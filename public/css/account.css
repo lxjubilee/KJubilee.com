@@ -1,0 +1,98 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   The signed-in control in the header (app/_account-button.js).
+
+   Loaded by the component itself rather than added to each page's stylesheet:
+   it appears on five headers whose CSS files define conflicting rules for the
+   same class names, and one shared file is the version that cannot drift.
+
+   Sits on top of the existing .btn-outline so the signed-in and signed-out
+   states are the same object in the same place — the label changes, the
+   furniture does not move.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.kj-account { position: relative; flex: 0 0 auto; }
+
+.kj-account-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  cursor: pointer;
+  font-family: inherit;
+  /* .btn-outline is written for an <a>; a <button> brings its own background
+     and line-height and would otherwise sit a pixel or two off its neighbours. */
+  background: none;
+  line-height: 1;
+}
+
+/* The initial, so the control is recognisable at a glance before the name is
+   read — and so it still says something once the name is hidden on narrow
+   screens. */
+.kj-account-initial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--accent, #3DA5FF);
+  color: #06182b;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* A long name must not push the search box or the nav out of the bar. */
+.kj-account-name {
+  max-width: 10ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kj-account-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 200;
+  min-width: 210px;
+  padding: 6px;
+  background: #1b1b1b;
+  border: 1px solid var(--border-strong, hsla(0, 0%, 100%, .1));
+  border-radius: 6px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
+}
+
+/* The address confirms WHICH account is signed in — the first name alone does
+   not, and that is the thing worth being sure of before signing out. */
+.kj-account-menu .kj-account-email {
+  padding: 7px 10px 9px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border-strong, hsla(0, 0%, 100%, .1));
+  color: var(--text-dim, #c9cad4);
+  font-size: 11.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kj-account-menu button {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: #e6e6e6;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.kj-account-menu button:hover { background: #2d2d2d; color: #fff; }
+.kj-account-menu button:focus-visible { outline: 2px solid var(--accent, #3DA5FF); outline-offset: -2px; }
+
+@media (max-width: 600px) {
+  .kj-account-name { display: none; }   /* the initial carries it */
+  .kj-account-trigger { padding-left: 8px; padding-right: 8px; }
+}

@@ -1,6 +1,7 @@
 'use client';
 
 import { usePageScripts } from '@/lib/use-page-script';
+import AccountButton from '../_account-button';
 
 /*
  * Ported from public/player.html.
@@ -34,7 +35,7 @@ export default function PlayerPage() {
                   <input id="q" type="search" placeholder="Search stations..." aria-label="Search stations" autoComplete="off" />
                   <button className="search-btn" id="qbtn">SEARCH</button>
                 </div>
-                <a className="btn-outline" href="/login">Sign In</a>
+                <AccountButton />
               </div>
               <div className="topbar-row2">
                 <nav className="primary-nav" id="nav" aria-label="Station categories"></nav>
