@@ -217,12 +217,16 @@ function ForgotRow({ email }) {
     );
 }
 
+// Module level, so it can see nothing declared inside JubileeIdDoor. The
+// setters arrive already wrapped by the parent — referencing a closure from
+// there is a ReferenceError at RENDER time, which compiles cleanly and then
+// takes the whole screen down.
 function NameFields({ firstName, lastName, setFirstName, setLastName }) {
     return (
         <div className="form-row">
-            <Field id="firstName" label="First name" value={firstName} onChange={edit(setFirstName)}
+            <Field id="firstName" label="First name" value={firstName} onChange={setFirstName}
                    maxLength={50} autoComplete="given-name" />
-            <Field id="lastName" label="Last name" value={lastName} onChange={edit(setLastName)}
+            <Field id="lastName" label="Last name" value={lastName} onChange={setLastName}
                    maxLength={50} autoComplete="family-name" />
         </div>
     );
@@ -232,7 +236,7 @@ function NameFields({ firstName, lastName, setFirstName, setLastName }) {
 // position from the start (.label-up).
 function DobField({ dob, setDob }) {
     return (
-        <Field id="dob" label="Date of birth" type="date" value={dob} onChange={edit(setDob)}
+        <Field id="dob" label="Date of birth" type="date" value={dob} onChange={setDob}
                className="date-field label-up" autoComplete="bday" max="9999-12-31" />
     );
 }
@@ -541,8 +545,8 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                         <AccountRow email={email} onChangeEmail={useDifferentEmail} />
                         <form onSubmit={handleCreateLinked} noValidate>
                             <NameFields firstName={firstName} lastName={lastName}
-                                        setFirstName={setFirstName} setLastName={setLastName} />
-                            <DobField dob={dob} setDob={setDob} />
+                                        setFirstName={edit(setFirstName)} setLastName={edit(setLastName)} />
+                            <DobField dob={dob} setDob={edit(setDob)} />
                             <RememberRow checked={rememberMe} onChange={setRememberMe} />
                             <SubmitButton loading={loading} busyLabel="Creating…">Create Account</SubmitButton>
                         </form>
@@ -561,8 +565,8 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                         <AccountRow email={email} onChangeEmail={useDifferentEmail} />
                         <form onSubmit={handleCreateJubileeId} noValidate>
                             <NameFields firstName={firstName} lastName={lastName}
-                                        setFirstName={setFirstName} setLastName={setLastName} />
-                            <DobField dob={dob} setDob={setDob} />
+                                        setFirstName={edit(setFirstName)} setLastName={edit(setLastName)} />
+                            <DobField dob={dob} setDob={edit(setDob)} />
                             <PasswordField id="password" label="Create a password"
                                            value={password} onChange={edit(setPassword)}
                                            autoComplete="new-password">
