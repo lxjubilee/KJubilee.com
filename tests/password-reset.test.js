@@ -289,6 +289,36 @@ function tokenFromLastEmail() {
         eq('and no token is stored', RESETS.length, 0);
     }
 
+    console.log('\nThe template is the family shell in kJubilee colours');
+    {
+        const m = require('../lib/email').passwordResetEmail({
+            to: 'jai@example.com',
+            resetUrl: 'https://kjubilee.com/reset-password?token=ABC',
+            minutes: 60, firstName: 'Jai',
+        });
+        // The shell is JubileeInspire's, because family mail should look like
+        // one family. Mail clients are not browsers: Outlook renders through
+        // Word, so the table layout and the VML button are what make this
+        // arrive intact rather than as a stack of unstyled text.
+        ok('XHTML transitional doctype', m.html.includes('XHTML 1.0 Transitional'));
+        ok('VML button, for Outlook', m.html.includes('v:roundrect'));
+        ok('600px card on a table layout', m.html.includes('width:600px'));
+        // ...and the colours are ours.
+        ok('kJubilee blue card border', m.html.includes('3px solid #3DA5FF'));
+        ok('no JubileeInspire gold survived the port', !/#ffbd59|#ffcc00|#f0ad4e/.test(m.html));
+        ok('the wordmark is kJubilee, not JubileeInspire', !m.html.includes('>Inspire</span>'));
+        ok('the logo is an absolute URL a mail client can fetch',
+            m.html.includes('https://kjubilee.com/images/members/'));
+        // A text part is not optional: it is what text-only clients show and
+        // what a filter reads when it distrusts the HTML.
+        ok('plain text carries the link', m.text.includes('https://kjubilee.com/reset-password'));
+        ok('greeting uses the name when we have one', m.text.startsWith('Hi Jai,'));
+        const anon = require('../lib/email').passwordResetEmail({
+            to: 'x@y.z', resetUrl: 'https://kjubilee.com/r?token=T', minutes: 60,
+        });
+        ok('and falls back when we do not', anon.text.startsWith('Hi there,'));
+    }
+
     console.log('\nFinishing a reset retires every other outstanding link');
     {
         SENT.length = 0; RESETS = []; resetId = 1;
