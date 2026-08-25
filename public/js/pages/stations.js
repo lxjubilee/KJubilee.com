@@ -438,7 +438,7 @@
 
   render();
 
-  /* Arriving on /stations.html#kids should open on Family Friendly. 'auto', not
+  /* Arriving on /stations#kids should open on Family Friendly. 'auto', not
      smooth: easing a page you have only just opened reads as a glitch. */
   if (!goToSection(decodeURIComponent(location.hash.slice(1)), 'auto')) syncActive();
 })();

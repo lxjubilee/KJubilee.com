@@ -4,7 +4,7 @@ import { usePageScripts } from '@/lib/use-page-script';
 import AccountButton from '../_account-button';
 
 /*
- * Ported from public/stations.html.
+ * Ported from public/stations.
  *
  * The markup is that file's markup; its <style> block is now
  * public/css/pages/stations.css and its inline
@@ -27,9 +27,9 @@ export default function StationsPage() {
                 </a>
                 <div className="spacer"></div>
                 <a className="nav-textlink" href="https://www.jubileeinspire.com" rel="noopener">Jubilee AI Bible Chat</a>
-                <a className="nav-textlink" href="/player.html">The Dial</a>
-                <a className="nav-textlink is-here" href="/stations.html">HM Radio Stations</a>
-                <a className="nav-textlink" href="/map.html">AI Towers Map</a>
+                <a className="nav-textlink" href="/player">The Dial</a>
+                <a className="nav-textlink is-here" href="/stations">HM Radio Stations</a>
+                <a className="nav-textlink" href="/map">AI Towers Map</a>
                 <div className="searchbar">
                   <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>
                   <input id="q" type="search" placeholder="Search stations..." aria-label="Search stations" autoComplete="off" />

@@ -3,7 +3,7 @@
 import { usePageScripts } from '@/lib/use-page-script';
 
 /*
- * Ported from public/radio.html.
+ * Ported from public/radio.
  *
  * The markup is that file's markup; its <style> block is now
  * public/css/pages/radio.css and its inline
@@ -305,8 +305,8 @@ export default function RadioPage() {
                         <h3 className="auth-prompt-title" id="authPromptTitle">Sign in to <span id="authPromptAction">save favorites</span></h3>
                         <p className="auth-prompt-body">Create a free kJubilee account or sign in to keep your favorite stations and follows synced across every device you use.</p>
                         <div className="auth-prompt-actions">
-                            <a className="auth-prompt-btn primary" id="authPromptSignIn" href="/login.html">Sign In</a>
-                            <a className="auth-prompt-btn" id="authPromptSignUp" href="/signup.html">Create Account</a>
+                            <a className="auth-prompt-btn primary" id="authPromptSignIn" href="/login">Sign In</a>
+                            <a className="auth-prompt-btn" id="authPromptSignUp" href="/signup">Create Account</a>
                         </div>
                         <button className="auth-prompt-cancel" type="button" onClick={(event) => { closeAuthPrompt() }}>Not now</button>
                     </div>

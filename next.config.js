@@ -17,7 +17,39 @@
 const PAGE_ROUTES = [
     '/', '/radio', '/music', '/player', '/dial',
     '/login', '/signin', '/signup', '/stations', '/map',
+    '/forgot-password', '/reset-password',
 ];
+
+// Every URL this site had before the Next migration.
+//
+// The pages moved from public/*.html to app routes and the files went to
+// legacy/, but the LINKS did not move with them. radio.js and music.js still
+// build `/login.html?redirect=…` when an anonymous listener tries to favourite
+// a station, so the sign-in prompt led straight to "This page could not be
+// found" — and the same for every other .html path in the shipped scripts.
+//
+// Rewriting those call sites fixes the ones we know about. This covers the
+// rest: bookmarks, links from other Jubilee sites, anything printed, and any
+// call site still lurking inside a template string.
+//
+// Temporary (307) rather than permanent on purpose. A 308 is cached by the
+// browser more or less forever, and on a site whose URLs have just moved once
+// already, being able to change these again is worth more than the redirect
+// being marked canonical.
+const LEGACY_HTML_ROUTES = {
+    '/index.html': '/',
+    '/login.html': '/login',
+    '/signin.html': '/signin',
+    '/signup.html': '/signup',
+    '/forgot-password.html': '/forgot-password',
+    '/reset-password.html': '/reset-password',
+    '/radio.html': '/radio',
+    '/music.html': '/music',
+    '/player.html': '/player',
+    '/dial.html': '/dial',
+    '/stations.html': '/stations',
+    '/map.html': '/map',
+};
 
 // helmet's defaults, minus the two it was configured to disable:
 //   contentSecurityPolicy: false  — the player HTML inlines styles + scripts
@@ -83,6 +115,17 @@ module.exports = {
     // pg loads its driver dynamically; bundling it breaks the build. Same for
     // the AWS SDK, which the tooling pulls in.
     serverExternalPackages: ['pg', 'pg-native', '@aws-sdk/client-s3', '@aws-sdk/lib-storage'],
+
+    // The query string is carried across by default, so
+    // /login.html?redirect=/radio arrives at /login?redirect=/radio with the
+    // return path intact — which is the whole point of that link.
+    async redirects() {
+        return Object.entries(LEGACY_HTML_ROUTES).map(([source, destination]) => ({
+            source,
+            destination,
+            permanent: false,
+        }));
+    },
 
     async headers() {
         return [

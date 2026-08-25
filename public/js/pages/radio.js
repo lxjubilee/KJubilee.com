@@ -1716,8 +1716,8 @@ document.addEventListener('error', function (e) {
             if (!overlay || !action || !signIn || !signUp) return;
             action.textContent = actionLabel;
             const here = encodeURIComponent(window.location.pathname + window.location.search);
-            signIn.href = `/login.html?redirect=${here}`;
-            signUp.href = `/signup.html?redirect=${here}`;
+            signIn.href = `/login?redirect=${here}`;
+            signUp.href = `/signup?redirect=${here}`;
             overlay.classList.add('open');
             // Allow Esc to dismiss.
             document.addEventListener('keydown', escDismissAuthPrompt);

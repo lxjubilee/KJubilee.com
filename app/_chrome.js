@@ -16,7 +16,10 @@ import SessionKeeper from './_session-keeper';
 
 function isRadio(pathname) {
     const p = (pathname || '').toLowerCase();
-    return p === '/radio' || p === '/radio/' || p.indexOf('/radio.html') >= 0;
+    // /radio.html is redirected to /radio by next.config.js before anything
+    // here sees it, so an exact match is all that is needed — and a substring
+    // test would also claim any future path that merely contains the word.
+    return p === '/radio' || p === '/radio/';
 }
 
 /*

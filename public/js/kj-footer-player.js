@@ -43,7 +43,8 @@
     'use strict';
 
     var path = (location.pathname || '').toLowerCase();
-    if (path === '/radio' || path === '/radio/' || path.endsWith('/radio.html')) return;
+    // /radio.html now redirects to /radio, so the exact paths are enough.
+    if (path === '/radio' || path === '/radio/') return;
 
     var KEY = {
         slug:    'kjubilee.player.slug',
