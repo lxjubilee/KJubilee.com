@@ -49,6 +49,10 @@ const LEGACY_HTML_ROUTES = {
     '/dial.html': '/dial',
     '/stations.html': '/stations',
     '/map.html': '/map',
+    // The "Previous site" link on the home page. Next serves static files but
+    // has no directory index, so /backup/ alone would still 404.
+    '/backup': '/backup/index.html',
+    '/backup/': '/backup/index.html',
 };
 
 // helmet's defaults, minus the two it was configured to disable:

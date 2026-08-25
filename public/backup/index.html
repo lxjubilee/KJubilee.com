@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kJubilee — Kingdom Jubilee Radio</title>
+<meta name="description" content="kJubilee — 24/7 Kingdom Jubilee Radio + Music. Stations across faith, family, and culture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#0f0f10; --bg2:#181819; --line:rgba(255,255,255,.1); --txt:#fff; --mut:#9a9a9a; --gold:#E6AC00; --blue:#6FB3FF; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Segoe UI',-apple-system,sans-serif; background:var(--bg); color:var(--txt); min-height:100vh; display:flex; flex-direction:column; }
+  header { display:flex; justify-content:space-between; align-items:center; padding:18px 28px; border-bottom:1px solid var(--line); }
+  header .brand { display:flex; align-items:center; gap:12px; }
+  header .brand img { width:36px; height:36px; }
+  header .brand .name { font-family:'Orbitron',sans-serif; font-size:18px; letter-spacing:.05em; color:var(--gold); }
+  header nav a { color:var(--mut); text-decoration:none; margin-left:18px; font-size:14px; }
+  header nav a:hover { color:var(--txt); }
+  main { flex:1; max-width:1100px; margin:0 auto; padding:60px 28px; width:100%; }
+  .hero { text-align:center; padding:60px 0 80px; }
+  .hero h1 { font-family:'Orbitron',sans-serif; font-size:48px; margin-bottom:14px; }
+  .hero h1 .accent { color:var(--gold); }
+  .hero p { color:var(--mut); font-size:18px; max-width:640px; margin:0 auto 32px; line-height:1.6; }
+  .cta { display:inline-flex; gap:14px; flex-wrap:wrap; justify-content:center; }
+  .btn { display:inline-block; padding:13px 28px; border-radius:8px; text-decoration:none; font-weight:600; font-size:15px; }
+  .btn.primary { background:var(--gold); color:#111; }
+  .btn.primary:hover { background:#ffd24a; }
+  .btn.ghost { background:transparent; border:1px solid var(--line); color:var(--txt); }
+  .btn.ghost:hover { border-color:var(--gold); color:var(--gold); }
+  .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-top:40px; }
+  .card { background:var(--bg2); border:1px solid var(--line); border-radius:10px; padding:24px; }
+  .card h3 { font-size:17px; margin-bottom:8px; color:var(--gold); }
+  .card p { color:var(--mut); font-size:14px; line-height:1.55; }
+  footer { padding:24px 28px; border-top:1px solid var(--line); color:var(--mut); font-size:13px; text-align:center; }
+</style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">
+      <img src="/images/JubileeLogo.png" alt="kJubilee">
+      <span class="name">kJubilee</span>
+    </a>
+    <nav>
+      <a href="/radio">Radio</a>
+      <a href="/music">Music</a>
+      <a href="/login">Sign in</a>
+      <a href="/signup">Sign up</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Kingdom Jubilee <span class="accent">Radio</span></h1>
+      <p>24/7 streaming across faith, family, and culture — multi-station radio, curated album collections, and a community of listeners. Built on the Jubilee Radio Engine.</p>
+      <div class="cta">
+        <a href="/radio" class="btn primary">Open the radio player</a>
+        <a href="/music" class="btn ghost">Browse music</a>
+      </div>
+    </section>
+
+    <section class="features">
+      <div class="card">
+        <h3>Multi-station radio</h3>
+        <p>Adult, gospel, celestial, kids — every format runs as a separate Icecast stream with album-driven programming.</p>
+      </div>
+      <div class="card">
+        <h3>Favorites &amp; follows</h3>
+        <p>Sign in to favorite a station, follow a show, or save an album collection. Your library lives across devices.</p>
+      </div>
+      <div class="card">
+        <h3>Listener voice</h3>
+        <p>Thumbs, comments, and voice messages flow back to the station — moderated and shaped into the next hour&apos;s programming.</p>
+      </div>
+      <div class="card">
+        <h3>Sabbath &amp; Feast programming</h3>
+        <p>The Kingdom Calendar drives Sabbath rest blocks and Feast Day specials automatically. Set it once; the schedule honors it.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer>© <span id="y"></span> kJubilee — Kingdom Jubilee Radio</footer>
+  <script>document.getElementById('y').textContent = new Date().getFullYear();</script>
+</body>
+</html>

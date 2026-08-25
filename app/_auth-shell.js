@@ -96,8 +96,8 @@ export default function AuthShell({ children }) {
                     <div className="auth-footer">
                         <p className="copyright">
                             &copy; {new Date().getFullYear()} kJubilee.com |{' '}
-                            <a href="/terms" target="_blank" rel="noopener">Terms of Use</a> |{' '}
-                            <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+                            <a href="https://www.jubileeinspire.com/help/terms" target="_blank" rel="noopener">Terms of Use</a> |{' '}
+                            <a href="https://www.jubileeinspire.com/help/privacy" target="_blank" rel="noopener">Privacy Policy</a>
                         </p>
                     </div>
                 </div>
