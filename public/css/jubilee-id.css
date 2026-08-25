@@ -32,20 +32,38 @@
 .wave-bar{position:fixed;top:0;left:0;width:100%;height:6px;z-index:999;background:linear-gradient(90deg,var(--kj-accent),var(--kj-accent-hi),var(--kj-accent));background-size:200% 100%;animation:waveSlide 3s linear infinite}
 @keyframes waveSlide{0%{background-position:0 0}100%{background-position:200% 0}}
 
-body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100vh;display:flex;overflow:hidden}
+/* dvh, not vh: on a phone 100vh is the viewport with the browser chrome
+   RETRACTED, so a 100vh column is always taller than what you can actually see
+   and its last rows sit under the address bar. */
+body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100dvh;display:flex}
+
+/* kj-footer-player.js puts padding-bottom on <body> so ordinary pages end above
+   the bar. This layout is two full-height columns, so that padding shrinks the
+   flex container instead and clips the bottom of the form — which, combined with
+   the overflow:hidden this rule used to carry, made the last field unreachable
+   by any amount of scrolling. The space is reserved INSIDE the scrolling column
+   instead (.auth-form-panel below). */
+body.kj-has-player{padding-bottom:0}
 
 /* ── Layout ── */
-.auth-row{display:flex;width:100%;min-height:100vh}
+.auth-row{display:flex;width:100%;min-height:100dvh}
 /* The footer player is FIXED to the bottom of every page on the site, so the
    last thing in this column — which on the reset screen is the submit button —
    sits underneath it and cannot be clicked. kj-footer-player.js publishes its
    measured height as --kj-player-h on <body>; reserving that much padding is
    what keeps the button reachable. The 0px fallback covers the moment before
    the bar mounts, and any page where it never does. */
-.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem calc(2rem + var(--kj-player-h,0px));position:relative;z-index:2;overflow-y:auto;min-height:100vh}
+/* height, not min-height: the column has to be exactly the viewport for its own
+   overflow-y to produce a scrollbar. With min-height it grows to fit its content
+   instead and never scrolls, so anything past the fold is simply unreachable. */
+.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem calc(2rem + var(--kj-player-h,0px));position:relative;z-index:2;overflow-y:auto;height:100dvh}
 /* The form is vertically centred, so the short email screen and the tall
-   Jubilee ID screen both sit comfortably without the logo jumping. */
-.auth-form-inner{flex:1;display:flex;flex-direction:column;justify-content:center}
+   Jubilee ID screen both sit comfortably without the logo jumping.
+   `safe center` rather than plain `center`: when the content is TALLER than
+   the column — which the create-a-Jubilee-ID screen is — centring pushes the
+   first rows above the top of the scroll box, where no scrolling can reach
+   them. `safe` falls back to flex-start at exactly that point. */
+.auth-form-inner{flex:1;display:flex;flex-direction:column;justify-content:safe center}
 
 /* ── Right panel ── */
 .auth-bg-panel{flex:1;position:relative;overflow:hidden}
@@ -205,7 +223,8 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 /* ── Mobile ── */
 @media(max-width:1024px){
   .auth-bg-panel{display:none}
-  .auth-form-panel{width:100%;min-width:0;max-width:none;padding:2rem 1.5rem}
+  /* keep the player allowance — a shorthand here would drop it */
+  .auth-form-panel{width:100%;min-width:0;max-width:none;padding:2rem 1.5rem calc(2rem + var(--kj-player-h,0px))}
 }
 @media(max-width:480px){
   .auth-logo-text{font-size:1.6rem}
