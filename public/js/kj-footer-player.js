@@ -551,6 +551,7 @@
             el.addEventListener('ended', function () { onTrackEnded(el); });
             el.addEventListener('error', function () { skipBadTrack(el); });
             el.addEventListener('playing', function () { badRun = 0; });
+            hookWaves(el);
             warm(doc, at.index);
             announce();
             return el.play();
@@ -870,6 +871,7 @@
             audio = el;
             el.addEventListener('ended', function () { nextTrack(el); });
             el.addEventListener('error', function () { nextTrack(el); });
+            hookWaves(el);
             var first = queue[qi++];
             setTrack(first);
             el.src = localise(first.url);
@@ -894,6 +896,7 @@
         var el = new Audio();
         el.volume = volume();
         audio = el;
+        hookWaves(el);
         setSub(subFor(station));
         el.src = station.stream;
         announce();
@@ -966,6 +969,8 @@
         vol: 'M3 9v6h4l5 5V4L7 9H3zm13.5 3a4.5 4.5 0 00-2.5-4v8a4.5 4.5 0 002.5-4z',
         mute: 'M16.5 12A4.5 4.5 0 0014 8v2.18l2.45 2.45c.03-.2.05-.41.05-.63zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25a7.06 7.06 0 01-2.25 1.21v2.06a8.99 8.99 0 003.69-1.81L19.73 21 21 19.73 4.27 3z',
         expand: 'M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z',
+        prev: 'M6 6h2v12H6zm3 6 9-6v12z',
+        next: 'M16 6h2v12h-2zM6 6l9 6-9 6z',
         wave: 'M12 3v10.55A4 4 0 1014 17V7h4V3h-6z',
     };
     function svg(d) { return '<svg viewBox="0 0 24 24"><path d="' + d + '"></path></svg>'; }
@@ -997,6 +1002,19 @@
 '  background-size:300% 100%;animation:kjflow 4s linear infinite;pointer-events:none}',
 '@keyframes kjflow{0%{background-position:0 50%}100%{background-position:300% 50%}}',
 '@media (prefers-reduced-motion:reduce){#kjPlayer.playing::before{animation:none}}',
+/* THE EQUALIZER.
+   A canvas filling the bar, behind everything, drawn from the sound that is
+   actually playing. It is the only decorative thing in this player and it earns
+   its place by being true: every column is one band of the audio's own
+   spectrum, so what a listener watches is what they are hearing rather than an
+   animation playing alongside it.
+   Under the controls, never over them. The bar's three columns are given a
+   stacking context of their own so the text stays crisp on top, and the canvas
+   is held to a low opacity because a legible station name matters more than a
+   bright light show. */
+'#kjPlayer .waves{position:absolute;inset:0;width:100%;height:100%;z-index:0;',
+'  opacity:.5;pointer-events:none}',
+'#kjPlayer .now,#kjPlayer .ctrls,#kjPlayer .right{position:relative;z-index:1}',
 '#kjPlayer .now{display:flex;align-items:center;gap:12px;min-width:0}',
 '#kjPlayer .cover{width:60px;height:60px;border-radius:6px;flex:none;overflow:hidden;position:relative;',
 '  display:flex;align-items:center;justify-content:center;cursor:pointer;',
@@ -1016,29 +1034,15 @@
    The bar is a three column grid - 1fr auto 1fr - so the middle column centres
    itself between two equal sides. That centres the COLUMN, which is only the
    same thing as centring the button while the column is symmetrical about it.
-   It was not: the lamp sat inside the column beside the button, so the pair
-   centred as a group and the button sat right of the midline by half the
-   label's width plus half the gap - about forty pixels.
-   The column is now a fixed width with THREE parts: the lamp, the button, and
-   an empty mirror of the lamp. The two outer parts are flex:1 1 0, so they
-   split the spare width evenly and the button is exactly between them.
-   Fixed width rather than auto because an auto column is sized from its
-   content, which collapses both flexible sides to their text and puts the
-   button back off centre. The width also RESERVES the lamp's space in the
-   grid, which an absolutely positioned lamp did not: hung out of flow it
-   overlapped the station name at every width where that name was long enough
-   to fill its column. */
-'#kjPlayer .ctrls{display:flex;align-items:center;gap:12px;width:260px}',   /* 260 = the 36px button, two 12px gaps, and 100px a side. The label
-        needs about 85 of that 100; the slack is deliberate, because a font
-        that renders a little wider would otherwise clip the word rather
-        than move the button, and a clipped label is the failure this
-        layout trades for. */
-/* The mirror. An empty box the same flexible size as the lamp, on the other
-   side of the button, so the two sides of the column are always equal and the
-   button sits between them. This is what makes the centring hold no matter
-   what the label says: the lamp cannot grow at the mirror's expense, because
-   both are flex:1 1 0 and neither is sized from its content. */
-'#kjPlayer .ctrls::after{content:"";flex:1 1 0;min-width:0}',
+   It now is, by construction: a stepper, the button, a stepper, all the same
+   size. That is why the fixed width and the invisible mirror this rule used to
+   carry are gone - they existed only to hold the button on the midline while
+   the STREAMING lamp sat beside it, and the lamp has moved to the right-hand
+   group, ahead of the speaker. */
+'#kjPlayer .ctrls{display:flex;align-items:center;gap:14px}',
+'#kjPlayer button.step{width:34px;height:34px;border-radius:50%;color:#c9cad4}',
+'#kjPlayer button.step svg{width:17px;height:17px}',
+'#kjPlayer button.step:hover{color:#fff;background:hsla(0,0%,100%,.08)}',
 '#kjPlayer button{background:none;border:0;color:#f3f2ee;cursor:pointer;padding:6px;border-radius:4px;',
 '  display:flex;align-items:center;justify-content:center;transition:color .15s ease,transform .15s ease}',
 '#kjPlayer button:hover{color:#7CC4FF}',
@@ -1047,12 +1051,10 @@
 '#kjPlayer button.play{background:var(--kjp-accent,#3DA5FF);border-radius:50%;width:36px;height:36px;padding:0;color:#052033}',
 '#kjPlayer button.play:hover{background:#7CC4FF;color:#052033}',
 '#kjPlayer button.play svg{width:16px;height:16px}',
-/* Right-aligned against the button, and sized by the column rather than by its
-   own text. flex:1 1 0 with min-width:0 means the label is handed exactly half
-   the column's spare width - never a pixel more, however long the word gets -
-   so a longer label ellipsises instead of shouldering the button aside. */
-'#kjPlayer .live{flex:1 1 0;min-width:0;justify-content:flex-end;overflow:hidden;',
-'  white-space:nowrap;display:inline-flex;align-items:center;gap:6px;font-size:9.5px;font-weight:700;',
+/* In the right-hand group now, immediately ahead of the speaker. flex:none so
+   it keeps its own width there and never squeezes the volume slider. */
+'#kjPlayer .live{flex:none;white-space:nowrap;margin-right:2px;',
+'  display:inline-flex;align-items:center;gap:6px;font-size:9.5px;font-weight:700;',
 '  letter-spacing:.09em;text-transform:uppercase;color:#46D07A}',   /* STREAMING is green, not the site accent */
 '#kjPlayer .live i{width:5px;height:5px;border-radius:50%;background:currentColor;display:block;',
 '  animation:kjpulse 1.8s ease-in-out infinite}',
@@ -1068,12 +1070,11 @@
 '@media (max-width:860px){',
 '  #kjPlayer{grid-template-columns:1fr auto;gap:12px;padding:0 12px}',
      /* Two columns here, so the transport is right-aligned rather than centred
-        and there is no midline to hold. The column packs to its content and
-        the mirror goes away, giving the station name back the ~100px the
-        reservation would otherwise cost it on a phone. */
-'  #kjPlayer .ctrls{width:auto;gap:10px}',
-'  #kjPlayer .ctrls::after{display:none}',
-'  #kjPlayer .live{flex:0 0 auto}',
+        and there is no midline to hold. The steppers go first: on a phone the
+        station name needs the width more than a dial-stepping shortcut does,
+        and play/pause is the control that has to survive. */
+'  #kjPlayer .ctrls{gap:10px}',
+'  #kjPlayer button.step{display:none}',
 '  #kjPlayer .right .volume{display:none}',
 '}',
 '@media (max-width:560px){#kjPlayer .cover{width:46px;height:46px}#kjPlayer .right{display:none}}'
@@ -1082,6 +1083,246 @@
         el.id = 'kj-footer-player-css';
         el.textContent = css;
         document.head.appendChild(el);
+    }
+
+    /* ──────────────────────────────────────────────────────────────────────
+     * THE WAVES — an audio-reactive background for the bar.
+     *
+     * Web Audio, driven by the element the player is already using: the source
+     * is tapped, passed through an analyser, and passed straight on to the
+     * speakers. The shapes drawn are that analyser's frequency bands, so the
+     * motion is the music and not a loop pretending to be.
+     *
+     * THREE RULES, because a decoration must never cost the audio:
+     *
+     *  1. A media element routed into an AudioContext plays through that
+     *     context and nothing else. If the context is SUSPENDED - which is its
+     *     state until a gesture resumes it - connecting would silence the
+     *     station. So nothing is connected until the context is confirmed
+     *     running.
+     *  2. A cross-origin resource without CORS makes the source node output
+     *     SILENCE by specification. Every track here is same-origin through
+     *     /cdn, but a station whose day file pointed elsewhere would go quiet
+     *     for no visible reason, so the origin is checked before connecting.
+     *  3. Any failure at all falls back to the time-driven idle wave below.
+     *     The listener loses the reactivity, not the radio.
+     *
+     * Failing all of that, there is still something to watch: an idle wave that
+     * breathes on a timer. Silence with a still canvas reads as broken; silence
+     * with a moving line reads as a station between songs.
+     * ────────────────────────────────────────────────────────────────────── */
+    var wavesCanvas = null, wavesCtx = null, wavesRAF = null, wavesHue = 0;
+    var audioCtx = null, analyser = null, freqData = null;
+    var tapCount = 0;
+    var tapped = (typeof WeakSet === 'function') ? new WeakSet() : null;
+    var tappedFallback = [];
+
+    function alreadyTapped(el) {
+        if (tapped) return tapped.has(el);
+        return tappedFallback.indexOf(el) >= 0;
+    }
+    function markTapped(el) {
+        if (tapped) tapped.add(el); else tappedFallback.push(el);
+    }
+
+    function sameOrigin(url) {
+        try { return new URL(url, location.href).origin === location.origin; }
+        catch (e) { return false; }
+    }
+
+    /** Tap the element for analysis, or leave it completely alone. */
+    function tapAudio(el) {
+        if (!el || alreadyTapped(el)) return;
+        var AC = window.AudioContext || window.webkitAudioContext;
+        if (!AC) return;
+        if (!sameOrigin(el.currentSrc || el.src)) return;      // rule 2
+
+        try {
+            if (!audioCtx) audioCtx = new AC();
+            if (audioCtx.state === 'suspended' && audioCtx.resume) audioCtx.resume();
+            // rule 1 — never route audio into a context that is not running
+            if (audioCtx.state !== 'running') return;
+
+            var src = audioCtx.createMediaElementSource(el);
+            if (!analyser) {
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 512;          // 256 bins - enough columns to read as a spectrum
+                analyser.smoothingTimeConstant = 0.8;
+                freqData = new Uint8Array(analyser.frequencyBinCount);
+                analyser.connect(audioCtx.destination);
+            }
+            src.connect(analyser);
+            tapCount++;
+            markTapped(el);
+        } catch (e) {
+            // Already connected, blocked, or unsupported. The idle wave covers it.
+            markTapped(el);
+        }
+    }
+
+    /* Start the waves from the ELEMENT, not from the play promise.
+       paintPlaying runs when play() RESOLVES, which can be a second after sound
+       starts and may never happen on a stalled stream - the same gap that had
+       the dial's lamp reading "Paused" over audible audio. The element's own
+       'playing' event is the honest signal, and 'pause' is its counterpart. */
+    function hookWaves(el) {
+        if (!el) return;
+        el.addEventListener('playing', function () {
+            try { tapAudio(el); startWaves(); } catch (e) {}
+        });
+        el.addEventListener('pause', function () { try { stopWaves(); } catch (e) {} });
+        el.addEventListener('ended', function () { /* the next track keeps them running */ });
+    }
+
+    function sizeWaves() {
+        // Find the canvas here rather than waiting for playback to find it.
+        // Sized only from startWaves, it kept the default 300x150 backing store
+        // until the first press of play, so the first frames drawn were
+        // stretched from a canvas a quarter of the bar's width.
+        if (!wavesCanvas) wavesCanvas = document.getElementById('kjpWaves');
+        if (!wavesCanvas || !bar) return;
+        // No canvas support, or a context refused: there is simply no picture.
+        if (typeof wavesCanvas.getContext !== 'function') { wavesCanvas = null; return; }
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var w = bar.clientWidth, h = bar.clientHeight;
+        if (!w || !h) return;
+        wavesCanvas.width = Math.round(w * dpr);
+        wavesCanvas.height = Math.round(h * dpr);
+        wavesCtx = wavesCanvas.getContext('2d');
+        if (wavesCtx) wavesCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    /* ── THE EQUALIZER ──────────────────────────────────────────────────
+     *
+     * This was four sine curves whose amplitude followed the music. It moved,
+     * but it moved like an animation that happened to be near some audio: four
+     * smooth lines cannot show what a mix is doing, because everything they
+     * know about a whole band of frequencies is squeezed into one height.
+     *
+     * A column per band says far more with the same data. Forty-odd bars, each
+     * reading its own slice of the spectrum, and the picture is the mix itself:
+     * a kick lands as a stab on the left, a cymbal scatters the right, a held
+     * chord stands the middle up. That is the difference between decoration and
+     * a meter.
+     *
+     * FOUR THINGS MAKE IT READ AS AN EQUALIZER RATHER THAN A BAR CHART:
+     *
+     *   log-ish spacing   The FFT gives linear bins, and music is not linear:
+     *                     half of a linear spectrum is content almost nothing
+     *                     lands in, so the right-hand half of a linear meter
+     *                     sits dead. The exponent spreads the low end out.
+     *   fast up, slow down  Instant attack and a slow decay is what a real
+     *                     meter does, and it is most of why one looks alive.
+     *   peak caps         The little mark left behind at each column's highest
+     *                     point, falling on its own. It is the detail that
+     *                     makes a meter look like it is measuring something.
+     *   mirrored          Around the middle, not standing on the floor: the
+     *                     bar is 80px tall with text across it, and energy
+     *                     spreading from the centre leaves the top and bottom
+     *                     edges quiet where the type is.
+     */
+    /** The average energy of one slice of the spectrum, 0..1. */
+    function bandEnergy(from, to) {
+        if (!analyser || !freqData) return null;
+        var n = freqData.length;
+        var a = Math.floor(n * from), b = Math.max(a + 1, Math.floor(n * to));
+        if (b > n) b = n;
+        var sum = 0;
+        for (var i = a; i < b; i++) sum += freqData[i];
+        return (sum / (b - a)) / 255;
+    }
+
+    var eqLevels = [], eqPeaks = [];
+
+    var EQ_BAR = 6;          // column width in px
+    var EQ_GAP = 3;
+    var EQ_ATTACK = 0.55;    // how much of a rise is taken immediately
+    var EQ_DECAY = 0.055;    // how fast a column falls when the sound stops
+    var EQ_PEAK_FALL = 0.011;
+
+    function drawWaves(t) {
+        wavesRAF = requestAnimationFrame(drawWaves);
+        if (!wavesCtx || !bar) return;
+
+        var w = bar.clientWidth, h = bar.clientHeight;
+        if (!w || !h) return;
+        wavesCtx.clearRect(0, 0, w, h);
+
+        if (analyser && freqData) analyser.getByteFrequencyData(freqData);
+
+        var n = Math.max(16, Math.floor(w / (EQ_BAR + EQ_GAP)));
+        if (eqLevels.length !== n) {
+            eqLevels = []; eqPeaks = [];
+            for (var k = 0; k < n; k++) { eqLevels.push(0); eqPeaks.push(0); }
+        }
+
+        // The colour rotation, now swept ACROSS the bar as well as through
+        // time: every column is a different hue and the whole spectrum walks.
+        wavesHue = (wavesHue + 0.34) % 360;
+
+        var mid = h / 2;
+        var maxH = h * 0.44;
+        var pad = (w - (n * (EQ_BAR + EQ_GAP) - EQ_GAP)) / 2;
+
+        for (var i = 0; i < n; i++) {
+            var target;
+            if (analyser && freqData) {
+                // Slice this column's own band, spaced so the low end - where
+                // nearly all of the music is - gets most of the columns.
+                var lo = Math.pow(i / n, 1.55);
+                var hi = Math.pow((i + 1) / n, 1.55);
+                target = bandEnergy(lo, Math.min(1, Math.max(hi, lo + 0.004)));
+                if (target === null) target = 0;
+                // The top of the spectrum is quiet on almost everything; lift it
+                // so the right-hand columns are part of the picture.
+                target = Math.min(1, target * (1 + 1.5 * (i / n)));
+            } else {
+                // No analyser: a slow travelling pattern, so the bar still has
+                // life without pretending to be measuring anything.
+                target = 0.20 + 0.15 * Math.sin(t / 430 + i * 0.5)
+                              + 0.09 * Math.sin(t / 170 + i * 1.6);
+            }
+
+            // Fast attack, slow decay.
+            eqLevels[i] = target > eqLevels[i]
+                ? eqLevels[i] + (target - eqLevels[i]) * EQ_ATTACK
+                : Math.max(0, eqLevels[i] - EQ_DECAY);
+
+            eqPeaks[i] = eqLevels[i] > eqPeaks[i]
+                ? eqLevels[i]
+                : Math.max(eqLevels[i], eqPeaks[i] - EQ_PEAK_FALL);
+
+            var x = pad + i * (EQ_BAR + EQ_GAP);
+            var barH = Math.max(1.5, eqLevels[i] * maxH);
+            var hue = (wavesHue + (i / n) * 300) % 360;
+
+            wavesCtx.fillStyle = 'hsla(' + hue + ',95%,58%,.85)';
+            wavesCtx.fillRect(x, mid - barH, EQ_BAR, barH * 2);
+
+            // The cap: a thin mark at the highest point this column has
+            // reached lately, falling on its own.
+            var peakY = eqPeaks[i] * maxH;
+            if (peakY > barH + 1.5) {
+                wavesCtx.fillStyle = 'hsla(' + hue + ',100%,76%,.95)';
+                wavesCtx.fillRect(x, mid - peakY - 2, EQ_BAR, 2);
+                wavesCtx.fillRect(x, mid + peakY, EQ_BAR, 2);
+            }
+        }
+    }
+
+    function startWaves() {
+        if (!bar) return;
+        wavesCanvas = wavesCanvas || document.getElementById('kjpWaves');
+        if (!wavesCanvas) return;
+        if (!wavesCtx) sizeWaves();
+        if (wavesRAF) return;
+        wavesRAF = requestAnimationFrame(drawWaves);
+    }
+
+    function stopWaves() {
+        if (wavesRAF) { cancelAnimationFrame(wavesRAF); wavesRAF = null; }
+        // Leave the last frame rather than clearing to black: a bar that empties
+        // the instant you pause looks like it broke rather than like it stopped.
     }
 
     var bar = null;
@@ -1106,6 +1347,7 @@
         var h = Math.ceil(bar.getBoundingClientRect().height);
         if (!h) return;                       /* display:none, or not laid out yet */
         document.body.style.setProperty('--kj-player-h', h + 'px');
+        sizeWaves();                          /* the canvas is measured in the same breath */
 
         if (!barRO && typeof ResizeObserver === 'function') {
             barRO = new ResizeObserver(function () { syncHeight(); });
@@ -1124,6 +1366,7 @@
         bar.setAttribute('role', 'region');
         bar.setAttribute('aria-label', 'Radio player');
         bar.innerHTML =
+            '<canvas class="waves" id="kjpWaves" aria-hidden="true"></canvas>' +
             '<div class="now">' +
               '<div class="cover" id="kjpCover" title="Open the full player"></div>' +
               '<div class="meta">' +
@@ -1138,10 +1381,12 @@
               '</div>' +
             '</div>' +
             '<div class="ctrls">' +
-              '<span class="live off" id="kjpLive"><i></i>Streaming</span>' +
+              '<button class="step" id="kjpPrev" title="Previous station" aria-label="Previous station">' + svg(ICON.prev) + '</button>' +
               '<button class="play" id="kjpPlay" title="Play / pause" aria-label="Play or pause">' + svg(ICON.play) + '</button>' +
+              '<button class="step" id="kjpNext" title="Next station" aria-label="Next station">' + svg(ICON.next) + '</button>' +
             '</div>' +
             '<div class="right">' +
+              '<span class="live off" id="kjpLive"><i></i>Streaming</span>' +
               '<div class="volume" title="Volume">' +
                 '<button id="kjpMute" aria-label="Mute">' + svg(ICON.vol) + '</button>' +
                 '<input type="range" min="0" max="1" step="0.01" id="kjpVol" aria-label="Volume">' +
@@ -1166,6 +1411,8 @@
 
         document.getElementById('kjpVol').value = String(volume());
         document.getElementById('kjpPlay').addEventListener('click', toggle);
+        document.getElementById('kjpPrev').addEventListener('click', function () { step(-1); });
+        document.getElementById('kjpNext').addEventListener('click', function () { step(1); });
         document.getElementById('kjpOpen').addEventListener('click', openFull);
         document.getElementById('kjpCover').addEventListener('click', openFull);
         document.getElementById('kjpMute').addEventListener('click', function () {
@@ -1228,6 +1475,21 @@
     // has just set.
     function paintPlaying(on, quiet) {
         if (!bar) return;
+        // The waves follow the sound, and this is the one function that knows
+        // whether there is any. Tapping here also means the AudioContext is
+        // created inside the gesture that started playback, which is the only
+        // moment a browser will let it run.
+        //
+        // WRAPPED, AND THE RULE THIS ENFORCES IS THE POINT. paintPlaying runs
+        // inside the promise chain that start() hangs its success on, so an
+        // exception thrown in here does not just lose the picture: it rejects
+        // that chain, the catch treats a playing station as a failed one, and
+        // the flag saying the listener wants sound gets cleared. That is a
+        // decoration reaching into playback, which is exactly what it is never
+        // allowed to do. Caught here so it cannot.
+        try {
+            if (on) { tapAudio(audio); startWaves(); } else { stopWaves(); }
+        } catch (e) { /* no waves; the radio does not care */ }
         bar.classList.toggle('playing', !!on);
         var b = document.getElementById('kjpPlay');
         if (b) b.innerHTML = svg(on ? ICON.pause : ICON.play);
@@ -1361,6 +1623,23 @@
         resumeHandler = null;
     }
 
+    /**
+     * Step to the next or previous station ON THE DIAL.
+     *
+     * These buttons were taken off this bar once, on the grounds that previous
+     * and next belong to a queue and a dial has none. That is right about a
+     * QUEUE and wrong about this: LIVE is sorted by frequency, so stepping is
+     * turning the dial one station, which is exactly what the buttons either
+     * side of a tuner's play button have always done. They wrap, because a
+     * band with an end you can fall off is not a band.
+     */
+    function step(dir) {
+        if (!LIVE.length) return;
+        var i = current ? liveIndex(current.slug) : -1;
+        if (i < 0) i = 0; else i = (i + dir + LIVE.length) % LIVE.length;
+        tune(LIVE[i].slug, true);
+    }
+
     function toggle() {
         if (!current) return;
         if (audio && !audio.paused) { wantPlaying = false; audio.pause(); paintPlaying(false); return; }
@@ -1380,6 +1659,22 @@
     window.kjPlayer = {
         play: function (slug) { tune(slug, true); },
         stations: function () { return LIVE.slice(); },
+        /* Whether the waves are reading real audio or breathing on a timer.
+           Worth exposing: the two look similar in motion and completely
+           different in meaning, and without this the only way to tell was to
+           guess from the shapes. */
+        visualiser: function () {
+            var peak = 0;
+            if (freqData) for (var i = 0; i < freqData.length; i++) if (freqData[i] > peak) peak = freqData[i];
+            return {
+                analysing: !!analyser,
+                context: audioCtx ? audioCtx.state : null,
+                drawing: !!wavesRAF,
+                taps: tapCount,
+                tappedCurrent: !!(audio && alreadyTapped(audio)),
+                peakBin: peak                     // 0 means the analyser hears silence
+            };
+        },
         isLive: function (slug) { return liveIndex(slug) >= 0; },
         /** What is tuned, and whether it is sounding right now. */
         state: function () {

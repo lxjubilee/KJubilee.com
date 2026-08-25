@@ -17,7 +17,9 @@ const tenants = require('./lib/tenants');
 const path = require('path');
 
 const ROOT = path.join(__dirname, '..');
-const RADIO = path.join(ROOT, 'public', 'radio.html');
+// The catalogue moved with radio.html's inline script when the pages became
+// Next routes; it is the same array, now at public/js/pages/radio.js.
+const RADIO = path.join(ROOT, 'public', 'js', 'pages', 'radio.js');
 const OUT = path.join(ROOT, 'public', 'js', 'stations-data.js');
 const BASES = path.join(ROOT, 'public', 'data', 'station-bases.json');
 

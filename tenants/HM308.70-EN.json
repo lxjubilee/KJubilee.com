@@ -1,0 +1,43 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM308.70-EN",
+  "slug": "jubilee-radio",
+  "name": "kJubilee Radio",
+  "hm": "308.70",
+  "band": "fivefold",
+  "mount": "jubilee",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Sacramento",
+    "timezone": "America/Los_Angeles"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "jubilee-inspire",
+        "caleb-inspire",
+        "zev-inspire",
+        "nova-inspire"
+      ],
+      "exclude": {
+        "albums": [
+          "CAIM1027EN"
+        ]
+      }
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM308.70-EN/delivery",
+    "file": "HM308.70EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM308.70-EN/delivery/HM308.70EN-20260821.json"
+  },
+  "format": "Jubilee Praise",
+  "timezone": "America/Los_Angeles"
+}

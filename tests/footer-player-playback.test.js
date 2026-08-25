@@ -195,6 +195,24 @@ function session(opts) {
         removeEventListener() {}
         closest() { return null; }
         getBoundingClientRect() { return { height: 80, width: 1200, top: 0, left: 0, bottom: 80, right: 1200 }; }
+        /* The equalizer's draw loop measures the bar and gives up if it has no
+           size. Without these it returned on the first line of every frame and
+           the whole visualiser was untested while appearing to pass. */
+        get clientWidth() { return 1200; }
+        get clientHeight() { return 80; }
+        /* A canvas stub, so the visualiser's draw path RUNS here instead of
+           being skipped. Not decoration in the test either: the waves live
+           inside the promise chain that decides whether playback succeeded, and
+           an exception in them once cleared the listener's intent flag and made
+           a playing station report as failed. Exercising the path is what
+           catches that. */
+        getContext() {
+            return {
+                setTransform() {}, clearRect() {}, beginPath() {},
+                moveTo() {}, lineTo() {}, stroke() {}, fillRect() {},
+                strokeStyle: '', fillStyle: '', lineWidth: 1,
+            };
+        }
     }
 
     const store = {};
@@ -207,7 +225,11 @@ function session(opts) {
             setItem: (k, v) => { store[k] = String(v); },
             removeItem: (k) => { delete store[k]; },
         },
-        location: { pathname: '/', href: 'https://www.kjubilee.com/' },
+        // `origin` matters: the visualiser refuses to tap a cross-origin element,
+        // and a fake location without one made every source look cross-origin,
+        // so the analysing path was never reached in any test.
+        location: { pathname: '/', href: 'https://www.kjubilee.com/',
+                    origin: 'https://www.kjubilee.com' },
         document: {
             readyState: 'complete', body: new El('body'), head: new El('head'),
             createElement: (t) => new El(t),
@@ -218,6 +240,39 @@ function session(opts) {
             },
         },
         Audio: FakeAudio,
+        /* A Web Audio stub, so the ANALYSING branch of the equalizer runs here.
+           Without it the visualiser always took its silent fallback path, and a
+           function the analysing path calls could go missing without a single
+           test noticing - which is exactly what happened: bandEnergy was
+           deleted in a refactor and every frame threw in the browser while the
+           suite stayed green. */
+        AudioContext: class {
+            constructor() { this.state = 'running'; this.destination = {}; }
+            resume() { return Promise.resolve(); }
+            createMediaElementSource() { return { connect() {} }; }
+            createAnalyser() {
+                var node = {
+                    fftSize: 2048,
+                    smoothingTimeConstant: 0,
+                    connect() {},
+                    getByteFrequencyData(arr) {
+                        // Something with shape to it, so the columns differ.
+                        for (var i = 0; i < arr.length; i++) {
+                            arr[i] = Math.max(0, 200 - i) + (i % 7) * 4;
+                        }
+                    },
+                };
+                Object.defineProperty(node, 'frequencyBinCount', {
+                    get() { return node.fftSize / 2; },
+                });
+                return node;
+            }
+        },
+        // The draw loop runs on rAF; without one the visualiser never starts
+        // and the test would prove nothing about it. Driven by the virtual
+        // clock like every other timer here.
+        requestAnimationFrame: (fn) => global.setTimeout(function () { fn(vnow - T0); }, 16),
+        cancelAnimationFrame: (id) => global.clearTimeout(id),
         CustomEvent: class { constructor(n, o) { this.type = n; Object.assign(this, o || {}); } },
         ResizeObserver: class { observe() {} disconnect() {} },
         window: global,
@@ -346,6 +401,7 @@ function session(opts) {
         }
         return {
             events, order,
+            threw: events.filter(e => e.kind === 'timer-threw' || e.kind === 'listener-threw'),
             recoveredAfter,
             playingFlag: store['kjubilee.player.playing'],
             armedListeners: (docListeners['pointerdown'] || []).length,
@@ -399,6 +455,12 @@ function session(opts) {
             ok(c.name + ': no dead air over 2s', r.longestSilence <= 2, r.longestSilence + 's');
         }
         ok(c.name + ': the station keeps playing', r.heard >= 4, r.heard + ' tracks heard');
+        // Nothing may throw in a timer or a listener. The player steps over such
+        // an error by design so one bad callback cannot stop the radio, which is
+        // exactly why a test has to look for it - the visualiser's draw loop
+        // runs on a timer, and a broken one would otherwise fail invisibly.
+        ok(c.name + ': nothing throws in a callback', r.threw.length === 0,
+           r.threw.length ? JSON.stringify(r.threw[0]).slice(0, 90) : '');
     }
 
     // Tuning in at an arbitrary second of the day must land inside the right

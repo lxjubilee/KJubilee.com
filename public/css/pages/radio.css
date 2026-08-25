@@ -1,0 +1,3359 @@
+:root {
+            --bg-primary: #1b1b1b;
+            --bg-secondary: #242424;
+            --bg-tertiary: #2d2d2d;
+            --bg-card: #2d2d2d;
+            --bg-card-hover: #3a3a3a;
+            --text-primary: #ffffff;
+            --text-secondary: #c4c4c4;
+            --text-muted: #8a8a8a;
+            --accent-gold: #E6AC00;
+            --accent-gold-hover: #F5C518;
+            --accent-red: #e74c3c;
+            --border-color: rgba(255, 255, 255, 0.1);
+            --header-height: 48px;
+            /* Player is single-row again — Heaven's Band tuner sits
+               inline inside the controls row, to the right of the station
+               identifier, per spec §1's "primary tuning UI" placement. */
+            --player-height: 120px;
+            --card-radius: 8px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        a { color: inherit; text-decoration: none; transition: color 0.2s; }
+        a:hover { color: var(--accent-gold); }
+
+        /* Header */
+        .header {
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-inner {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 16px;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .logo-text span { color: var(--accent-gold); }
+        .logo-text .logo-verse { color: var(--accent-gold); }
+        .logo-text .logo-dotcom { color: #ffffff; }
+
+        /* Radio Stations title in the top header — sits between the logo
+           and the Back-to-Home link. Pushes itself to fill the gap so the
+           three groups (logo · title · back) read evenly across the bar. */
+        .header-page-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: 24px;
+            margin-right: auto;
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            opacity: 0.95;
+        }
+        .header-page-title svg {
+            color: var(--accent-gold);
+            opacity: 0.85;
+            flex-shrink: 0;
+        }
+        @media (max-width: 640px) {
+            .header-page-title { font-size: 13px; gap: 6px; margin-left: 14px; }
+            .header-page-title svg { width: 15px; height: 15px; }
+        }
+
+        .back-link {
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 6px 14px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            transition: all 0.15s;
+        }
+
+        .back-link:hover {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+        }
+
+        /* Main Layout */
+        .radio-layout {
+            display: grid;
+            /* Sidebar width is controlled by the --sidebar-w CSS var so
+               the resize handle JS can update one place and have the
+               whole grid reflow. JS clamps between 280px and 30vw. */
+            grid-template-columns: var(--sidebar-w, 320px) 1fr 350px;
+            height: calc(100vh - var(--header-height) - var(--player-height));
+            overflow: hidden;
+        }
+
+        /* Left Sidebar */
+        .station-sidebar {
+            position: relative; /* anchor for the resize handle */
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        /* Resize handle — sits on the right edge of the sidebar. Invisible
+           by default; shows a subtle gold tint on hover and during drag.
+           User-pointer drag rewrites --sidebar-w on .radio-layout, clamped
+           between 280px and 30vw. */
+        .sidebar-resize-handle {
+            position: absolute;
+            top: 0;
+            right: -3px;
+            width: 6px;
+            height: 100%;
+            cursor: col-resize;
+            z-index: 10;
+            background: transparent;
+            transition: background 0.12s ease;
+            touch-action: none; /* prevent scroll on touch drag */
+            user-select: none;
+        }
+        .sidebar-resize-handle::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 100%;
+            background: transparent;
+            transition: background 0.12s ease;
+            border-radius: 2px;
+        }
+        .sidebar-resize-handle:hover::after,
+        .sidebar-resize-handle.dragging::after {
+            background: var(--accent-gold);
+            box-shadow: 0 0 6px rgba(230, 172, 0, 0.5);
+        }
+        .sidebar-resize-handle.dragging {
+            background: rgba(230, 172, 0, 0.05);
+        }
+        /* Cursor stays col-resize across the whole window during a drag —
+           prevents flicker when the cursor leaves the 6 px handle. */
+        body.sidebar-resizing,
+        body.sidebar-resizing * { cursor: col-resize !important; user-select: none !important; }
+        @media (max-width: 1024px) {
+            .sidebar-resize-handle { display: none; }
+        }
+
+        .station-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .station-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .station-title svg { opacity: 0.7; }
+
+        .station-filters {
+            padding: 0 16px 12px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            background: var(--bg-tertiary);
+            border: none;
+            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .filter-chip:hover { background: var(--bg-card-hover); color: var(--text-primary); }
+        .filter-chip.active { background: var(--accent-gold); color: #000; }
+
+        .station-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 8px;
+        }
+
+
+        .station-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .station-item:hover { background: var(--bg-tertiary); }
+        .station-item.active { background: var(--bg-tertiary); border-left: 3px solid var(--accent-gold); }
+
+        .station-item-art {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .station-item-info { flex: 1; min-width: 0; }
+
+        .station-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .station-item.active .station-item-name { color: var(--accent-gold); }
+
+        /* ─────────────────────────────────────────────────────────────
+           NEW SIDEBAR: vertical tab strip + 2-col square card grid.
+           Replaces the old horizontal filter chips + flat list. The old
+           .station-item rules above are still used for mobile accordion
+           rendering — desktop sidebar uses .station-card below.
+           ───────────────────────────────────────────────────────────── */
+
+        .station-sidebar-body {
+            flex: 1;
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 36px 1fr;
+            overflow: hidden;
+        }
+
+        /* Vertical tab strip — rotated text, sits flush against the divider. */
+        .station-tab-strip {
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--bg-tertiary);
+            padding: 8px 0;
+            gap: 4px;
+        }
+        .station-tab {
+            background: none;
+            border: 0;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 16px 0;
+            /* Vertical text — characters stack and read bottom-to-top, matching
+               the V-tab reference. writing-mode handles the rotation cleanly
+               (no transform needed, hit area stays correct). */
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            transition: color 0.15s, background 0.15s;
+            border-radius: 0;
+        }
+        .station-tab:hover { color: var(--text-secondary); }
+        .station-tab.active {
+            color: var(--accent-gold);
+            background: rgba(230, 172, 0, 0.08);
+        }
+        .station-tab.active::before {
+            content: '';
+            position: absolute;
+            /* Subtle vertical accent — drawn via box-shadow on the parent
+               so we don't need ::before positioning gymnastics. */
+        }
+        .station-tab.active {
+            box-shadow: inset 2px 0 0 var(--accent-gold);
+        }
+
+        /* Card grid — responsive auto-fill so cards never squeeze below
+           a usable size. As the sidebar gets wider (via the resize
+           handle), more columns appear automatically; as it narrows,
+           the grid drops to 1 column instead of overlapping. The 14 px
+           gap gives the cards visual breathing room. */
+        .station-card-grid {
+            overflow-y: auto;
+            padding: 14px 12px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 14px;
+            align-content: start;
+        }
+        /* Rectangular card per design reference: dark fill, prominent
+           gold left accent, top row (HM frequency + heart), dashed gold
+           divider, station name. No square aspect-ratio, no wave at the
+           bottom. */
+        .station-card {
+            position: relative;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px solid var(--accent-gold);
+            padding: 8px 10px;
+            min-height: 70px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: background 0.18s, color 0.18s, transform 0.12s, box-shadow 0.18s;
+            overflow: hidden;
+            box-shadow: inset 0 0 0 0 transparent;
+        }
+        .station-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-1px);
+        }
+        /* Selected (clicked / navigated to) but not currently streaming —
+           a subtle gold ring so the user can see which detail they're
+           viewing in the main panel. The ring is muted enough that it
+           doesn't compete with the fully-saturated .playing state. */
+        .station-card.selected:not(.playing) {
+            box-shadow: inset 0 0 0 2px var(--accent-gold);
+            background: var(--bg-card-hover);
+        }
+        .station-card.playing {
+            background: var(--accent-gold);
+            color: #1b1b1b;
+        }
+        .station-card.playing:hover {
+            background: var(--accent-gold-hover);
+        }
+
+        /* Live dot — blinking green dot pinned to the card's TOP-LEFT
+           corner, only present on the currently-playing card. */
+        .station-card-live-dot {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #016225;
+            box-shadow: 0 0 0 2px rgb(1 20 8 / 25%);
+            animation: live-dot-blink 1.1s ease-in-out infinite;
+            z-index: 2;
+        }
+        @keyframes live-dot-blink {
+            0%, 100% { opacity: 1;   transform: scale(1); }
+            50%      { opacity: 0.35; transform: scale(0.85); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .station-card-live-dot { animation: none; }
+        }
+
+        /* Heart toggle — sits inline at the right of the top row, no
+           longer absolutely positioned. The 3-column grid keeps the
+           frequency *centred* in the card by giving the empty left
+           cell the same 1fr weight as the heart's right cell. */
+        .station-card-top {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+        .station-card-top .station-card-frequency,
+        .station-card-top .station-card-name {
+            grid-column: 2;
+            text-align: center;
+            justify-self: center;
+        }
+        .station-card-top .station-card-heart {
+            grid-column: 3;
+            justify-self: end;
+        }
+        .station-card-heart {
+            flex: 0 0 auto;
+            width: 22px;
+            height: 22px;
+            border: 0;
+            border-radius: 50%;
+            background: transparent;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s, transform 0.1s;
+        }
+        .station-card-heart:hover { background: rgba(255, 255, 255, 0.08); color: var(--text-primary); transform: scale(1.05); }
+        .station-card-heart.favorited { color: #e74c3c; }
+        .station-card.playing .station-card-heart { color: rgba(0, 0, 0, 0.55); }
+        .station-card.playing .station-card-heart:hover { background: rgba(0, 0, 0, 0.12); color: #1b1b1b; }
+        .station-card.playing .station-card-heart.favorited { color: #e74c3c; }
+        .station-card-heart svg { width: 14px; height: 14px; }
+        /* Dashed gold rule between the HM number and the station name. */
+        .station-card-divider {
+            height: 0;
+            border-top: 1px dashed rgba(245, 165, 36, 0.55);
+            margin: 0;
+        }
+        .station-card.playing .station-card-divider {
+            border-top-color: rgba(0, 0, 0, 0.35);
+        }
+
+        /* Station name — sits below the dashed divider, white on dark
+           background. Centred horizontally to match the frequency. */
+        .station-card-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+            text-align: center;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            word-break: break-word;
+        }
+        .station-card.playing .station-card-name { color: #1b1b1b; }
+
+        /* Frequency — gold "HM 301.12" line at the top of the card. */
+        .station-card-frequency {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            line-height: 1;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.01em;
+        }
+        /* "HM" reads as a small uppercase prefix in front of the number,
+           still gold but a touch lighter weight. */
+        .station-card-hm-prefix {
+            font-size: 0.5em;
+            font-weight: 600;
+            margin-right: 4px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            opacity: 0.85;
+        }
+        .station-card.playing .station-card-frequency { color: #1b1b1b; }
+        .station-card.playing .station-card-hm-prefix { color: #1b1b1b; opacity: 0.65; }
+
+        /* Heaven's Dial band dividers — separate the sidebar's frequency-
+           ordered cards into the spec's three bands (CORE / MID / HIGH).
+           Each divider spans the full grid width and shows the band's
+           frequency range so listeners can read the dial at a glance. */
+        .dial-band-header {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 14px 4px 4px;
+            border-top: 1px solid var(--bg-tertiary);
+            margin-top: 4px;
+        }
+        .dial-band-header:first-child {
+            border-top: 0;
+            padding-top: 4px;
+            margin-top: 0;
+        }
+        .dial-band-name {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+        }
+        .dial-band-range {
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Tri-mode badge — small pill displayed under the title stack so
+           listeners can see at a glance which mode (OHI / Non-OHI / Mixed
+           / Family-Safe) a station operates under. Spec §2 declares mode
+           is locked at the station level. */
+        .station-mode-badge {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 6px;
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+        .mode-ohi    { background: rgba(230, 172, 0, 0.18); color: var(--accent-gold); }
+        .mode-nonohi { background: rgba(0, 137, 123, 0.22);  color: #4dd0c5; }
+        .mode-mixed  { background: rgba(123, 31, 162, 0.22); color: #ce93d8; }
+        .mode-both   { background: rgba(33, 150, 243, 0.22); color: #82c1ff; }
+        .mode-family { background: rgba(76, 175, 80, 0.22);  color: #a5d6a7; }
+        .station-card.playing .station-mode-badge {
+            background: rgba(0, 0, 0, 0.18);
+            color: #1b1b1b;
+        }
+
+        /* ─────────────────────────────────────────────────────────────
+           Phase C — Tri-mode filter chips above the card grid.
+           Lives in the right column of .station-sidebar-body so it
+           scrolls/lays out independently of the vertical ALL STATIONS /
+           FAVORITES strip. Chip palette mirrors .station-mode-badge so
+           the active chip's tint matches the badges it filters on.
+           ───────────────────────────────────────────────────────────── */
+        .station-sidebar-cards {
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow: hidden;
+        }
+        .station-sidebar-cards > .station-card-grid { flex: 1; }
+
+        .mode-filter-strip {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 12px 8px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            background: var(--bg-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 3;
+        }
+        .mode-filter-chip {
+            background: none;
+            border: 1px solid var(--bg-tertiary);
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 5px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            transition: color 0.15s, background 0.15s, border-color 0.15s;
+            white-space: nowrap;
+        }
+        .mode-filter-chip:hover {
+            color: var(--text-secondary);
+            border-color: var(--text-muted);
+        }
+        .mode-filter-chip.active {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+            background: rgba(230, 172, 0, 0.08);
+        }
+        .mode-filter-chip.active.mode-ohi    { color: var(--accent-gold); border-color: var(--accent-gold); background: rgba(230, 172, 0, 0.18); }
+        .mode-filter-chip.active.mode-nonohi { color: #4dd0c5; border-color: #4dd0c5; background: rgba(0, 137, 123, 0.22); }
+        .mode-filter-chip.active.mode-mixed  { color: #ce93d8; border-color: #ce93d8; background: rgba(123, 31, 162, 0.22); }
+        .mode-filter-chip.active.mode-both   { color: #82c1ff; border-color: #82c1ff; background: rgba(33, 150, 243, 0.22); }
+        .mode-filter-chip.active.mode-family { color: #a5d6a7; border-color: #a5d6a7; background: rgba(76, 175, 80, 0.22); }
+
+        /* Phase D — Dimensional toggle strip (spec Part 1 / §16). */
+        .dimension-toggle-strip {
+            display: flex;
+            gap: 6px;
+            padding: 8px 12px;
+            overflow-x: auto;
+            overflow-y: hidden;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--bg-tertiary);
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent-gold) transparent;
+        }
+        .dimension-toggle-strip::-webkit-scrollbar { height: 4px; }
+        .dimension-toggle-strip::-webkit-scrollbar-thumb { background: var(--accent-gold); border-radius: 2px; }
+        /* Dimension chip — pill with persistent gold border, segmented
+           into four parts (left to right): a circular +/− toggle icon,
+           the dimension label, a dark circular count badge, and a
+           "Follow"/"Unfollow" action pill. The chip itself is the click
+           target; inner spans are visual cues only (no nested buttons). */
+        .dimension-toggle {
+            flex: 0 0 auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 8px 8px 4px;
+            width: 100%;
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s, border-color 0.15s, transform 0.05s;
+            font-family: inherit;
+        }
+        .dimension-toggle:hover {
+            background: rgba(230, 172, 0, 0.08);
+            border-color: var(--accent-gold-hover);
+        }
+        .dimension-toggle:active { transform: scale(0.98); }
+        .dimension-toggle-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            border: 1.5px solid var(--accent-gold);
+            color: var(--accent-gold);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            font-size: 18px;
+            font-weight: 600;
+            line-height: 1;
+            background: transparent;
+        }
+        .dimension-toggle:hover .dimension-toggle-icon {
+            border-color: var(--accent-gold-hover);
+            color: var(--accent-gold-hover);
+        }
+        .dimension-label {
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            line-height: 1;
+        }
+        /* Count badge — dark circle with white numeral. margin-left: auto
+           pushes it and the trailing action pill to the right edge of
+           the now full-width chip, leaving the icon + label hugging the
+           left side. */
+        .dimension-toggle .dimension-count {
+            margin-left: auto;
+            width: 22px;
+            height: 22px;
+            padding: 0;
+            border-radius: 50%;
+            background: #0d0d0d;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1;
+            min-width: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dimension-toggle-action {
+            color: var(--accent-gold);
+            font-size: 10px;
+            font-weight: 600;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 999px;
+            padding: 5px 12px;
+            background: transparent;
+            line-height: 1;
+            letter-spacing: 0.02em;
+        }
+        .dimension-toggle:hover .dimension-toggle-action {
+            border-color: var(--accent-gold-hover);
+            color: var(--accent-gold-hover);
+        }
+        /* Active = dimension is followed. Border switches to the brighter
+           gold-hover tone so a followed chip stands apart from the
+           default 20%-white-bordered idle chip; background warms
+           slightly to reinforce the ON state. */
+        .dimension-toggle.active {
+            background: #F5C518;
+            border-color: #F5C518;
+            color: #1b1b1b;
+        }
+        .dimension-toggle.active:hover {
+            background: #ffd230;
+            border-color: #ffd230;
+        }
+        /* Active chip flips its inner pieces to dark-on-yellow so the
+           contrast tracks the new solid-gold fill. Count badge stays
+           black-with-white — already legible against the yellow. */
+        .dimension-toggle.active .dimension-toggle-icon {
+            border-color: #1b1b1b;
+            color: #1b1b1b;
+        }
+        .dimension-toggle.active .dimension-label {
+            color: #1b1b1b;
+        }
+        .dimension-toggle.active .dimension-toggle-action {
+            border-color: #1b1b1b;
+            color: #1b1b1b;
+        }
+        .dimension-toggle.active:hover .dimension-toggle-icon,
+        .dimension-toggle.active:hover .dimension-toggle-action {
+            border-color: #1b1b1b;
+            color: #1b1b1b;
+        }
+        /* Locked = always followed (Music/Prayer/Devotionals). Inherits
+           the active full-gold styling, but isn't a click target —
+           neutral cursor, no hover brightening, and a slight overall
+           opacity drop so the user can tell it's not toggleable. */
+        .dimension-toggle.locked {
+            cursor: default;
+            opacity: 0.85;
+        }
+        .dimension-toggle.locked:hover {
+            background: #F5C518;
+            border-color: #F5C518;
+        }
+        .dimension-toggle.locked:active { transform: none; }
+        /* Reset button — only child is the "Reset" text, no icon/label/
+           count/action sub-elements. Keep it visually distinct with a
+           dashed border so it doesn't read as a regular dimension chip. */
+        .dimension-toggle.reset {
+            margin-left: auto;
+            padding: 7px 16px;
+            color: var(--text-muted);
+            border-style: dashed;
+        }
+        .dimension-toggle.reset:hover {
+            color: var(--accent-gold);
+            border-color: var(--accent-gold);
+            background: transparent;
+        }
+
+        .station-card-grid-empty.dimensions-empty .empty-icon { color: var(--accent-gold); }
+
+        /* DIMENSIONS tab panel — hosts the 12-dimension toggle strip and
+           the 6-mode filter chips moved out of the cards-view header. */
+        .station-sidebar-panel {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .station-sidebar-panel[hidden] { display: none; }
+        #dimensionsPanel {
+            overflow-y: auto;
+            padding: 14px 14px 24px;
+        }
+        .dimensions-section {
+            margin-bottom: 18px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .dimensions-section:last-child {
+            border-bottom: 0;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .dimensions-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin: 0 0 4px;
+        }
+        .dimensions-section-help {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin: 0 0 12px;
+            line-height: 1.45;
+        }
+        /* Inside the panel, the dimension + mode chip rows wrap vertically
+           rather than scroll horizontally — there's room here. */
+        .dimension-toggle-strip--panel {
+            overflow: visible;
+            padding: 0;
+            background: transparent;
+            border-bottom: 0;
+            flex-wrap: wrap;
+        }
+        .mode-filter-strip--panel {
+            position: static;
+            padding: 0;
+            background: transparent;
+            border-bottom: 0;
+            flex-wrap: wrap;
+        }
+
+        /* Family-Safe stations now share the standard card design —
+           same gold border, same gold HM frequency, same white name.
+           The mode is still tracked on the data-mode attribute for
+           filter/badge logic, but the visual override (sage gradient,
+           leaf icon) has been removed so the grid reads uniformly. */
+
+        /* ============================================
+         * HEAVEN'S DIAL v1.0 — tri-band SVG tuner.
+         * Three vertically-stacked bands carry stations
+         * by category (Five-Fold ministry / Multilingual /
+         * Mainstream). Each station is a vertical SVG line
+         * coloured + sized per the Five-Fold spec. The
+         * orange indicator overlays the active station.
+         * (Spec §1 — "the primary user interface")
+         * ============================================ */
+        .heaven-dial-tuner {
+            position: relative;
+            user-select: none;
+        }
+        .heaven-dial-tuner--inline.heaven-dial-tuner--triband {
+            height: 100%;
+            min-height: 42px;
+            padding: 4px 8px 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            flex: 1 1 480px;
+            min-width: 0;
+            background: linear-gradient(180deg, #1a1a1a 0%, #141414 100%);
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 8px;
+        }
+        .dial-tune-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        /* Wrapper holds the stretched SVG plus the un-stretched HTML
+           scale labels. Width 100% is what gives the dial its full
+           horizontal spread. */
+        .dial-svg-wrap {
+            position: relative;
+            flex: 1 1 auto;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        /* SVG stretches to fill 100% of the wrapper in BOTH dimensions.
+           preserveAspectRatio="none" + vector-effect:non-scaling-stroke
+           on every stroke means horizontal positions stretch (what we
+           want) but stroke widths stay crisp. */
+        .dial-svg {
+            width: 100%;
+            height: 100%;
+            min-height: 17px;
+            max-height: 75%;
+            flex: 1 1 auto;
+            display: block;
+        }
+        /* No band fills, divider, or outer frame — the dial is just a
+           flat dark surface. Three vertical zones (Five-Fold tall,
+           Multi short, Mainstream tiny) are defined by station line
+           y-coordinates in getBandY(). */
+        /* Station bars — vector-effect keeps the 7px purple / 4px
+           yellow widths consistent under preserveAspectRatio="none". */
+        .dial-station-line {
+            vector-effect: non-scaling-stroke;
+            cursor: pointer;
+            transition: opacity 0.15s ease;
+        }
+        .dial-station-line:hover { opacity: 0.7; }
+        .dial-station-line.playing {
+            filter: drop-shadow(0 0 4px currentColor);
+        }
+        /* Frequency scale — moved out of the SVG so the dial can
+           stretch 100% wide without distorting the labels. Each span
+           is absolutely positioned at its frequency's percentage of
+           the band's active range. */
+        .dial-scale-row {
+            position: relative;
+            height: 18px;
+            margin-top: 4px;
+            font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            letter-spacing: 0.06em;
+            line-height: 1;
+            flex: 0 0 auto;
+        }
+        .dial-scale-row span {
+            position: absolute;
+            top: 0;
+            transform: translateX(-50%);
+            white-space: nowrap;
+        }
+        .dial-scale-row span:first-child { transform: none; }
+        .dial-scale-row span:last-child  { transform: translateX(-100%); }
+        /* Mobile — tighter scale text on small viewports. */
+        @media (max-width: 720px) {
+            .heaven-dial-tuner--triband { flex-basis: 100%; padding: 4px 4px 6px; min-height: 116px; }
+            .dial-svg { max-height: 83px; min-height: 69px; }
+            .dial-scale-row { font-size: 10px; height: 14px; }
+        }
+        /* (Player-footer @media (max-width: 1280px) override moved
+           to live next to the 1024 and 768 player media queries below,
+           so it sits AFTER the default .radio-player-controls-row /
+           .player-share-btn / .player-prayer-btn declarations in
+           source order and actually wins the cascade. Search for the
+           "@media (max-width: 1280px) — player footer rules" comment.) */
+
+        /* Discover §4 — Bestseller leaderboard (spec §6 ratings). */
+        .bestseller-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .bestseller-row {
+            display: grid;
+            grid-template-columns: 28px 88px 1fr auto auto;
+            align-items: center;
+            gap: 14px;
+            padding: 10px 14px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.12s, transform 0.1s;
+        }
+        .bestseller-row:hover {
+            background: rgba(230, 172, 0, 0.08);
+            transform: translateX(2px);
+        }
+        .bestseller-rank {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--accent-gold);
+            text-align: center;
+            line-height: 1;
+        }
+        .bestseller-freq {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
+        .bestseller-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .bestseller-rating {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent-gold);
+            min-width: 42px;
+            text-align: right;
+        }
+        .bestseller-reach {
+            font-size: 11px;
+            color: var(--text-secondary);
+            min-width: 56px;
+            text-align: right;
+        }
+        @media (max-width: 600px) {
+            .bestseller-row { grid-template-columns: 24px 72px 1fr auto; }
+            .bestseller-reach { display: none; }
+        }
+
+        /* Empty-state messaging when Favorites tab is empty. */
+        .station-card-grid-empty {
+            grid-column: 1 / -1;
+            padding: 40px 12px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            line-height: 1.5;
+        }
+        .station-card-grid-empty .empty-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+            opacity: 0.5;
+        }
+        .station-card-grid-empty button.signin-link {
+            margin-top: 12px;
+            background: var(--accent-gold);
+            color: #1b1b1b;
+            border: 0;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .station-card-grid-empty button.signin-link:hover { background: var(--accent-gold-hover); }
+        /* End new sidebar styles. */
+
+        /* ─────────────────────────────────────────────────────────────
+           DISCOVER VIEW (middle column landing state).
+           Featured banner + Top Artists row + Top Albums row.
+           Replaces the empty "Select a station" placeholder. When a
+           station is selected, selectStation() overwrites this with
+           the detail view as before.
+           ───────────────────────────────────────────────────────────── */
+
+        .discover-view { padding: 0 0 24px; }
+
+        /* ── Featured banner (uses Jubilee-Concert as bg image) ── */
+        .discover-banner {
+            position: relative;
+            margin: 16px 24px 0;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 280px;
+            display: flex;
+            align-items: stretch;
+            color: #fff;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        .discover-banner-bg {
+            position: absolute;
+            inset: 0;
+            background-image: url('/images/Jubilee-Concert.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            background-repeat: no-repeat;
+            /* Falls back gracefully to the gradient on .discover-banner if the
+               image fails to load. */
+        }
+        .discover-banner-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(15, 18, 28, 0.92) 0%,
+                rgba(15, 18, 28, 0.65) 40%,
+                rgba(15, 18, 28, 0.05) 75%,
+                rgba(15, 18, 28, 0.0) 100%
+            );
+        }
+        .discover-banner-content {
+            position: relative;
+            padding: 32px 36px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            max-width: 520px;
+            z-index: 1;
+        }
+        .discover-banner-eyebrow {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.4px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+        .discover-banner-title {
+            font-size: 38px;
+            font-weight: 800;
+            line-height: 1.05;
+            margin: 0 0 10px;
+            color: #fff;
+        }
+        .discover-banner-meta {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 24px;
+        }
+        .discover-banner-meta strong { color: #fff; font-weight: 700; }
+        .discover-banner-actions { display: flex; gap: 12px; align-items: center; }
+        .discover-play-btn {
+            background: var(--accent-gold);
+            color: #1b1b1b;
+            border: 0;
+            border-radius: 999px;
+            padding: 12px 22px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: inherit;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .discover-play-btn:hover { background: var(--accent-gold-hover); transform: scale(1.02); }
+        .discover-play-btn svg { width: 14px; height: 14px; fill: currentColor; }
+        .discover-mini-heart {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .discover-mini-heart:hover { background: rgba(255, 255, 255, 0.22); }
+        .discover-mini-heart.favorited { color: #e74c3c; }
+        .discover-mini-heart svg { width: 18px; height: 18px; }
+
+        /* ── Section header (Top Artists / Top Albums) ── */
+        .discover-section { margin: 28px 24px 0; }
+        .discover-section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .discover-section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        .discover-section-link {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .discover-section-link:hover { color: var(--accent-gold); }
+
+        /* ── Top Artists / Top Albums row.
+           Auto-wraps into as many rows as the viewport allows so cards
+           never overlap at narrow widths. Each card is at least 140 px
+           wide; columns expand evenly to fill the row. ── */
+        .discover-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px 16px;
+            row-gap: 24px;
+            padding-bottom: 8px;
+        }
+
+        /* ── Artist card (round avatar + name) ── */
+        .artist-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.12s;
+        }
+        .artist-card:hover { transform: translateY(-2px); }
+        .artist-avatar {
+            /* Fluid square — fills its grid column up to 150 px, so it
+               shrinks cleanly when .discover-row wraps into narrower
+               columns instead of overflowing the card. */
+            width: 100%;
+            max-width: 150px;
+            aspect-ratio: 1 / 1;
+            /* Rounded square — matches the user's reference image (Billie
+               Eilish / Sam Smith style) rather than a perfect circle. */
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 800;
+            font-size: 22px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+            margin-bottom: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+        .artist-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        /* When the <img> errors and removes itself, a `data-fallback` attr
+           with the persona code is set — show that as a centred label so
+           the avatar still reads correctly even if the asset is missing. */
+        .artist-avatar[data-fallback]::after {
+            content: attr(data-fallback);
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .artist-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Per-persona gradient backgrounds — each picks a tint that mirrors
+           the persona's musical lineage (gold for the flagship, deep purple
+           for warfare worship, teal for Celtic, etc.). Easy to swap in real
+           photos later: replace the gradient with `background: url(...)`. */
+        .grad-jubilee  { background: linear-gradient(135deg, #E6AC00 0%, #F5C518 100%); color: #1b1b1b; }
+        .grad-melody   { background: linear-gradient(135deg, #c2185b 0%, #7b1fa2 100%); }
+        .grad-zariah   { background: linear-gradient(135deg, #ff6b35 0%, #c8102e 100%); }
+        .grad-nova     { background: linear-gradient(135deg, #00897b 0%, #1e3a5f 100%); }
+        .grad-imani    { background: linear-gradient(135deg, #4a148c 0%, #1a0033 100%); }
+        .grad-santiago { background: linear-gradient(135deg, #2e7d32 0%, #fbc02d 100%); }
+        .grad-tahoma   { background: linear-gradient(135deg, #6d4c41 0%, #ff7043 100%); }
+        .grad-elias    { background: linear-gradient(135deg, #6d4c41 0%, #d7a866 100%); }
+        .grad-amir     { background: linear-gradient(135deg, #0277bd 0%, #b71c1c 100%); }
+        .grad-eliana   { background: linear-gradient(135deg, #ff9800 0%, #e91e63 100%); }
+
+        /* ── Album card (square art + title + artist) ── */
+        .album-card {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            transition: transform 0.12s;
+            min-width: 140px;
+        }
+        .album-card:hover { transform: translateY(-2px); }
+        .album-art {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 12px;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .album-art::after {
+            /* subtle vignette so any overlaid title is legible against
+               whatever gradient/image fills the tile. */
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.35) 100%);
+            pointer-events: none;
+        }
+        .album-art-title {
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .album-art.has-light-bg .album-art-title { color: #1b1b1b; }
+        .album-meta-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .album-meta-artist {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* End Discover view styles. */
+
+        /* ── "Now Playing" distinction ───────────────────────────────────
+           .station-item.active  = station currently selected/navigated to
+           .station-item.playing = station whose audio is actually streaming
+           The two states can coexist (same station selected AND playing) or
+           be on different stations (user navigated elsewhere without switching
+           audio). The equalizer is the unambiguous signal of what's audible. */
+        .station-item.playing {
+            background: linear-gradient(90deg, rgba(230,172,0,0.08) 0%, transparent 60%);
+        }
+        .station-item.playing .station-item-name {
+            font-weight: 700;
+        }
+        .station-eq {
+            display: inline-flex;
+            align-items: flex-end;
+            gap: 2px;
+            width: 18px;
+            height: 14px;
+            margin-left: 8px;
+            flex-shrink: 0;
+            vertical-align: middle;
+        }
+        .station-eq span {
+            display: inline-block;
+            width: 3px;
+            background: var(--accent-gold);
+            border-radius: 1px;
+            animation: station-eq-bar 0.9s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+        .station-eq span:nth-child(1) { animation-delay: 0s;     }
+        .station-eq span:nth-child(2) { animation-delay: 0.18s;  }
+        .station-eq span:nth-child(3) { animation-delay: 0.32s;  }
+        .station-eq span:nth-child(4) { animation-delay: 0.05s;  }
+        @keyframes station-eq-bar {
+            0%, 100% { height: 22%; }
+            30%      { height: 100%; }
+            60%      { height: 45%; }
+            80%      { height: 78%; }
+        }
+        /* Honor user preference for reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            .station-eq span { animation: none; height: 60%; opacity: 0.8; }
+        }
+
+        /* ── Sign-in prompt modal ──────────────────────────────────
+           Shown when an anonymous user tries to favorite/follow a station.
+           Hidden by default; toggled via the .open class. */
+        .auth-prompt-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 16px;
+        }
+        .auth-prompt-overlay.open { display: flex; animation: auth-fade-in 0.18s ease-out; }
+        @keyframes auth-fade-in {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+        .auth-prompt-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 32px 28px 24px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+        .auth-prompt-icon {
+            width: 56px;
+            height: 56px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: rgba(230, 172, 0, 0.12);
+            color: var(--accent-gold);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .auth-prompt-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 8px;
+            color: var(--text-primary);
+        }
+        .auth-prompt-body {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0 0 24px;
+        }
+        .auth-prompt-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .auth-prompt-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid var(--bg-tertiary);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .auth-prompt-btn:hover { background: var(--bg-card-hover); }
+        .auth-prompt-btn.primary {
+            background: var(--accent-gold);
+            border-color: var(--accent-gold);
+            color: #000;
+        }
+        .auth-prompt-btn.primary:hover { background: var(--accent-gold-hover); }
+        .auth-prompt-cancel {
+            display: inline-block;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            background: none;
+            border: 0;
+            cursor: pointer;
+        }
+        .auth-prompt-cancel:hover { color: var(--text-primary); text-decoration: underline; }
+
+        /* ── Submit Prayer CTA + modal (Phase E, spec Part 1 + Part 8) ──
+           Routes faith-mode listeners to The Upper Room (HM 309.00).
+           Visually mirrors .auth-prompt-* so the two modals feel like
+           one family. Hidden on Family-Safe stations via JS. */
+        .dsb-prayer-cta {
+            flex: 0 0 auto;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--bg-tertiary);
+            background: linear-gradient(180deg, rgba(230,172,0,0.06) 0%, transparent 100%);
+        }
+        .submit-prayer-btn {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-gold);
+            background: rgba(230, 172, 0, 0.12);
+            color: var(--accent-gold);
+            font-family: inherit;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .submit-prayer-btn:hover { background: rgba(230, 172, 0, 0.22); }
+        .submit-prayer-btn:active { transform: scale(0.98); }
+        .submit-prayer-btn[hidden] { display: none !important; }
+        .submit-prayer-btn svg { flex: 0 0 auto; }
+
+        .prayer-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 16px;
+        }
+        .prayer-modal-overlay.open { display: flex; animation: auth-fade-in 0.18s ease-out; }
+        .prayer-modal-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 28px 28px 20px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+        }
+        .prayer-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 0 4px;
+            color: var(--text-primary);
+            text-align: center;
+        }
+        .prayer-modal-subtitle {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+            margin: 0 0 18px;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+        .prayer-field { margin-bottom: 14px; }
+        .prayer-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+        .prayer-field textarea,
+        .prayer-field input[type="text"] {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--bg-tertiary);
+            border-radius: 8px;
+            padding: 10px 12px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .prayer-field textarea {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.45;
+        }
+        .prayer-field textarea:focus,
+        .prayer-field input[type="text"]:focus {
+            outline: 0;
+            border-color: var(--accent-gold);
+        }
+        .prayer-field-hint {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .prayer-field-hint.warn { color: #e07a5f; }
+        .prayer-counter { float: right; font-variant-numeric: tabular-nums; }
+        .prayer-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            user-select: none;
+        }
+        .prayer-toggle input { accent-color: var(--accent-gold); }
+        .prayer-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 18px;
+        }
+        .prayer-modal-footer {
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid var(--bg-tertiary);
+            font-size: 11px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            text-align: center;
+        }
+        .prayer-modal-footer a { color: var(--accent-gold); text-decoration: none; }
+        .prayer-modal-footer a:hover { text-decoration: underline; }
+
+        /* BR-I2 — voice message recorder controls. */
+        .vm-recorder { text-align: center; padding: 12px 0 6px; }
+        .vm-record-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 2px solid var(--accent-red);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+        }
+        .vm-record-btn:hover { background: #3a3a3a; }
+        .vm-record-btn:disabled { opacity: 0.4; cursor: default; }
+        .vm-record-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent-red);
+            transition: width 0.15s, height 0.15s, border-radius 0.15s;
+        }
+        .vm-record-btn.recording .vm-record-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            animation: vm-pulse 1s ease-in-out infinite;
+        }
+        @keyframes vm-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+        .vm-timer {
+            font-size: 22px;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-primary);
+            margin: 12px 0 4px;
+        }
+        .vm-status { font-size: 12px; color: var(--text-muted); min-height: 16px; }
+        .vm-status.error { color: var(--accent-red); }
+        .vm-preview { width: 100%; margin: 12px 0 4px; }
+        .prayer-crisis-panel {
+            text-align: center;
+            padding: 8px 4px 4px;
+        }
+        .prayer-crisis-panel h4 {
+            color: var(--accent-gold);
+            font-size: 18px;
+            margin: 0 0 8px;
+        }
+        .prayer-crisis-panel p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin: 0 0 14px;
+        }
+        .prayer-crisis-resources {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+            text-align: left;
+        }
+        .prayer-crisis-resources a {
+            display: block;
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 13px;
+        }
+        .prayer-crisis-resources a:hover { background: var(--bg-card-hover); }
+        .prayer-crisis-resources strong { color: var(--accent-gold); display: block; }
+
+        .station-item-category {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .station-item-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-live { background: rgba(231,76,60,0.2); color: #e74c3c; }
+        .badge-podcast { background: rgba(155,89,182,0.2); color: #bb8fce; }
+        .badge-music { background: rgba(230,172,0,0.2); color: var(--accent-gold); }
+        .badge-religious { background: rgba(46,204,113,0.2); color: #2ecc71; }
+
+        /* Center Content */
+        .main-content {
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+
+
+        /* ============================================
+         * COUNTRIES MAP VIEW — world map backdrop with
+         * blinking dots for each Multi-Language station.
+         * Click a dot to tune in to that station.
+         * ============================================ */
+        .countries-map-section {
+            padding: 24px 32px 48px;
+        }
+        /* Header is a flex row: title block on the left, zoom controls
+           pinned to the right and aligned with the title baseline. */
+        .countries-map-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+        .countries-map-header-text {
+            min-width: 0;
+        }
+        .countries-map-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0 0 4px;
+        }
+        .countries-map-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        /* Zoom button group — three small square buttons aligned with the
+           title text. Plus / Minus drive the --map-zoom CSS variable on
+           the canvas; Restore returns it to 1. */
+        .countries-map-zoom {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex: 0 0 auto;
+        }
+        .countries-map-zoom-btn {
+            width: 32px;
+            height: 32px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            padding: 0;
+            cursor: pointer;
+            transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+        }
+        .countries-map-zoom-btn:hover:not([disabled]) {
+            background: var(--bg-card-hover);
+            border-color: rgba(230, 172, 0, 0.5);
+            color: var(--accent-gold);
+        }
+        .countries-map-zoom-btn:active:not([disabled]) { transform: scale(0.95); }
+        .countries-map-zoom-btn[disabled] {
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .countries-map-zoom-btn svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        /* Viewport clips + scrolls the canvas when the user zooms in.
+           Without this wrapper a zoomed canvas would push the page out
+           horizontally and the buttons would lose context. */
+        .countries-map-viewport {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2 / 1;
+            background: #0e1521;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            overflow: auto;
+        }
+        .countries-map-canvas {
+            position: relative;
+            /* width grows past 100% when the user zooms in — viewport
+               provides the scrollbars. height tracks via aspect-ratio. */
+            width: calc(100% * var(--map-zoom, 1));
+            aspect-ratio: 2 / 1;
+            overflow: hidden;
+        }
+        .countries-map-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+            opacity: 0.85;
+            display: block;
+            pointer-events: none;
+            user-select: none;
+        }
+        .countries-map-dots {
+            position: absolute;
+            inset: 0;
+        }
+        /* Each dot is a transparent button positioned by inline left/top
+           percentages. Three layered children: outer pulse halo, solid
+           core, and a hover tooltip. */
+        .country-dot {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            width: 28px;
+            height: 28px;
+            background: transparent;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: #f5a524;
+        }
+        .country-dot-pulse {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: rgba(245, 165, 36, 0.35);
+            animation: country-dot-pulse 1.6s ease-out infinite;
+        }
+        .country-dot-core {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #f5a524;
+            box-shadow: 0 0 8px rgba(245, 165, 36, 0.7);
+            animation: country-dot-blink 1.1s ease-in-out infinite;
+        }
+        @keyframes country-dot-pulse {
+            0%   { transform: translate(-50%, -50%) scale(0.6); opacity: 0.7; }
+            70%  { transform: translate(-50%, -50%) scale(1.6); opacity: 0;   }
+            100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0;   }
+        }
+        @keyframes country-dot-blink {
+            0%, 100% { opacity: 1;   transform: translate(-50%, -50%) scale(1);    }
+            50%      { opacity: 0.45; transform: translate(-50%, -50%) scale(0.85); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .country-dot-pulse { animation: none; opacity: 0.5; }
+            .country-dot-core  { animation: none; }
+        }
+        .country-dot:hover .country-dot-core,
+        .country-dot:focus-visible .country-dot-core {
+            background: #ffb83a;
+            box-shadow: 0 0 12px rgba(245, 165, 36, 0.95);
+        }
+        /* Tooltip card on hover/focus — anchored above the dot. */
+        .country-dot-tooltip {
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1b1b1b;
+            border: 1px solid rgba(245, 165, 36, 0.4);
+            border-radius: 6px;
+            padding: 6px 10px;
+            min-width: 140px;
+            display: none;
+            flex-direction: column;
+            gap: 2px;
+            text-align: center;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 5;
+        }
+        .country-dot:hover .country-dot-tooltip,
+        .country-dot:focus-visible .country-dot-tooltip {
+            display: flex;
+        }
+        .country-dot-tooltip-country {
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--accent-gold);
+        }
+        .country-dot-tooltip-station {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .country-dot-tooltip-hm {
+            font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+            font-size: 10px;
+            color: var(--text-secondary);
+        }
+
+        /* Station Banner */
+        .station-banner {
+            padding: 32px 32px 24px;
+            display: flex;
+            align-items: flex-end;
+            gap: 24px;
+            background: linear-gradient(135deg, #2d1a1a 0%, var(--bg-primary) 100%);
+        }
+
+        .station-banner.cat-live { background: linear-gradient(135deg, #3a1a1a 0%, var(--bg-primary) 100%); }
+        .station-banner.cat-podcast { background: linear-gradient(135deg, #2d1a3a 0%, var(--bg-primary) 100%); }
+        .station-banner.cat-music { background: linear-gradient(135deg, #3a2d1a 0%, var(--bg-primary) 100%); }
+        .station-banner.cat-religious { background: linear-gradient(135deg, #1a3a2d 0%, var(--bg-primary) 100%); }
+
+        .station-banner-art {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            flex-shrink: 0;
+            border: 3px solid rgba(255,255,255,0.1);
+        }
+
+        .station-banner-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .station-banner-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .station-banner-title {
+            font-size: 38px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .station-banner-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .station-banner-meta {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+            flex-wrap: wrap;
+        }
+
+        .station-banner-dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--text-muted);
+        }
+
+        /* Station Actions */
+        .station-actions {
+            padding: 20px 32px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .btn-play-large {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            flex-shrink: 0;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .btn-play-large:hover { transform: scale(1.05); background: var(--accent-gold-hover); }
+        .btn-play-large:active { transform: scale(0.95); }
+        .btn-play-large svg { color: #000; width: 24px; height: 24px; fill: #000; pointer-events: none; }
+
+        .btn-follow {
+            padding: 6px 24px;
+            border-radius: 20px;
+            border: 1px solid var(--text-muted);
+            background: transparent;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            min-width: 44px;
+            min-height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-follow:hover { border-color: var(--text-primary); transform: scale(1.02); }
+        .btn-follow:active { transform: scale(0.95); }
+        .btn-follow.following { border-color: var(--accent-gold); color: var(--accent-gold); }
+
+        .live-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            background: rgba(231,76,60,0.15);
+            color: #e74c3c;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e74c3c;
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes livePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* Now Playing Section */
+        .now-playing-section {
+            padding: 0 32px 24px;
+        }
+
+        .now-playing-card {
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 20px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .now-playing-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .now-playing-show {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .now-playing-host {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .now-playing-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Schedule Section */
+        .schedule-section {
+            padding: 0 32px 100px;
+        }
+
+        .schedule-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .schedule-row {
+            display: grid;
+            grid-template-columns: 90px 1fr 150px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            transition: background 0.1s;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .schedule-row:hover { background: var(--bg-tertiary); }
+
+        .schedule-time {
+            font-size: 13px;
+            color: var(--accent-gold);
+            font-weight: 500;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .schedule-info { min-width: 0; }
+
+        .schedule-show {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .schedule-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .schedule-host {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+        }
+
+        /* Right Sidebar */
+        /* Right sidebar — two stacked zones now: top half is the
+           Playing-list / Schedule tabs, bottom half is the animated
+           waveform. The old library/trending/recommended sections
+           still have CSS classes below (kept for any future revival)
+           but renderDiscoverSidebar() no longer emits them. */
+        .discover-sidebar {
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* zones manage their own scroll */
+        }
+
+        .dsb-top {
+            flex: 1 1 50%;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .dsb-bottom {
+            flex: 1 1 50%;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            background: linear-gradient(180deg, var(--bg-secondary) 0%, #14141f 100%);
+            overflow: hidden;
+        }
+
+        /* Tab strip across the top of the schedule zone. */
+        .dsb-tabs {
+            display: flex;
+            flex: 0 0 auto;
+            border-bottom: 1px solid var(--bg-tertiary);
+        }
+        .dsb-tab {
+            flex: 1;
+            background: none;
+            border: 0;
+            border-bottom: 2px solid transparent;
+            padding: 14px 0;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s, background 0.15s;
+        }
+        .dsb-tab:hover { color: var(--text-secondary); background: rgba(255,255,255,0.02); }
+        .dsb-tab.active {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
+        }
+
+        .dsb-tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 16px 16px;
+        }
+
+        /* Schedule / Playing-list rows. */
+        .dsb-row {
+            display: grid;
+            grid-template-columns: 64px 1fr;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+        .dsb-row:last-child { border-bottom: 0; }
+        .dsb-row.now {
+            color: var(--accent-gold);
+        }
+        .dsb-row.now .dsb-row-show { color: var(--accent-gold); }
+        .dsb-row-time {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .dsb-row.now .dsb-row-time { color: var(--accent-gold); }
+        .dsb-row-show {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .dsb-row-host {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 1px;
+        }
+
+        .dsb-station-header {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .dsb-station-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+        }
+
+        /* The Logos OHI/Non-OHI parallel-rotation toggle (spec §7). */
+        .logos-rotation-toggle {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            background: var(--bg-tertiary);
+            padding: 3px;
+            border-radius: 8px;
+        }
+        .logos-rot-btn {
+            flex: 1;
+            background: transparent;
+            border: 0;
+            color: var(--text-muted);
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            padding: 6px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+        }
+        .logos-rot-btn:hover { color: var(--text-secondary); }
+        .logos-rot-btn.active {
+            background: var(--accent-gold);
+            color: #1b1b1b;
+        }
+
+        /* Animated waveform — 50 vertical bars, each with a unique negative
+           animation-delay so the row reads as a moving wave rather than a
+           uniform pulse. The animation is gated on the .is-active modifier:
+           toggled on/off when audio actually starts/stops, so the bars rest
+           at a steady low height when nothing's playing. Pure CSS; the JS
+           just adds/removes one class. */
+        .dsb-waveform {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+        }
+        .dsb-waveform span {
+            flex: 0 0 3px;
+            min-width: 3px;
+            background: var(--accent-gold);
+            border-radius: 2px;
+            height: 18%;
+            opacity: 0.65;
+            box-shadow: 0 0 8px rgba(230, 172, 0, 0.35);
+            transition: height 0.25s ease, opacity 0.25s ease;
+        }
+        .dsb-waveform.is-active span {
+            opacity: 0.9;
+            animation: dsb-wave 1.6s ease-in-out infinite;
+        }
+        @keyframes dsb-wave {
+            0%, 100% { height: 12%; }
+            50%      { height: 92%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .dsb-waveform.is-active span { animation: none; height: 50%; }
+        }
+
+        /* Footer equalizer — mirrors the .station-card-equalizer pattern:
+           flex bars stretched across the available width, anchored to the
+           bottom (rising from a baseline), scrambled animation delays so
+           neighbours are out of phase rather than tracing a single wave.
+           Reuses the same `card-eq-bar` keyframe as the cards, just sized
+           to the footer's 38px tall slot. */
+        .player-eq {
+            display: flex;
+            align-items: flex-end;
+            gap: 2px;
+            width: 100%;
+            height: 38px;
+        }
+        .player-eq span {
+            flex: 1;
+            min-width: 2px;
+            background: var(--accent-gold);
+            border-radius: 1px;
+            height: 18%;
+            opacity: 0.6;
+            box-shadow: 0 0 6px rgba(230, 172, 0, 0.28);
+            transform-origin: bottom;
+            transition: height 0.25s ease, opacity 0.25s ease;
+        }
+        .player-eq.is-active span {
+            opacity: 0.95;
+            animation: card-eq-bar 0.95s ease-in-out infinite;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .player-eq.is-active span { animation: none; height: 60%; }
+        }
+
+        .discover-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .discover-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+            margin-bottom: 4px;
+        }
+
+        .discover-card:hover { background: var(--bg-tertiary); }
+
+        .discover-card-art {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .discover-card-info { flex: 1; min-width: 0; }
+
+        .discover-card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .discover-card-cat {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .discover-card-listeners {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .discover-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 16px 0;
+        }
+
+        .discover-section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        /* Your Library Section */
+        .library-section {
+            margin-bottom: 20px;
+        }
+
+        .library-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.15s;
+            border-radius: 6px;
+        }
+
+        .library-header:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .library-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .library-toggle {
+            color: var(--text-muted);
+            transition: transform 0.2s;
+        }
+
+        .library-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .library-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .library-content.expanded {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .library-empty {
+            padding: 20px 16px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .library-empty-icon {
+            font-size: 32px;
+            opacity: 0.3;
+            margin-bottom: 8px;
+        }
+
+        .playlist-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 12px 16px 8px 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Heart Icon for Favorites */
+        .station-heart-btn,
+        .discover-heart-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .station-heart-btn:hover,
+        .discover-heart-btn:hover {
+            color: var(--accent-gold);
+            transform: scale(1.1);
+        }
+
+        .station-heart-btn.favorited,
+        .discover-heart-btn.favorited {
+            color: var(--accent-gold);
+        }
+
+        .station-heart-btn svg,
+        .discover-heart-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Follow Button */
+        .station-follow-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .station-follow-btn:hover {
+            color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .station-follow-btn.following {
+            color: var(--accent-gold);
+        }
+
+        .station-follow-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Remove button for library items (trash icon) */
+        .discover-remove-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            flex-shrink: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .discover-card:hover .discover-remove-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .discover-remove-btn:hover {
+            color: #ff4444;
+            transform: scale(1.1);
+        }
+
+        .discover-remove-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Banner heart button */
+        .btn-heart {
+            background: none;
+            border: 1px solid var(--text-muted);
+            color: var(--text-primary);
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-heart:hover {
+            border-color: var(--text-primary);
+            transform: scale(1.02);
+        }
+
+        .btn-heart.favorited {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        .btn-heart svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Sticky Footer Player */
+        .radio-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: var(--player-height);
+            background: #181818;
+            border-top: 1px solid var(--border-color);
+            z-index: 1001;
+            display: flex;
+            flex-direction: column;
+        }
+        /* Pin-to-other-pages toggle. Sits in the absolute top-right of the
+           player so it doesn't crowd the existing controls. When active
+           ("pinned"), the icon fills with gold and the listener's selection
+           persists across navigation via the sticky-radio-player.js script
+           that other pages on the site can include. */
+        .radio-player-pin-btn {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            width: 28px;
+            height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 6px;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 0;
+            transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.05s;
+            z-index: 2;
+        }
+        .radio-player-pin-btn:hover {
+            background: rgba(230, 172, 0, 0.08);
+            border-color: rgba(230, 172, 0, 0.5);
+            color: var(--accent-gold);
+        }
+        .radio-player-pin-btn:active { transform: scale(0.95); }
+        .radio-player-pin-btn svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            transition: fill 0.15s, transform 0.2s;
+        }
+        /* Pinned state — solid gold fill on the pin glyph + slight rotation
+           to read as "stuck in". Border glows gold. */
+        .radio-player-pin-btn.pinned {
+            background: rgba(230, 172, 0, 0.12);
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+        .radio-player-pin-btn.pinned svg {
+            fill: var(--accent-gold);
+            transform: rotate(-20deg);
+        }
+        /* New 4-column controls row — station-info | Heaven's Band tuner |
+           controls | volume. The dial expands to fill the middle, replacing
+           the old equalizer column as the dominant visual surface. */
+        .radio-player-controls-row {
+            flex: 1;
+            display: grid;
+            grid-template-columns: minmax(220px, 1fr) minmax(0, 2.4fr) auto auto;
+            align-items: center;
+            padding: 0 16px;
+            gap: 18px;
+            min-height: 0;
+        }
+
+        /* Player Left */
+        .player-station-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .player-station-art {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .player-station-text { min-width: 0; }
+
+        .player-station-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-station-show {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-like-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+            transition: color 0.15s;
+        }
+
+        .player-like-btn:hover { color: var(--accent-gold); }
+
+        /* ── Now Playing footer enhancement (spec Part 10) ──
+           Adds: HM frequency pill, mode badge, persona/host line,
+           Share button, Submit Prayer button (faith-mode only). */
+        .player-station-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .player-station-meta-row .player-station-name {
+            flex: 0 1 auto;
+            min-width: 0;
+        }
+        .player-station-hm {
+            display: inline-flex;
+            align-items: center;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 2px 7px;
+            border-radius: 999px;
+            color: var(--accent-gold);
+            background: rgba(230, 172, 0, 0.10);
+            border: 1px solid rgba(230, 172, 0, 0.32);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .player-mode-badge {
+            display: inline-flex;
+            align-items: center;
+            font-size: 9px;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            padding: 2px 6px;
+            border-radius: 3px;
+            background: var(--bg-tertiary);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .player-mode-badge.is-ohi     { color: #E6AC00; border-color: rgba(230,172,0,0.45); background: rgba(230,172,0,0.08); }
+        .player-mode-badge.is-non-ohi { color: #6FB3FF; border-color: rgba(111,179,255,0.45); background: rgba(111,179,255,0.08); }
+        .player-mode-badge.is-mixed   { color: #B98CFF; border-color: rgba(185,140,255,0.45); background: rgba(185,140,255,0.08); }
+        .player-mode-badge.is-both    { color: #82c1ff; border-color: rgba(33,150,243,0.45); background: rgba(33,150,243,0.08); }
+        .player-mode-badge.is-family  { color: #5FD68A; border-color: rgba(95,214,138,0.45); background: rgba(95,214,138,0.08); }
+        /* BR-B3 — six-hour cycle indicator (m/a/e/n) in station-local time. */
+        .player-cycle-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            padding: 2px 7px;
+            border-radius: 999px;
+            color: #6FB3FF;
+            background: rgba(111, 179, 255, 0.10);
+            border: 1px solid rgba(111, 179, 255, 0.32);
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .player-station-host {
+            font-size: 10px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+            opacity: 0.85;
+        }
+        .player-station-host:empty { display: none; }
+        .player-station-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+            margin-left: auto;
+        }
+        .player-share-btn,
+        .player-prayer-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+            transition: color 0.15s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .player-share-btn:hover,
+        .player-prayer-btn:hover { color: var(--accent-gold); }
+        .player-prayer-btn.is-hidden { display: none; }
+
+        /* BR-I1 listener engagement — thumbs up/down + comment. Mirrors the
+           share/prayer button styling. `.rated` marks the active vote so the
+           listener sees their thumb stick after they tap it. */
+        .player-feedback-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+            transition: color 0.15s;
+            display: inline-flex;
+            align-items: center;
+        }
+        .player-feedback-btn:hover { color: var(--accent-gold); }
+        .player-feedback-btn.rated { color: var(--accent-gold); }
+        .player-feedback-btn.rated.rated-down { color: var(--accent-red); }
+        .player-feedback-btn:disabled { opacity: 0.35; cursor: default; }
+        .player-feedback-btn:disabled:hover { color: var(--text-muted); }
+
+        /* Player Center */
+        .player-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-buttons {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        /* Hexagonal play button with two concentric ring halos.
+           Implemented as nested SVG inside a transparent button, plus a
+           second SVG layered on top for the play / pause glyph that
+           updatePlayIcon() keeps in sync. */
+        .player-btn-play {
+            position: relative;
+            width: 64px;
+            height: 56px; /* hex aspect ratio (1.155 wide:tall) */
+            background: transparent;
+            border: 0;
+            padding: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.12s;
+        }
+        .player-btn-play:hover { transform: scale(1.04); }
+        .player-btn-play:active { transform: scale(0.98); }
+        .player-btn-play .hex-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+        .player-btn-play .hex-fill        { fill: var(--accent-gold); }
+        .player-btn-play .hex-ring-inner  { fill: none; stroke: var(--accent-gold); stroke-opacity: 0.45; stroke-width: 1.5; }
+        .player-btn-play .hex-ring-outer  { fill: none; stroke: var(--accent-gold); stroke-opacity: 0.18; stroke-width: 1.5; }
+        .player-btn-play:hover .hex-ring-inner { stroke-opacity: 0.7; }
+        .player-btn-play:hover .hex-ring-outer { stroke-opacity: 0.35; }
+        /* Centered play / pause glyph on top of the hex. */
+        .player-btn-play .hex-play-icon {
+            position: relative;
+            width: 18px;
+            height: 18px;
+            color: #1b1b1b;
+            fill: currentColor;
+            z-index: 1;
+        }
+
+        /* Circular previous / next station buttons flanking the hex. */
+        .player-btn-skip {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s, transform 0.1s, border-color 0.15s;
+        }
+        .player-btn-skip:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(230, 172, 0, 0.5);
+            transform: scale(1.05);
+        }
+        .player-btn-skip:active { transform: scale(0.96); }
+        .player-btn-skip[disabled] {
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.04);
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+        .player-btn-skip[disabled]:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.04);
+            transform: none;
+        }
+        .player-btn-skip svg { width: 14px; height: 14px; fill: currentColor; }
+
+        .player-live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            color: #22c55e;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .player-live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.25);
+            animation: livePulse 1.5s ease-in-out infinite;
+        }
+
+        .player-live-indicator.inactive {
+            color: var(--text-muted);
+        }
+
+        .player-live-indicator.inactive .player-live-dot {
+            background: var(--text-muted);
+            animation: none;
+        }
+
+        /* Player Right - Volume.
+           Column layout that mirrors .player-controls (LIVE indicator
+           on top, buttons below, gap 8px). The empty top row pushes
+           the volume controls down so they line up vertically with the
+           prev / play / next buttons in the centre column. */
+        .player-volume {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 8px;
+        }
+        .player-volume::before {
+            content: '';
+            display: block;
+            height: 14px;
+        }
+        .player-volume-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .volume-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            display: flex;
+            transition: color 0.15s;
+        }
+
+        .volume-btn:hover { color: var(--text-primary); }
+        .volume-btn svg { width: 16px; height: 16px; }
+
+        .volume-bar {
+            /* Override the global border-box so height:4px is the
+               *visible* track, not the total including padding —
+               otherwise the content box collapses to 0 and the
+               background (clipped to content-box) becomes invisible. */
+            box-sizing: content-box;
+            width: 100px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.28);
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            /* Larger invisible hit area above/below the visible track so the
+               control is easier to grab without enlarging the visual. */
+            padding: 8px 0;
+            margin: -8px 0;
+            background-clip: content-box;
+            /* Disable native touch gestures so dragging the bar doesn't
+               scroll the page or trigger long-press menus on mobile. */
+            touch-action: none;
+            user-select: none;
+            transition: height 0.12s ease;
+        }
+
+        .volume-bar:hover, .volume-bar.dragging { height: 6px; }
+
+        .volume-fill {
+            height: 100%;
+            width: 70%;
+            background: var(--text-secondary);
+            border-radius: 2px;
+            position: relative;
+            /* Smooth fill animation for non-drag changes (mute toggle, init).
+               During an active drag we strip the transition via .dragging
+               so the knob tracks the cursor 1:1. */
+            transition: width 0.08s linear, background 0.15s ease;
+            pointer-events: none;
+        }
+
+        .volume-bar.dragging .volume-fill { transition: none; }
+
+        .volume-bar:hover .volume-fill,
+        .volume-bar.dragging .volume-fill { background: var(--accent-gold); }
+
+        .volume-knob {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-primary);
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: opacity 0.12s ease, transform 0.1s ease;
+            pointer-events: none;
+        }
+
+        .volume-bar:hover .volume-knob,
+        .volume-bar.dragging .volume-knob { opacity: 1; }
+        .volume-bar.dragging .volume-knob { transform: translateY(-50%) scale(1.15); }
+
+        /* Empty state */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 40px;
+        }
+
+        .empty-state svg { margin-bottom: 16px; opacity: 0.3; }
+        .empty-state h3 { font-size: 18px; color: var(--text-primary); margin-bottom: 8px; }
+        .empty-state p { font-size: 14px; }
+
+        /* Mobile Accordion */
+        .mobile-accordion {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        /* Dimensions panel rendered inline inside the mobile accordion's
+           Radio Stations content area (instead of in the off-screen
+           desktop sidebar). Sized so its content can scroll without
+           pushing the whole accordion out of view. */
+        .mobile-dimensions-panel { padding: 8px 0; }
+        .mobile-dimensions-panel .dimensions-section { padding: 12px 14px; }
+
+        /* Discover sidebar (Playing List / Schedule tabs + waveform)
+           remounted at the bottom of the mobile sidebar. The dsb-top /
+           dsb-bottom flex children inherit their existing styles. */
+        .mobile-discover-mount {
+            display: flex;
+            flex-direction: column;
+            border-top: 1px solid var(--border-color);
+            min-height: 360px;
+            background: var(--bg-secondary);
+        }
+        .mobile-discover-mount .discover-sidebar,
+        .mobile-discover-mount > .dsb-top { flex: 1 1 auto; }
+
+        .accordion-section {
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .accordion-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .accordion-title svg {
+            opacity: 0.8;
+        }
+
+        .accordion-badge {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: auto;
+            margin-right: 8px;
+        }
+
+        .accordion-toggle {
+            transition: transform 0.3s;
+            opacity: 0.6;
+        }
+
+        .accordion-toggle.expanded {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.expanded {
+            max-height: none;
+            overflow-y: auto;
+        }
+
+
+        .accordion-filters {
+            padding: 12px 16px 8px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .accordion-list {
+            padding: 8px;
+        }
+
+        .accordion-empty {
+            padding: 32px 16px;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Responsive */
+        /* Hamburger Menu Button */
+        .hamburger-btn {
+            display: none;
+            position: fixed;
+            top: 56px;
+            left: 16px;
+            z-index: 1100;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            width: 44px;
+            height: 44px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .hamburger-btn:hover {
+            background: var(--bg-tertiary);
+            transform: scale(1.05);
+        }
+
+        .hamburger-btn:active {
+            transform: scale(0.95);
+        }
+
+        .hamburger-btn.active {
+            left: 296px;
+            background: var(--bg-tertiary);
+        }
+
+        .hamburger-icon {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 20px;
+        }
+
+        .hamburger-icon span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background: var(--text-primary);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .hamburger-btn.active .hamburger-icon span:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+
+        .hamburger-btn.active .hamburger-icon span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger-btn.active .hamburger-icon span:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+
+        /* Mobile Sidebar Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            bottom: var(--player-height);
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1050;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .sidebar-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* @media (max-width: 1280px) — player footer rules.
+           Below 1280px the SVG tuner is dropped entirely and the
+           player footer collapses to three columns: station info,
+           play controls, volume. The dial column is removed because
+           it has no useful function at narrower widths — the listener
+           still gets the HM frequency via #playerStationHm in the
+           station-info column. */
+        @media (max-width: 1280px) {
+            #heavenDialTuner { display: none; }
+            .radio-player-controls-row {
+                grid-template-columns: minmax(220px, 0.75fr) minmax(220px, 1fr) minmax(150px, 0.5fr);
+            }
+            /* Secondary station actions hide at this width so the
+               station-info column doesn't overflow once the dial column
+               is gone. Like/favorite stays — that's the primary action. */
+            .player-share-btn,
+            .player-prayer-btn { display: none; }
+        }
+
+        @media (max-width: 1024px) {
+            .radio-layout { grid-template-columns: 320px 1fr; }
+            .discover-sidebar { display: none; }
+            /* Hide the footer equalizer in lockstep with the right sidebar
+               (they share the 350px column width). The player falls back to
+               its 3-column layout below this breakpoint, with the station
+               info column dominant since the dial is already gone (see
+               1280px breakpoint above). */
+            .radio-player-controls-row { grid-template-columns: 1.5fr 1fr 0.75fr; }
+            .player-eq { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+                overflow-y: auto;
+            }
+
+            .hamburger-btn { display: flex; }
+            .sidebar-overlay { display: block; }
+
+            .radio-layout {
+                grid-template-columns: 1fr;
+                height: auto;
+                min-height: calc(100vh - var(--header-height));
+                overflow: visible;
+                padding-bottom: calc(var(--player-height) + 20px);
+            }
+
+            .main-content {
+                height: auto;
+                overflow-y: visible;
+                overflow-x: hidden;
+            }
+
+            .station-sidebar {
+                position: fixed;
+                top: var(--header-height);
+                left: 0;
+                bottom: 0;
+                width: 300px;
+                z-index: 1060;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0,0,0,0.3);
+                padding-bottom: var(--player-height);
+                overflow-y: auto;
+            }
+
+            .station-sidebar.active {
+                transform: translateX(0);
+            }
+
+            /* Hide desktop sidebar structure on mobile */
+            .station-header,
+            .station-filters,
+            .station-list {
+                display: none !important;
+            }
+
+            /* Show mobile accordion */
+            .mobile-accordion {
+                display: flex !important;
+            }
+
+            .station-banner { padding: 20px 16px 16px; gap: 16px; }
+            .station-banner-art { width: 120px; height: 120px; }
+            .station-banner-title { font-size: 24px; }
+            .station-actions { padding: 16px; }
+            .now-playing-section { padding: 0 16px 16px; }
+            .schedule-section { padding: 0 16px 16px; }
+            .schedule-row { grid-template-columns: 70px 1fr; }
+            .schedule-host { display: none; }
+            .player-volume { display: none; }
+
+            .radio-player {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1001 !important;
+                height: var(--player-height) !important;
+            }
+            .radio-player-controls-row {
+                grid-template-columns: 1fr 1fr;
+            }
+        }

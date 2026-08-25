@@ -1,0 +1,210 @@
+/* ─────────────────────────────────────────────────────────────────────────
+   The Jubilee ID door — /login, /signin, /signup.
+
+   Same design as the kJubilee sign-in page it replaces: gold form furniture on
+   the dark left panel, rotating scripture over the photograph on the right. The
+   wordmark is the site's own — a small "k", "Jubilee" in the kJubilee azure,
+   then ".com" — so the door plainly wears the site you came to.
+
+   Markup is rendered by /js/jubilee-id.js; this file is the whole look.
+   ───────────────────────────────────────────────────────────────────────── */
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+/* ── Wave bar ── */
+.wave-bar{position:fixed;top:0;left:0;width:100%;height:6px;z-index:999;background:linear-gradient(90deg,#f0ad4e,#ffcc00,#f0ad4e);background-size:200% 100%;animation:waveSlide 3s linear infinite}
+@keyframes waveSlide{0%{background-position:0 0}100%{background-position:200% 0}}
+
+body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100vh;display:flex;overflow:hidden}
+
+/* ── Layout ── */
+.auth-row{display:flex;width:100%;min-height:100vh}
+.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem 2rem;position:relative;z-index:2;overflow-y:auto;min-height:100vh}
+/* The form is vertically centred, so the short email screen and the tall
+   Jubilee ID screen both sit comfortably without the logo jumping. */
+.auth-form-inner{flex:1;display:flex;flex-direction:column;justify-content:center}
+
+/* ── Right panel ── */
+.auth-bg-panel{flex:1;position:relative;overflow:hidden}
+.auth-bg-panel .bg-slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.5s ease}
+.auth-bg-panel .bg-slide.active{opacity:1}
+.auth-bg-panel .bg-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:1}
+
+.bubbles{position:absolute;inset:0;z-index:0;overflow:hidden;list-style:none}
+.bubbles li{position:absolute;bottom:-80px;background:rgba(255,189,89,0.08);border-radius:50%;animation:floatUp linear infinite}
+.bubbles li:nth-child(1){left:5%;width:40px;height:40px;animation-duration:22s;animation-delay:0s}
+.bubbles li:nth-child(2){left:15%;width:20px;height:20px;animation-duration:18s;animation-delay:2s}
+.bubbles li:nth-child(3){left:30%;width:60px;height:60px;animation-duration:28s;animation-delay:4s}
+.bubbles li:nth-child(4){left:45%;width:30px;height:30px;animation-duration:20s;animation-delay:1s}
+.bubbles li:nth-child(5){left:55%;width:50px;height:50px;animation-duration:32s;animation-delay:3s}
+.bubbles li:nth-child(6){left:65%;width:25px;height:25px;animation-duration:24s;animation-delay:5s}
+.bubbles li:nth-child(7){left:75%;width:70px;height:70px;animation-duration:26s;animation-delay:0s}
+.bubbles li:nth-child(8){left:85%;width:35px;height:35px;animation-duration:19s;animation-delay:6s}
+.bubbles li:nth-child(9){left:92%;width:15px;height:15px;animation-duration:30s;animation-delay:2s}
+.bubbles li:nth-child(10){left:40%;width:45px;height:45px;animation-duration:21s;animation-delay:7s}
+@keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(-120vh) rotate(720deg);opacity:0}}
+
+.scripture-quote{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);z-index:2;text-align:center;max-width:80%;color:#fff;font-family:Georgia,serif;font-size:1.5rem;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.6}
+.scripture-quote span,.scripture-quote cite{transition:opacity .5s ease}
+.scripture-quote cite{display:block;margin-top:0.75rem;font-size:1rem;font-style:normal;color:#ffbd59;letter-spacing:1px}
+
+/* ── Logo ── */
+.auth-logo{text-align:center;margin-bottom:1.5rem;display:block}
+.auth-logo a{text-decoration:none;display:inline-flex;flex-direction:column;align-items:center}
+.auth-logo-img{width:92px;height:92px;border-radius:50%;border:2px solid #2fd2ff;box-shadow:0 0 15px rgba(0,207,255,0.5);object-fit:cover}
+.auth-logo-text{margin-top:0.75rem;font-family:'Orbitron',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:#fff;line-height:1}
+/* The leading "k" sits 2pt below the rest of the wordmark, as it does in the
+   site header. An absolute pt, not an em ratio, so the drop is exactly 2pt. */
+.auth-logo-text .k{font-size:calc(1em - 2pt)}
+.auth-logo-text .jubilee{color:#3DA5FF}
+
+/* ── Headings ── */
+.door-heading{font-size:1.55rem;font-weight:700;text-align:center;line-height:1.3;letter-spacing:.2px;margin-bottom:.6rem}
+.door-helper{color:#b0b4bd;font-size:.95rem;text-align:center;line-height:1.55;margin-bottom:1.9rem}
+.door-subtext{color:#b0b4bd;font-size:.92rem;text-align:center;line-height:1.6;margin-bottom:1.6rem}
+.door-disclaimer{color:#b0b4bd;font-size:.84rem;text-align:center;margin-top:1.3rem}
+
+/* ── Alerts ── */
+.auth-alert{border-radius:8px;padding:12px 16px;margin-bottom:1.25rem;font-size:.875rem;line-height:1.5}
+.auth-alert--error{background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);color:#f87171}
+.auth-alert--notice{background:rgba(255,189,89,0.12);border:1px solid rgba(255,189,89,0.35);color:#ffbd59}
+
+/* ── Account row (read-only email + "Use a different email") ── */
+.account-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;background:rgba(255,255,255,0.03);margin-bottom:1.35rem;font-size:.95rem;color:#fff}
+/* A long address stays on ONE line and truncates; the full text is in the title. */
+.account-row .account-email{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.account-row .use-different{flex:0 0 auto;background:none;border:none;color:#f0ad4e;font-size:.8rem;cursor:pointer;white-space:nowrap;text-decoration:underline;padding:0;font-family:inherit}
+.account-row .use-different:hover{color:#ffcc00}
+
+/* ── Fields ── */
+.input-group{position:relative;margin-bottom:1.25rem}
+.input-group input{width:100%;height:58px;padding:22px 16px 8px;background:rgba(80,80,80,0.7);border:2px solid transparent;border-radius:8px;color:#fff;font-size:1rem;font-family:inherit;transition:border-color .2s,box-shadow .2s;outline:none}
+.input-group input:focus{border-color:#ffcc00;box-shadow:0 0 0 3px rgba(240,173,78,0.25)}
+.input-group label{position:absolute;left:16px;top:18px;font-size:0.95rem;color:#999;pointer-events:none;transition:all .2s ease}
+.input-group input:not(:placeholder-shown)+label,
+.input-group input:focus+label{top:8px;font-size:0.75rem;color:#f0ad4e}
+.input-group input[type="password"]{color:#f0ad4e;letter-spacing:3px}
+.input-group input[type="password"]::placeholder{color:#999;letter-spacing:0}
+.input-group input[readonly]{opacity:.75;cursor:default}
+
+/* A date input has no empty state to key :placeholder-shown off, so its label
+   is parked in the raised position from the start. */
+.input-group.label-up label{top:8px;font-size:0.75rem;color:#f0ad4e}
+.input-group input[type="date"]{color-scheme:dark;padding-right:44px}
+.input-group input[type="date"]::-webkit-calendar-picker-indicator{position:absolute;right:0;top:0;width:44px;height:100%;opacity:0;cursor:pointer}
+.input-group input[type="date"]::-webkit-datetime-edit{padding-top:2px}
+.input-group.date-field::after{content:"";position:absolute;right:14px;top:calc(50% + 4px);transform:translateY(-50%);width:20px;height:20px;pointer-events:none;background:no-repeat center/20px 20px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0ad4e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>")}
+
+/* Two fields side by side (first / last name) */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem}
+.form-row .input-group{margin-bottom:0}
+
+/* ── Password toggle ── */
+.password-wrapper{position:relative}
+.password-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#999;cursor:pointer;padding:4px;display:flex;align-items:center}
+.password-toggle:hover{color:#f0ad4e}
+.password-toggle svg{width:20px;height:20px}
+.password-wrapper input{padding-right:46px}
+
+/* ── Password feedback ── */
+.password-hint{font-size:.75rem;color:#bdbdbd;margin-top:6px}
+.password-strength{margin-top:8px}
+.strength-bar{height:4px;background:#444;border-radius:2px;overflow:hidden;margin-bottom:4px}
+.strength-fill{height:100%;border-radius:2px;transition:width .2s ease,background-color .2s ease}
+.strength-fill.weak{width:33%;background:#f87171}
+.strength-fill.fair{width:66%;background:#fbbf24}
+.strength-fill.strong{width:100%;background:#4ade80}
+.strength-text{font-size:.7rem}
+.strength-text.weak{color:#f87171}
+.strength-text.fair{color:#fbbf24}
+.strength-text.strong{color:#4ade80}
+
+.field-error{display:block;font-size:.72rem;color:#f87171;margin-top:5px;min-height:1em}
+
+/* ── Forgot / extras ── */
+.forgot-row{margin:-0.55rem 0 1.35rem;text-align:right;font-size:.85rem}
+.forgot-link{color:#f0ad4e;text-decoration:none;font-weight:500}
+.forgot-link:hover{text-decoration:underline}
+
+/* ── Keep me signed in ── */
+.remember-row{margin:1.25rem 0 1.35rem}
+.checkbox-wrapper{display:flex;align-items:center;gap:10px;cursor:pointer;color:#ccc;font-size:.875rem;user-select:none}
+.checkbox-wrapper input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;flex:none;border:2px solid #f0ad4e;border-radius:4px;cursor:pointer;position:relative;background:transparent;transition:background .2s}
+.checkbox-wrapper input[type="checkbox"]:checked{background:#f0ad4e}
+.checkbox-wrapper input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:-2px;left:2px;font-size:13px;color:#1a1a1a;font-weight:700}
+.checkbox-wrapper input[type="checkbox"]:focus-visible{outline:2px solid #ffcc00;outline-offset:2px}
+
+/* ── Consent ── */
+.consent-line{font-size:.78rem;color:#bdbdbd;line-height:1.55;margin:0 0 1.15rem;text-align:center}
+.consent-line a{color:#f0ad4e;text-decoration:none}
+.consent-line a:hover{text-decoration:underline}
+
+/* ── Primary button ── */
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#f0ad4e,#ec971f);border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px rgba(240,173,78,0.3);transition:all .2s;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#ec971f,#d58512);transform:translateY(-1px);box-shadow:0 6px 16px rgba(240,173,78,0.4)}
+.btn-primary:active:not(:disabled){transform:translateY(0)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Secondary link under a form ── */
+.back-link{text-align:center;margin-top:1rem}
+.back-link button{background:none;border:none;color:#f0ad4e;font-size:.875rem;font-family:inherit;cursor:pointer;text-decoration:underline}
+.back-link button:hover{color:#ffcc00}
+
+.signup-prompt{text-align:center;font-size:.95rem;color:#fff;margin-bottom:1.5rem}
+.signup-prompt a{color:#f0ad4e;font-weight:600;text-decoration:none}
+.signup-prompt a:hover{text-decoration:underline}
+
+/* ── Success ── */
+.success-state{text-align:center;padding:1rem 0}
+.success-icon-circle{width:80px;height:80px;margin:0 auto 1rem;background:rgba(74,222,128,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.success-icon-circle svg{width:40px;height:40px;color:#4ade80}
+.success-state h2{font-size:1.35rem;margin-bottom:.5rem}
+.success-state p{font-size:.9rem;color:#bdbdbd;line-height:1.6;margin-bottom:2rem}
+
+/* ── Footer ── */
+.auth-footer{text-align:center;padding-top:1.5rem;margin-top:auto}
+.auth-footer .copyright{font-size:.75rem;color:#fff}
+.auth-footer .copyright a{color:#ffbd59;text-decoration:none;transition:color .2s ease}
+.auth-footer .copyright a:hover{color:#fff}
+
+/* ── Validation modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:10000;cursor:pointer;padding:1rem}
+.modal-box{background:#2b2b2b;border-radius:16px;padding:30px 40px;text-align:center;max-width:460px;width:100%;box-shadow:0 10px 40px rgba(0,0,0,0.5);cursor:default}
+.modal-box svg{margin-bottom:1.15rem}
+.modal-box p{color:#dcdcdc;font-size:1rem;line-height:1.55}
+
+/* ── Screen-reader only ── */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+
+/* ── Mobile ── */
+@media(max-width:1024px){
+  .auth-bg-panel{display:none}
+  .auth-form-panel{width:100%;min-width:0;max-width:none;padding:2rem 1.5rem}
+}
+@media(max-width:480px){
+  .auth-logo-text{font-size:1.6rem}
+  .auth-logo-img{width:76px;height:76px}
+  .door-heading{font-size:1.3rem}
+  .input-group input{height:52px}
+  .form-row{grid-template-columns:1fr;gap:0}
+  .form-row .input-group{margin-bottom:1.25rem}
+}
+
+/* Someone who has asked for less motion should not get drifting bubbles, a
+   sliding wave bar, or cross-fading photographs. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .bubbles{display:none}
+}
+
+/* ── Human verification (Cloudflare Turnstile) ──
+   The 'normal' widget is a fixed 300px iframe. The wrapper is measured and the
+   inner box CSS-scaled to it, so the challenge is exactly as wide as the email
+   field at any viewport instead of a narrow box floating beside it. The height
+   is set from JS for the same reason. */
+.door-turnstile{width:100%;margin:0 0 1.35rem;overflow:hidden}
+.door-turnstile:empty{margin:0}
+.door-turnstile-inner{width:300px;transform-origin:top left}

@@ -169,10 +169,10 @@ const STATIONS = {
     // Caleb's CCM sit in the same radio lane — a listener who likes one will sit
     // through the other — where Latin, Hebraic, indigenous and country do not,
     // which is why they have their own frequencies.
-    'HM388.70-EN': {
+    'HM308.70-EN': {
         slug: 'jubilee-radio',
-        name: 'KJubilee',
-        hm: '388.70',
+        name: 'kJubilee Radio',
+        hm: '308.70',
         mount: 'jubilee',   // Icecast mount + playlist basename on the radio host
         // English only. EVERY station is single-language — see the rule below.
         // This one carried all languages historically; that was wrong for a
@@ -183,7 +183,7 @@ const STATIONS = {
         languageName: 'English',
         languageTag: 'en-US',
         mode: 'CCI',
-        hostCity: 'Seattle',
+        hostCity: 'Sacramento',
         timezone: 'America/Los_Angeles',
         pool: 'inspire-family',
         // CAIM1027EN kingdom-revealed is excluded: all twelve of its tracks are

@@ -6,7 +6,8 @@
 //   GET  /             → landing page
 //   GET  /radio        → radio player
 //   GET  /music        → music page
-//   GET  /login, /signup
+//   GET  /login, /signin, /signup  → the one Jubilee ID door
+//   /api/sso/*         → Jubilee ID lookup / login / account creation
 //   GET  /cdn/*        → audio assets (byte-range), serves CDN_LOCAL_ROOT
 //   /api/auth/*        → register / login / me
 //   /api/radio/*       → feedback, voicemail, favorites, follows
@@ -27,6 +28,13 @@ const fsp     = require('fs').promises;
 
 const { pool: pgPool } = require('./lib/db');
 const { hashPassword, createSalt, signJWT, getUserIdFromAuth } = require('./lib/auth');
+const sso = require('./lib/sso');
+const { verifyTurnstile, HUMAN_CHECK_FAILED } = require('./lib/turnstile');
+const {
+    normalizeEmail, toAuthUser, toYmdLocal,
+    checkLocalEmail, linkLocalAccount, updateLocalAccount,
+    issueSession, accountBlockedReason,
+} = require('./lib/local-account');
 
 const PORT = parseInt(process.env.PORT || '3210', 10);
 const NODE_ENV = process.env.NODE_ENV || 'development';
@@ -97,16 +105,12 @@ app.use('/cdn', express.static(CDN_LOCAL_ROOT, {
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// ── Page routes ─────────────────────────────────────────────────────────
-app.get('/',         (_, res) => res.sendFile(path.join(__dirname, 'public', 'index.html')));
-app.get('/radio',    (_, res) => res.sendFile(path.join(__dirname, 'public', 'radio.html')));
-app.get('/music',    (_, res) => res.sendFile(path.join(__dirname, 'public', 'music.html')));
-// The dial: a tuner rather than a directory. /player and /dial both reach it,
-// because people ask for it by both names.
-app.get('/player',   (_, res) => res.sendFile(path.join(__dirname, 'public', 'player.html')));
-app.get('/dial',     (_, res) => res.sendFile(path.join(__dirname, 'public', 'player.html')));
-app.get('/login',    (_, res) => res.sendFile(path.join(__dirname, 'public', 'login.html')));
-app.get('/signup',   (_, res) => res.sendFile(path.join(__dirname, 'public', 'signup.html')));
+// ── Page routes ────────────────────────────────────────────────────────
+//
+// GONE. Every page is now a route under app/ and is served by Next; the
+// public/*.html files these used to send moved to legacy/html/ when they were
+// ported. What remains here is the API, which Next also serves — see
+// docs/nextjs-migration.md before running this in front of anything.
 
 // ── Time ────────────────────────────────────────────────────────────────
 //
@@ -189,6 +193,386 @@ app.get('/api/auth/me', async (req, res) => {
         if (!u) return res.status(404).json({ error: 'User not found' });
         res.json({ user: u });
     } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// ────────────────────────────────────────────────────────────────────────
+// JUBILEE ID — the one door
+//
+// /login, /signin and /signup all render the SAME email-first screen. Screen 1
+// takes only an email, looks it up at the Jubilee ID authority, and routes to
+// one of three outcomes:
+//
+//   A  has a Jubilee ID and already uses kJubilee  → password → signed in
+//   B  has a Jubilee ID, new to kJubilee           → confirm password, then a
+//                                                     VISIBLE Create Account step
+//   C  no Jubilee ID at all                        → create the Jubilee ID and
+//                                                     the kJubilee account together
+//
+// B never links silently: the account on this site is created on a screen the
+// person can see, which is what pairs with the in-app deletion path the app
+// stores require. And because a Jubilee ID *is* a verified email address, no
+// path here sends a verification email.
+//
+// Ported from JubileeInspire.com (src/app/api/sso/*) so both sites speak the
+// same protocol; the routes below keep the same paths and response shapes.
+//
+// LOCAL FALLBACK: when SSO_CLIENT_SECRET is unset, or the email has no Jubilee
+// ID but does have a kJubilee row with a local password, these routes fall back
+// to kj_users' own password. That is what keeps accounts made before the door —
+// and development boxes with no authority credentials — signing in.
+// ────────────────────────────────────────────────────────────────────────
+
+// Password endpoints get their own budget. The global limiter is sized for a
+// player fetching schedules, which is far too generous for guessing a password.
+const ssoAuthLimiter = rateLimit({
+    windowMs: parseInt(process.env.AUTH_RATE_LIMIT_WINDOW_MS || '900000', 10), // 15 min
+    max:      parseInt(process.env.AUTH_RATE_LIMIT_MAX || '30', 10),
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { success: false, error: 'Too many attempts. Please wait a few minutes and try again.' },
+});
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Mirrors the client-side rule so a hand-crafted request cannot skip it.
+function validateDob(dob) {
+    if (!dob) return null; // optional — see the data-minimization note in the door
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dob)) return 'Date of birth must be a valid date.';
+    const d = new Date(dob + 'T00:00:00Z');
+    if (Number.isNaN(d.getTime())) return 'Date of birth is not a valid date.';
+    const now = new Date();
+    if (d > now) return 'Date of birth cannot be in the future.';
+    const thirteen = new Date(Date.UTC(now.getUTCFullYear() - 13, now.getUTCMonth(), now.getUTCDate()));
+    if (d > thirteen) return 'Accounts require a minimum age of 13.';
+    return null;
+}
+
+// Sign a local user in: mint the kJubilee session and answer in the shape the
+// browser stores (see public/js/jubilee-id.js).
+//
+// This is also where a locked or deactivated account is turned away. The check
+// lives HERE, past the password, so that an unauthenticated caller cannot use
+// the door to probe which addresses are locked.
+async function respondSignedIn(res, user, rememberMe) {
+    const blocked = accountBlockedReason(user);
+    if (blocked) return res.status(403).json({ success: false, error: blocked });
+
+    const sess = await issueSession(user, rememberMe);
+    if (!sess.success) {
+        return res.status(503).json({ success: false, error: 'Signed in, but the session could not be created. Please try again.' });
+    }
+    return res.json({
+        success: true,
+        token: sess.token,
+        expiresAt: sess.expiresAt,
+        user: toAuthUser(user),
+    });
+}
+
+// Verify a legacy local password (accounts that predate the Jubilee ID door).
+function localPasswordMatches(password, row) {
+    if (!row || !row.password_hash || !row.password_salt) return false;
+    return hashPassword(password, row.password_salt) === row.password_hash;
+}
+
+async function loadPasswordRow(email) {
+    const { rows: [r] } = await pgPool.query(
+        `SELECT password_hash, password_salt FROM kj_users WHERE email = $1`, [email]
+    );
+    return r || null;
+}
+
+// ── Screen 1: which of the three outcomes is this email? ─────────────────
+app.post('/api/sso/signup/lookup', ssoAuthLimiter, async (req, res) => {
+    const email = normalizeEmail((req.body || {}).email);
+    if (!email || !EMAIL_RE.test(email)) {
+        return res.status(400).json({ success: false, error: 'Please enter a valid email address.' });
+    }
+
+    // The same gate the Next route applies (app/api/sso/signup/lookup). Both
+    // surfaces answer on the same path, so guarding only one would leave the
+    // other as an unauthenticated way to ask whether an address has a Jubilee ID.
+    const human = await verifyTurnstile((req.body || {}).turnstileToken, req.ip);
+    if (!human.ok) {
+        console.warn('[sso/lookup] turnstile rejected a request:', human.reason);
+        return res.status(403).json({ success: false, error: HUMAN_CHECK_FAILED });
+    }
+
+    // Checked FIRST, so Outcome A still works when the authority is down: a
+    // person who already has a kJubilee account never needs the lookup below.
+    const local = await checkLocalEmail(email);
+    if (local.success && local.exists) {
+        return res.json({ success: true, existsLocally: true, existsInSso: true });
+    }
+    if (!local.success) {
+        return res.status(503).json({ success: false, error: 'We are having trouble reaching your account right now. Please try again in a moment.' });
+    }
+
+    // No authority credentials on this box → nobody can have a Jubilee ID we can
+    // see, so a new email goes to Outcome C and creates a local-only account.
+    if (!sso.isConfigured()) {
+        return res.json({ success: true, existsLocally: false, existsInSso: false, ssoConfigured: false });
+    }
+
+    const result = await sso.ssoLookup(email);
+    if (!result.ok) {
+        console.error('[sso/lookup]', result.status, result.error);
+        return res.status(503).json({ success: false, error: 'Sign-in is temporarily unavailable. Please try again in a moment.' });
+    }
+    // exists → Outcome B (confirm the Jubilee ID, then Create Account here)
+    // else   → Outcome C (create the Jubilee ID and this account together)
+    return res.json({ success: true, existsLocally: false, existsInSso: Boolean(result.data.exists) });
+});
+
+// ── Outcome A: password → signed in. Also the password check for Outcome B. ──
+app.post('/api/sso/login', ssoAuthLimiter, async (req, res) => {
+    const body = req.body || {};
+    const email = normalizeEmail(body.email);
+    const password = body.password || '';
+    const rememberMe = body.rememberMe !== false;
+
+    if (!email || !password) {
+        return res.status(400).json({ success: false, error: 'Email and password are required.' });
+    }
+
+    const local = await checkLocalEmail(email);
+    if (!local.success) {
+        return res.status(503).json({ success: false, error: 'Sign-in is temporarily unavailable. Please try again in a moment.' });
+    }
+
+    // ── Legacy / no-authority path: this site's own password ──────────────
+    // Reached when the box has no SSO credentials, or when the email has a
+    // kJubilee row that still carries a local hash. Without this, every account
+    // created before the Jubilee ID door would be locked out.
+    const passwordRow = local.exists ? await loadPasswordRow(email) : null;
+    const hasLocalPassword = Boolean(passwordRow && passwordRow.password_hash);
+
+    if (!sso.isConfigured()) {
+        if (!local.exists) {
+            return res.status(404).json({ success: false, redirect: 'signup', email, error: "No account for this email — let's create one." });
+        }
+        if (!hasLocalPassword) {
+            return res.status(503).json({ success: false, error: 'Sign-in is temporarily unavailable. Please try again in a moment.' });
+        }
+        if (!localPasswordMatches(password, passwordRow)) {
+            return res.status(401).json({ success: false, error: 'Invalid email or password' });
+        }
+        return respondSignedIn(res, local.user, rememberMe);
+    }
+
+    // 1) Does this email have a Jubilee ID at all?
+    const lookup = await sso.ssoLookup(email);
+    if (!lookup.ok) {
+        // The authority is unreachable. A legacy account can still get in on its
+        // own password rather than being told to come back later.
+        if (hasLocalPassword && localPasswordMatches(password, passwordRow)) {
+            return respondSignedIn(res, local.user, rememberMe);
+        }
+        console.error('[sso/login] lookup', lookup.status, lookup.error);
+        return res.status(503).json({ success: false, error: 'Sign-in is temporarily unavailable. Please try again in a moment.' });
+    }
+
+    if (!lookup.data.exists) {
+        // No Jubilee ID. A pre-door kJubilee account signs in on its local password.
+        if (hasLocalPassword) {
+            if (!localPasswordMatches(password, passwordRow)) {
+                return res.status(401).json({ success: false, error: 'Invalid email or password' });
+            }
+            return respondSignedIn(res, local.user, rememberMe);
+        }
+        return res.status(404).json({
+            success: false, redirect: 'signup', email,
+            error: "No Jubilee ID for this email — let's create one.",
+        });
+    }
+
+    // 2) Verify the password at the authority.
+    const result = await sso.ssoLogin({ email, password });
+    if (!result.ok) {
+        const message = result.status === 401
+            ? 'Invalid email or password'
+            : 'Sign-in is temporarily unavailable. Please try again in a moment.';
+        return res.status(result.status === 401 ? 401 : 503).json({ success: false, error: message });
+    }
+    const ssoUser = result.data.user;
+
+    // 3) Password is good — is there a kJubilee account for it?
+    if (!local.exists) {
+        // Outcome B. The door now shows the Create Account screen, pre-filled
+        // with whatever the Jubilee ID already knows. Nothing is created yet —
+        // that is the point of making the step visible.
+        return res.status(200).json({
+            success: false,
+            redirect: 'signup-existing',
+            email,
+            first_name: ssoUser.first_name || '',
+            last_name: ssoUser.last_name || '',
+            date_of_birth: toYmdLocal(ssoUser.date_of_birth),
+        });
+    }
+
+    // Outcome A. Refresh the local mirror's name from the authority so a name
+    // changed on any family site lands here on this sign-in. Best-effort.
+    await updateLocalAccount({ email, first_name: ssoUser.first_name, last_name: ssoUser.last_name });
+    local.user.first_name = ssoUser.first_name || local.user.first_name;
+    local.user.last_name  = ssoUser.last_name  || local.user.last_name;
+    if (!local.user.jubilee_id && ssoUser.id) {
+        await pgPool.query(`UPDATE kj_users SET jubilee_id = $2::uuid WHERE email = $1 AND jubilee_id IS NULL`, [email, ssoUser.id])
+            .catch((e) => console.error('[sso/login] adopt jubilee_id', e.message));
+        local.user.jubilee_id = ssoUser.id;
+    }
+    return respondSignedIn(res, local.user, rememberMe);
+});
+
+// ── Outcome B, second screen: create the kJubilee account (no password) ──
+// The person proved they own the Jubilee ID on the previous screen; this call
+// re-verifies that same password server-side so the creation cannot be forged,
+// then creates the row and signs them in.
+app.post('/api/sso/signup/verify', ssoAuthLimiter, async (req, res) => {
+    const body = req.body || {};
+    const email = normalizeEmail(body.email);
+    const password = body.password || '';
+    const rememberMe = body.rememberMe !== false;
+
+    if (!email || !password) {
+        return res.status(400).json({ success: false, error: 'Email and password are required.' });
+    }
+    const dobError = validateDob((body.date_of_birth || '').trim());
+    if (dobError) return res.status(400).json({ success: false, error: dobError });
+
+    if (!sso.isConfigured()) {
+        return res.status(503).json({ success: false, error: 'Sign-up is temporarily unavailable. Please try again in a moment.' });
+    }
+
+    const result = await sso.ssoLogin({ email, password });
+    if (!result.ok) {
+        const message = result.status === 401
+            ? "That password doesn't match. Try again."
+            : 'Sign-up is temporarily unavailable. Please try again in a moment.';
+        return res.status(result.status === 401 ? 401 : 503).json({ success: false, error: message });
+    }
+    const ssoUser = result.data.user;
+
+    // The pre-filled details are editable, so honour what was submitted and push
+    // any change back to the Jubilee ID — best-effort, since the identity, not
+    // this site, is where a date of birth belongs.
+    const firstName = (body.first_name != null ? body.first_name : ssoUser.first_name || '').trim();
+    const lastName  = (body.last_name  != null ? body.last_name  : ssoUser.last_name  || '').trim();
+    const dob       = (body.date_of_birth || '').trim();
+    const ssoDob    = ssoUser.date_of_birth ? String(ssoUser.date_of_birth).slice(0, 10) : '';
+    const nameChanged = firstName !== (ssoUser.first_name || '') || lastName !== (ssoUser.last_name || '');
+    const dobChanged  = Boolean(dob) && dob !== ssoDob;
+    if (nameChanged || dobChanged) {
+        const patch = {};
+        if (firstName) patch.first_name = firstName;
+        if (lastName)  patch.last_name  = lastName;
+        if (dob)       patch.date_of_birth = dob;
+        const upd = await sso.ssoUpdateProfileByEmail(ssoUser.email, patch);
+        if (!upd.ok) console.error('[sso/signup/verify] profile update', upd.status, upd.error);
+    }
+
+    const linked = await linkLocalAccount({
+        email: ssoUser.email || email,
+        first_name: firstName || ssoUser.first_name,
+        last_name: lastName || ssoUser.last_name,
+        date_of_birth: dob || ssoDob,
+        jubilee_id: ssoUser.id,
+    });
+    if (!linked.success) {
+        return res.status(503).json({ success: false, error: 'Could not set up your kJubilee account. Please try again.' });
+    }
+    return respondSignedIn(res, linked.user, rememberMe);
+});
+
+// ── Outcome C: create the Jubilee ID and the kJubilee account together ───
+app.post('/api/sso/signup/register', ssoAuthLimiter, async (req, res) => {
+    const body = req.body || {};
+    const email = normalizeEmail(body.email);
+    const firstName = (body.first_name || '').trim();
+    const lastName  = (body.last_name || '').trim();
+    const dob       = (body.date_of_birth || '').trim();
+    const password  = body.password || '';
+    const rememberMe = body.rememberMe !== false;
+
+    if (!firstName || !lastName) {
+        return res.status(400).json({ success: false, error: 'Please enter your first and last name.' });
+    }
+    if (!email || !EMAIL_RE.test(email)) {
+        return res.status(400).json({ success: false, error: 'Please enter a valid email address.' });
+    }
+    const dobError = validateDob(dob);
+    if (dobError) return res.status(400).json({ success: false, error: dobError });
+    if (password.length < 8) {
+        return res.status(400).json({ success: false, error: 'Password must be at least 8 characters.' });
+    }
+
+    // Already a member here? Stop before touching the authority, so a failed
+    // sign-up cannot leave an orphaned Jubilee ID for an email we already hold.
+    const existing = await checkLocalEmail(email);
+    if (!existing.success) {
+        return res.status(503).json({ success: false, error: 'Sign-up is temporarily unavailable. Please try again in a moment.' });
+    }
+    if (existing.exists) {
+        return res.status(409).json({ success: false, existsLocally: true, error: 'An account already exists for this email — please sign in.' });
+    }
+
+    // No authority credentials → create a local-only account with a local
+    // password, exactly as /api/auth/register always has.
+    if (!sso.isConfigured()) {
+        const salt = createSalt();
+        const hash = hashPassword(password, salt);
+        try {
+            const { rows: [row] } = await pgPool.query(
+                `INSERT INTO kj_users (email, password_hash, password_salt, first_name, last_name, name, date_of_birth, email_verified)
+                 VALUES ($1,$2,$3,$4,$5,NULLIF(TRIM(COALESCE($4,'') || ' ' || COALESCE($5,'')), ''),$6::date,FALSE)
+                 RETURNING id, email, first_name, last_name, name, role, jubilee_id, is_active, is_locked, email_verified`,
+                [email, hash, salt, firstName, lastName, dob || null]
+            );
+            return respondSignedIn(res, row, rememberMe);
+        } catch (e) {
+            if (e.code === '23505') {
+                return res.status(409).json({ success: false, error: 'An account already exists for this email — please sign in.' });
+            }
+            console.error('[sso/signup/register] local', e.message);
+            return res.status(500).json({ success: false, error: 'Could not create your account. Please try again.' });
+        }
+    }
+
+    // Create the master identity. The authority holds the password; this site
+    // never sees it again.
+    const result = await sso.ssoRegister({
+        first_name: firstName, last_name: lastName, email,
+        date_of_birth: dob || null, password,
+    });
+    if (!result.ok) {
+        if (result.status === 409) {
+            return res.status(409).json({ success: false, error: 'An account already exists for this email — please sign in.' });
+        }
+        console.error('[sso/signup/register]', result.status, result.error);
+        return res.status(503).json({ success: false, error: 'Could not create your account. Please try again.' });
+    }
+
+    // Create the passwordless kJubilee account linked to the new Jubilee ID.
+    // email_verified: false — nothing in this path proved the address. This is
+    // the ONLY caller that opts out of verified-by-default; the door shows the
+    // dismissible "please confirm your email" banner off the back of it.
+    const ssoUser = result.data.user;
+    const linked = await linkLocalAccount({
+        email: ssoUser.email || email,
+        first_name: ssoUser.first_name || firstName,
+        last_name: ssoUser.last_name || lastName,
+        date_of_birth: dob || null,
+        jubilee_id: ssoUser.id,
+        email_verified: false,
+    });
+    if (!linked.success) {
+        // The Jubilee ID now exists but this site has no row for it, so the
+        // person lands on Outcome B next time rather than a broken account.
+        console.error('[sso/signup/register] local link failed for', email);
+        return res.status(503).json({ success: false, error: 'Your Jubilee ID was created, but kJubilee setup failed. Please try signing in.' });
+    }
+
+    return respondSignedIn(res, linked.user, rememberMe);
 });
 
 // ────────────────────────────────────────────────────────────────────────

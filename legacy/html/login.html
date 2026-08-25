@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kJubilee — Sign in with your Jubilee ID</title>
+<meta name="robots" content="noindex">
+<link rel="icon" type="image/png" href="/images/members/JubileeNova-Circle-200.png">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/scrollbars.css">
+<link rel="stylesheet" href="/css/jubilee-id.css">
+<!-- Same-document navigation, so moving between pages does not stop the
+     music. MUST stay first and MUST NOT be deferred: it wraps
+     addEventListener before any page script can register anything. -->
+<script src="/js/kj-nav.js"></script>
+</head>
+<!--
+  The Jubilee ID door. /login, /signin and /signup are the SAME screen — an
+  email box that then routes to sign-in or to a visible Create Account step.
+  signup.html is this file's twin; the flow itself lives in /js/jubilee-id.js.
+-->
+<body>
+<div class="wave-bar"></div>
+
+<div class="auth-row">
+
+  <!-- Left panel: the door -->
+  <div class="auth-form-panel">
+    <div class="auth-form-inner">
+      <div class="auth-logo">
+        <a href="/" aria-label="kJubilee.com home">
+          <img src="/images/members/JubileeNova-Circle-200.png" alt="" class="auth-logo-img" width="92" height="92">
+          <span class="auth-logo-text"><span class="k">k</span><span class="jubilee">Jubilee</span>.com</span>
+        </a>
+      </div>
+
+      <!-- Every screen of the flow renders here. -->
+      <div id="jubileeDoor"></div>
+    </div>
+
+    <div class="auth-footer">
+      <p class="copyright">
+        &copy; <span id="currentYear"></span> kJubilee.com |
+        <a href="/terms.html" target="_blank" rel="noopener">Terms of Use</a> |
+        <a href="/privacy.html" target="_blank" rel="noopener">Privacy Policy</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- Right panel: photographs, bubbles, scripture -->
+  <div class="auth-bg-panel" aria-hidden="true">
+    <div class="bg-slide active" style="background-image:url('https://images.unsplash.com/photo-1507692049790-de58290a4334?w=1200&q=80')"></div>
+    <div class="bg-slide" style="background-image:url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1200&q=80')"></div>
+    <div class="bg-slide" style="background-image:url('https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1200&q=80')"></div>
+    <div class="bg-slide" style="background-image:url('https://images.unsplash.com/photo-1470252649378-9c29740c9fa8?w=1200&q=80')"></div>
+    <div class="bg-overlay"></div>
+
+    <ul class="bubbles">
+      <li></li><li></li><li></li><li></li><li></li>
+      <li></li><li></li><li></li><li></li><li></li>
+    </ul>
+
+    <div class="scripture-quote">
+      <span id="quoteText">"For I know the plans I have for you," declares the Lord, "plans to prosper you and not to harm you, plans to give you hope and a future."</span>
+      <cite id="quoteCite">— Jeremiah 29:11</cite>
+    </div>
+  </div>
+
+</div>
+
+<script src="/js/jubilee-id.js"></script>
+<!-- The bar is on every page, so a visitor can start listening from wherever
+     they land. It needs the catalogue to know what the stations are. -->
+<script src="/js/stations-data.js"></script>
+<script>window.KJNav && window.KJNav.pageDone();</script>  <!-- closes the window in which registrations count as this page's; see js/kj-nav.js. The footer player loads after this. -->
+</body>
+</html>

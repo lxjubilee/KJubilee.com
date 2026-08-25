@@ -1,0 +1,247 @@
+/* ==========================================================================
+   player.html — THE DIAL
+
+   A tuner, not a directory. Every other surface on this site answers "what is
+   available" by showing you a list; this one answers it by playing something.
+   You press next, a needle slides along the 300 series, and a station arrives.
+   The whole point is to find a frequency you like before you have read a word
+   about it, which is how anyone ever found a radio station they loved.
+
+   BLACK, AND WHITE ON IT. The rest of the site is dark with an azure accent;
+   this page drops the accent almost entirely. A tuner face is a lit scale in a
+   dark case, and colour would only compete with the one thing that moves.
+
+   THE AUDIO IS NOT HERE. The footer player owns every element that makes
+   sound, on this page as on every other. This page is a control surface: it
+   asks kjPlayer to tune, and it listens for what kjPlayer says came back. Two
+   players on one page is the fault this codebase has already been bitten by.
+   ========================================================================== */
+:root{
+  --bg:#000;
+  --ink:#fff;
+  --ink-dim:#b9b9b9;
+  --ink-faint:#6e6e6e;
+  --hair:#2a2a2a;
+  /* RED, and the only red on the page. The needle answers the one question the
+     dial exists to answer - which station am I on - and against a scale drawn
+     entirely in white it was competing with the tick marks and the station
+     marks for attention. A colour nothing else uses cannot be mistaken for
+     part of the scale. */
+  --needle:#ff2d2d;
+  --live:#46D07A;
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-dial:"Orbitron","Segoe UI",sans-serif;
+  --kj-player-h:80px;
+  /* The site header's own tokens, so the bar on this page is the same bar as
+     everywhere else rather than a black-theme lookalike. */
+  --accent:#3DA5FF;
+  --text-muted:#8c8d9c;
+  --border-strong:hsla(0,0%,100%,.1);
+  --topbar-row1-h:48px;
+  --topbar-row2-h:50px;
+  --topbar-h:calc(var(--topbar-row1-h) + var(--topbar-row2-h) + 2px);
+  --site-max:1548px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  min-height:100vh;min-height:100dvh;
+  padding-bottom:var(--kj-player-h,0px);
+  background:var(--bg);color:var(--ink);
+  font-family:var(--font-sans);
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px;border-radius:4px}
+
+/* ---------- the site header ----------------------------------------------
+   THE SAME HEADER AS EVERY OTHER PAGE, rules and all, taken from the page that
+   already carries it rather than re-drawn to look like it.
+
+   This page opened with a thin masthead - a back link and nothing else - on the
+   reasoning that a tuner should feel like an instrument rather than a section
+   of a website. That was the wrong trade: it also meant a listener who tuned
+   something here had no way to reach the categories, and navigation is not
+   decoration. The header goes back and the dial sits underneath it.
+
+   The two rows are the site's own colours, not this page's black, because a
+   header that changes colour per page stops reading as one site. */
+.topbar{flex:none;background:#1b1b1b;border-bottom:1px solid var(--border-strong);z-index:30}
+.topbar-row1,.topbar-row2{display:flex;align-items:center;flex-wrap:nowrap;gap:12px;
+  padding:0 max(10px,calc((100% - var(--site-max)) / 2 + 10px));}
+.topbar-row1{height:var(--topbar-row1-h);background:#242424}
+.topbar-row2{height:var(--topbar-row2-h);background:#1b1b1b;border-top:1px solid var(--border-strong)}
+.logo{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
+.logo-img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
+.logo-name{font-family:var(--font-logo);font-weight:600;font-size:24px;line-height:1;letter-spacing:.01em;white-space:nowrap}
+.logo-accent{color:var(--accent)}
+.spacer{flex:1 1 auto;min-width:0}
+.nav-textlink{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  font-size:12px;font-weight:500;color:#c4c4c4;white-space:nowrap;transition:color .2s ease;}
+.nav-textlink:hover{color:#fff}
+.nav-textlink.is-here{color:var(--accent)}
+.searchbar{display:flex;align-items:center;gap:8px;flex:0 50 auto;min-width:0;
+  padding:5px 12px;background:hsla(0,0%,100%,.06);
+  border:1px solid hsla(0,0%,100%,.12);border-radius:4px;transition:border-color .15s ease;}
+.searchbar:focus-within{border-color:var(--accent)}
+.search-icon{flex:none;color:var(--text-muted)}
+.searchbar input{flex:1 1 auto;min-width:0;background:none;border:0;outline:0;
+  color:var(--text);font:inherit;font-size:13px;}
+.searchbar input::placeholder{color:var(--text-muted)}
+.btn-outline{padding:8px 12px;border-radius:4px;border:1px solid var(--border-strong);
+  color:#c4c4c4;font-size:12px;font-weight:500;white-space:nowrap;
+  transition:border-color .2s ease,color .2s ease,background .2s ease;}
+.btn-outline:hover{color:#fff;background:#2d2d2d}
+.primary-nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.primary-nav::-webkit-scrollbar{display:none}
+.nav-link{padding:7px 12px;border-radius:4px;border:1px solid transparent;
+  font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:#c4c4c4;white-space:nowrap;transition:background .2s ease,color .2s ease;}
+.nav-link:hover{background:#2d2d2d}
+.nav-link.is-active{color:var(--accent);border-color:var(--accent);background:transparent}
+.search-btn:hover{filter:brightness(1.06)}
+.nav-short{display:none}
+.nav-long{display:none}
+.nav-short{display:inline}
+.lang-flag{flex:0 0 auto;padding:4px 4px 4px 10px;background:#1b1b1b;display:inline-flex;transition:box-shadow .2s ease,transform .2s ease}
+.lang-flag:hover{transform:scale(1.1);box-shadow:0 0 0 2px var(--accent)}
+.lang-flag img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.topbar-row1{gap:8px}
+.searchbar{display:none}
+
+/* ---------- the readout --------------------------------------------------- */
+/* Every vertical gap on this page scales with the viewport HEIGHT, not just
+   its width. The readout's type is clamped against vw and grows large on a
+   wide screen; with fixed margins under it the instrument stopped fitting in
+   one view on a laptop — ten pixels over, which is enough to put a scrollbar
+   on a page whose whole idea is a single face you look at. */
+.stage{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;justify-content:center;
+  padding:10px 22px clamp(12px,2.4vh,30px);max-width:1180px;margin:0 auto;width:100%}
+.readout{text-align:center;margin-bottom:clamp(20px,4.4vh,54px)}
+.band{font-family:var(--font-dial);font-size:12px;letter-spacing:.42em;
+  text-transform:uppercase;color:var(--ink-faint);margin-bottom:14px}
+/* The number is the largest thing on the page, because on a tuner it is the
+   thing you are actually turning. */
+/* Sized against the SHORTER dimension. Against width alone, a 1366x768 laptop
+   asked for a 132px number and pushed the dial and the transport off the
+   bottom by 146px — the instrument no longer fit on the instrument's own page.
+   min(12vw, 15vh) keeps it the biggest thing on screen without letting a wide,
+   short window blow the layout. */
+.freq{font-family:var(--font-dial);font-weight:700;line-height:1;
+  font-size:clamp(46px,min(12vw,15vh),132px);letter-spacing:-.01em;
+  display:flex;align-items:baseline;justify-content:center;gap:.14em}
+.freq .hm{font-size:.3em;letter-spacing:.12em;color:var(--ink-faint)}
+.station{font-size:clamp(19px,2.4vw,27px);font-weight:600;margin:18px 0 6px;
+  min-height:1.2em}
+.sub{font-size:14px;color:var(--ink-dim);min-height:1.3em}
+.onair{display:inline-flex;align-items:center;gap:7px;margin-top:14px;
+  font-size:10.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-faint);transition:color .25s ease}
+.onair i{width:6px;height:6px;border-radius:50%;background:currentColor;display:block}
+.onair.live{color:var(--live)}
+.onair.live i{animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* ---------- the dial ------------------------------------------------------
+   A window onto a scale that is wider than the window. The scale slides
+   behind a fixed needle, which is how a real tuner reads: the number under
+   the line is the number you are on. */
+.dial{position:relative;height:132px;overflow:hidden;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair);
+  cursor:grab}
+.dial:active{cursor:grabbing}
+.dial-track{position:absolute;top:0;bottom:0;left:0;
+  transition:transform .85s cubic-bezier(.22,.61,.36,1)}
+.dial-track.dragging{transition:none}
+/* Every tick is placed by the script at its own frequency, so the scale is
+   linear in HZ and a station's mark sits exactly where its number does. */
+.tick{position:absolute;bottom:34px;width:1px;background:var(--hair)}
+.tick.minor{height:9px}
+.tick.major{height:17px;background:#3a3a3a}
+.tick.label{height:22px;background:#4a4a4a}
+.tick-num{position:absolute;bottom:6px;transform:translateX(-50%);
+  font-family:var(--font-dial);font-size:12px;letter-spacing:.06em;color:var(--ink-dim);
+  white-space:nowrap}
+/* A station is a taller, brighter mark with a dot on top. Nothing else on the
+   scale is white, so the eye reads the white marks as "there is something
+   here" without a legend explaining it. */
+.mark{position:absolute;bottom:34px;width:2px;height:46px;background:var(--ink);
+  transform:translateX(-50%);opacity:.55;transition:opacity .25s ease,height .25s ease}
+.mark::after{content:"";position:absolute;top:-7px;left:50%;transform:translateX(-50%);
+  width:7px;height:7px;border-radius:50%;background:var(--ink)}
+.mark:hover{opacity:1}
+.mark.on{opacity:1;height:60px}
+.mark-hit{position:absolute;bottom:0;width:34px;height:100%;transform:translateX(-50%);
+  background:none;border:0;padding:0;cursor:pointer}
+/* The needle. Fixed in the middle of the window; the scale moves under it. */
+.needle{position:absolute;left:50%;top:0;bottom:0;width:2px;transform:translateX(-50%);
+  background:var(--needle);box-shadow:0 0 16px rgba(255,45,45,.75);pointer-events:none}
+.needle::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);
+  border-left:7px solid transparent;border-right:7px solid transparent;
+  border-top:9px solid var(--needle)}
+/* The scale fades out at both edges rather than being cut off, so it reads as
+   a band continuing past the window instead of a bar that ends. */
+.dial::before,.dial::after{content:"";position:absolute;top:0;bottom:0;width:110px;z-index:2;
+  pointer-events:none}
+.dial::before{left:0;background:linear-gradient(90deg,#000,transparent)}
+.dial::after{right:0;background:linear-gradient(270deg,#000,transparent)}
+
+/* ---------- transport ----------------------------------------------------- */
+.controls{display:flex;align-items:center;justify-content:center;gap:clamp(18px,4vw,40px);
+  margin-top:clamp(26px,5vh,48px)}
+.tbtn{display:grid;place-items:center;width:56px;height:56px;border-radius:50%;
+  border:1px solid var(--hair);color:var(--ink-dim);
+  transition:border-color .18s ease,color .18s ease,transform .12s ease}
+.tbtn svg{width:22px;height:22px;fill:currentColor}
+.tbtn:hover{border-color:var(--ink-faint);color:var(--ink)}
+.tbtn:active{transform:scale(.94)}
+.tbtn.play{width:84px;height:84px;background:var(--ink);color:#000;border-color:var(--ink)}
+.tbtn.play svg{width:30px;height:30px}
+.tbtn.play:hover{background:#e6e6e6;border-color:#e6e6e6;color:#000}
+.tbtn-label{display:block;margin-top:10px;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-faint);text-align:center}
+.control{display:flex;flex-direction:column;align-items:center}
+.hint{margin:clamp(12px,2.4vh,26px) auto 0;max-width:560px;text-align:center;
+  font-size:13px;line-height:1.6;color:var(--ink-faint)}
+.hint kbd{font-family:var(--font-dial);font-size:11px;border:1px solid var(--hair);
+  border-radius:4px;padding:2px 6px;color:var(--ink-dim)}
+
+/* A short window is the common laptop, not an edge case: the page has to fit
+   at 768 tall with a player bar taking eighty of it. The hint is the first
+   thing to go — it explains a control that is already obvious once pressed. */
+@media (max-height:820px){
+  .dial{height:112px}
+  .hint{display:none}
+  .tbtn{width:50px;height:50px}
+  .tbtn.play{width:74px;height:74px}
+  .station{margin:12px 0 4px}
+}
+
+/* The short-window step. 740 rather than 700 because the breakpoint has to
+   catch a 1440x810 laptop too: the browser's own chrome takes about a hundred
+   pixels off the top, so an 810px window is a ~705px viewport and was landing
+   just above the old cut and scrolling by eleven pixels. */
+@media (max-height:740px){
+  .dial{height:84px}
+  .freq{font-size:clamp(40px,min(11vw,13vh),132px)}
+  .band{margin-bottom:6px;font-size:11px}
+  .readout{margin-bottom:clamp(10px,2.2vh,30px)}
+  .controls{margin-top:clamp(14px,3vh,48px)}
+  .station{font-size:clamp(17px,2vw,22px);margin:10px 0 3px}
+  .sub{font-size:13px}
+  .onair{margin-top:8px}
+  .tbtn-label{margin-top:6px}
+  .stage{padding-top:4px}
+}
+
+@media (max-width:700px){
+  .top{padding:14px 16px}
+  .top .elsewhere{display:none}
+  .stage{padding:6px 14px 24px}
+  .dial{height:112px}
+  .dial::before,.dial::after{width:56px}
+  .tbtn{width:48px;height:48px}
+  .tbtn.play{width:72px;height:72px}
+}

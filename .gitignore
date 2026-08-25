@@ -38,3 +38,7 @@ coverage/
 tools/StationImageStudio/bin/
 tools/StationImageStudio/obj/
 tools/StationImageStudio/studio.config.json
+
+# Next.js
+.next/
+next-env.d.ts

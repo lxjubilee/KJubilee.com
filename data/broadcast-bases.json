@@ -227,8 +227,8 @@
     },
 
     "jubilee-radio": {
-      "bases": ["Seattle", "Nashville", "Atlanta"],
-      "why": "The flagship keeps the Seattle origin its tenant already carries, relayed through Nashville and Atlanta so all three mainland zones carry the dial's front door."
+      "bases": ["Sacramento", "Denver", "Miami", "Houston", "Honolulu"],
+      "why": "The flagship carries five bases where every other station carries three, because it is the dial's front door and should reach a listener on their own clock wherever they are. Sacramento, Denver, Houston, Miami and Honolulu are five distinct time zones — Pacific, Mountain, Central, Eastern and Hawaii — which is every zone the United States keeps except Alaska."
     },
     "jubilee-praise": {
       "bases": ["Jerusalem", "Los Angeles", "Newark"],
@@ -239,8 +239,8 @@
       "why": "Jerusalem per the tenant, with Nashville as the CCM relay and Los Angeles closing the Pacific."
     },
     "yes-and-amen": {
-      "bases": ["Nashville", "Phoenix", "Charlotte"],
-      "why": "Nashville per the tenant. Phoenix and Charlotte spread it across Mountain and Eastern without doubling up on a market Nashville already covers."
+      "bases": ["Boston", "Phoenix", "Charlotte"],
+      "why": "Boston anchors, with Phoenix and Charlotte covering Mountain and the Southeast. The anchor moved off the tenant's Nashville on 2026-08-25; Boston and Charlotte both keep Eastern time, so Phoenix is what makes the set span more than one clock."
     },
     "country-gospel": {
       "bases": ["Nashville", "Sacramento", "Charlotte"],

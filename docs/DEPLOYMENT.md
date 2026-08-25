@@ -149,6 +149,75 @@ keep the origin on HTTP, set `trust proxy` (already done in `server.js`).
 
 ---
 
+## 7b. `api.kjubilee.com` — the auth API on its own hostname
+
+DNS for `api.kjubilee.com` already exists and is Cloudflare-proxied to the same
+addresses as the apex. What it lacks is an origin: with no `server_name` for it,
+nginx hands the request to the default server and Cloudflare reports **502**.
+That is the whole gap — the app already serves every auth route.
+
+```bash
+sudo cp deploy/nginx/api.kjubilee.com.conf /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/api.kjubilee.com.conf /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+The block proxies `/api/` to the same `localhost:3210` the apex uses, so there
+is no second deployment and no second database. `/health` is proxied too, so the
+API host can be monitored on its own; everything else returns 404, because a
+second half-working copy of the site on a hostname nobody designed for it is
+worse than nothing.
+
+**Paths keep the `/api/` prefix**, matching `api.jubileeinspire.com`:
+
+| | |
+|---|---|
+| `POST /api/sso/signup/lookup` | Screen 1 — which of the three outcomes |
+| `POST /api/sso/login` | Outcome A sign-in, and the Outcome B password check |
+| `POST /api/sso/signup/verify` | Outcome B — create the linked account |
+| `POST /api/sso/signup/register` | Outcome C — create the Jubilee ID + account |
+| `POST /api/auth/forgot-password` | issue and email a reset link |
+| `GET · POST /api/auth/reset-password` | check a link · spend it |
+| `POST /api/auth/register` · `login` · `GET /api/auth/me` | the pre-door local endpoints |
+
+### CORS is the part to get right
+
+Publishing on a second hostname makes every browser call cross-origin, and the
+allowlist in `lib/cors.js` becomes load-bearing. It replaced
+`cors({ origin: true, credentials: true })`, which reflected **any** Origin and
+paired it with `Allow-Credentials: true` — survivable while every call was
+same-origin, not survivable for an auth API on its own host.
+
+Add anything outside the family to `CORS_ORIGINS` (comma-separated, exact
+origins). Do **not** add `Access-Control-*` headers in nginx: the app already
+sends them, and a browser rejects a duplicated `Access-Control-Allow-Origin`.
+
+### Pointing the site at it
+
+Same-origin still works and stays the default. To move the browser's own calls
+to the API host:
+
+```env
+NEXT_PUBLIC_API_BASE=https://api.kjubilee.com
+```
+
+⚠ `NEXT_PUBLIC_` values are inlined at **build** time — that is `npm run build`,
+not a restart. Leaving it empty keeps every call same-origin and costs a
+cross-origin preflight per call less.
+
+### Verify
+
+```bash
+npm run check:api                        # https://api.kjubilee.com
+npm run check:api -- http://localhost:3210
+```
+
+Checks each auth endpoint is reachable and that CORS lets `kjubilee.com` in
+while refusing `evil.example` **and** `kjubilee.com.evil.example` — the
+lookalike a loose rule waves through.
+
+---
+
 ## 8. Smoke tests after deploy
 
 ```bash

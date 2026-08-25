@@ -41,7 +41,9 @@ const tenants = require('./lib/tenants');
 const ROOT = path.join(__dirname, '..');
 const SRC = path.join(ROOT, 'data', 'broadcast-bases.json');
 const TOWERS = path.join(ROOT, 'public', 'data', 'hm-towers.json');
-const CATALOGUE = path.join(ROOT, 'public', 'radio.html');
+// The catalogue moved with radio.html's inline script when the pages became
+// Next routes; it is the same array, now at public/js/pages/radio.js.
+const CATALOGUE = path.join(ROOT, 'public', 'js', 'pages', 'radio.js');
 const OUT = path.join(ROOT, 'public', 'data', 'station-bases.json');
 
 const CHECK_ONLY = process.argv.indexOf('--check') >= 0;

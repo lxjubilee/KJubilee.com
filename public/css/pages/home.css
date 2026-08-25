@@ -1,0 +1,667 @@
+/* ==========================================================================
+   kJubilee.com home page
+   Visual language follows the Inspire network house style (inspiremanna.com):
+   two-row top bar, cinematic hero carousel, horizontal card shelves.
+   Accent palette is the Nova persona's "black-green" theme — she is the
+   host persona this site is fronted by. Swapping --accent + friends below
+   re-themes the whole page for a different member.
+   ========================================================================== */
+:root{
+  --bg:#000;
+  --surface:#14151d;
+  --surface-2:#16171f;
+  --card:#2d2d2d;
+  --card-hover:#3a3a3a;
+  --text:#f3f2ee;
+  --text-dim:#c9cad4;
+  --text-muted:#8c8d9c;
+  --accent:#3DA5FF;          /* Jubilee — azure */
+  /* ON AIR is green everywhere, independent of the site accent. Green means
+     live; it is the one colour on the page that carries a meaning of its own
+     rather than a brand. */
+  --onair:#46D07A;
+  --onair-ink:#05210f;
+  --accent-hi:#7CC4FF;
+  --accent-lo:#1B6FB8;
+  --accent-soft:rgba(61,165,255,.55);
+  --border:hsla(0,0%,100%,.06);
+  --border-strong:hsla(0,0%,100%,.1);
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-logo:"Orbitron","Segoe UI",sans-serif;
+  --topbar-row1-h:48px;
+  --topbar-row2-h:50px;
+  /* Row 2 has a 1px top border and .topbar a 1px bottom border, so the bar is
+     two pixels taller than its two rows. The hero subtracts this to reach the
+     player exactly. */
+  --topbar-h:calc(var(--topbar-row1-h) + var(--topbar-row2-h) + 2px);
+  /* The player bar mounts from JS, so without this the hero would first lay out
+     80px too tall and then snap shorter once the bar appeared. This page always
+     carries the player, so it reserves the space up front and kj-footer-player.js
+     re-declares the same value on body when it mounts. Keep the two in step. */
+  --kj-player-h:80px;
+  --shelf-gap:38px;
+  --site-max:1548px;
+  --site-pad:10px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;
+  /* Reserved up front, not when the deferred player script mounts the bar:
+     without it the first measurement of #scroll is 80px too tall and the hero
+     visibly snaps shorter a frame later. kj-footer-player.js re-declares the
+     same padding on mount from the height it actually measures. */
+  padding-bottom:var(--kj-player-h,0px);
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- top bar ------------------------------------------------------ */
+.topbar{flex:none;background:#1b1b1b;border-bottom:1px solid var(--border-strong);z-index:30}
+.topbar-row1,.topbar-row2{
+  display:flex;align-items:center;flex-wrap:nowrap;gap:12px;
+  padding:0 max(10px,calc((100% - var(--site-max)) / 2 + 10px));
+}
+.topbar-row1{height:var(--topbar-row1-h);background:#242424}
+.topbar-row2{height:var(--topbar-row2-h);background:#1b1b1b;border-top:1px solid var(--border-strong)}
+.logo{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
+.logo-img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
+.logo-name{font-family:var(--font-logo);font-weight:600;font-size:24px;line-height:1;letter-spacing:.01em;white-space:nowrap}
+.logo-accent{color:var(--accent)}
+/* The leading "k" sits 2pt below the rest of the wordmark. calc with an
+   absolute pt, not an em ratio, so the reduction stays exactly 2pt at the
+   24px desktop size and the 17px narrow-screen size alike. */
+.logo-k{font-size:calc(1em - 2pt)}
+.spacer{flex:1 1 auto;min-width:0}
+.nav-textlink{
+  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  font-size:12px;font-weight:500;color:#c4c4c4;white-space:nowrap;transition:color .2s ease;
+}
+.nav-textlink:hover{color:#fff}
+.searchbar{
+  display:flex;align-items:center;gap:8px;flex:0 50 auto;min-width:0;
+  padding:5px 12px;background:hsla(0,0%,100%,.06);
+  border:1px solid hsla(0,0%,100%,.12);border-radius:4px;transition:border-color .15s ease;
+}
+.searchbar:focus-within{border-color:hsla(0,0%,100%,.2)}
+.search-icon{color:#8a8a8a;flex:none}
+.searchbar input{flex:1 1;min-width:0;width:130px;background:none;border:0;color:#fff;font-size:12px;outline:none}
+.searchbar input::placeholder{color:#8a8a8a}
+.search-btn{flex:none;padding:3px 10px;border-radius:3px;background:var(--accent);color:#0A1B2B;font-size:11px;font-weight:700;transition:filter .15s ease}
+.search-btn:hover{filter:brightness(1.06)}
+.btn-outline{
+  padding:8px 12px;border-radius:4px;border:1px solid var(--border-strong);
+  color:#c4c4c4;font-size:12px;font-weight:500;white-space:nowrap;
+  transition:border-color .2s ease,color .2s ease,background .2s ease;
+}
+.btn-outline:hover{color:#fff;background:#2d2d2d}
+.primary-nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.primary-nav::-webkit-scrollbar{display:none}
+.nav-link{
+  display:inline-flex;align-items:center;padding:8px 12px;border:1px solid transparent;border-radius:4px;
+  font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.02em;color:#fff;white-space:nowrap;
+  transition:color .2s ease,border-color .2s ease,background .2s ease;
+}
+.nav-link:hover{background:#2d2d2d}
+.nav-link.is-active{color:var(--accent);border-color:var(--accent);background:transparent}
+/* The right-hand nav must not shrink away when the left one has more items
+   than fit — the left side scrolls, this side stays put. */
+.nav-right{flex:0 0 auto;overflow:visible}
+.nav-short{display:none}
+/* Below this width the left-hand categories have to scroll, so the pinned
+   right-hand item gives up its long name to leave them as much room as it can. */
+@media (max-width:900px){
+  .nav-long{display:none}
+  .nav-short{display:inline}
+}
+
+/* ---------- HM articles -------------------------------------------------- */
+.articles{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;margin-bottom:var(--shelf-gap)}
+.article{
+  position:relative;background:var(--card);border:1px solid var(--border);border-radius:10px;
+  padding:24px 26px 26px;overflow:hidden;
+}
+.article.is-live{border-color:var(--accent-soft)}
+.article-kicker{
+  display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.14em;color:var(--accent);margin-bottom:10px;
+}
+.article h2{font-size:20px;font-weight:800;letter-spacing:-.01em;line-height:1.25;margin:0 0 12px;color:#fff}
+.article p{margin:0 0 12px;font-size:14.5px;line-height:1.62;color:var(--text-dim)}
+.article p:last-child{margin-bottom:0}
+/* The lead article runs the full width and sets the tone for the page. Its
+   body flows into columns rather than one long measure — full-width prose at
+   this size would either run to an unreadable line length or leave half the
+   card empty. */
+.articles .article:first-child{grid-column:1/-1;padding:34px 36px 36px}
+.articles .article:first-child h2{font-size:29px}
+.articles .article:first-child p{font-size:16px}
+.articles .article:first-child .article-body{columns:2;column-gap:46px}
+.articles .article:first-child .article-body p{break-inside:avoid}
+@media (max-width:860px){.articles .article:first-child .article-body{columns:1}}
+/* Sits after the nav, which scrolls horizontally on narrow screens — the
+   solid ground keeps nav items from sliding visibly underneath it. */
+.lang-flag{flex:0 0 auto;padding:4px 4px 4px 10px;background:#1b1b1b;display:inline-flex;transition:box-shadow .2s ease,transform .2s ease}
+.lang-flag img{border-radius:50%}
+.lang-flag:hover{transform:scale(1.1);box-shadow:0 0 0 2px var(--accent)}
+.lang-flag img{width:26px;height:26px;border-radius:50%;object-fit:cover}
+
+/* ---------- scroll region ------------------------------------------------ */
+.scroll{flex:1 1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column}
+.scroll-inner{
+  --pad-top:28px;--pad-x:var(--site-pad);--pad-bot:52px;
+  padding:var(--pad-top) max(var(--pad-x),calc((100% - var(--site-max)) / 2 + var(--pad-x))) var(--pad-bot);
+  flex:1 0 auto;width:100%;
+}
+
+/* ---------- station ident artwork ---------------------------------------- */
+/* No cover photography exists yet, so every station gets a generated ident:
+   its format gradient, dial ticks, and its own frequency set large. */
+.ident{
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(120% 92% at 78% 22%,hsla(0,0%,100%,.13),transparent 62%),
+    repeating-linear-gradient(90deg,hsla(0,0%,100%,.05) 0 1px,transparent 1px 34px),
+    linear-gradient(150deg,var(--g1),var(--g2));
+}
+.ident-freq{
+  position:absolute;right:10px;top:50%;transform:translateY(-50%);
+  font-family:var(--font-logo);font-weight:700;font-size:clamp(34px,4.6vw,58px);
+  line-height:1;letter-spacing:-.03em;color:hsla(0,0%,100%,.14);white-space:nowrap;
+}
+
+/* ---------- hero --------------------------------------------------------- */
+.hero{
+  /* FILLS THE VIEWPORT DOWN TO THE STICKY PLAYER, AT EVERY SIZE AND ZOOM.
+     It used to be a vh fraction (48vh + 92px) chosen to look right on one
+     screen, which left a black band above the player on tall displays and
+     overshot on short ones. Deriving it instead - viewport, less the top bar,
+     less the player - is closer, but still only exact while those two numbers
+     are exactly what the stylesheet says: a browser at 110% or 125% rounds
+     each bar to a different whole number of pixels, the top bar grows when its
+     nav wraps, and the player has breakpoints of its own. Every pixel any of
+     them is out by comes back as a black band above the player.
+
+     So the height is MEASURED, not described. #scroll is precisely the space
+     between the two bars, so its own height is the answer at any resolution
+     and any zoom; sizeHero() publishes it as --hero-h and keeps it in step
+     with a ResizeObserver.
+
+     The calc() stays as the fallback --hero-h resolves to before the script
+     runs and if it never does: three declarations, in rising order of
+     accuracy, each one only used when the browser cannot honour the next.
+     --kj-player-h is published by kj-footer-player.js when the bar mounts and
+     defaults to 0px, so a page without a player still reaches the bottom.
+
+     min-height, not height, so an unusually tall caption can still grow the box
+     rather than spill out of it. */
+  position:relative;overflow:hidden;
+  min-height:calc(100vh  - var(--topbar-h) - var(--kj-player-h, 0px));
+  min-height:calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px));
+  min-height:var(--hero-h, calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px)));
+  display:flex;align-items:flex-end;padding:38px;
+  margin:calc(-1 * var(--pad-top)) calc(-1 * var(--site-pad)) var(--shelf-gap);
+}
+.hero-shot{position:absolute;inset:0;opacity:0;transition:opacity .7s ease}
+.hero-shot.is-live{opacity:1}
+/* STAYS ABSOLUTE. The base .ident-freq is absolutely positioned and this rule
+   only re-places it; setting `relative` here turned right/bottom into flow
+   nudges and the watermark jumped to the top-left corner over the title. */
+.hero-shot .ident-freq{position:absolute;z-index:2;right:44px;top:auto;bottom:26px;transform:none;font-size:clamp(44.8px,6.3vw,105px);color:hsla(0,0%,100%,.225)}
+/* The "HM" prefix reads at 70% of the frequency it labels, so the number stays
+   the thing you see. em, not px — it has to track the clamp() above. */
+.hero-shot .ident-freq .ident-freq-hm{font-size:.7em}
+/* The hero picture. Same fade and same top anchoring as a tile cover — it is
+   the same class — but the hero box is roughly 3:1, far wider than the 16:9
+   render, so the vertical crop here is the largest anywhere on the page and the
+   top anchoring matters most. No hover transform: the hero is not a button. */
+.hero-art{z-index:0}
+.hero-shot:hover .hero-art{transform:none}
+.hero-scrim{
+  position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,rgba(6,6,12,.94),rgba(6,6,12,.86) 30%,rgba(6,6,12,.55) 55%,rgba(6,6,12,.18) 78%,rgba(6,6,12,0));
+}
+.hero-content{position:relative;z-index:3;max-width:600px;animation:heroIn .5s ease both}
+@keyframes heroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.hero-eyebrow{display:block;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:hsla(0,0%,100%,.72);margin-bottom:16px}
+.hero-title{font-weight:800;font-size:46px;line-height:1.05;letter-spacing:-.02em;margin:0 0 6px;color:#fff}
+.hero-title button{display:block;text-align:left;font:inherit;letter-spacing:inherit}
+.hero-title button:hover{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.hero-freq{font-family:var(--font-logo);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--accent);display:block;margin-bottom:14px}
+.hero-by{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+.hero-face{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid hsla(0,0%,100%,.28);flex:none}
+.hero-by-name{font-size:14.5px;font-weight:700;color:#fff}
+.hero-by-focus{font-size:13px;color:hsla(0,0%,100%,.66)}
+.hero-by-focus::before{content:"· "}
+.hero-blurb{font-size:15.5px;line-height:1.5;color:hsla(0,0%,100%,.85);margin:0 0 22px;max-width:530px}
+.hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.btn-accent{
+  display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#0a1b12;
+  font-weight:700;font-size:14px;padding:11px 20px;border-radius:100px;white-space:nowrap;
+  transition:filter .15s ease,transform .15s ease;
+}
+.btn-accent:hover{filter:brightness(1.06)}
+.btn-accent:active{transform:translateY(1px)}
+.hero-meta{font-size:13px;font-weight:500;color:hsla(0,0%,100%,.82)}
+.hero-tag{font-size:13px;font-weight:600;color:var(--accent)}
+.hero-arrow{
+  position:absolute;z-index:4;top:50%;transform:translateY(-50%);width:40px;height:40px;
+  display:grid;place-items:center;border-radius:50%;color:#fff;
+  background:rgba(10,11,16,.55);border:1px solid hsla(0,0%,100%,.16);
+  opacity:0;transition:opacity .18s ease,background .18s ease;
+}
+.hero-arrow.prev{left:14px}
+.hero-arrow.next{right:14px}
+.hero:hover .hero-arrow,.hero-arrow:focus-visible{opacity:1}
+.hero-arrow:hover{background:rgba(10,11,16,.82)}
+.hero-dots{position:absolute;z-index:4;left:0;right:0;bottom:24px;display:flex;justify-content:center;gap:8px;pointer-events:none}
+.hero-dot{pointer-events:auto;width:9px;height:9px;border-radius:50%;background:hsla(0,0%,100%,.34);transition:width .25s ease,background .25s ease}
+.hero-dot.is-live{width:26px;border-radius:5px;background:var(--accent)}
+
+/* ---------- section intro ------------------------------------------------ */
+.section-intro{margin:0 0 26px}
+.section-intro h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px}
+.section-intro p{margin:0;color:var(--text-muted);font-size:14.5px;max-width:620px}
+
+/* ---------- member strip ------------------------------------------------- */
+.members{display:flex;gap:10px;overflow-x:auto;padding:4px 0 14px;margin-bottom:var(--shelf-gap)}
+.member{flex:0 0 112px;text-align:center;padding:12px 4px;border-radius:10px;transition:background .2s ease}
+.member:hover{background:#1c1c1c}
+.member img{width:76px;height:76px;border-radius:50%;margin:0 auto 9px;border:2px solid var(--border-strong);object-fit:cover}
+.member.is-lead img{border-color:var(--accent);box-shadow:0 0 0 4px rgba(61,165,255,.14)}
+.member-name{font-size:13.5px;font-weight:700;color:#fff}
+.member-focus{font-size:11.5px;color:var(--text-muted);line-height:1.35;margin-top:3px}
+.member-count{font-size:11px;color:var(--accent);margin-top:5px;font-weight:600}
+
+/* ---------- shelves ------------------------------------------------------ */
+.shelf{margin-bottom:var(--shelf-gap)}
+.shelf-head{display:flex;align-items:baseline;gap:12px;margin-bottom:12px}
+.shelf-head h2{font-size:21px;font-weight:700;letter-spacing:-.01em;margin:0}
+.shelf-count{font-size:12px;color:var(--text-muted)}
+.row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+/* ONE CARD PER ROW IS WIDE, which is what gives the grid its rhythm on
+   InspireManna and JubiLujah. See isWide() in the shelf renderer for why the
+   marked indexes are 0, 6 and 11 of every twelve. */
+.card.wide{grid-column:span 2}
+.card{
+  position:relative;width:100%;min-width:0;text-align:left;display:flex;flex-direction:column;
+  background:var(--card);border-radius:8px;overflow:hidden;transition:background .2s ease,transform .2s ease;
+}
+.card:hover{background:var(--card-hover);transform:translateY(-2px)}
+
+/* ── Hover preview ───────────────────────────────────────────────────────
+   The card that grows out of the tile on hover, ported from InspireManna
+   (globals.css .card-preview / MessageCard.js). A flat panel that pops from
+   0.86 rather than fading, carrying the picture, the transport row and the
+   station's details.
+
+   It is appended to <body>, NOT to the tile. A popup inside .scroll would be
+   clipped by it and would scroll away from the pointer; fixed positioning
+   against the viewport is the only thing that holds it still. Everything the
+   preview needs is therefore passed in when it is built — it cannot see the
+   card it belongs to from where it lives. */
+.card-preview{
+  position:fixed;z-index:1500;background:#181818;border-radius:6px;
+  box-shadow:0 14px 44px rgba(0,0,0,.8);overflow:visible;transform-origin:center;
+  animation:cp-pop .16s ease-out;
+}
+@keyframes cp-pop{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+.cp-cover{
+  position:relative;display:block;width:100%;padding:0;border:0;cursor:pointer;
+  border-radius:6px 6px 0 0;overflow:hidden;aspect-ratio:16/9;background:#111;
+}
+/* The station render at its own 16:9, not the tile's letterbox band: the popup
+   has the room to show the whole frame the tile had to crop. */
+.cp-cover .ident{position:absolute;inset:0}
+.cp-cover .cover-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;opacity:0;transition:opacity .3s ease}
+.cp-cover .cover-art.on{opacity:1}
+/* The picture fades into the panel along its bottom edge, so the photograph
+   ends by becoming the card rather than stopping at a hard line. Confined to
+   the bottom 35%: any taller and it starts eating the subject, which on these
+   renders is a person standing in the middle of the frame.
+
+   It fades to #181818 because that is .card-preview background — the point is
+   that the seam between image and body disappears. */
+.cp-cover::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:35%;z-index:1;
+  background:linear-gradient(180deg,rgba(24,24,24,0) 0%,rgba(24,24,24,.72) 55%,#181818 100%);
+  pointer-events:none;
+}
+/* Bottom LEFT, matching the tile underneath it: the frequency reads as the
+   station identifier in both places, and on the popup the right-hand corner is
+   where the eye is already heading for the controls below. Sized up from the
+   tile because the popup picture is bigger and the ident should scale with it. */
+.cp-ident{
+  position:absolute;left:12px;right:12px;bottom:10px;z-index:2;
+  /* Baseline, not centre: the count is less than half the height of the
+     frequency, and centring it would leave it floating in the middle of the
+     digits instead of sitting on the same line they stand on. */
+  display:flex;align-items:baseline;gap:10px;
+}
+.cp-freq{
+  font-family:var(--font-logo);font-weight:700;
+  font-size:31.6px;line-height:1;letter-spacing:.05em;color:hsla(0,0%,100%,.95);text-shadow:0 1px 8px rgba(0,0,0,.75);
+}
+/* How much music the station actually has, next to the dial number it plays on.
+   Stated only where there IS a catalog: a station still being built would
+   otherwise read "0 Songs", which says broken rather than not-yet. */
+.cp-songs{
+  font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  color:hsla(0,0%,100%,.82);text-shadow:0 1px 6px rgba(0,0,0,.7);white-space:nowrap;
+}
+.cp-body{padding:14px 16px 18px;color:#fff}
+.cp-actions{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cp-act{
+  width:38px;height:38px;border-radius:50%;border:2px solid #6d6d6e;padding:0;
+  background:rgba(42,42,42,.6);color:#fff;display:grid;place-items:center;cursor:pointer;
+  transition:border-color .15s ease,background .15s ease,transform .1s ease,filter .15s ease;
+}
+.cp-act:hover{border-color:#fff}
+.cp-act:active{transform:scale(.92)}
+.cp-act svg{display:block}
+/* Play is the filled one — it is the reason the popup exists. */
+.cp-act.play{background:var(--accent);color:#052033;border-color:var(--accent)}
+.cp-act.play:hover{filter:brightness(1.08)}
+/* Saved / liked, once it has been pressed. */
+.cp-act.is-on{background:var(--accent);border-color:var(--accent);color:#1b1b1b}
+.cp-act.is-on:hover{filter:brightness(1.08)}
+.cp-act.details{margin-left:auto}
+.cp-act[disabled]{opacity:.4;cursor:default}
+.cp-act[disabled]:hover{border-color:#6d6d6e}
+.cp-title{font-weight:700;font-size:15px;line-height:1.3;color:#fff;margin-bottom:8px}
+.cp-meta{display:flex;align-items:center;gap:8px;font-size:12px;color:#d2d2d2;margin-bottom:8px;min-width:0}
+.cp-pill{
+  display:inline-block;flex:none;font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.06em;padding:2px 8px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 16%,transparent);
+  color:var(--accent);border:1px solid var(--accent);
+  max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cp-dur{flex:none;border:1px solid #5a5a5a;border-radius:3px;padding:0 5px;font-size:10px;color:#aaa;font-variant-numeric:tabular-nums}
+.cp-member{margin-left:auto;font-size:12px;color:#ddd;white-space:nowrap}
+.cp-ref{font-size:12px;color:hsla(0,0%,100%,.72);line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+@media (prefers-reduced-motion:reduce){.card-preview{animation:none}}
+.card-cover{position:relative;width:100%;height:clamp(150px,11vw,210px);flex:none;overflow:hidden}
+/* The station's own cover, over the ident gradient rather than instead of it.
+   The gradient stays underneath as the fallback: a station with no artwork yet,
+   or one whose image 404s, shows its ident instead of a hole. `object-fit:cover`
+   is what lets one 16:9 render fill both a normal tile and a wide one without
+   distorting - the wide card simply takes a wider crop of the same picture. */
+.cover-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  /* ANCHORED TO THE TOP, and that is about faces.
+
+     Station renders are 16:9. A WIDE tile is two columns on one row's height —
+     roughly 3.4:1 — so `cover` scales the picture to the full width and throws
+     away the height that will not fit. Centred vertically it takes that off BOTH
+     ends, and the top is exactly where the heads are: every wide card arrived
+     decapitated. `top` spends the whole loss at the bottom instead, which on
+     these compositions is ground and foreground and costs nothing.
+
+     Applied to EVERY cover, not only the wide ones. A normal tile is about
+     1.7:1 at five columns, narrower than the source, so it crops side to side
+     and this changes nothing — but between 1024 and 1280 the grid drops to four
+     columns at the same height, the tile goes past 2:1, and the ordinary cards
+     start losing heads too. One rule that is inert when it is not needed beats
+     a second rule nobody remembers to add. */
+  object-position:center top;
+  opacity:0;transition:opacity .35s ease}
+.cover-art.on{opacity:1}
+.card:hover .cover-art{transform:scale(1.03)}
+.cover-art{transition:opacity .35s ease,transform .4s ease}
+.cover-scrim{position:absolute;inset:0;background:linear-gradient(180deg,transparent 52%,rgba(0,0,0,.6))}
+.cover-freq{
+  position:absolute;left:12px;bottom:10px;font-family:var(--font-logo);font-weight:700;
+  font-size:12px;letter-spacing:.05em;color:hsla(0,0%,100%,.92);text-shadow:0 1px 6px rgba(0,0,0,.6);
+}
+.cover-flag{position:absolute;left:12px;top:12px;width:24px;height:16px;border-radius:2px;object-fit:cover;box-shadow:0 1px 4px rgba(0,0,0,.5)}
+/* Status sits bottom-right of the cover, opposite the frequency bottom-left, so
+   the two read as one baseline: what it is on the left, whether it plays on the
+   right. Every card carries one — ON AIR or COMING SOON — because a badge that
+   only ever appears on the good news makes its absence ambiguous. */
+.cover-live{
+  position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:5px;
+  padding:3px 8px;border-radius:100px;background:rgba(0,0,0,.55);border:1px solid var(--onair);
+  font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--onair);
+}
+.cover-live::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--onair);animation:pulse 1.8s ease-in-out infinite}
+/* Coming soon is deliberately quiet — muted, no pulse, not pressable. It states
+   a fact without competing with the stations that actually play. */
+.cover-soon{
+  position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;
+  padding:3px 8px;border-radius:100px;background:rgba(0,0,0,.5);
+  border:1px solid hsla(0,0%,100%,.22);
+  font-size:9.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:hsla(0,0%,100%,.62);
+}
+/* On a live station the badge is the play button, so it has to look pressable. */
+.cover-live[data-kj-play]{cursor:pointer;z-index:4;transition:background .15s ease,color .15s ease}
+.cover-live[data-kj-play]:hover{background:var(--onair);color:var(--onair-ink)}
+.cover-live[data-kj-play]:hover::before{background:var(--onair-ink)}
+.cover-live svg{width:9px;height:9px;fill:currentColor}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+.card-body{position:relative;overflow:hidden;display:flex;flex-direction:column;flex:1 1 auto;min-width:0;padding:10px 14px 14px}
+/* The dial number is a watermark behind the body copy, not cover art - the
+   cover above is being handed over to station photography. The white
+   "HM ###.##" identifier stays down on the cover where it always was. */
+.body-freq{
+  position:absolute;right:10px;top:4px;z-index:0;pointer-events:none;
+  font-family:var(--font-logo);font-weight:700;font-size:clamp(26px,3.15vw,42px);
+  line-height:1;letter-spacing:-.03em;color:hsla(0,0%,100%,.10);white-space:nowrap;
+}
+.card-category,.card-title,.card-blurb,.card-meta{position:relative;z-index:1}
+.card-category{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);margin-bottom:4px}
+.card-title{font-size:16px;font-weight:700;line-height:1.28;color:#fff;margin:0 0 6px}
+.card-blurb{font-size:12.5px;line-height:1.45;color:var(--text-muted);margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{display:flex;align-items:center;gap:8px;margin-top:auto;font-size:11px;color:var(--text-muted);min-width:0;white-space:nowrap}
+.card-pill{
+  flex:none;padding:2px 8px;border:1px solid var(--accent);border-radius:999px;
+  background:rgba(61,165,255,.14);color:var(--accent);font-size:10px;font-weight:700;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.card-member{margin-left:auto;color:#ddd;overflow:hidden;text-overflow:ellipsis}
+
+/* ---------- station article ---------------------------------------------
+   A STATION GETS A PAGE, NOT A POPUP.
+
+   This replaces the dialog that used to open over the shelf. The dialog could
+   only ever restate the card - the same name, the same one-line blurb, a table
+   of facts - because a 640px box over a dimmed page is not somewhere anyone
+   reads. Everything here is the InspireManna article template carried across:
+   a full-bleed hero whose bottom gradient holds the meta row and the headline,
+   a prose column with a sticky sidebar beside it, a closing call to listen, and
+   the rest of the dial underneath.
+
+   It renders into the ordinary scroll view rather than over it, so it is a
+   place with a URL (#station/<slug>), the back button works, and - the reason
+   this is not a separate .html file - THE MUSIC KEEPS PLAYING. A document load
+   would tear the footer player down and take the audio with it.
+   ------------------------------------------------------------------------ */
+.kja{display:block;margin:calc(-1 * var(--pad-top)) calc(-1 * var(--site-pad)) 0}
+
+/* The hero is the full width of the viewport and most of its height, the way
+   the home hero is, so arriving on a station feels like arriving somewhere. */
+.kja-hero{position:relative;overflow:hidden;background:var(--surface);
+  min-height:calc(100vh - var(--topbar-h) - var(--kj-player-h, 0px));
+  min-height:calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px));
+  min-height:var(--hero-h, calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px)));
+  display:flex;align-items:flex-end}
+.kja-hero-art{position:absolute;inset:0}
+/* Top-anchored, as everywhere else on the dial: the covers are 16:9 in a much
+   taller box and a centred crop takes the faces off. */
+.kja-hero-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  object-position:top center;opacity:0;transition:opacity .35s ease}
+.kja-hero-photo.on{opacity:1}
+.kja-hero-sheen{position:absolute;inset:0;
+  background:radial-gradient(120% 90% at 18% 8%,hsla(0,0%,100%,.14),transparent 60%)}
+.kja-hero-overlay{position:relative;z-index:2;width:100%;
+  padding:120px 0 34px;
+  background:linear-gradient(transparent,rgba(6,6,12,.86) 45%,rgba(6,6,12,.97))}
+.kja-hero-inner{max-width:var(--site-max);margin:0 auto;
+  padding:0 max(20px,calc((100% - var(--site-max)) / 2 + 20px))}
+.kja-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.kja-tab{display:inline-block;padding:4px 10px;border-radius:4px;background:var(--accent);
+  color:#06121f;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
+.kja-tab-link{font:inherit;cursor:pointer}
+.kja-tab-link:hover{filter:brightness(1.08)}
+.kja-meta-plain{font-family:var(--font-logo);font-size:12px;letter-spacing:.06em;color:var(--text-dim)}
+.kja-title{font-size:clamp(34px,4.6vw,52px);font-weight:800;letter-spacing:-.02em;
+  line-height:1.06;margin:0 0 14px;color:#fff}
+.kja-need{margin:0;max-width:720px;font-size:17px;line-height:1.55;color:var(--text-dim)}
+.kja-need-label{color:var(--text-muted)}
+.kja-back{position:absolute;top:20px;left:20px;z-index:3;display:inline-flex;align-items:center;
+  gap:7px;padding:8px 14px;border-radius:6px;background:rgba(6,6,12,.6);
+  border:1px solid hsla(0,0%,100%,.2);color:#fff;font-size:13px;font-weight:600;
+  transition:background .2s ease,border-color .2s ease,color .2s ease}
+.kja-back:hover{background:rgba(6,6,12,.9);border-color:var(--accent);color:var(--accent)}
+
+/* ---- body: prose + a sidebar that stays with you ---- */
+.kja-container{max-width:var(--site-max);margin:0 auto;
+  padding:44px max(20px,calc((100% - var(--site-max)) / 2 + 20px)) 20px;
+  display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:start}
+.kja-main{min-width:0}
+.kja-banner{margin:0 0 26px;padding:14px 18px;border-radius:8px;
+  background:rgba(61,165,255,.08);border:1px solid var(--accent-soft);
+  font-size:13.5px;line-height:1.6;color:var(--text-dim)}
+.kja-banner strong{color:var(--accent)}
+.kja-body{font-size:17.5px;line-height:1.8;color:#e0e0e0}
+.kja-body p{margin:0 0 22px}
+/* The drop cap is the one flourish, and it only ever lands on the lead. */
+.kja-body p.kja-lead::first-letter{float:left;font-size:4rem;line-height:.8;font-weight:800;
+  padding:6px 12px 0 0;color:var(--accent)}
+.kja-body h2{font-size:25px;line-height:1.3;font-weight:800;letter-spacing:-.01em;
+  color:#fff;margin:38px 0 12px}
+.kja-callout{margin:34px 0 0;padding:18px 22px;border-left:3px solid var(--accent);
+  background:var(--surface-2);border-radius:0 8px 8px 0}
+.kja-callout-label{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:800;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.kja-callout-label svg{width:14px;height:14px}
+.kja-callout-text{margin:0;font-size:18px;line-height:1.5;color:#fff;font-style:italic}
+.kja-byline{display:flex;align-items:center;gap:13px;margin:30px 0 0;padding:16px 0;
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+.kja-byline img{width:46px;height:46px;border-radius:50%;object-fit:cover;
+  border:1.5px solid var(--accent);flex:none}
+.kja-byline-credit{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted)}
+.kja-byline-name{font-size:15.5px;font-weight:800;color:#fff}
+.kja-byline-role{font-size:13px;color:var(--text-muted)}
+.kja-note{margin:18px 0 0;font-size:13px;color:var(--text-muted)}
+
+/* ---- sidebar ---- */
+.kja-sidebar{position:sticky;top:20px;display:flex;flex-direction:column;gap:18px}
+.kja-widget{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:18px}
+.kja-widget-title{margin:0 0 12px;font-size:11px;font-weight:800;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-muted)}
+.kja-now{display:flex;align-items:center;gap:11px}
+.kja-now-dot{width:7px;height:7px;border-radius:50%;background:var(--onair);flex:none;
+  animation:kjpulse 1.8s ease-in-out infinite}
+@keyframes kjpulse{0%,100%{opacity:1}50%{opacity:.25}}
+.kja-now-text{min-width:0}
+.kja-now-title{font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kja-now-sub{font-size:12.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kja-facts{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13.5px}
+.kja-facts dt{color:var(--text-muted)}
+.kja-facts dd{margin:0;color:var(--text-dim);text-align:right}
+.kja-sched{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:13.5px}
+.kja-sched li{display:flex;gap:12px;align-items:baseline}
+.kja-sched time{font-family:var(--font-logo);font-size:12px;color:var(--accent);flex:none}
+.kja-sched span{color:var(--text-dim)}
+.kja-share{display:flex;gap:8px;flex-wrap:wrap}
+.kja-share button{padding:8px 12px;border-radius:6px;border:1px solid var(--border-strong);
+  color:var(--text-dim);font-size:12.5px;font-weight:600;transition:border-color .2s,color .2s}
+.kja-share button:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ---- the closing call to listen ---- */
+.kja-cta{display:flex;align-items:center;gap:18px;width:calc(100% - 2 * max(20px,(100% - var(--site-max)) / 2 + 20px));
+  max-width:var(--site-max);margin:10px auto 0;padding:20px 24px;border-radius:12px;
+  background:linear-gradient(100deg,rgba(61,165,255,.16),rgba(61,165,255,.04));
+  border:1px solid var(--accent-soft);text-align:left;
+  transition:border-color .2s ease,background .2s ease,transform .15s ease}
+.kja-cta:hover{border-color:var(--accent);background:linear-gradient(100deg,rgba(61,165,255,.24),rgba(61,165,255,.07))}
+.kja-cta:active{transform:translateY(1px)}
+.kja-cta-play{width:52px;height:52px;border-radius:50%;background:var(--accent);color:#06121f;
+  display:grid;place-items:center;flex:none}
+.kja-cta-play svg{width:22px;height:22px;fill:currentColor}
+.kja-cta-label{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.kja-cta-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.kja-cta-sub{font-size:13.5px;color:var(--text-muted)}
+
+/* ---- the rest of the dial ---- */
+.kja-more{max-width:var(--site-max);margin:0 auto;
+  padding:38px max(20px,calc((100% - var(--site-max)) / 2 + 20px)) 10px}
+.kja-more-title{font-size:22px;font-weight:800;letter-spacing:-.01em;color:#fff;margin:0 0 18px}
+
+@media (max-width:980px){
+  .kja-container{grid-template-columns:1fr;gap:30px}
+  .kja-sidebar{position:static;order:2}
+}
+@media (max-width:620px){
+  .kja-hero-overlay{padding:90px 0 26px}
+  .kja-body{font-size:16.5px}
+  .kja-cta{flex-wrap:wrap;gap:12px}
+}
+
+/* ---------- empty state & footer ----------------------------------------- */
+.empty{padding:60px 0;text-align:center;color:var(--text-muted);font-size:15px}
+.empty strong{color:#fff}
+.site-footer{
+  background:#07080c;color:var(--text-dim);padding:22px 24px;text-align:center;
+  font-size:12px;letter-spacing:.04em;border-top:2px solid var(--accent);
+}
+.site-footer-inner{max-width:var(--site-max);margin:0 auto;line-height:1.8}
+.site-footer strong{font-weight:700;color:var(--accent)}
+.site-footer a{color:var(--accent)}
+.site-footer a:hover{text-decoration:underline}
+
+/* ---------- responsive --------------------------------------------------- */
+/* FIVE COLUMNS AT EVERY WIDTH, then one on a phone. Nothing in between.
+
+   The grid used to step 5 -> 4 -> 3 -> 2 -> 1 as the window narrowed. It now
+   holds five until the phone breakpoint and drops straight to one, which is
+   what was asked for and has a real benefit: the 0/6/11 wide-card tiling only
+   comes out flush on five columns, so every intermediate step left the last row
+   of a shelf short. Five or one, both tile exactly.
+
+   The cost is honest and worth stating: at the narrow end of the desktop range
+   a card is around 140px across. The rules below give those widths a 16:9 cover
+   and drop the blurb so a small card still reads as a card rather than a
+   squashed one. */
+@media (max-width:1024px){
+  .hero{padding:28px}   /* height is viewport-derived; see .hero */
+  .hero-title{font-size:34px}
+  .hero-scrim{background:linear-gradient(90deg,rgba(6,6,12,.95),rgba(6,6,12,.9) 55%,rgba(6,6,12,.6))}
+  .nav-textlink{display:none}
+}
+@media (max-width:760px){
+  .card-cover{height:auto;aspect-ratio:16/9}
+  .card-blurb{display:none}
+  .hero{padding:22px 20px 46px}   /* height is viewport-derived; see .hero */
+  .hero-title{font-size:26px}
+  .hero-by-focus{display:none}
+  .hero-arrow{display:none}
+  .search-btn{display:none}
+  .searchbar input{width:70px}
+  .logo-name{font-size:17px}
+  .section-intro h1{font-size:23px}
+}
+/* THE PHONE. One column, and the only place the five is given up.
+
+   700px rather than the old 460: a phone in portrait is comfortably under it,
+   a tablet at 768 is over it and keeps the five. A phone turned landscape can
+   exceed 700 and will show five narrow columns — the alternative is a width
+   test that also catches small tablets, and five columns everywhere is the
+   instruction. */
+@media (max-width:700px){
+  .row{grid-template-columns:minmax(0,1fr)}
+  /* One column: a card spanning two would overflow the grid. */
+  .card.wide{grid-column:auto}
+  /* Full width means the cover has room to be a proper 16:9 again. */
+  .card-cover{height:auto;aspect-ratio:16/9}
+  .card-blurb{display:block}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

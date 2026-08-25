@@ -963,33 +963,51 @@
    ]
   },
   "jubilee-radio": {
-   "why": "The flagship keeps the Seattle origin its tenant already carries, relayed through Nashville and Atlanta so all three mainland zones carry the dial's front door.",
+   "why": "The flagship carries five bases where every other station carries three, because it is the dial's front door and should reach a listener on their own clock wherever they are. Sacramento, Denver, Houston, Miami and Honolulu are five distinct time zones — Pacific, Mountain, Central, Eastern and Hawaii — which is every zone the United States keeps except Alaska.",
    "bases": [
     {
-     "city": "Seattle",
+     "city": "Sacramento",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
-     "lat": 47.61,
-     "lon": -122.33,
+     "lat": 38.58,
+     "lon": -121.49,
      "region": "North America"
     },
     {
-     "city": "Nashville",
+     "city": "Denver",
      "cc": "US",
-     "tz": "America/Chicago",
+     "tz": "America/Denver",
      "tower": true,
-     "lat": 36.17,
-     "lon": -86.78,
+     "lat": 39.74,
+     "lon": -104.98,
      "region": "North America"
     },
     {
-     "city": "Atlanta",
+     "city": "Miami",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
-     "lat": 33.75,
-     "lon": -84.39,
+     "lat": 25.77,
+     "lon": -80.19,
+     "region": "North America"
+    },
+    {
+     "city": "Houston",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 29.76,
+     "lon": -95.36,
+     "region": "North America"
+    },
+    {
+     "city": "Honolulu",
+     "cc": "US",
+     "tz": "Pacific/Honolulu",
+     "tower": true,
+     "lat": 21.31,
+     "lon": -157.86,
      "region": "North America"
     }
    ]
@@ -1059,15 +1077,15 @@
    ]
   },
   "yes-and-amen": {
-   "why": "Nashville per the tenant. Phoenix and Charlotte spread it across Mountain and Eastern without doubling up on a market Nashville already covers.",
+   "why": "Boston anchors, with Phoenix and Charlotte covering Mountain and the Southeast. The anchor moved off the tenant's Nashville on 2026-08-25; Boston and Charlotte both keep Eastern time, so Phoenix is what makes the set span more than one clock.",
    "bases": [
     {
-     "city": "Nashville",
+     "city": "Boston",
      "cc": "US",
-     "tz": "America/Chicago",
+     "tz": "America/New_York",
      "tower": true,
-     "lat": 36.17,
-     "lon": -86.78,
+     "lat": 42.36,
+     "lon": -71.06,
      "region": "North America"
     },
     {
