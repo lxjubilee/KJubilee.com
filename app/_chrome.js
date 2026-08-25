@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { ensureCatalogue, loadOnce } from '@/lib/session-scripts';
+import SessionKeeper from './_session-keeper';
 
 /*
  * The session-owned chrome: the footer player, and the click rule that keeps
@@ -86,5 +87,6 @@ function useFooterPlayer() {
 export default function SiteChrome() {
     useInternalLinkRouting();
     useFooterPlayer();
-    return null;
+    // Keeps the access token fresh on every page (app/_session-keeper.js).
+    return <SessionKeeper />;
 }

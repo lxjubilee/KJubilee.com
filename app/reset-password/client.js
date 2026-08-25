@@ -24,6 +24,13 @@ export default function ResetPasswordPage({ token = '' }) {
     const [password, setPassword] = useState('');
     const [confirm, setConfirm] = useState('');
     const [error, setError] = useState('');
+
+    // Editing a field answers the complaint about it, so the complaint should
+    // go. Otherwise the screen shows "Password must be at least 8 characters"
+    // above a nine-character password that says "Passwords match" — a message
+    // that was true when it was written and is contradicted by everything
+    // under it.
+    const edit = (set) => (v) => { set(v); if (error) setError(''); };
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -132,12 +139,12 @@ export default function ResetPasswordPage({ token = '' }) {
                 <input type="text" name="username" autoComplete="username" value={email}
                        readOnly hidden aria-hidden="true" tabIndex={-1} />
                 <PasswordField id="password" label="New password" value={password}
-                               onChange={setPassword} autoComplete="new-password"
+                               onChange={edit(setPassword)} autoComplete="new-password"
                                minLength={8} autoFocus>
                     <PasswordStrength value={password} />
                 </PasswordField>
                 <PasswordField id="confirm" label="Confirm new password" value={confirm}
-                               onChange={setConfirm} autoComplete="new-password" minLength={8}>
+                               onChange={edit(setConfirm)} autoComplete="new-password" minLength={8}>
                     <PasswordMatch password={password} confirm={confirm} />
                 </PasswordField>
                 <button type="submit" className="btn-primary" disabled={loading}>

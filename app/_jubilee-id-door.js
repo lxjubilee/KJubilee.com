@@ -96,11 +96,15 @@ function validateDob(dob) {
 // (see issueSession in lib/local-account.js).
 function storeAuth(data) {
     try {
+        // The refresh token goes in too: the access token is ~15 minutes now,
+        // and app/_session-keeper.js needs this to get the next one.
         localStorage.setItem('jv_auth', JSON.stringify({
             token: data.token, user: data.user, ts: Date.now(),
+            expiresAt: data.expiresAt, refreshToken: data.refreshToken,
         }));
         localStorage.setItem('jubileeVerseAuth', JSON.stringify({
-            authenticated: true, token: data.token, user: data.user, expiresAt: data.expiresAt,
+            authenticated: true, token: data.token, user: data.user,
+            expiresAt: data.expiresAt, refreshToken: data.refreshToken,
         }));
     } catch (e) {
         // Private mode with storage blocked. The person is signed in for this
@@ -210,9 +214,9 @@ function ForgotRow({ email }) {
 function NameFields({ firstName, lastName, setFirstName, setLastName }) {
     return (
         <div className="form-row">
-            <Field id="firstName" label="First name" value={firstName} onChange={setFirstName}
+            <Field id="firstName" label="First name" value={firstName} onChange={edit(setFirstName)}
                    maxLength={50} autoComplete="given-name" />
-            <Field id="lastName" label="Last name" value={lastName} onChange={setLastName}
+            <Field id="lastName" label="Last name" value={lastName} onChange={edit(setLastName)}
                    maxLength={50} autoComplete="family-name" />
         </div>
     );
@@ -222,7 +226,7 @@ function NameFields({ firstName, lastName, setFirstName, setLastName }) {
 // position from the start (.label-up).
 function DobField({ dob, setDob }) {
     return (
-        <Field id="dob" label="Date of birth" type="date" value={dob} onChange={setDob}
+        <Field id="dob" label="Date of birth" type="date" value={dob} onChange={edit(setDob)}
                className="date-field label-up" autoComplete="bday" max="9999-12-31" />
     );
 }
@@ -280,6 +284,10 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
     }, [step]);
 
     const goto = useCallback((next) => { setError(''); setStep(next); }, []);
+
+    // Editing a field answers the complaint about it. Leaving the old message
+    // up contradicts what the person is now looking at.
+    const edit = (set) => (v) => { set(v); if (error) setError(''); };
 
     // A token is spent the moment it is checked, so any outcome other than
     // leaving Screen 1 needs a fresh challenge before the next attempt.
@@ -484,7 +492,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                         <AccountRow email={email} onChangeEmail={useDifferentEmail} />
                         <form onSubmit={handleWelcomePassword} noValidate>
                             <PasswordField id="existingPassword" label="Password"
-                                           value={existingPassword} onChange={setExistingPassword}
+                                           value={existingPassword} onChange={edit(setExistingPassword)}
                                            autoComplete="current-password" autoFocus />
                             <ForgotRow email={email} />
                             <SubmitButton loading={loading} busyLabel="Signing in…">Continue</SubmitButton>
@@ -504,7 +512,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                         <AccountRow email={email} onChangeEmail={useDifferentEmail} />
                         <form onSubmit={handleConfirmPassword} noValidate>
                             <PasswordField id="existingPassword" label="Jubilee ID password"
-                                           value={existingPassword} onChange={setExistingPassword}
+                                           value={existingPassword} onChange={edit(setExistingPassword)}
                                            autoComplete="current-password" autoFocus />
                             <ForgotRow email={email} />
                             <SubmitButton loading={loading} busyLabel="Checking…">Continue</SubmitButton>
@@ -550,7 +558,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                                         setFirstName={setFirstName} setLastName={setLastName} />
                             <DobField dob={dob} setDob={setDob} />
                             <PasswordField id="password" label="Create a password"
-                                           value={password} onChange={setPassword}
+                                           value={password} onChange={edit(setPassword)}
                                            autoComplete="new-password">
                                 {strength ? (
                                     <div className="password-strength">
@@ -564,7 +572,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                                 )}
                             </PasswordField>
                             <PasswordField id="confirmPassword" label="Confirm password"
-                                           value={confirmPassword} onChange={setConfirmPassword}
+                                           value={confirmPassword} onChange={edit(setConfirmPassword)}
                                            autoComplete="new-password">
                                 {confirmPassword && (
                                     <div className={`password-match ${password === confirmPassword ? 'is-match' : 'is-mismatch'}`}>

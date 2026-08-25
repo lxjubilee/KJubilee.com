@@ -87,7 +87,25 @@ export default function AccountButton() {
         };
     }, [open]);
 
-    function signOut() {
+    async function signOut() {
+        // Clearing localStorage only ever removed the copy in front of us; the
+        // token itself stayed valid for its whole life in anyone else's hands.
+        // This is the half that actually ends the session, and it is why there
+        // is a session table at all.
+        try {
+            const raw = localStorage.getItem('jv_auth') || localStorage.getItem('jubileeVerseAuth');
+            const refreshToken = raw ? (JSON.parse(raw) || {}).refreshToken : null;
+            if (refreshToken) {
+                await fetch('/api/auth/signout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ refreshToken }),
+                });
+            }
+        } catch {
+            // Offline, or the token was already gone. Sign out locally anyway —
+            // refusing to would strand someone signed in on a shared machine.
+        }
         clearSession();
         setUser(null);
         setOpen(false);

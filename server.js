@@ -265,6 +265,10 @@ async function respondSignedIn(res, user, rememberMe) {
         success: true,
         token: sess.token,
         expiresAt: sess.expiresAt,
+        // The browser needs this to get the next access token — without it the
+        // session simply ends in fifteen minutes (app/_session-keeper.js).
+        refreshToken: sess.refreshToken,
+        refreshExpiresAt: sess.refreshExpiresAt,
         user: toAuthUser(user),
     });
 }
