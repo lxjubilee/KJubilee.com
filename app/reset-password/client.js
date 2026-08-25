@@ -15,38 +15,14 @@
 
 import { useState, useEffect } from 'react';
 import AuthShell from '../_auth-shell';
+import PasswordField, { PasswordStrength, PasswordMatch } from '../_password-field';
 import { apiUrl } from '@/lib/api-base';
-
-const EyeOpen = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" />
-    </svg>
-);
-const EyeClosed = () => (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
-        <line x1="1" y1="1" x2="23" y2="23" />
-    </svg>
-);
-
-function calcStrength(pw) {
-    let score = 0;
-    if (pw.length >= 8) score++;
-    if (pw.length >= 12) score++;
-    if (/[a-z]/.test(pw) && /[A-Z]/.test(pw)) score++;
-    if (/[0-9]/.test(pw)) score++;
-    if (/[^a-zA-Z0-9]/.test(pw)) score++;
-    if (score <= 2) return 'weak';
-    if (score <= 4) return 'fair';
-    return 'strong';
-}
-const STRENGTH_LABEL = { weak: 'Weak password', fair: 'Fair password', strong: 'Strong password' };
 
 export default function ResetPasswordPage({ token = '' }) {
     const [state, setState] = useState(token ? 'checking' : 'invalid'); // checking | ready | invalid | done
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [shown, setShown] = useState(false);
+    const [confirm, setConfirm] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
@@ -67,6 +43,10 @@ export default function ResetPasswordPage({ token = '' }) {
     async function onSubmit(e) {
         e.preventDefault();
         if (!password || password.length < 8) return setError('Password must be at least 8 characters.');
+        // Same reason the Jubilee ID screen asks twice: this is write-only. A
+        // typo here is not discovered now, it is discovered the next time they
+        // try to sign in — on every Jubilee site at once.
+        if (password !== confirm) return setError('Those passwords do not match.');
         setError('');
         setLoading(true);
         let data = {};
@@ -80,7 +60,7 @@ export default function ResetPasswordPage({ token = '' }) {
         } catch { /* handled below */ }
         setLoading(false);
 
-        if (data.success) { setPassword(''); setState('done'); return; }
+        if (data.success) { setPassword(''); setConfirm(''); setState('done'); return; }
         setError(data.error || 'Could not set your new password. Please try again.');
     }
 
@@ -133,8 +113,6 @@ export default function ResetPasswordPage({ token = '' }) {
         );
     }
 
-    const strength = password ? calcStrength(password) : null;
-
     return (
         <AuthShell>
             <h1 className="door-heading">Choose a new password</h1>
@@ -153,26 +131,15 @@ export default function ResetPasswordPage({ token = '' }) {
                     the new password belongs to, and it is not on the form. */}
                 <input type="text" name="username" autoComplete="username" value={email}
                        readOnly hidden aria-hidden="true" tabIndex={-1} />
-                <div className="input-group">
-                    <div className="password-wrapper">
-                        <input id="password" type={shown ? 'text' : 'password'} placeholder=" "
-                               value={password} onChange={(e) => setPassword(e.target.value)}
-                               autoComplete="new-password" minLength={8} required autoFocus />
-                        <label htmlFor="password">New password</label>
-                        <button type="button" className="password-toggle" onClick={() => setShown((v) => !v)}
-                                aria-label={shown ? 'Hide password' : 'Show password'} tabIndex={-1}>
-                            {shown ? <EyeClosed /> : <EyeOpen />}
-                        </button>
-                    </div>
-                    {strength ? (
-                        <div className="password-strength">
-                            <div className="strength-bar"><div className={`strength-fill ${strength}`} /></div>
-                            <div className={`strength-text ${strength}`}>{STRENGTH_LABEL[strength]}</div>
-                        </div>
-                    ) : (
-                        <div className="password-hint">At least 8 characters</div>
-                    )}
-                </div>
+                <PasswordField id="password" label="New password" value={password}
+                               onChange={setPassword} autoComplete="new-password"
+                               minLength={8} autoFocus>
+                    <PasswordStrength value={password} />
+                </PasswordField>
+                <PasswordField id="confirm" label="Confirm new password" value={confirm}
+                               onChange={setConfirm} autoComplete="new-password" minLength={8}>
+                    <PasswordMatch password={password} confirm={confirm} />
+                </PasswordField>
                 <button type="submit" className="btn-primary" disabled={loading}>
                     {loading && <span className="spinner" />}
                     {loading ? 'Saving…' : 'Save new password'}
