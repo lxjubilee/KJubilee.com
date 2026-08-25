@@ -65,6 +65,15 @@ const USERS = [
       date_of_birth: null, password_hash: null, password_salt: null },
 ];
 const findUser = (e) => USERS.find((u) => u.email === e) || null;
+
+// What the authority knows, independent of kj_users. 'identity-only' is the
+// case the first version of this flow got wrong: a Jubilee ID, no account here.
+const SSO_IDENTITIES = {
+    'ada@example.com': true,
+    'vera@example.com': false,
+    'lock@example.com': true,
+    'identity-only@example.com': true,
+};
 const project = (u) => u && ({
     id: u.id, email: u.email, first_name: u.first_name, last_name: u.last_name, name: u.name,
     role: u.role, jubilee_id: u.jubilee_id, is_active: u.is_active, is_locked: u.is_locked,
@@ -143,6 +152,9 @@ globalThis.fetch = async function (url, init) {
         const body = init && init.body ? JSON.parse(init.body) : {};
         if (p === '/api/auth/service/token') return reply(200, { token: 'svc-token', expiresAt: new Date(Date.now() + 1800_000).toISOString() });
         if (init.headers.Authorization !== 'Bearer svc-token') return reply(401, { error: 'unauthorized' });
+        if (p === '/api/auth/lookup') {
+            return reply(200, { exists: SSO_IDENTITIES[body.email] === true });
+        }
         if (p === '/api/auth/service/password') {
             ssoPasswordSets.push({ email: body.email, new_password: body.new_password });
             return reply(200, { success: true });
@@ -243,6 +255,38 @@ function tokenFromLastEmail() {
         ok('and it verifies against the new password',
             hashPassword('vera-new-password', after.password_salt) === after.password_hash);
         eq('the authority was NOT called for a local-only account', ssoPasswordSets.length, 1);
+    }
+
+    console.log('\nA Jubilee ID with no kJubilee account can still reset');
+    {
+        // "Forgot your password?" sits on the Confirm it's you screen, which is
+        // ONLY ever shown to someone who has a Jubilee ID and no account here.
+        // The first version returned early on "no local account" and sent them
+        // nothing at all — the one person the link exists for.
+        SENT.length = 0; RESETS = []; resetId = 1; ssoPasswordSets = [];
+        const r = await requestReset('identity-only@example.com', '10.0.0.9');
+        eq('the request succeeds', r.success, true);
+        eq('and an email really is sent', SENT.length, 1);
+        eq('to the right person', SENT[0].fields.to, 'identity-only@example.com');
+
+        const token = tokenFromLastEmail();
+        eq('the link is live', (await peekToken(token)).valid, true);
+
+        const done = await completeReset(token, 'a-fresh-password');
+        eq('the reset completes', done.success, true);
+        eq('the authority was told', ssoPasswordSets.length, 1);
+        eq('for the right identity', ssoPasswordSets[0].email, 'identity-only@example.com');
+        ok('and no kJubilee account was invented out of a password reset',
+            findUser('identity-only@example.com') === null);
+    }
+
+    console.log('\nAn address nobody has heard of still gets nothing');
+    {
+        SENT.length = 0; RESETS = []; resetId = 1;
+        const r = await requestReset('stranger@example.com', '10.0.0.9');
+        eq('the response is the same success', r.success, true);
+        eq('but nothing is sent', SENT.length, 0);
+        eq('and no token is stored', RESETS.length, 0);
     }
 
     console.log('\nFinishing a reset retires every other outstanding link');
