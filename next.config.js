@@ -29,7 +29,15 @@ const SECURITY_HEADERS = [
     { key: 'Origin-Agent-Cluster', value: '?1' },
     { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
     { key: 'X-Permitted-Cross-Domain-Policies', value: 'none' },
-    { key: 'Referrer-Policy', value: 'no-referrer' },
+    // helmet's default is 'no-referrer', which is what the static site shipped.
+    // It stops being free once a page embeds a third-party challenge: Cloudflare
+    // Turnstile checks the hostname against the site key's allowlist, and with
+    // 'no-referrer' the browser tells it nothing to check — the widget fails to
+    // render, no token is produced, and every sign-in is refused for want of one.
+    //
+    // 'strict-origin-when-cross-origin' sends the ORIGIN only (https://kjubilee.com,
+    // never a path or query) to other sites, and it is the modern browser default.
+    { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
     { key: 'X-XSS-Protection', value: '0' },
     { key: 'Cross-Origin-Opener-Policy', value: 'same-origin' },
     { key: 'Cross-Origin-Resource-Policy', value: 'cross-origin' },
