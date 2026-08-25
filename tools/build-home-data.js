@@ -1356,6 +1356,2229 @@ const HM_MORE = [
 
    Both guards below are load-bearing. A slug typo in either list is otherwise
    silent: the piece simply vanishes from the site, and nothing fails. */
+
+/* ── The voices ────────────────────────────────────────────────────────────
+   Seven pieces for each of the twelve Inspire Family personas. A persona is
+   the beat, not a byline: each slate is drawn from the stations that persona
+   actually holds, so a piece could not be swapped to another voice without
+   ceasing to make sense. Split across HM_VOICES_1..6 for readability only —
+   HM_ORDER is what decides the grid.                                        */
+
+const HM_VOICES_1 = [
+  /* ---- Nova Inspire — for the doubting -------------------------------- */
+  {
+    slug: 'doubt-is-not-the-opposite-of-faith',
+    kicker: 'For the doubting',
+    title: 'Doubt is not the opposite of faith. Certainty is.',
+    dek: 'The thing almost nobody says to a person who has started asking questions.',
+    image: 'the-mended-place',
+    author: 'nova',
+    stands: 'Faith is what you do while you are not sure. If you were sure, it would not be faith. It would be arithmetic.',
+    body: [
+      'The standard response to a doubting believer is to try to remove the doubt, usually by ' +
+      'supplying an answer at speed. It rarely works, and the reason it rarely works is that the ' +
+      'diagnosis was wrong. Doubt is not a hole in faith. It is very often the shape faith takes ' +
+      'in a person who is paying attention.',
+      'Consider what faith would even mean without it. Hebrews calls faith the substance of things ' +
+      'hoped for, the evidence of things not seen — which is a definition built entirely around ' +
+      'not having the matter settled. Faith is what you do while you are not sure. If you were ' +
+      'sure, it would not be faith. It would be arithmetic.',
+      'The real opposite is certainty, and certainty is the more dangerous condition by some ' +
+      'distance. A certain person cannot be taught, cannot be corrected, and has no further use ' +
+      'for prayer except as a formality. Every account in Scripture of someone going badly wrong ' +
+      'features a man who was completely sure.',
+      'So this station does not treat a question as an emergency. It plays for people who are ' +
+      'still here and still asking, which is most people, most of the time, whatever they say ' +
+      'out loud on a Sunday.',
+    ],
+  },
+  {
+    slug: 'questions-you-were-told-not-to-ask',
+    kicker: 'For the doubting',
+    title: 'The questions you were told not to ask in church',
+    dek: 'Not because they are dangerous, but because somebody in the room did not have an answer.',
+    image: 'logos',
+    author: 'nova',
+    stands: 'A question that gets shut down does not go away. It goes underground, and it takes the person with it.',
+    body: [
+      'Most people who have left a church can name the moment. It is almost never a doctrinal ' +
+      'crisis. It is a question asked in good faith that was met with a look, a deflection, or a ' +
+      'sentence beginning “we just have to trust” — and the understanding, arriving all at once, ' +
+      'that this was not a room where that could be said.',
+      'The questions are not exotic. Why does God permit this. What actually happens to people ' +
+      'who never heard. How do I square these two passages that plainly disagree. Why did nothing ' +
+      'change when I prayed about it for six years.',
+      'None of those is a threat to anything true. They are the ordinary questions of anyone who ' +
+      'has read the book carefully and looked at the world honestly, and the historic Church has ' +
+      'argued about every one of them at length and in public. The discomfort in the room was ' +
+      'never about the question. It was about somebody not having an answer and not being allowed ' +
+      'to say so.',
+      'A question that gets shut down does not go away. It goes underground, and it takes the ' +
+      'person with it. So The Logos is a frequency where the asking is the programming rather than ' +
+      'an interruption to it.',
+    ],
+  },
+  {
+    slug: 'come-back-without-explaining',
+    kicker: 'For the doubting',
+    title: 'You can come back without explaining where you went',
+    dek: 'The debrief nobody owes anybody, and the station built on not asking for one.',
+    image: 'the-comeback-room',
+    author: 'nova',
+    stands: 'The father in that parable runs down the road before the son gets a word out. The speech the son prepared is never actually needed.',
+    body: [
+      'There is an unwritten toll on returning, and everybody who has been away knows the amount. ' +
+      'You will be asked where you have been. You will be expected to have a narrative — a ' +
+      'wandering, a lesson, a tidy arc ending in the present tense. And you will be aware, while ' +
+      'delivering it, that it is being assessed.',
+      'That toll keeps more people out than any argument ever has. Not because they are ashamed, ' +
+      'though some are, but because the honest answer is usually shapeless. Nothing happened. It ' +
+      'got hard, then it got easy to not go, and then a great deal of time passed.',
+      'It is worth noticing that the most famous homecoming in Scripture does not work this way at ' +
+      'all. The father runs down the road before the son gets a word out. The speech the son had ' +
+      'rehearsed the whole way home is never actually needed, and the text is careful to tell us ' +
+      'he had rehearsed it.',
+      'So The Comeback Room asks nothing. There is no account, nobody is counted, and no one is ' +
+      'going to ring you. You put it on, and you are back, and the terms of that are entirely ' +
+      'yours.',
+    ],
+  },
+  {
+    slug: 'why-midnight-praise-exists',
+    kicker: 'For the doubting',
+    title: 'Why Midnight Praise exists',
+    dek: 'Three in the morning has its own theology, and almost nothing is scheduled for it.',
+    image: 'midnight-praise',
+    author: 'nova',
+    stands: 'Paul and Silas sang at midnight. The text records the hour, and Scripture does not usually waste words on the time.',
+    body: [
+      'Radio schedules are built around the waking day. Breakfast, drive, afternoon, evening — the ' +
+      'hours advertisers pay for, and the hours most people are in fact awake. What sits between ' +
+      'midnight and five is almost always automation, because nobody is buying it.',
+      'Which is a strange gap, because those are the hours when a person is least able to manage ' +
+      'themselves. Grief arrives at three. So does the recurring worry, the decision that will not ' +
+      'settle, the sick child, the shift that ends when everyone else is asleep. Whatever a person ' +
+      'is carrying is heaviest then, and there is nobody to ring.',
+      'Scripture keeps unusually careful track of that hour. Paul and Silas sang at midnight, and ' +
+      'the text records the time, which Scripture does not usually bother to do. The psalmist ' +
+      'remembers his song in the night. Something about the dark is treated as its own kind of ' +
+      'occasion rather than as a dead zone between two days.',
+      'So this frequency is programmed for it deliberately — quieter, slower, with more space ' +
+      'between things, and a voice that assumes you are awake for a reason. It is the least ' +
+      'commercially defensible station on the band and one of the easiest to justify.',
+    ],
+  },
+  {
+    slug: 'hymns-were-written-in-trouble',
+    kicker: 'For the doubting',
+    title: 'Hymns survive because they were written by people in trouble',
+    dek: 'Not heritage, and not nostalgia — the ones that lasted were forged in the worst year of somebody’s life.',
+    image: 'inspire-hymns-heritage',
+    author: 'nova',
+    stands: 'A hymn is a sentence somebody had to mean under pressure. That is why it holds weight the next person can lean on.',
+    body: [
+      'The case usually made for hymns is a bad one. It is that they are old, that they are ' +
+      'reverent, and that the modern stuff is thin — an argument about taste dressed as an ' +
+      'argument about depth, and it convinces nobody under fifty.',
+      'The better case is biographical. Go and look at when the ones that lasted were written. It ' +
+      'Is Well With My Soul was written by a man who had just lost four daughters at sea. Amazing ' +
+      'Grace was written by a former slave trader who had understood what he had done. Cowper ' +
+      'wrote some of the most durable lines in English hymnody while severely, repeatedly ill in ' +
+      'his mind.',
+      'That is not a coincidence and it is not morbid. A hymn is a sentence somebody had to mean ' +
+      'under pressure, and pressure is what removes everything from a line that was only ever ' +
+      'decorative. What is left holds weight, which is precisely why the next person can lean on ' +
+      'it.',
+      'It also explains why they work for doubters better than almost anything written for ' +
+      'doubters. These are not songs by people who found it easy. They are field notes from people ' +
+      'who did not, and who kept singing anyway.',
+    ],
+  },
+  {
+    slug: 'wisdom-when-advice-runs-out',
+    kicker: 'For the doubting',
+    title: 'What wisdom is, when advice has run out',
+    dek: 'Advice tells you what to do. Wisdom is for the situations where nobody can.',
+    image: 'wisdom-channel',
+    author: 'nova',
+    stands: 'Job’s friends gave superb advice for seven days after they stopped sitting with him in silence. The silence was the wise part.',
+    body: [
+      'Advice assumes a solvable problem. Given the facts, here is the action, and if you take it ' +
+      'the situation improves. Most of life is like that, and advice is genuinely useful, which is ' +
+      'why there is so much of it.',
+      'Then there are the other situations. The diagnosis that is not going to change. The ' +
+      'estrangement where you have already apologised. The work you are good at and cannot ' +
+      'continue. Advice arrives in those rooms too, and it lands as an insult, because it is ' +
+      'treating as a puzzle something the person has already understood is not one.',
+      'Wisdom is the older category and it is doing a different job. It is not about the next ' +
+      'action. It is about how to be a person while the thing is true — what to hold on to, what ' +
+      'to stop demanding, what is actually yours to carry. Proverbs is largely about competence, ' +
+      'and then Ecclesiastes and Job sit right beside it saying: and here is what to do when ' +
+      'competence is not the issue.',
+      'Job’s friends were superb advisers. They were only wise during the seven days at the start, ' +
+      'when they sat with him and said nothing. This station is trying to be the seven days.',
+    ],
+  },
+  {
+    slug: 'nothing-here-closes-the-deal',
+    kicker: 'For the doubting',
+    title: 'Nothing here is trying to close the deal',
+    dek: 'An editorial policy, stated plainly, so you can hold the station to it.',
+    image: 'whole-hearted-sisters',
+    author: 'nova',
+    stands: 'If a thing is true, it does not need a technique. If it needs a technique, that is worth noticing about the thing.',
+    body: [
+      'Anyone who has spent time near modern Christian media can feel the machinery. The story ' +
+      'that turns, the pause before the appeal, the music arriving underneath the sentence that ' +
+      'matters. It is a set of techniques borrowed almost entirely from direct marketing, and it ' +
+      'works, in the narrow sense that it produces a response.',
+      'It also teaches the listener something nobody intended: that they are a target. Once a ' +
+      'person has noticed the shape, they hear it everywhere, and they stop being able to receive ' +
+      'anything on these frequencies without first checking what it wants from them.',
+      'So the policy on the stations under this beat is straightforward. No countdown. No urgency ' +
+      'that was manufactured rather than real. No story engineered so that the turn lands on a ' +
+      'request. If something here is worth agreeing with, it will have to manage that on the ' +
+      'merits, in the ordinary way, at whatever speed the listener actually moves.',
+      'This costs something and it is worth saying so. Measured on response, it will lose to the ' +
+      'machinery every time. The argument for it is simple: if a thing is true it does not need a ' +
+      'technique, and if it needs a technique that is worth noticing about the thing.',
+    ],
+  },
+
+  /* ---- Jubilee Inspire — the whole house sings ------------------------- */
+  {
+    slug: 'what-plays-on-the-flagship',
+    kicker: 'The whole house sings',
+    title: 'What plays on the flagship, and why that is the hardest choice',
+    dek: 'A station for everybody is the most difficult remit on the dial, not the easiest.',
+    image: 'jubilee-radio',
+    author: 'jubilee',
+    stands: 'A specialist station only has to be right for its listener. The flagship has to be right for a stranger.',
+    body: [
+      'It is tempting to think of a flagship as the easy assignment — the broad one, the middle of ' +
+      'the road, the station that does not have to commit. In practice it is the hardest brief on ' +
+      'the band, and the reason is that it is the only frequency with no permission to assume ' +
+      'anything about who is listening.',
+      'Every other station here gets to know its audience. Torah Sings can assume an interest in ' +
+      'the feasts. Grief Walked can assume a loss. The Ancient Paths can assume a curiosity about ' +
+      'where the faith came from. Each of those assumptions is worth a great deal, because it lets ' +
+      'a station be specific, and specific is what makes anything good.',
+      'The flagship gets none of that. It is what a person hears when they arrive knowing nothing, ' +
+      'which means it has to be true enough for a believer of forty years and open enough for ' +
+      'somebody who has never been in a church, in the same three minutes, without patronising ' +
+      'either.',
+      'So the rule here is that nothing goes on the flagship that needs to be explained first, and ' +
+      'nothing goes on it that would embarrass us in front of somebody who knows the subject. That ' +
+      'narrows it considerably, and what survives is the station.',
+    ],
+  },
+  {
+    slug: 'four-generations-one-radio',
+    kicker: 'The whole house sings',
+    title: 'A house where four generations have to agree on the radio',
+    dek: 'The real design problem behind a family station, and why most of them solve it badly.',
+    image: 'inspire-family-pop',
+    author: 'jubilee',
+    stands: 'Most family radio is aimed at the parent and endured by everybody else. That is not a family station. It is a parent station with hostages.',
+    body: [
+      'Picture the actual room. A grandmother who learned the faith in a language of hymns. Two ' +
+      'parents who came up on whatever was on the radio in the nineties. A teenager with far ' +
+      'better taste than anyone credits. A six-year-old. One set of speakers.',
+      'Most family radio resolves this by aiming at the parent and hoping. The grandmother finds ' +
+      'it loud, the teenager finds it embarrassing, the six-year-old is not being served at all, ' +
+      'and everybody tolerates it because the parent controls the dial. That is not a family ' +
+      'station. It is a parent station with hostages.',
+      'The alternative is not to average everyone into beige, which is the other common failure ' +
+      'and a worse one. It is to build a rotation where each of those four people gets something ' +
+      'that is genuinely for them at some point in the hour, and where the others can survive it ' +
+      'cheerfully because their turn is coming.',
+      'That is a scheduling problem rather than a music problem, and it is solvable. What it needs ' +
+      'is somebody willing to programme for the whole room instead of for the person holding the ' +
+      'remote.',
+    ],
+  },
+  {
+    slug: 'decisions-before-you-know',
+    kicker: 'The whole house sings',
+    title: 'The ones you make before you know they were decisions',
+    dek: 'Almost nothing that changes a life arrives labelled as a fork in the road.',
+    image: 'decisions-that-matter',
+    author: 'jubilee',
+    stands: 'The large decisions announce themselves and get prayed over. The ones that actually set the direction are made in about four seconds.',
+    body: [
+      'Ask somebody how they ended up where they are and they will tell you about a few big ' +
+      'moments — the job, the move, the marriage. Press a little and something else usually ' +
+      'surfaces: that the big moment was mostly the consequence of a hundred small ones that ' +
+      'nobody was treating as decisions at the time.',
+      'Who you spend a Tuesday evening with. What you do with the first ten minutes of the ' +
+      'morning. Whether you say the mildly dishonest thing that makes the conversation easier. ' +
+      'Whether you keep the promise that nobody would notice you breaking. None of those feels ' +
+      'like a fork in the road, and every one of them is quietly setting the direction.',
+      'Scripture is unusually attentive to this. It spends far less time on dramatic choices than ' +
+      'a reader expects, and a great deal of time on habits, company, speech and small ' +
+      'faithfulness — because that is where character is actually assembled, and character is what ' +
+      'makes the big decision when it comes.',
+      'So this station is not about crisis navigation. It is about the four-second choices, made ' +
+      'while distracted, that turn out to have been the ones that mattered.',
+    ],
+  },
+  {
+    slug: 'celebrating-without-borrowing',
+    kicker: 'The whole house sings',
+    title: 'Celebrating Yeshua without borrowing the world’s party',
+    dek: 'Joy is not the same thing as a loud room, and the difference is audible.',
+    image: 'radiant-stones-radio',
+    author: 'jubilee',
+    stands: 'The world knows how to throw a party and cannot manufacture the reason for one. We have the reason and keep borrowing the party.',
+    body: [
+      'There is a version of Christian celebration that is simply a secular party with the lyrics ' +
+      'swapped. Same build, same drop, same instruction to put your hands up, and a chorus that ' +
+      'would work equally well about a person, a weekend or a brand.',
+      'It is not that the energy is wrong. Scripture is full of noise — trumpets, dancing, shouting ' +
+      'until the ground moves. David embarrasses his household with it. The objection is narrower ' +
+      'than the usual killjoy one, and it is this: the borrowed version has the celebration ' +
+      'without the occasion, and after a while a listener can hear that nothing in particular is ' +
+      'being celebrated.',
+      'The world knows how to throw a party and cannot manufacture the reason for one. That is the ' +
+      'actual asymmetry, and it runs entirely in our favour. We have an occasion — a specific ' +
+      'person, a specific event, a debt actually settled — and we keep trading it for a production ' +
+      'technique.',
+      'Celebration that names what it is celebrating sounds different. It is usually more ' +
+      'specific, often less loud, and it survives being listened to twice.',
+    ],
+  },
+  {
+    slug: 'when-faith-feels-hard-is-not-beginner',
+    kicker: 'The whole house sings',
+    title: 'When Faith Feels Hard is not a beginner station',
+    dek: 'The people who need it most have usually been at this for decades.',
+    image: 'when-faith-feels-hard',
+    author: 'jubilee',
+    stands: 'Nobody warns you that the hardest stretch tends to arrive in year twenty, to someone doing everything right.',
+    body: [
+      'The assumption baked into the title is that difficulty belongs to the beginning — that ' +
+      'faith is hard while it is new, and then it settles. It is a comforting model and it does ' +
+      'not match many actual lives.',
+      'The hard stretch far more often arrives late, and to people who are doing everything they ' +
+      'were told to do. Twenty years in, having served, given, prayed and shown up, a person finds ' +
+      'that the thing has gone quiet. Not disproved — quiet. The practices still run and produce ' +
+      'nothing they can feel, and there is no vocabulary in most churches for saying so out loud ' +
+      'without sounding like a warning to everybody else.',
+      'That silence has a long pedigree. It is the middle of most psalms. It is the whole of ' +
+      'Ecclesiastes. It is Elijah under the tree, immediately after the single greatest public ' +
+      'victory of his career, asking to die. The pattern of collapse-after-triumph is in the text ' +
+      'because it is in people.',
+      'So the station is not aimed at doubters or newcomers. It is for the long-serving, in the ' +
+      'flat years, who have nowhere to say it — and it treats that as an ordinary stretch of the ' +
+      'road rather than as a failure to be fixed.',
+    ],
+  },
+  {
+    slug: 'never-twice-in-a-day',
+    kicker: 'The whole house sings',
+    title: 'Why the flagship never plays a song twice in a day',
+    dek: 'Commercial radio repeats its best track every four hours. Here is the argument against.',
+    image: 'jubilee-ccm',
+    author: 'jubilee',
+    stands: 'Repetition is how you build a hit, and familiarity is not the same thing as agreement.',
+    body: [
+      'Commercial music radio runs on repetition. The strongest songs are in heavy rotation, which ' +
+      'in practice means several plays a day, and the reason is well understood: familiarity is ' +
+      'the largest single driver of whether somebody says they like a song. Play it enough and ' +
+      'people come to want it.',
+      'That mechanism works exactly as well on a worship song, which is the problem. A track can ' +
+      'be installed in a congregation by rotation alone, and the affection it accumulates is ' +
+      'indistinguishable, from the inside, from agreement with what it says. People end up ' +
+      'attached to a line they have never once examined.',
+      'There is a related cost. Heavy rotation means a small pool, and a small pool means the ' +
+      'ninety per cent of the catalogue that is not the current handful never gets heard — ' +
+      'including most of what is unusual, most of what is old, and most of what came from ' +
+      'somewhere other than the two or three places that currently export worship music.',
+      'So the flagship does not repeat inside a day. It costs some of the comfort of the familiar, ' +
+      'and it buys a listener a genuinely wider week and a fair chance of noticing what they are ' +
+      'agreeing to.',
+    ],
+  },
+  {
+    slug: 'jazz-when-nobody-is-performing',
+    kicker: 'The whole house sings',
+    title: 'Jazz is what worship sounds like when nobody is performing',
+    dek: 'A form built on listening to each other rather than on delivering a rehearsed thing.',
+    image: 'inspire-jazz',
+    author: 'jubilee',
+    stands: 'The whole form is people listening to each other closely enough to respond in real time. There are worse descriptions of a church.',
+    body: [
+      'Jazz is an odd fit for a worship band on paper. It has no obvious congregational function, ' +
+      'most of it has no words at all, and its reputation is for cleverness — which is not a ' +
+      'virtue anybody is looking for in this context.',
+      'The reason it earns a frequency is structural. Almost every other form on this dial is ' +
+      'delivered: a thing was written, arranged and rehearsed, and then it is presented, ' +
+      'identically, to a room. Jazz is the one common form organised around the opposite ' +
+      'principle. It is people listening to each other closely enough to respond in real time, ' +
+      'inside an agreed shape, where nobody knows exactly what the next minute contains.',
+      'There are considerably worse descriptions of a church than that. And there are worse ' +
+      'descriptions of prayer, which is also a form with a shape and no script, in which the ' +
+      'listening is most of the work.',
+      'It is also, practically, the least intrusive music on the band. It fills a room without ' +
+      'demanding the room, which is why it is on at the hours when people are working, talking, ' +
+      'or trying to think.',
+    ],
+  },
+];
+
+const HM_VOICES_2 = [
+  /* ---- Melody Inspire — everyday family faith -------------------------- */
+  {
+    slug: 'family-faith-is-mostly-logistics',
+    kicker: 'Everyday family faith',
+    title: 'Family faith is mostly logistics',
+    dek: 'The unglamorous truth, and why admitting it takes the guilt out of the whole subject.',
+    image: 'inspire-kids',
+    author: 'melody',
+    stands: 'Nobody teaches this because it does not sound spiritual. It is, however, the part that decides whether any of the rest happens.',
+    body: [
+      'The literature on raising children in the faith is almost entirely about content — what to ' +
+      'teach, which verses, which questions to expect. Very little of it is about the actual ' +
+      'obstacle, which is that there are four people, three schedules, one bathroom and eleven ' +
+      'minutes.',
+      'What survives contact with a real week is whatever was attached to something that was ' +
+      'already going to happen. A grace said because everyone is sitting down anyway. A song ' +
+      'because the car journey exists regardless. Two minutes at bedtime because bedtime is ' +
+      'non-negotiable. The families who keep something going are almost never the most devout ' +
+      'ones. They are the ones who bolted it to a fixed point.',
+      'Anything that needs its own slot will be the first thing cut, and it will be cut in week ' +
+      'three, and the parent will privately file it as a spiritual failure rather than as a ' +
+      'scheduling one. That misfiling does a lot of damage over a decade.',
+      'So the honest advice is unromantic. Do not design a family devotional. Find the thing that ' +
+      'already happens every single day without anyone deciding, and put something true next to ' +
+      'it. That is the whole method, and it is why a station that is simply on does more work than ' +
+      'a programme nobody can start.',
+    ],
+  },
+  {
+    slug: 'a-sanctuary-that-is-a-kitchen',
+    kicker: 'Everyday family faith',
+    title: 'What a sanctuary sounds like when it is a kitchen',
+    dek: 'The word does not mean a building. It means a place where something is protected.',
+    image: 'jubilee-sanctuary',
+    author: 'melody',
+    stands: 'A sanctuary is not a quiet room. It is a place where a particular thing is safe, and quiet is optional.',
+    body: [
+      'Sanctuary has drifted into meaning the large room with the good acoustics, which is a ' +
+      'shame, because the older sense is far more useful to anybody who does not live in one. A ' +
+      'sanctuary is a place where something is protected — where a thing that is vulnerable ' +
+      'everywhere else cannot be reached.',
+      'By that definition a kitchen qualifies more often than a building does. It is where the ' +
+      'family actually assembles, where the difficult conversation eventually gets had, and where ' +
+      'a child learns what the adults are really like by watching how they behave when tired.',
+      'It is also, notably, not quiet. The protected thing is not silence. It is whatever is being ' +
+      'kept safe in that room — honesty, usually, and the assumption that a person can say the ' +
+      'true version of how their day went without it being used against them later.',
+      'A station can help with that or hinder it. Something true playing underneath a room lowers ' +
+      'the temperature of it and gives people somewhere to put their eyes. That is a small ' +
+      'function and it is worth a frequency.',
+    ],
+  },
+  {
+    slug: 'twenty-minutes-in-the-car',
+    kicker: 'Everyday family faith',
+    title: 'The twenty minutes in the car are the discipleship',
+    dek: 'Side by side, no eye contact, and a fixed end point. It is a nearly perfect format.',
+    image: 'inspire-latin',
+    author: 'melody',
+    stands: 'A child will tell you things at forty miles an hour that they would never say across a table.',
+    body: [
+      'Every parent of a teenager works this out eventually, usually by accident. The conversations ' +
+      'that matter do not happen when you sit down opposite them and announce that you want to ' +
+      'talk. They happen in the car.',
+      'The reasons are almost mechanical. You are side by side rather than face to face, so ' +
+      'nothing has to be held in eye contact. There is a fixed end point, so nobody is trapped. ' +
+      'There is a legitimate reason to be there that is not the conversation, so the conversation ' +
+      'can be abandoned without anybody having failed. And there is something else to look at, ' +
+      'which is what most people need in order to say a hard sentence.',
+      'It is worth noticing how much of the teaching in the Gospels happens while walking. Not ' +
+      'seated in a room, arranged for the purpose — on a road, going somewhere else, with the ' +
+      'lesson attached to whatever came up. The Emmaus conversation is a seven-mile walk, and the ' +
+      'teaching only lands because the journey gave it the time.',
+      'So what goes on the radio for those twenty minutes is not background. It is the raw ' +
+      'material for whatever gets said, and quite often it is what starts the sentence.',
+    ],
+  },
+  {
+    slug: 'children-do-not-need-a-simplified-god',
+    kicker: 'Everyday family faith',
+    title: 'Children do not need a simplified God',
+    dek: 'Simple language, yes. A smaller God, no — and children can tell the difference immediately.',
+    image: 'inspire-kids',
+    author: 'melody',
+    stands: 'Simplifying the words is respect. Simplifying the subject is a debt, and it comes due in the teenage years with interest.',
+    body: [
+      'There is a real skill in saying a large thing in small words, and children’s material that ' +
+      'does it well is worth a great deal. That is not what this is about. This is about the other ' +
+      'move — where the subject itself gets shrunk, so that what is handed over is not a simple ' +
+      'account of God but an account of a simple God.',
+      'It looks like kindness and it is a loan. A child given a God who is mainly nice, who does ' +
+      'not do anything difficult and who never appears in a story that ends badly, will meet the ' +
+      'actual text somewhere around thirteen and find they were told a different religion. The ' +
+      'usual response is not a crisis of faith. It is a quiet conclusion that the adults were ' +
+      'managing them.',
+      'Children are also considerably tougher than the material aimed at them assumes. They ' +
+      'already know that people die, that adults are frightened sometimes, and that some things ' +
+      'do not get fixed. What they lack is not resilience but vocabulary, and a story that ' +
+      'pretends otherwise is not protecting them from anything they had not already noticed.',
+      'So the standard on the children’s stations is the same as everywhere else on this band. ' +
+      'Small words, ordinary sentences, and nothing left out because it is uncomfortable.',
+    ],
+  },
+  {
+    slug: 'beyond-the-trauma-is-not-over-it',
+    kicker: 'Everyday family faith',
+    title: 'Beyond the trauma is not the same as over it',
+    dek: 'A station name that is doing careful work, and a distinction most recovery language misses.',
+    image: 'beyond-the-trauma',
+    author: 'melody',
+    stands: 'Beyond means you have travelled. It does not mean the ground behind you has changed.',
+    body: [
+      'The word people reach for is over. Are you over it. She is not over it yet. He should be ' +
+      'over it by now. The metaphor is a hurdle: a discrete obstacle, cleared once, after which ' +
+      'the track is flat again.',
+      'That metaphor is wrong for almost everything serious, and it does damage on both sides. The ' +
+      'person carrying the thing hears that they are late. Everybody else gets a schedule against ' +
+      'which to measure them, and a reason to be quietly impatient when it is not met.',
+      'Beyond is a different word doing a different job. It says a distance has been covered, and ' +
+      'it says nothing at all about the ground behind you having changed. It is possible to have ' +
+      'travelled a very long way and for the thing to still be exactly where it was, still that ' +
+      'size, still capable of arriving in the room on an ordinary Tuesday because of a smell.',
+      'What actually improves is range. Early on, the whole map is organised around it; later, ' +
+      'there is more country. That is real progress and it is worth naming honestly, because the ' +
+      'alternative — being told you should be over it — teaches people to perform a recovery they ' +
+      'have not had.',
+    ],
+  },
+  {
+    slug: 'what-grows-back-and-what-does-not',
+    kicker: 'Everyday family faith',
+    title: 'What actually grows back, and what does not',
+    dek: 'Restoration is a real promise and a specific one. It is not the same as replacement.',
+    image: 'restored-renewed',
+    author: 'melody',
+    stands: 'Joel promises the years the locusts ate will be restored. It does not promise the locusts never came.',
+    body: [
+      'Restoration language gets used loosely, and the looseness sets people up badly. The ' +
+      'implication a listener takes away is that the thing lost will be handed back in its ' +
+      'original condition, and when it is not, the promise looks broken rather than misread.',
+      'Look at what is actually promised. Joel says the years the locusts ate will be restored — ' +
+      'the years, not the locusts undone. Job ends with more than he began with, and four ' +
+      'daughters do not become the same four daughters. The New Testament word for it keeps ' +
+      'carrying the sense of putting back into working order, which is a specific and modest claim ' +
+      'and a very different one from erasure.',
+      'That distinction matters enormously in practice. Capacity comes back. Function comes back. ' +
+      'The ability to work, to trust, to be in a room, to enjoy something — those are the things ' +
+      'that genuinely return, often more slowly than anyone wants and often more completely than ' +
+      'the person expected in the worst part of it.',
+      'What does not come back is the timeline. Nobody gets the decade returned. Restoration is ' +
+      'not a reversal, it is a rebuild, and a rebuild is a real and sufficient thing to be ' +
+      'promised.',
+    ],
+  },
+  {
+    slug: 'who-teaches-your-children-the-words',
+    kicker: 'Everyday family faith',
+    title: 'Whose job is it to teach your children the words?',
+    dek: 'The uncomfortable one, asked plainly, with no guilt attached to the answer.',
+    image: 'jubilee-sanctuary',
+    author: 'melody',
+    stands: 'An hour a week against everything else a child hears is not a fair contest, and it was never designed to be one.',
+    body: [
+      'The honest arithmetic is unfriendly. A child in a churchgoing family might get an hour a ' +
+      'week of explicit teaching from somebody other than their parents. Set that against the ' +
+      'hours of everything else and it is not a contest, and it was never intended to be one — ' +
+      'the arrangement Scripture describes has the teaching happening at home, constantly, in ' +
+      'ordinary conversation, with the formal gathering as reinforcement rather than as the ' +
+      'delivery mechanism.',
+      'Almost every parent knows this and almost every parent feels caught by it, because the ' +
+      'obvious inference is that they are not doing enough. Which is where the guilt comes in, and ' +
+      'the guilt is worth interrupting, because it is a poor motivator and it usually produces an ' +
+      'ambitious plan that lasts nine days.',
+      'The realistic version is much smaller. You are not required to teach a syllabus. You are ' +
+      'required to be a person your children can watch, and to let what you actually think be ' +
+      'audible in the house rather than kept for Sundays. Most of what transfers is caught rather ' +
+      'than taught, which is either the most reassuring sentence in this piece or the most ' +
+      'alarming one, depending on the week.',
+      'And some of it can be shared out. A station cannot raise anybody’s children. It can put ' +
+      'the words in the room often enough that they are familiar when the moment comes to use ' +
+      'them.',
+    ],
+  },
+
+  /* ---- Zariah Inspire — Caribbean and diaspora ------------------------- */
+  {
+    slug: 'riddim-was-church-first',
+    kicker: 'Caribbean and diaspora',
+    title: 'Riddim was church before it was radio',
+    dek: 'The rhythm arrived in the sanctuary first. The charts came along later and took the credit.',
+    image: 'riddim-and-rhyme',
+    author: 'zariah',
+    stands: 'The drum was not borrowed from the dancehall. Both of them got it from the same place, and the church got there first.',
+    body: [
+      'There is a tidy story about Caribbean gospel in which the church, arriving late and ' +
+      'reluctantly, borrows a popular rhythm in order to reach young people. It is the story told ' +
+      'about a lot of music and it has the direction of travel backwards.',
+      'The rhythms came out of communities where the church was the institution that survived — ' +
+      'often the only one people owned outright, frequently the only building where a large group ' +
+      'could gather without permission. What was worked out in those rooms did not stay in them, ' +
+      'and a great deal of what later became commercially enormous had been running in a ' +
+      'congregation for a generation first.',
+      'That has practical consequences for how a station like this is built. It is not an ' +
+      'evangelistic use of somebody else’s sound. It is the older stream, and it does not need to ' +
+      'apologise to anybody for the drum or justify it to a nervous elder.',
+      'It also settles the recurring question of whether this music is too much for worship. The ' +
+      'people who developed it were worshipping at the time.',
+    ],
+  },
+  {
+    slug: 'worship-in-a-country-not-yours',
+    kicker: 'Caribbean and diaspora',
+    title: 'Worshipping in a country that is not yours',
+    dek: 'The particular loneliness of praising God in a place where your praise is an accent.',
+    image: 'france-inspire-francais',
+    author: 'zariah',
+    stands: 'You can be entirely welcome in a church and still be the only person in it who knows what the song is supposed to feel like.',
+    body: [
+      'There is a specific experience that people who have moved will recognise and that people ' +
+      'who have not usually cannot picture. You are in a church. Everybody is kind. Nothing is ' +
+      'wrong. And you are the only person in the room who knows what this song is supposed to feel ' +
+      'like, because where you are from it is not taken at this speed and not sung sitting down.',
+      'It is not exclusion. That is what makes it hard to raise. Nobody has done anything, there ' +
+      'is nothing to complain about, and the sensation is simply that the part of worship which ' +
+      'used to be effortless has become a translation you are performing in your head.',
+      'Scripture has a whole vocabulary for this, and it is not a small corner of the book. How ' +
+      'shall we sing the Lord’s song in a strange land is one of the most quoted lines in the ' +
+      'Psalms, and it is a genuine question rather than a rhetorical one. A very large amount of ' +
+      'the Bible was written by, for and about displaced people.',
+      'So these stations exist to be the room where the translation stops for an hour — where the ' +
+      'thing sounds the way it sounds at home, and nobody has to explain why that matters.',
+    ],
+  },
+  {
+    slug: 'french-is-not-a-translation',
+    kicker: 'Caribbean and diaspora',
+    title: 'Why the French station is not a translation of the English one',
+    dek: 'It has a different playlist, a different pace and a different set of concerns, on purpose.',
+    image: 'jubilee-prayers-french',
+    author: 'zariah',
+    stands: 'A dubbed station is a station about somebody else, delivered in your language. That is not the same as a station for you.',
+    body: [
+      'The cheap way to serve another language is to take the English schedule and change the ' +
+      'voice track. Same songs, same running order, same references, now in French. It is fast, it ' +
+      'is defensible on a spreadsheet, and it produces something a listener can tell is second ' +
+      'hand within about four minutes.',
+      'What gives it away is never the vocabulary. It is the assumptions underneath. The examples ' +
+      'come from somewhere else. The seasons are wrong. The songs are the ones that were popular ' +
+      'in a different country, arranged for a different kind of room, and the pacing belongs to a ' +
+      'broadcasting culture the listener does not live in.',
+      'French-language worship is not English worship with different words on it. It has its own ' +
+      'repertoire, much of it from West Africa, the Caribbean and Québec rather than from Paris, ' +
+      'and it carries a different relationship to formality, to the choir, and to how long a ' +
+      'thing is allowed to take.',
+      'So this frequency was built rather than converted. It shares the band, the discipline and ' +
+      'the standards with everything else here, and almost nothing else — which is the point.',
+    ],
+  },
+  {
+    slug: 'the-commute-belongs-to-you',
+    kicker: 'Caribbean and diaspora',
+    title: 'The commute is the only hour that belongs to you',
+    dek: 'Nobody can reach you, nothing is expected, and it is the last unclaimed slot in most days.',
+    image: 'inspire-drive',
+    author: 'zariah',
+    stands: 'Everybody wants that hour. Most days it is the only one where you get to decide what goes in.',
+    body: [
+      'Look honestly at a working day and count the hours that are actually yours. Not free — ' +
+      'yours, in the sense that you choose what occupies your attention. For most people the ' +
+      'answer is somewhere near zero, with one exception.',
+      'The commute is strange because it is simultaneously obligatory and unsupervised. You have ' +
+      'to be there, and while you are there nobody can require anything of you. No colleague can ' +
+      'reach you, no child needs anything, and there is nothing you could be doing instead that ' +
+      'you are failing to do. It is the last uncontested slot in a great many lives.',
+      'Which is exactly why so much competes for it. Every podcast, every news service and every ' +
+      'streaming platform is designed around that hour, and most of what fills it leaves people ' +
+      'arriving in a slightly worse condition than they set off in — more informed, more agitated, ' +
+      'no better prepared for the room they are walking into.',
+      'It is a reasonable thing to be deliberate about. Whatever goes in during that hour is the ' +
+      'last thing said to you before the day starts and the first thing said after it ends, and ' +
+      'over a year that is a great many hours to hand over without deciding.',
+    ],
+  },
+  {
+    slug: 'holidays-hold-the-old-country',
+    kicker: 'Caribbean and diaspora',
+    title: 'Holidays are where the old country survives',
+    dek: 'Language goes first, then food, then the songs. The feast days are where the last of it holds on.',
+    image: 'inspire-holiday',
+    author: 'zariah',
+    stands: 'A grandchild who cannot hold a conversation in the language will still know every word of the song that gets sung once a year.',
+    body: [
+      'Migration erodes in a predictable order, and anybody in the second or third generation can ' +
+      'watch it happening in their own family. The language goes first, usually within two ' +
+      'generations. The food lasts longer because it is daily. The music lasts longest of all, ' +
+      'and what preserves it is the calendar.',
+      'This is the pattern almost everywhere. A grandchild who cannot hold a conversation in the ' +
+      'language will nonetheless know every word of the song that gets sung once a year, because ' +
+      'that song is bolted to an occasion that keeps recurring whether or not anybody has ' +
+      'maintained anything else.',
+      'It gives the holiday frequencies a job larger than atmosphere. What is on them is, for a ' +
+      'lot of families, the annual transfer — the one point in the year when the older repertoire ' +
+      'is audible in a house that otherwise runs entirely in the new country’s music.',
+      'Which is worth taking seriously when programming them. A holiday station that plays only ' +
+      'the internationally famous versions of things is quietly finishing the erosion it could ' +
+      'have interrupted.',
+    ],
+  },
+  {
+    slug: 'a-rhythm-your-grandmother-knows',
+    kicker: 'Caribbean and diaspora',
+    title: 'A rhythm your grandmother would recognise',
+    dek: 'Continuity is not conservatism. It is the test of whether a thing was ever really yours.',
+    image: 'riddim-and-rhyme',
+    author: 'zariah',
+    stands: 'If your grandmother could not find her way into it, something got replaced rather than developed.',
+    body: [
+      'There is a useful test for any church music, and it costs nothing to apply. Could your ' +
+      'grandmother find her way into this. Not enjoy it, necessarily, and certainly not choose it ' +
+      '— but recognise it. Find the beat. Know where the line lands.',
+      'This is not an argument for keeping everything the way it was. Every living tradition ' +
+      'changes constantly, and the ones that stop changing become museum pieces within one ' +
+      'generation. Development is normal and it is healthy.',
+      'The test is distinguishing development from replacement. Development moves and stays ' +
+      'legible to the people it came from. Replacement imports a form wholesale from somewhere ' +
+      'else, and its tell is exactly this: the previous generation cannot get in. They are not ' +
+      'being challenged by it. They are locked out of it, in their own church, using a form that ' +
+      'arrived from a country none of them have been to.',
+      'A tradition that fails this test has usually swapped its inheritance for whatever was ' +
+      'currently being exported, and it will have to do that again in fifteen years, because it ' +
+      'no longer has anything of its own to develop from.',
+    ],
+  },
+  {
+    slug: 'praying-in-the-language-you-dream-in',
+    kicker: 'Caribbean and diaspora',
+    title: 'Praying in the language you dream in',
+    dek: 'Fluency is not the issue. There is a language a person is most themselves in, and God speaks it.',
+    image: 'jubilee-prayers-french',
+    author: 'zariah',
+    stands: 'You can be perfectly fluent in a language and still not be able to be honest in it.',
+    body: [
+      'People who live between two languages will tell you they are slightly different people in ' +
+      'each. Not less capable — different. There is one they argue in, one they count in, and one ' +
+      'they would swear in if something fell on their foot, and those are frequently not the same ' +
+      'language.',
+      'Prayer sits with the last group. Whatever a person prays in when nothing is going well is ' +
+      'the language underneath the others, and it is very often not the one they are most ' +
+      'educated in. Fluency turns out to be the wrong measure entirely. You can be perfectly ' +
+      'fluent in a language and still be unable to be honest in it, because you learned it in ' +
+      'rooms where honesty was not what was called for.',
+      'Pentecost is unusually pointed about this. The miracle described is not that everybody ' +
+      'suddenly understood one language. It is that each person heard in the language they were ' +
+      'born into — which was an expensive way to do it, and evidently the way it was meant to be ' +
+      'done.',
+      'So the prayer frequencies are hosted in their own languages rather than subtitled, at the ' +
+      'hours when people are awake and alone with something. That is not a nicety. It is the ' +
+      'difference between a prayer somebody joins and a prayer somebody observes.',
+    ],
+  },
+];
+
+const HM_VOICES_3 = [
+  /* ---- Caleb Inspire — young, courageous worship ----------------------- */
+  {
+    slug: 'courage-is-mostly-boring',
+    kicker: 'Young, courageous worship',
+    title: 'Courage is mostly boring',
+    dek: 'The word gets used for the dramatic version. Almost all of the real thing is repetitive and unwitnessed.',
+    image: 'inspire-talk',
+    author: 'caleb',
+    stands: 'Nobody is ever going to congratulate you for the thing that actually took courage, because nobody is going to know it happened.',
+    body: [
+      'Courage is sold to young men as a moment. There is a stand to be taken, a room to be walked ' +
+      'into, a thing to be said out loud at cost. Those moments are real and they do arrive, but ' +
+      'they are a rounding error in the total, and building a whole idea of manhood around them ' +
+      'leaves a person unprepared for the actual assignment.',
+      'The real thing is almost entirely repetitive. Getting up at the same time when nothing ' +
+      'depends on it. Continuing to be decent to somebody who has not noticed. Doing the work when ' +
+      'the outcome will be credited elsewhere. Staying in a marriage, a job or a church through ' +
+      'the flat year that has no story in it.',
+      'None of that photographs. Nobody is going to congratulate you, because nobody is going to ' +
+      'know it happened, and that absence of witness is precisely what makes it the harder ' +
+      'version. A dramatic act of courage has adrenaline and an audience helping it along. The ' +
+      'boring kind has neither.',
+      'This is why the New Testament word usually rendered as endurance is so much more common ' +
+      'than any word for bravery. What is being asked for is not a burst. It is a rate — ' +
+      'maintained, without applause, for a long time.',
+    ],
+  },
+  {
+    slug: 'iron-requires-two-pieces-of-iron',
+    kicker: 'Young, courageous worship',
+    title: 'Iron sharpening iron requires two pieces of iron',
+    dek: 'The verse gets quoted at men who have no such friendship, as if naming it produced one.',
+    image: 'iron-sharpening-iron',
+    author: 'caleb',
+    stands: 'Sharpening makes a noise, removes material, and cannot be done at a distance. Most of what men call friendship is none of those.',
+    body: [
+      'The proverb is quoted constantly and almost always as encouragement, which is a strange use ' +
+      'of it, because the image is not an encouraging one. Sharpening is abrasive. It makes a ' +
+      'noise, it removes material, and it requires the two objects to be pressed together hard ' +
+      'enough that something comes off.',
+      'Set that against what most men actually have. A group chat. Some colleagues. Several people ' +
+      'who would come to the funeral and none who could name what he is currently getting wrong. ' +
+      'That is not iron and iron. That is proximity, and proximity sharpens nothing.',
+      'The condition the proverb assumes is specific and rare. It needs someone close enough to ' +
+      'see the fault, with standing to name it, and a relationship durable enough to survive them ' +
+      'doing so. Any one of those is common. The three together are not, and they cannot be ' +
+      'produced by deciding to have them.',
+      'What they can be produced by is time and regularity — the same people, often, over years, ' +
+      'in an arrangement neither party has to keep choosing. Which is unglamorous, slow, and ' +
+      'almost the only method that has ever worked.',
+    ],
+  },
+  {
+    slug: 'marriage-matters-is-not-a-conference',
+    kicker: 'Young, courageous worship',
+    title: 'Marriage Matters is not a conference',
+    dek: 'A weekend produces resolve. A marriage runs on Tuesdays, and nothing is scheduled for Tuesdays.',
+    image: 'marriage-matters',
+    author: 'caleb',
+    stands: 'The intensive weekend has an excellent record on how people feel by Sunday night and almost none on where they are in March.',
+    body: [
+      'The dominant format for marriage teaching is the intensive: a weekend, a course, a retreat. ' +
+      'Concentrated, expensive, emotionally significant, and genuinely useful — most people come ' +
+      'out of one with things named that had been unnameable for years.',
+      'Then everybody goes home. And the thing that erodes a marriage was never a lack of insight ' +
+      'in the first place. It is the accumulated weight of ordinary Tuesdays: the tone used about ' +
+      'a small thing, the conversation postponed for the fourth time, the assumption that has ' +
+      'quietly hardened and not been checked in eighteen months.',
+      'Insight has a short half-life against that. Resolve formed on a Sunday night is measurably ' +
+      'gone by the middle of the following month, not because anybody was insincere but because ' +
+      'resolve is not the mechanism that runs daily life. Habit is, and habit is built by ' +
+      'repetition at low intensity.',
+      'Which is what a station is for. Not a weekend that produces feeling, but something in the ' +
+      'room on an ordinary evening, saying the ordinary thing, often enough that it is available ' +
+      'on the night it is needed.',
+    ],
+  },
+  {
+    slug: 'after-the-storm-nobody-films',
+    kicker: 'Young, courageous worship',
+    title: 'After the storm: the part nobody films',
+    dek: 'The testimony ends at the rescue. The clearing up takes years and has no audience.',
+    image: 'after-the-storm',
+    author: 'caleb',
+    stands: 'Every testimony you have heard was edited to end at the good bit, and everybody listening quietly concluded that theirs was going wrong.',
+    body: [
+      'The testimony has a fixed shape. There was a bad time, God moved, and here I am. It is ' +
+      'told from the far side and compressed, and the compression is where the damage is done — ' +
+      'because the bad time gets four minutes and the rescue gets the applause, and the years ' +
+      'between the two are not in the account at all.',
+      'The person listening does the arithmetic without meaning to. Their own bad time has been ' +
+      'running for two years with no visible turn, so either they are doing it wrong or they were ' +
+      'not given whatever the speaker was given. Neither conclusion is true and both are entirely ' +
+      'reasonable given the evidence presented.',
+      'What is missing is the clearing up. After a storm there is a long stretch of dull, ' +
+      'unphotogenic work — the debt, the reputation, the trust that has to be rebuilt with people ' +
+      'who are entitled to be wary, the habit that has to be broken again on an ordinary ' +
+      'afternoon. That stretch is where most people actually live, and it is nearly absent from ' +
+      'the material.',
+      'So this station is programmed for the clearing up rather than for the rescue. It assumes ' +
+      'the storm has passed and that this has not made the week easy.',
+    ],
+  },
+  {
+    slug: 'acapella-when-production-stops',
+    kicker: 'Young, courageous worship',
+    title: 'Acapella is what is left when the production stops',
+    dek: 'Strip the arrangement and you find out whether the song was ever carrying anything.',
+    image: 'inspire-acapella',
+    author: 'caleb',
+    stands: 'Production can make a weak line feel enormous. Take it away and the line has to be enormous by itself, or it is just a sentence.',
+    body: [
+      'Modern worship production is very good, and that is the difficulty. A build, a drop and the ' +
+      'right reverb can make almost any line feel significant. The feeling is real; what is not ' +
+      'reliable is the inference that the line caused it.',
+      'Take the arrangement away and the question resolves immediately. A song sung by voices ' +
+      'alone has nothing to hide behind. Either the words are carrying it or the room notices ' +
+      'within about eight seconds, and there is no engineering available to rescue the situation.',
+      'This is a useful thing to have on a band, and not only as an aesthetic preference. It is a ' +
+      'test the rest of the catalogue can be held against. A song that survives being sung ' +
+      'unaccompanied by four people in a kitchen is a song that will survive being sung by a ' +
+      'congregation with no band, in a country with no equipment, in a room with no power.',
+      'It is also, historically, the normal condition. Almost every song that has lasted more than ' +
+      'a century was written for voices and whatever happened to be in the room, and most of the ' +
+      'world still worships that way.',
+    ],
+  },
+  {
+    slug: 'the-last-ten-minutes-of-the-day',
+    kicker: 'Young, courageous worship',
+    title: 'The last ten minutes of the day belong to somebody',
+    dek: 'Whatever occupies them is what the mind works on all night. That slot is worth defending.',
+    image: 'bedtime-blessings',
+    author: 'caleb',
+    stands: 'You do not get to choose what you think about at four in the morning. You do get to choose what you handed yourself at eleven.',
+    body: [
+      'There is nothing mystical about the last ten minutes before sleep. It is simply that the ' +
+      'mind keeps working on whatever it was last given, and it does so without supervision for ' +
+      'the next several hours.',
+      'Most people hand it something hostile. The scroll, the news, the message that will not be ' +
+      'answered until tomorrow, the tallying of an unfinished argument. None of that gets resolved ' +
+      'at that hour and all of it gets processed, which is why so many people wake at four with ' +
+      'the exact item they went to bed holding, now larger.',
+      'The old practice was to close the day deliberately — a set form of words, said at the same ' +
+      'time, whether or not the day warranted it. Compline exists for this, and so does the ' +
+      'bedtime blessing said over a child, and the reason both survived for centuries is that they ' +
+      'work on the mechanism rather than on the mood. You are not required to feel settled. You ' +
+      'are required to say the thing, and the saying does the work.',
+      'For a child it is formation. For an adult it is maintenance. Either way it is the one slot ' +
+      'in the day with a guaranteed several hours of consequences attached.',
+    ],
+  },
+  {
+    slug: 'a-station-not-a-podcast',
+    kicker: 'Young, courageous worship',
+    title: 'Why a young man needs a station and not a podcast',
+    dek: 'One of these builds a habit. The other builds an appetite, and they are not the same.',
+    image: 'inspire-cafe',
+    author: 'caleb',
+    stands: 'A podcast asks you to choose it every time. Anything that has to be chosen every time eventually will not be.',
+    body: [
+      'Podcasts are the dominant format for men under forty and they are extremely good at what ' +
+      'they do. They are long, they are conversational, and they get listened to for hours, which ' +
+      'is more than most media manages.',
+      'What they are structurally poor at is regularity. Every listen begins with a decision — ' +
+      'which one, which episode, is this the mood for. That decision is small and it is made ' +
+      'dozens of times a week, and anything requiring a decision that often is eventually going ' +
+      'to be decided against, usually during the exact week it was most needed.',
+      'The second problem is that the format optimises for interest. A podcast has to be ' +
+      'compelling or it is not finished, which pushes everything toward the novel, the ' +
+      'argumentative and the strongly stated. That is a fine diet in moderation and a poor one as ' +
+      'a staple, because it builds an appetite for stimulation rather than a habit of attention.',
+      'A station asks for one decision and then keeps going. It is on during the flat week as well ' +
+      'as the interested one, it says the ordinary thing rather than the striking one, and it does ' +
+      'not require you to be in the mood. Which is precisely the property you want from anything ' +
+      'meant to form you.',
+    ],
+  },
+
+  /* ---- Zev Inspire — Hebrew roots and the feasts ----------------------- */
+  {
+    slug: 'the-feasts-are-a-calendar',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'The feasts are not Jewish nostalgia. They are a calendar.',
+    dek: 'Everyone keeps a calendar. The only question is whose, and what it is quietly teaching.',
+    image: 'hebraic-celebrations',
+    author: 'zev',
+    stands: 'A calendar is a curriculum. It decides what you think about, in what order, every year, whether or not you agreed to it.',
+    body: [
+      'The usual objection to the feasts is that they belong to somebody else — that they are ' +
+      'cultural rather than binding, and that observing them is either sentimental or a quiet ' +
+      'return to law. It is a serious objection and it deserves a serious answer, but it usually ' +
+      'arrives without noticing the thing it assumes: that the alternative is no calendar at all.',
+      'There is no such alternative. Everyone lives inside one. If it is not the feasts it is the ' +
+      'retail year — a long build to December, a slump, a manufactured romance in February, a ' +
+      'summer, back to school, and around again. That cycle is not neutral. It teaches ' +
+      'acquisition, then exhaustion, then acquisition, and it teaches it annually, to everybody, ' +
+      'including people who would say they are not participating.',
+      'A calendar is a curriculum. It decides what you think about and in what order, every year, ' +
+      'without asking. Which makes the real question not whether to keep one but which one, and ' +
+      'what it is teaching while nobody is paying attention.',
+      'The feast cycle teaches deliverance, provision, harvest, atonement and dwelling — in that ' +
+      'order, on a fixed schedule, tied to actual events. Whatever else is true about how a ' +
+      'believer should relate to them, that is a considerably better syllabus than the one most ' +
+      'people are enrolled in by default.',
+    ],
+  },
+  {
+    slug: 'when-the-law-is-set-to-music',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'What happens when the Law is set to music',
+    dek: 'It stops being a list of rules and starts being something you can carry around.',
+    image: 'jubilee-praise',
+    author: 'zev',
+    stands: 'The instruction to memorise it comes with an instruction about how. Write it as a song, and put it in their mouths.',
+    body: [
+      'Read as prose, a legal text resists memory almost completely. It is dense, it is ' +
+      'enumerated, and nothing about its structure helps a person hold it. Anyone who has tried to ' +
+      'commit a chapter of Leviticus to memory understands the problem immediately.',
+      'Set the same material to music and the difficulty inverts. Melody supplies exactly what ' +
+      'prose withholds — a fixed order, a rhythm that flags a missing word, and a shape that ' +
+      'survives decades of not being used. This is not a modern discovery. It is why the ' +
+      'instruction to remember comes bundled with an instruction about method: write it as a song, ' +
+      'teach it to them, put it in their mouths.',
+      'Something else happens as well, and it is the part people do not expect. Sung, the material ' +
+      'stops reading as a list of prohibitions and starts reading as a description of a ' +
+      'relationship — because music forces the affective question. You cannot sing a line without ' +
+      'taking a position on how you feel about it, and a great deal of the text turns out to be ' +
+      'warmer than it looks on the page.',
+      'That is what this frequency is doing. Not decorating the Law, and not softening it. Putting ' +
+      'it in the form it was originally meant to be carried in.',
+    ],
+  },
+  {
+    slug: 'shema-means-hear-then-do',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'Shema means hear, and then it means do',
+    dek: 'A word with no clean English equivalent, and a whole posture lost in the translation.',
+    image: 'shema-roots',
+    author: 'zev',
+    stands: 'In English you can hear a thing perfectly and do nothing about it, and no one has misused the word. In Hebrew that is not available.',
+    body: [
+      'Hear, O Israel. In English that is a request for attention, and it is complete once ' +
+      'attention has been given. A person can hear something, understand it fully, decide against ' +
+      'it, and have used the word correctly throughout.',
+      'Shema does not divide that way. The same word covers hearing, understanding, and acting on ' +
+      'what was heard, and it is used across all three without a seam. A child who has been told ' +
+      'and has not done it has not, in this construction, heard. Obedience is not a separate step ' +
+      'that follows listening; it is part of what listening means.',
+      'That single feature changes a great deal of the text. Every command to hear becomes a ' +
+      'command to comply. Every complaint that the people would not hear stops being about ' +
+      'attention spans and becomes about refusal. And the daily confession that opens with the ' +
+      'word stops being an appeal for quiet and becomes a statement about how the whole day is ' +
+      'going to be conducted.',
+      'It also explains a certain frustration in the prophets that reads oddly in English. They ' +
+      'are not complaining that nobody was listening. They are complaining that everybody had ' +
+      'listened, and that in Hebrew that ought to have settled the matter.',
+    ],
+  },
+  {
+    slug: 'the-subject-every-station-avoids',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'The subject every station avoids at the same time',
+    dek: 'Scripture discusses money constantly. Christian radio discusses it almost never, and the reason is not mysterious.',
+    image: 'money-faith',
+    author: 'zev',
+    stands: 'A station funded by its listeners cannot teach freely about money. It has a position, and everyone can hear it.',
+    body: [
+      'Money is one of the most heavily covered subjects in Scripture. It appears in the law, ' +
+      'throughout the prophets, repeatedly in the parables, and in most of the letters. Whatever ' +
+      'else the text is reticent about, this is not it.',
+      'Christian broadcasting is close to silent on it, and when it does speak the range is ' +
+      'narrow: generosity, usually, and stewardship, occasionally, and almost never debt, wages, ' +
+      'inheritance, the treatment of the poor, or what a person is allowed to charge. The gap ' +
+      'between the source material and the coverage is enormous and it is not an accident.',
+      'The reason is structural rather than cowardly. A station that depends on listener giving ' +
+      'cannot teach freely on money, because every sentence it says is heard against its own ' +
+      'interest. Even the true things sound like the setup for an appeal, and the presenters know ' +
+      'it, so the whole subject gets handled at a distance.',
+      'This band does not take listener money, does not sell advertising, and has nothing to raise ' +
+      'from anybody. That does not make it right about the subject. It does mean it can discuss ' +
+      'the whole of it — including the parts that cost the speaker something — without the ' +
+      'listener having to wonder what the sentence is for.',
+    ],
+  },
+  {
+    slug: 'washing-feet-before-anyone-watches',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'Washing feet before anyone is watching',
+    dek: 'The gesture has been thoroughly domesticated. What it originally demonstrated was rank.',
+    image: 'lead-like-yeshua',
+    author: 'zev',
+    stands: 'It was the job given to whoever in the household had the least standing. That is the whole content of the demonstration.',
+    body: [
+      'Foot washing survives as an occasional ceremony, performed once a year, generally by ' +
+      'somebody senior, in front of a congregation, with clean feet and warm water. Everybody ' +
+      'understands it as a symbol of humility and almost nobody is uncomfortable.',
+      'The original was not like that. It was a genuinely unpleasant job, assigned to whoever in ' +
+      'the household had the least standing, on roads shared with animals. The point was not that ' +
+      'the task was menial in the abstract. The point was that it was rank-coded, and everybody in ' +
+      'the room could read the code instantly.',
+      'That is why Peter objects. He is not being squeamish, he is being ordered — the ' +
+      'arrangement of the room is being publicly inverted, and he can see exactly what it implies ' +
+      'about every assumption he has been operating on.',
+      'The domesticated version loses all of this, which is why it can be performed annually ' +
+      'without changing anything. The live equivalent is not a ceremony at all. It is doing the ' +
+      'task that your position is understood to exempt you from, at a time when nobody is ' +
+      'watching and no one will be told, and finding out what you actually think about rank when ' +
+      'there is no audience to be humble in front of.',
+    ],
+  },
+  {
+    slug: 'identity-is-not-a-personality-type',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'Identity in Yeshua is not a personality type',
+    dek: 'The word has been absorbed by an industry that means something else by it entirely.',
+    image: 'identity-in-yeshua',
+    author: 'zev',
+    stands: 'One of these is discovered by looking inward and describing what is there. The other is conferred, from outside, by somebody else.',
+    body: [
+      'Identity has become an enormous cultural category, and most of what it now carries is ' +
+      'descriptive. It is the set of traits, preferences and histories that make a person ' +
+      'distinguishable, arrived at by examination — tests, types, reflection, the long project of ' +
+      'working out who you really are underneath.',
+      'The biblical usage runs in the opposite direction and it is easy to miss because the word ' +
+      'is the same. What the text describes is not discovered but conferred. Adopted. Named. ' +
+      'Bought. Grafted in. In every one of those images the decisive action is taken by somebody ' +
+      'else, and the recipient’s contribution is to accept a status that was not generated ' +
+      'internally and cannot be revised by further introspection.',
+      'The practical difference shows up under pressure. A discovered identity has to be ' +
+      'maintained, defended and periodically re-verified, which is exhausting and which is why so ' +
+      'much of the culture around it is anxious. A conferred one does not depend on the holder’s ' +
+      'current condition at all. It is as true on the bad Tuesday as it was on the day it was ' +
+      'given.',
+      'That is a much stronger claim than the therapeutic version, and it is also a stranger one. ' +
+      'It says the most important true thing about a person is not something they found out about ' +
+      'themselves.',
+    ],
+  },
+  {
+    slug: 'why-heavens-dawn-airs-before-sunrise',
+    kicker: 'Hebrew roots and the feasts',
+    title: 'Why Heaven’s Dawn airs before sunrise',
+    dek: 'The day starts the night before on this calendar, and the schedule follows it.',
+    image: 'heavens-dawn',
+    author: 'zev',
+    stands: 'And there was evening, and there was morning — the first day. The order in that sentence is not decorative.',
+    body: [
+      'Genesis reports each day in an order that most readers slide past. Evening first, then ' +
+      'morning, then the day is counted. On this reckoning a day does not begin when you wake up ' +
+      'and get to work on it. It begins in darkness, while you are asleep, and by the time you are ' +
+      'conscious it has been running for hours without your assistance.',
+      'That is a small structural fact with a large disposition attached. A day that starts at ' +
+      'dawn is a day you are responsible for launching. A day that started last night was ' +
+      'underway before you arrived, and your part in it is to join something already in progress.',
+      'It also puts rest in a different position. On the common model, sleep is recovery from the ' +
+      'day that has finished — you earn it, at the end, having spent yourself. On this one it is ' +
+      'the opening move, which makes rest preparation rather than payment, and reframes the whole ' +
+      'anxious relationship a person can develop with productivity.',
+      'So the station is scheduled to the older reckoning. The turn happens in the dark, and what ' +
+      'plays before first light is the beginning of the day rather than the tail of the last one.',
+    ],
+  },
+];
+
+const HM_VOICES_4 = [
+  /* ---- Imani Inspire — Pentecostal fire -------------------------------- */
+  {
+    slug: 'fire-is-not-volume',
+    kicker: 'Pentecostal fire',
+    title: 'Fire is not volume',
+    dek: 'The correction Pentecostal radio needs most, from inside the tradition rather than outside it.',
+    image: 'jubilee-gospel-fire',
+    author: 'imani',
+    stands: 'Elijah gets wind, earthquake and fire, and the text says God was in none of them. Then a low voice, and he covers his face.',
+    body: [
+      'Somewhere along the way loudness became the evidence. If the room is not shouting, nothing ' +
+      'is happening; if the music is not enormous, the Spirit has not come. It is an easy ' +
+      'assumption to make because the two genuinely do occur together often, and a great deal of ' +
+      'the tradition’s best moments have been noisy.',
+      'The difficulty is that volume is manufacturable and presence is not. Any competent musician ' +
+      'can produce the physiological signature of a move of God in about ninety seconds — the ' +
+      'build, the key change, the held note, the room on its feet. That is a technique, it works ' +
+      'on anybody, and it works identically at a concert with no theological content whatsoever.',
+      'Once a congregation has been trained to read intensity as presence, it will keep needing ' +
+      'more of it, and the people running the room will keep supplying it, and nobody in the ' +
+      'building is lying. Everybody is simply measuring with the wrong instrument.',
+      'Elijah is the correction, and it is placed immediately after his loudest possible victory. ' +
+      'Wind, earthquake and fire all arrive, and the text goes out of its way to say God was in ' +
+      'none of the three. Then a low voice, and that is the point at which he covers his face. ' +
+      'This tradition owns that passage as much as it owns Acts 2.',
+    ],
+  },
+  {
+    slug: 'ten-days-before-one-day',
+    kicker: 'Pentecostal fire',
+    title: 'Ten days of waiting before one day of fire',
+    dek: 'Everybody preaches the second chapter. The first one is where the people actually live.',
+    image: 'upper-room',
+    author: 'imani',
+    stands: 'They were told to wait, with no date given, in a city that had recently executed their teacher. The waiting is not the preamble. It is most of the account.',
+    body: [
+      'Acts 2 is one of the most preached chapters in the book. Acts 1 is the setup nobody lingers ' +
+      'on, which is unfortunate, because it contains the part that most listeners are currently ' +
+      'living in.',
+      'They were told to wait. No date was given. They waited in an upper room in a city that had ' +
+      'recently executed their teacher, in a group that had very publicly failed him, with an ' +
+      'instruction that must have looked increasingly like nothing was going to happen. That is ' +
+      'ten days of ordinary time, and the text records what they did with it: they prayed, they ' +
+      'stayed together, and they handled a piece of unglamorous administrative business.',
+      'It is worth saying plainly that the waiting is not a delay before the story. It is a large ' +
+      'part of the story, and it is the part that is reproducible. Almost nobody reading this is ' +
+      'currently in Acts 2. A great many people are in Acts 1 — obedient, gathered, praying, and ' +
+      'entirely without evidence that the instruction was worth following.',
+      'The tradition that most celebrates the fire ought to be the best in the world at teaching ' +
+      'the ten days. Mostly it is not, and this station is an attempt to correct that in its own ' +
+      'house.',
+    ],
+  },
+  {
+    slug: 'africa-is-a-broadcaster',
+    kicker: 'Pentecostal fire',
+    title: 'Africa is not a mission field on this dial. It is a broadcaster.',
+    dek: 'The direction of travel assumed by most Christian media is a century out of date.',
+    image: 'africa-inspire-kiswahili',
+    author: 'imani',
+    stands: 'The centre of gravity of the Church moved decades ago. Most of the media has not been told.',
+    body: [
+      'Almost all Christian broadcasting still runs on a nineteenth-century map. Content is made ' +
+      'in a handful of wealthy countries and sent outward; the receiving end is described as a ' +
+      'field, and the traffic is understood to move in one direction. The vocabulary gives it ' +
+      'away — reaching, going, sending — and every one of those words positions the listener as ' +
+      'the destination rather than as a participant.',
+      'The map has been wrong for a long time. The Church’s centre of gravity moved south and east ' +
+      'decades ago, in numbers, in growth and in the ordinary business of sending missionaries, ' +
+      'and a great deal of the most vital worship music now in circulation was written in places ' +
+      'that the older map filed under recipients.',
+      'On this band the Kiswahili, Yorùbá and Amharic frequencies are not outreach. They are ' +
+      'stations, held by a host, with catalogues written in those languages, sitting on the same ' +
+      'dial as everything else and subject to the same standards. Nobody is being reached. People ' +
+      'are being broadcast to in the ordinary sense in which anybody is broadcast to.',
+      'The distinction sounds like politics and it is really about quality. Material made for a ' +
+      'field is made down. Material made for an audience is made properly, because the people ' +
+      'making it expect to be judged by them.',
+    ],
+  },
+  {
+    slug: 'what-yoruba-praise-does',
+    kicker: 'Pentecostal fire',
+    title: 'What Yorùbá praise does that a translation cannot',
+    dek: 'In a tonal language the melody is not decoration on the words. It is part of them.',
+    image: 'west-africa-inspire-yoruba',
+    author: 'imani',
+    stands: 'Change the pitch and you have not changed the tune. You have changed the word.',
+    body: [
+      'Yorùbá is a tonal language, which means pitch is not expression laid over the words but ' +
+      'part of the words themselves. The same syllable at a different pitch is a different item ' +
+      'of vocabulary. This is ordinary and unremarkable to any speaker and it has an extraordinary ' +
+      'consequence for music.',
+      'A composer setting a Yorùbá text is not free to put any note under any syllable. The melody ' +
+      'has to agree with the speech tones or the line stops meaning what it said, which sounds ' +
+      'like a constraint and functions as an engine — the words are already halfway to being a ' +
+      'tune before anybody writes one, and the resulting music is fused to the language in a way ' +
+      'that has no equivalent in English.',
+      'It is also why the drums are doing more than keeping time. A talking drum can reproduce ' +
+      'the tonal contour of speech closely enough to carry actual phrases, so the instrument is ' +
+      'not accompanying the praise. It is participating in it, saying the same thing in a second ' +
+      'register.',
+      'None of that survives translation, and this is the honest reason these stations are hosted ' +
+      'rather than dubbed. Translate the text and you keep the doctrine and lose the mechanism. ' +
+      'What is left is accurate and inert.',
+    ],
+  },
+  {
+    slug: 'amharic-worship-is-ancient',
+    kicker: 'Pentecostal fire',
+    title: 'Amharic worship sounds ancient because it is',
+    dek: 'Ethiopia was Christian before most of Europe, and the music never went through the West.',
+    image: 'ethiopia-inspire-amharic',
+    author: 'imani',
+    stands: 'This is not an old-sounding style. It is an old style, developed continuously, that simply never passed through anybody else’s hands.',
+    body: [
+      'A listener meeting Ethiopian worship for the first time usually reaches for the word ' +
+      'ancient, and then assumes it is an aesthetic — a deliberate archaism, the way a Western ' +
+      'group might use plainchant for effect. It is not an aesthetic. It is a continuous ' +
+      'tradition that has been running, without a break and without passing through Western ' +
+      'church music, for an extremely long time.',
+      'Ethiopia was Christian as a kingdom in the fourth century, well before most of Europe, and ' +
+      'the Ethiopian Church developed its own liturgy, its own notation, its own instruments and ' +
+      'its own hymnody largely out of contact with the traditions that later became the default ' +
+      'sound of global Christianity. What that produces is not a variant of Western worship. It is ' +
+      'a parallel line.',
+      'This matters for how the station is programmed and it matters for a listener’s ear. Almost ' +
+      'everything else on international Christian radio, in any language, is downstream of the ' +
+      'same few European and American sources. This is one of the small number of places where you ' +
+      'can hear what Christian music sounds like when it was not.',
+      'It is also a useful corrective to a persistent assumption. The faith did not arrive in ' +
+      'Africa with the colonial period. In some places it had been there for well over a thousand ' +
+      'years by the time anybody turned up to introduce it.',
+    ],
+  },
+  {
+    slug: 'praying-in-swahili-at-three',
+    kicker: 'Pentecostal fire',
+    title: 'Praying in Swahili at three in the morning',
+    dek: 'A continuous prayer frequency, and why the hour it is hardest to pray is the hour it is left running.',
+    image: 'jubilee-prayers-swahili',
+    author: 'imani',
+    stands: 'Somewhere it is always three in the morning, and somebody is always awake with something they cannot put down.',
+    body: [
+      'The prayer stations do one thing and do it without interruption: audible prayer, in one ' +
+      'language, around the clock. No teaching, no music beds designed to move anybody, no ' +
+      'presenter working the room. Just praying, continuously, in Swahili.',
+      'The format looks thin written down and it earns its place in the hours when everything else ' +
+      'fails. There is a state, familiar to anybody who has been in real trouble, in which a ' +
+      'person cannot pray and cannot stop needing to. The words will not assemble. Every attempt ' +
+      'turns into the same circular worry with a religious opening attached.',
+      'What helps in that state is not encouragement to try harder. It is somebody else already ' +
+      'doing it out loud, so that a person can join rather than initiate — which is a much smaller ' +
+      'act and is available when the larger one is not. The whole liturgical tradition rests on ' +
+      'this observation, and so does the practice of praying the Psalms.',
+      'It runs continuously because the need does. The band is on every continent, so somewhere it ' +
+      'is always three in the morning, and somebody is always awake with something they cannot put ' +
+      'down.',
+    ],
+  },
+  {
+    slug: 'chill-is-still-pentecostal',
+    kicker: 'Pentecostal fire',
+    title: 'Inspire Chill is still a Pentecostal station',
+    dek: 'Quiet is not the absence of the Spirit. Sometimes it is the more honest report of it.',
+    image: 'inspire-chill',
+    author: 'imani',
+    stands: 'A tradition that can only recognise God at high intensity has accidentally taught its people that most of their life is godless.',
+    body: [
+      'It reads like a contradiction on the schedule. Everything else under this beat is fire, ' +
+      'shout, upper room — and then a station built for low volume and long spaces. The obvious ' +
+      'reading is that it is the concession, the one aimed at people who find the rest too much.',
+      'That is not what it is for. It is there because a tradition which can only recognise God at ' +
+      'high intensity has, without meaning to, taught its people that the other ninety per cent of ' +
+      'their lives is godless. Every ordinary Tuesday becomes a gap between real encounters, and ' +
+      'the person begins to live for the meeting rather than in the week.',
+      'That is a serious pastoral problem and it is largely self-inflicted. It produces believers ' +
+      'who are devoted and depleted, who measure their standing by their most recent peak, and who ' +
+      'quietly conclude during any flat season that something has gone wrong with them.',
+      'A quiet frequency inside a Pentecostal house is a statement rather than a compromise. It ' +
+      'says the same Spirit is present in the low hours, at conversational volume, doing ' +
+      'unspectacular work — and that noticing this is not a downgrade from the fire but a ' +
+      'prerequisite for surviving between fires.',
+    ],
+  },
+
+  /* ---- Santiago Inspire — Latino heart --------------------------------- */
+  {
+    slug: 'la-familia-is-a-doctrine',
+    kicker: 'Latino heart',
+    title: 'La familia is a doctrine, not a demographic',
+    dek: 'Marketing treats it as an audience segment. It is closer to an ecclesiology.',
+    image: 'familia-inspire-espanol',
+    author: 'santiago',
+    stands: 'The household is the unit Scripture keeps addressing. Everywhere else has spent a century breaking it into individuals and selling to each.',
+    body: [
+      'Every media company knows that Latino audiences are family-oriented, and every media ' +
+      'company treats this as a targeting instruction: put more generations in the advert, and ' +
+      'schedule around the times families are together. It is not wrong and it is entirely ' +
+      'external — a description of behaviour rather than of the thing producing it.',
+      'What is underneath is closer to a doctrine. The household, not the individual, is treated ' +
+      'as the unit that things happen to. Faith is inherited within it, decisions are made ' +
+      'inside it rather than reported to it afterwards, obligation runs sideways and upward as ' +
+      'well as down, and the boundary of who counts as family is set by relationship rather than ' +
+      'by paperwork.',
+      'This is much closer to the Scriptural default than the arrangement most of Western ' +
+      'Christianity now assumes. Households are baptised. Households are addressed. The letters ' +
+      'go to houses, salvation comes to a house, and the whole apparatus of individual private ' +
+      'decision that the modern church runs on would have been difficult to explain to anybody ' +
+      'in the text.',
+      'So a station built on this is not doing demographics. It is programming for the unit it ' +
+      'thinks is actually there — which means content aimed at a room containing several ages, ' +
+      'rather than at one listener wearing headphones.',
+    ],
+  },
+  {
+    slug: 'a-latin-station-sung-in-english',
+    kicker: 'Latino heart',
+    title: 'Why there is a Latin station sung in English',
+    dek: 'It looks like a mistake on the schedule. It is the station for people who live between two languages.',
+    image: 'latin-worship',
+    author: 'santiago',
+    stands: 'The second generation does not need a Spanish station or an English one. It needs the one that knows both are true at once.',
+    body: [
+      'On paper it is the strangest frequency on the band. Latin Worship, sung in English — which ' +
+      'reads either as a compromise or as an error, and prompts the obvious question of who ' +
+      'exactly it is meant for.',
+      'It is for the second generation, and they are not a rounding error. Millions of people grew ' +
+      'up in households where the parents prayed in Spanish and the children answered in English, ' +
+      'where the music at home was one thing and the music everywhere else was another, and where ' +
+      'both are entirely native rather than one being a dilution of the other.',
+      'A Spanish-language station asks them to be more Latino than they are in daily life. A ' +
+      'standard English worship station asks them to leave the rhythm, the instrumentation and ' +
+      'half of what makes music feel like home at the door. Both are perfectly good stations and ' +
+      'neither is describing the actual condition, which is not a halfway point between two ' +
+      'cultures but a distinct third thing with its own sound.',
+      'That is what this frequency carries. The musical inheritance intact, the language the ' +
+      'listener actually thinks in, and no requirement to pick a side in order to be sung to.',
+    ],
+  },
+  {
+    slug: 'portuguese-is-not-spanish',
+    kicker: 'Latino heart',
+    title: 'Portuguese is not Spanish, and Brasil gets its own frequency',
+    dek: 'A distinction constantly flattened by people who have never had to listen closely.',
+    image: 'brasil-inspire-portugues',
+    author: 'santiago',
+    stands: 'Two hundred million people, an entirely separate musical tradition, and a language routinely treated as a regional accent.',
+    body: [
+      'The flattening happens everywhere. Latin America is treated as one market with one ' +
+      'language and a footnote, and Brazilian material gets folded into a Spanish-language ' +
+      'schedule on the grounds that the words look similar written down.',
+      'They are separate languages with separate literatures, and mutual intelligibility is much ' +
+      'poorer in speech than the page suggests. More to the point for a radio station, the ' +
+      'musical traditions are not even close. Brazilian worship carries a rhythmic and harmonic ' +
+      'inheritance — bossa, samba, the whole line of Brazilian popular music and its unusually ' +
+      'sophisticated relationship to harmony — that simply does not appear in Spanish-language ' +
+      'worship from anywhere else.',
+      'It also has one of the largest and most productive evangelical populations in the world, ' +
+      'writing an enormous quantity of its own material rather than importing it. Whatever else is ' +
+      'true, this is not a territory that needs somebody else’s catalogue translated into it.',
+      'So Brasil holds its own number on this dial, with its own host, its own catalogue and its ' +
+      'own schedule. The alternative was to treat two hundred million people as an accent, which ' +
+      'is what usually happens and is not defensible once it is said out loud.',
+    ],
+  },
+  {
+    slug: 'two-generations-one-kitchen',
+    kicker: 'Latino heart',
+    title: 'Two generations, one kitchen, different languages',
+    dek: 'The everyday negotiation of an immigrant household, and what a radio station can do about it.',
+    image: 'jubilee-prayers-spanish',
+    author: 'santiago',
+    stands: 'The parents are most themselves in one language and the children in another, and nobody chose this.',
+    body: [
+      'The arrangement is so common in immigrant families that it barely gets remarked on. A ' +
+      'parent speaks in one language, a child answers in another, everybody understands ' +
+      'everybody, and the conversation proceeds without difficulty for years.',
+      'It works until it has to carry weight. Comfort, correction, apology and prayer are the ' +
+      'places it strains, because those are exactly the registers a person only has in the ' +
+      'language they were formed in. A parent consoling a grown child in their second language ' +
+      'will often sound stiffer and more distant than they are; a child explaining something ' +
+      'painful in their parents’ language will sound younger and less competent than they are. ' +
+      'Both misread the other, and both are being misled by fluency rather than by feeling.',
+      'What helps, unglamorously, is shared material. A song both generations know, a prayer said ' +
+      'the same way every time, a phrase from the radio that is in the house often enough to be ' +
+      'available to both — things that do not have to be translated in the moment because they are ' +
+      'already common property.',
+      'That is a modest function for a station and a real one. It puts words in the room that ' +
+      'belong to everybody in it, which is precisely what the household is short of.',
+    ],
+  },
+  {
+    slug: 'praying-out-loud-as-a-habit',
+    kicker: 'Latino heart',
+    title: 'Praying out loud is a cultural habit worth keeping',
+    dek: 'Some traditions pray audibly in front of each other as a matter of course. That is not a small inheritance.',
+    image: 'jubilee-prayers-portuguese',
+    author: 'santiago',
+    stands: 'A child who has heard adults pray out loud, badly, at the kitchen table, has been given something no curriculum supplies.',
+    body: [
+      'There are cultures in which prayer is a private act performed silently, and cultures in ' +
+      'which it is ordinary to hear it out loud — a grandmother praying over a meal at length, ' +
+      'somebody praying at a doorway before a journey, a whole room praying simultaneously and ' +
+      'audibly and not in unison.',
+      'The audible habit is often treated as informal, or as insufficiently reverent, or simply as ' +
+      'noise by people from the other tradition. It is worth defending, and the argument is ' +
+      'practical rather than sentimental.',
+      'Almost nobody learns to pray from instruction. They learn it by overhearing, the way ' +
+      'children learn any speech register — by being present while competent speakers do it ' +
+      'imperfectly. A child raised where prayer is silent has been told that adults pray. A child ' +
+      'raised where it is audible has heard what it sounds like, including the hesitations, the ' +
+      'repetitions and the parts where the adult clearly did not know what to say and kept going.',
+      'That last detail may be the whole inheritance. Hearing somebody pray badly and continue ' +
+      'teaches that fluency was never the requirement, which is a lesson that almost nothing else ' +
+      'manages to deliver.',
+    ],
+  },
+  {
+    slug: 'focus-is-a-discipline',
+    kicker: 'Latino heart',
+    title: 'Focus is a spiritual discipline with a soundtrack',
+    dek: 'Attention is the raw material of prayer, work and love, and it is the thing most under attack.',
+    image: 'inspire-focus',
+    author: 'santiago',
+    stands: 'You cannot pray, work or love anybody with an attention span that has been trained to turn over every nine seconds.',
+    body: [
+      'Focus gets filed as a productivity concern, which puts it in the wrong department. ' +
+      'Attention is the raw material of every serious thing a person does. Prayer is sustained ' +
+      'attention directed at God. Love, in practice, is sustained attention directed at a person. ' +
+      'Work worth doing requires holding one thing in mind long enough for it to yield.',
+      'All three degrade together, and they degrade the same way — not through a decision to stop ' +
+      'caring but through the gradual training of the mind to expect a new stimulus every few ' +
+      'seconds. That training is thorough, it is delivered several hours a day, and it does not ' +
+      'stay in the phone. The person who cannot read a page also cannot sit in silence, and ' +
+      'discovers it the first time they try to pray for more than four minutes.',
+      'The traditional disciplines were largely attention exercises before they were anything ' +
+      'else. Fixed hours, repetition, long readings, silence — all of them are training the same ' +
+      'muscle, and all of them look pointless if you assume the goal was the content rather than ' +
+      'the capacity.',
+      'Instrumental music is a poor substitute for silence and a good substitute for the ' +
+      'alternative. It occupies the part of the mind that goes looking for stimulus, and leaves ' +
+      'the part that does the work alone.',
+    ],
+  },
+  {
+    slug: 'wellness-without-the-religion',
+    kicker: 'Latino heart',
+    title: 'Wellness without the religion of wellness',
+    dek: 'Rest, food, sleep and the body are genuinely spiritual subjects. The industry around them is a competing faith.',
+    image: 'inspire-wellness',
+    author: 'santiago',
+    stands: 'One of these says look after the body because it is not yours. The other says perfect the body because it is all there is.',
+    body: [
+      'The Church has an unhelpful history with the body. For long stretches it has treated ' +
+      'physical life as the lower floor — tolerated, disciplined, occasionally despised — which ' +
+      'is closer to Greek philosophy than to a text that spends chapters on food, rest, skin ' +
+      'conditions and a weekly command to stop working.',
+      'Into that vacuum walked the wellness industry, which took the abandoned subject seriously ' +
+      'and built something with the full apparatus of a religion around it: a moral vocabulary of ' +
+      'clean and toxic, disciplines, guilt, confession, a promise of transformation, and the ' +
+      'implication that a person who is unwell has failed at something.',
+      'That last move is the one worth naming. Under wellness, illness becomes a verdict, ageing ' +
+      'becomes a defeat, and the body’s eventual failure — which is universal and scheduled — has ' +
+      'no meaning available to it except as a loss of control.',
+      'The older account holds both halves without either. The body genuinely matters, is worth ' +
+      'looking after, and is not the point; rest is commanded rather than earned; and its decline ' +
+      'is not a personal failure. That is a more generous frame than either the disdainful one or ' +
+      'the anxious one, and it is what this frequency is programmed inside.',
+    ],
+  },
+];
+
+const HM_VOICES_5 = [
+  /* ---- Tahoma Inspire — Native voice and healing ----------------------- */
+  {
+    slug: 'arrived-in-the-wrong-hands',
+    kicker: 'Native voice and healing',
+    title: 'The gospel arrived here in the wrong hands. It is still the gospel.',
+    dek: 'Both halves of that sentence are true, and most people are only willing to say one of them.',
+    image: 'island-hallelujah',
+    author: 'tahoma',
+    stands: 'The message was carried by people who also carried a great deal else. Sorting one from the other is the work of several generations, and it is not optional.',
+    body: [
+      'There is a conversation that most Christian broadcasting will not have, and it is the one ' +
+      'that has to happen first with a great many Native and Indigenous listeners. The faith did ' +
+      'not arrive here neutrally. It came bundled with land loss, with schools that were not ' +
+      'schools, with languages punished out of children, and with the confident assumption that ' +
+      'becoming Christian meant ceasing to be what you were.',
+      'Two responses are common and both are evasions. The first says that was regrettable, it was ' +
+      'long ago, and we should move forward — which asks the injured party to do all the moving. ' +
+      'The second concludes that the message is inseparable from its carriers and must be set ' +
+      'down with them, which hands the people who did the damage a final and permanent victory ' +
+      'over what they were nominally preaching.',
+      'The harder position is to hold both. What was done was done, at scale, by people who quoted ' +
+      'this book while doing it. And the book they were quoting is the one in which God ' +
+      'consistently sides with the dispossessed against exactly that kind of power — which means ' +
+      'the strongest available indictment of what happened comes from inside the text rather than ' +
+      'from outside it.',
+      'That is the ground these stations are built on. Not an apology offered in place of ' +
+      'programming, and not a silence pretending the question was never asked.',
+    ],
+  },
+  {
+    slug: 'sobriety-is-a-daily-frequency',
+    kicker: 'Native voice and healing',
+    title: 'Sobriety is a daily frequency, not a testimony',
+    dek: 'The story gets told once. The thing itself has to be done again tomorrow, and the day after.',
+    image: 'freedom-steps',
+    author: 'tahoma',
+    stands: 'A testimony has an ending. Recovery does not, and the mismatch between those two shapes does real damage.',
+    body: [
+      'Church culture loves a recovery testimony, and there is a reason: it has a shape. Bondage, ' +
+      'intervention, freedom. It is told from a platform, in the past tense, and it ends.',
+      'The thing being described does not end. It is a daily practice with no terminal point, ' +
+      'conducted mostly in private, in which the decisive events are unremarkable — a Tuesday ' +
+      'afternoon, a familiar route not taken, a phone call made before rather than after. Nobody ' +
+      'is going to ask you to come and speak about a Tuesday afternoon.',
+      'That mismatch does two kinds of harm. It teaches the person in recovery that their real ' +
+      'life is the uninteresting part, and it teaches everybody else that the problem is solved ' +
+      'once the story has been told — which is exactly when the support tends to withdraw, because ' +
+      'the narrative has reached its ending and everybody claps.',
+      'A station cannot hold anybody accountable and does not pretend to. What it can do is be ' +
+      'present at the same time every day, in the ordinary hours where the actual work happens, ' +
+      'and treat the flat Tuesday as the main event rather than as the gap between testimonies.',
+    ],
+  },
+  {
+    slug: 'men-with-nowhere-to-be-honest',
+    kicker: 'Native voice and healing',
+    title: 'For men with nowhere to be honest',
+    dek: 'Not a shortage of friends. A shortage of rooms in which the true answer is sayable.',
+    image: 'pure-heart-brothers',
+    author: 'tahoma',
+    stands: 'Most men have people to talk to and nowhere to say the actual sentence. Those are different shortages and only one of them gets discussed.',
+    body: [
+      'The standard diagnosis is loneliness, and the standard prescription is more connection — a ' +
+      'group, a men’s breakfast, somebody to check in. It is well meant and it frequently misses, ' +
+      'because a great many of the men in question are not short of company.',
+      'What they are short of is a room where the true answer is available. There is a difference ' +
+      'between having people to talk to and having somewhere to say the actual sentence: that the ' +
+      'work is going badly and has been for a year, that the marriage is quieter than anybody ' +
+      'knows, that the thing he stopped doing has started again, that he does not know what he is ' +
+      'for since the children left.',
+      'Most of those sentences are unsayable in most settings, and the barrier is not shame in the ' +
+      'abstract. It is a well-founded expectation about what would happen next — that it would be ' +
+      'handled, or fixed, or repeated, or would change how he is looked at in a room he has to ' +
+      'keep returning to.',
+      'A frequency is not a substitute for that room. What it can do is get the sentence said out ' +
+      'loud by somebody else first, at ordinary volume, without drama, so that a man hearing it ' +
+      'learns the thing he most needs to know — that it is a sentence other people have, and that ' +
+      'saying it did not end anybody.',
+    ],
+  },
+  {
+    slug: 'anxious-no-more-is-a-command',
+    kicker: 'Native voice and healing',
+    title: 'Anxious No More is a command, which is the problem with it',
+    dek: 'Taking apart the name of one of our own stations, because the misreading is doing harm.',
+    image: 'anxious-no-more',
+    author: 'tahoma',
+    stands: 'Be anxious for nothing is not an instruction to feel differently. It is an instruction about where to put the thing.',
+    body: [
+      'Be anxious for nothing. It is one of the most quoted lines in the New Testament and one of ' +
+      'the most damaging when it is quoted alone, because in English it lands as an instruction ' +
+      'about how to feel — and nobody has ever successfully followed an instruction about how to ' +
+      'feel.',
+      'What it produces instead is a second problem stacked on the first. The person is anxious, ' +
+      'and now they are also failing at a command, and the failure is evidence of the spiritual ' +
+      'deficiency they already suspected. Anyone who has been handed this verse during a genuinely ' +
+      'bad stretch knows precisely how it lands.',
+      'Read the whole sentence and it is doing something different. Be anxious for nothing, but in ' +
+      'everything, by prayer and supplication, let your requests be made known. The instruction is ' +
+      'not to stop having the feeling. It is about where to take it — a transfer, an action ' +
+      'available to somebody in the middle of the state rather than a condition for getting out of ' +
+      'it. And what is promised at the end is not the absence of anxiety but a peace that is ' +
+      'explicitly described as making no sense, which is a strange thing to promise unless the ' +
+      'circumstances producing the anxiety are expected to still be there.',
+      'The station is named after the promise, not the command. That distinction is the entire ' +
+      'remit.',
+    ],
+  },
+  {
+    slug: 'be-still-is-the-hardest-instruction',
+    kicker: 'Native voice and healing',
+    title: 'Be still is the hardest instruction in Scripture',
+    dek: 'Harder than the ethical commands, because there is nothing to do in order to comply.',
+    image: 'shalom-be-still',
+    author: 'tahoma',
+    stands: 'Every other command can be obeyed by doing something. This one is disobeyed by doing anything.',
+    body: [
+      'The difficult commands are usually assumed to be the ethical ones — forgive, give, tell the ' +
+      'truth when it costs. Those are genuinely hard and they share one enormous advantage: there ' +
+      'is an action available. Something can be done, immediately, and the doing constitutes ' +
+      'obedience.',
+      'Be still has no such action. It is the only instruction that is disobeyed by doing anything ' +
+      'at all, which puts a person with any competence at a disadvantage. Everything that has ever ' +
+      'worked for them — effort, planning, pushing through — is precisely what is prohibited.',
+      'The Hebrew makes it worse rather than better. The word carries the sense of letting go, ' +
+      'dropping, ceasing to grip — closer to release than to quiet. And the setting of the psalm ' +
+      'is not a retreat. It is upheaval: nations in uproar, mountains falling into the sea. The ' +
+      'stillness is commanded inside the crisis, not after it has been resolved.',
+      'Which is why almost every tradition eventually builds a structure for it. Left to ' +
+      'themselves people do not become still, they become busy in a quieter way. What works is ' +
+      'usually external — a fixed time, a form, a set length, something that runs whether or not ' +
+      'the person is in the mood. A scheduled frequency is a crude version of that, and crude ' +
+      'versions of this have a better record than good intentions.',
+    ],
+  },
+  {
+    slug: 'the-rhythm-that-outlasted-the-hymnbook',
+    kicker: 'Native voice and healing',
+    title: 'The rhythm that outlasted the hymnbook',
+    dek: 'What happened to island and Native worship after the missionaries stopped supervising it.',
+    image: 'inspire-celebrations',
+    author: 'tahoma',
+    stands: 'The hymn was imposed, learned, kept, and then quietly rebuilt into something the people who imposed it would not recognise.',
+    body: [
+      'The mission-era arrangement was straightforward. The hymnbook came in, the local music was ' +
+      'discouraged or forbidden, and congregations were taught European tunes in four parts, often ' +
+      'in translation, often alongside instructions about clothing and dancing.',
+      'What happened afterwards is more interesting than either the triumphal version or the ' +
+      'tragic one. The hymns were not rejected when supervision ended. They had been sung for ' +
+      'generations by then and they belonged to people’s grandparents, which makes them ' +
+      'inheritance regardless of how they arrived. So they were kept — and rebuilt. Harmonised ' +
+      'differently, taken at different tempi, given back their rhythm, and folded into forms that ' +
+      'the original compilers would find difficult to identify.',
+      'Anyone who has heard Pacific or Caribbean congregational singing has heard the result: a ' +
+      'nineteenth-century European tune that has been thoroughly and permanently repossessed.',
+      'That is a more accurate picture of how tradition actually moves than either purity story ' +
+      'allows. Nothing was preserved untouched and nothing was simply replaced. What survived ' +
+      'survived by being taken over, and this frequency is the continuation of that rather than a ' +
+      'reconstruction of what came before it.',
+    ],
+  },
+  {
+    slug: 'stories-keep-what-is-not-written',
+    kicker: 'Native voice and healing',
+    title: 'Stories are how a people keep what cannot be written down',
+    dek: 'Oral tradition is not a primitive stage before literacy. It is a different technology with different strengths.',
+    image: 'inspire-stories',
+    author: 'tahoma',
+    stands: 'A written text survives without anybody caring about it. A spoken one only survives inside a community that is still telling it, which is a stricter test.',
+    body: [
+      'The assumption underneath most Western thinking about this is that oral tradition is what ' +
+      'people had before writing — a lossy, approximate stage that literacy replaces and improves ' +
+      'on.',
+      'The comparison does not survive much scrutiny. Oral traditions are frequently more accurate ' +
+      'over long periods than the assumption predicts, because they are structured for it: metre, ' +
+      'repetition, formula and a community of checkers who will interrupt a teller who gets it ' +
+      'wrong. And crucially, a story that is told carries information a text cannot — who is ' +
+      'entitled to tell it, to whom, at what time of year, and what the room is meant to do while ' +
+      'it is being told.',
+      'The two technologies also fail differently. A written text survives indifference; it sits ' +
+      'on a shelf for two hundred years and is still there when somebody wants it. A spoken one ' +
+      'only survives inside a community still telling it, which is a far stricter test — and ' +
+      'exactly why deliberately breaking the chain of telling was such an effective way to destroy ' +
+      'something.',
+      'Scripture spent a long time as both, and shows it. Large parts of the text are visibly ' +
+      'shaped for the mouth rather than the page, and read better aloud than they do silently. ' +
+      'This station takes that seriously rather than treating it as a curiosity.',
+    ],
+  },
+
+  /* ---- Amir Inspire — South Asian soul --------------------------------- */
+  {
+    slug: 'the-church-already-there',
+    kicker: 'South Asian soul',
+    title: 'The church that was already there when the missionaries arrived',
+    dek: 'Christianity reached India and Central Asia long before it reached most of Europe.',
+    image: 'ancient-paths',
+    author: 'amir',
+    stands: 'The nineteenth-century missionaries who arrived in Kerala met congregations whose liturgy was older than their own countries’ conversion.',
+    body: [
+      'The standard mental map has the faith beginning in Jerusalem, moving west into Europe, ' +
+      'maturing there for a millennium and a half, and then being carried outward to everybody ' +
+      'else in the modern period. It is the map underneath most mission history and most Christian ' +
+      'media, and it is missing an entire direction.',
+      'The faith moved east at the same time and at least as fast. The Church of the East ran ' +
+      'along the trade routes through Persia and Central Asia and had reached China by the seventh ' +
+      'century, which is documented on a stone that is still standing. In Kerala there are ' +
+      'communities whose tradition places their founding in the first century and whose liturgy ' +
+      'is in a dialect of Aramaic.',
+      'Which produces one of the more awkward encounters in mission history. European missionaries ' +
+      'arriving in South India in the modern period did not find an unevangelised territory. They ' +
+      'found churches with a continuous liturgy older than the Christianisation of the countries ' +
+      'the missionaries had come from, and the meeting frequently went badly, because the visitors ' +
+      'had no category for a Christianity that had not come through them.',
+      'This is not a footnote for a listener in South Asia. It is the difference between being ' +
+      'told your faith is an import and knowing it is an inheritance.',
+    ],
+  },
+  {
+    slug: 'ancient-paths-people-who-looked-like-me',
+    kicker: 'South Asian soul',
+    title: 'The ancient paths were walked by people who looked like me',
+    dek: 'Ask for the old paths, says Jeremiah. It is worth checking whose old paths we mean.',
+    image: 'inspire-crown-arabic',
+    author: 'amir',
+    stands: 'Everything in the book happened in Asia, to Asians, in Asian languages, in a climate most Western church art has never depicted.',
+    body: [
+      'Stand in the old ways and see, and ask for the ancient paths. The line gets used constantly ' +
+      'as an argument for tradition against novelty, and the tradition being defended is almost ' +
+      'always a recent European one — a hymnody a century and a half old, an order of service, an ' +
+      'architecture.',
+      'Go back far enough and the ancient paths are not European at all. Every event in the book ' +
+      'happened in Asia, to Asians, in Asian languages, in a climate and a set of social ' +
+      'arrangements that a listener in Lahore or Chennai will find considerably more legible than ' +
+      'a listener in northern Europe does. Bride price, honour and shame, extended households, ' +
+      'patronage, hospitality as obligation, dust and heat and shade: these are not exotic details ' +
+      'requiring explanation. They are how a great deal of the world still works.',
+      'Which means the recovery project runs in an unexpected direction. Reading Scripture through ' +
+      'South Asian social categories is not a contextualisation of a Western text for a local ' +
+      'audience. It is frequently a return to the assumptions the text was written inside, which ' +
+      'the Western reading had to work around.',
+      'That is the remit here. Not translating something foreign into local terms, but noticing ' +
+      'how much of it was never foreign.',
+    ],
+  },
+  {
+    slug: 'arabic-was-a-language-of-worship',
+    kicker: 'South Asian soul',
+    title: 'Arabic was a language of worship long before it was anything else',
+    dek: 'There were Arabic-speaking Christians before there was anything else for the language to be famous for.',
+    image: 'jubilee-prayers-arabic',
+    author: 'amir',
+    stands: 'Arab Christians were praying in Arabic centuries before the seventh century, and have never stopped.',
+    body: [
+      'For most Western listeners Arabic arrives pre-loaded with a single association, and the ' +
+      'idea of Christian worship in it registers as a novelty or as a missionary strategy. It is ' +
+      'neither. Arabic-speaking Christians predate the seventh century by a long way, and there ' +
+      'has been continuous Christian worship in the language ever since without a break.',
+      'Arab Christians are named at Pentecost, in the list of who heard. There were Arab bishops ' +
+      'at early councils. Communities across the Levant, Mesopotamia and the Gulf have been ' +
+      'praying in Arabic for the whole of the intervening period, through every political ' +
+      'arrangement the region has had, and are praying in it today.',
+      'One consequence is worth stating plainly for listeners who find it strange: Arabic-speaking ' +
+      'Christians use the ordinary Arabic word for God, because it is the ordinary Arabic word for ' +
+      'God and always has been. It appears in Arabic Bibles and in Arabic liturgy, and Arab ' +
+      'Christians have never needed anybody’s permission to say it.',
+      'So this frequency is not an outreach project in a difficult language. It is a station for a ' +
+      'church that has been there the entire time, and often at considerable cost.',
+    ],
+  },
+  {
+    slug: 'the-bengali-gap-was-indefensible',
+    kicker: 'South Asian soul',
+    title: 'The Bengali station exists because the gap was indefensible',
+    dek: 'One of the most spoken languages on earth, and almost nothing on the air in it.',
+    image: 'bengal-inspire-bangla',
+    author: 'amir',
+    stands: 'Nobody decided Bengali did not matter. It simply never cleared a commercial threshold, which produced the same result.',
+    body: [
+      'Bengali is among the most spoken languages in the world. It has a literary tradition of the ' +
+      'first rank, a Nobel laureate poet whose songs are still sung daily by millions, and a ' +
+      'musical culture in which words and melody are unusually tightly bound.',
+      'Christian radio in it is close to absent. Not suppressed — absent, which is a different and ' +
+      'in some ways more embarrassing condition. Nobody ever decided that Bengali speakers did not ' +
+      'warrant a station. It simply never cleared a commercial threshold, and the result is ' +
+      'indistinguishable from a decision.',
+      'That is the pattern this band was built to interrupt, and it is worth being specific about ' +
+      'why the gap persisted. Producing a catalogue in a language requires either a market that ' +
+      'can fund it or a donor base that cares about it, and Bengali-speaking Christians are a ' +
+      'minority within a population that is itself not a wealthy media market. Every step of that ' +
+      'chain is about money and none of it is about need.',
+      'Remove the licensing cost and collapse the production cost and the question changes ' +
+      'entirely. It stops being can this be afforded and becomes why on earth is this not being ' +
+      'done — at which point the gap is simply indefensible, and the frequency gets assigned.',
+    ],
+  },
+  {
+    slug: 'hindi-worship-is-not-western-worship',
+    kicker: 'South Asian soul',
+    title: 'Hindi worship is not Western worship with different words',
+    dek: 'A different scale system, a different relationship to repetition, and a different idea of what a song is for.',
+    image: 'inspire-india-hindi',
+    author: 'amir',
+    stands: 'Set a Hindi text over a Western chord progression and you have not localised anything. You have made a translation with a costume on.',
+    body: [
+      'The cheap approach to Hindi worship is to take the Western song form — verse, chorus, ' +
+      'bridge, four chords, a fixed harmonic destination — and put Hindi words on it. It is ' +
+      'quick, it is singable by anybody who has heard Western pop, and it is what a great deal of ' +
+      'the available material sounds like.',
+      'What it leaves out is most of the tradition. Indian classical and devotional music is ' +
+      'organised around raga rather than around chord progression: melodic frameworks with their ' +
+      'own rules, their own emotional associations and, in the classical system, their own times ' +
+      'of day. Rhythm is organised in cycles that do not map onto four-four. And the devotional ' +
+      'forms — bhajan, kirtan — are built on extended repetition that is doing something specific ' +
+      'rather than filling time.',
+      'That last point is where the misunderstanding bites. A Western listener hearing thirty ' +
+      'repetitions of a line often reads it as a lack of material. In the devotional tradition the ' +
+      'repetition is the mechanism, and the thing it produces cannot be got at in three verses ' +
+      'and a bridge no matter how good they are.',
+      'So the catalogue behind this station was written inside those forms rather than translated ' +
+      'into them, which is the whole reason it gets its own frequency instead of a slot.',
+    ],
+  },
+  {
+    slug: 'praying-in-a-language-your-government',
+    kicker: 'South Asian soul',
+    title: 'Praying in a language your government would rather you didn’t',
+    dek: 'For listeners where this is not a hobby, and where the volume knob is a real decision.',
+    image: 'jubilee-prayers-hindi',
+    author: 'amir',
+    stands: 'A great deal of the New Testament was written to people for whom this was the ordinary condition, and it shows in what the text bothers to say.',
+    body: [
+      'A large share of the world’s Christians practise under some degree of legal or social ' +
+      'pressure. It runs from paperwork and quiet employment discrimination through to ' +
+      'anti-conversion statutes and worse, and for the people inside it the practical questions ' +
+      'are unglamorous and constant. How loud. Who can see. Which neighbour. Whether the phone is ' +
+      'a risk.',
+      'Broadcasting into that has to be built differently, and mostly it is not. Material made in ' +
+      'comfortable countries assumes an audience that can gather freely, wear the identity ' +
+      'publicly, and treat faith as a matter of preference rather than of exposure. Its calls to ' +
+      'boldness are written by people for whom boldness costs a conversation.',
+      'What a private, on-demand, headphone-sized frequency offers is specific. No building to ' +
+      'enter, no register to sign, nothing to carry, nothing on a shelf. It is worship a person ' +
+      'can hold without holding anything, and for a considerable number of listeners that is the ' +
+      'difference between practising and not.',
+      'It is worth remembering that this is the original setting. Most of the New Testament was ' +
+      'written to communities in exactly this position, which is why it spends so much time on ' +
+      'endurance, on households, on small gatherings, and so little on buildings.',
+    ],
+  },
+  {
+    slug: 'what-the-five-fold-actually-is',
+    kicker: 'South Asian soul',
+    title: 'What the five-fold actually is, and why it is not a hierarchy',
+    dek: 'A list of functions has been read for a century as an org chart, with predictable results.',
+    image: 'apostolic-five-fold',
+    author: 'amir',
+    stands: 'The passage names five things the church needs done. It does not name five ranks, and it does not put anybody above anybody.',
+    body: [
+      'Apostles, prophets, evangelists, pastors and teachers. The list is short, it appears once, ' +
+      'and it has carried an enormous amount of weight — including a great deal it was not built ' +
+      'for.',
+      'The most common misuse is to read it as a ranking. Apostle at the top, teacher at the ' +
+      'bottom, and a career path in between, with the title functioning as a claim about standing. ' +
+      'The text does not support this in any obvious way, and the stated purpose runs against it: ' +
+      'these are given for the equipping of the saints for the work of ministry, which makes every ' +
+      'one of them a servant function rather than a rank, and makes the congregation the ones ' +
+      'doing the work.',
+      'The second misuse is subtler and more common in practice. It treats the five as personality ' +
+      'types — take the assessment, discover you are a prophet, and organise your self-image ' +
+      'around it. That reading turns a description of things the church needs done into a ' +
+      'description of what somebody is, and the two are not the same. Function is assigned to a ' +
+      'body by need; identity is not.',
+      'Read plainly the passage is unremarkable and useful. There are five kinds of work a healthy ' +
+      'church requires, most communities are short of at least two, and noticing which two is more ' +
+      'productive than working out which one you are.',
+    ],
+  },
+];
+
+const HM_VOICES_6 = [
+  /* ---- Elias Inspire — Appalachian repentance -------------------------- */
+  {
+    slug: 'repentance-is-a-turn',
+    kicker: 'Appalachian repentance',
+    title: 'Repentance is not an emotion. It is a turn.',
+    dek: 'The word means to change direction. Feeling bad is optional and frequently a substitute.',
+    image: 'deutschland-inspire-deutsch',
+    author: 'elias',
+    stands: 'You can feel terrible for thirty years and never once turn around. Many people have, and they think it counts.',
+    body: [
+      'Repentance has been quietly redefined as remorse. Under that reading a person repents by ' +
+      'feeling sufficiently bad about a thing — and the sincerity of the feeling becomes the ' +
+      'measure, which is unfortunate, because feeling is the one part of the transaction nobody ' +
+      'can verify and everybody can generate.',
+      'The word does not mean that in either language the text uses. The Hebrew is about turning ' +
+      'and physically going back the other way. The Greek is about a change of mind that governs ' +
+      'what happens next. Both are directional. Both describe a person who was heading one way ' +
+      'and is now heading another, and neither says anything about how they felt while turning.',
+      'This is not a technicality. It is possible — common, in fact — to feel dreadful about ' +
+      'something for thirty years while continuing to do it, and to experience that ongoing ' +
+      'misery as evidence of a tender conscience rather than as evidence that nothing has changed. ' +
+      'Remorse is comfortable in exactly this way: it feels like the cost has been paid.',
+      'The mountain preaching this station comes out of was blunt about the distinction, and ' +
+      'sometimes harsh about it. Its instinct was right. The question is never how sorry you are. ' +
+      'It is which way you are now walking.',
+    ],
+  },
+  {
+    slug: 'country-never-stopped-being-honest',
+    kicker: 'Appalachian repentance',
+    title: 'Country music never stopped being honest about sin',
+    dek: 'It kept a vocabulary that most Christian music dropped, and it kept it in the first person.',
+    image: 'country-gospel',
+    author: 'elias',
+    stands: 'One of these traditions will sing about a man who has ruined his life and is not sure he will stop. The other one moved on from that some time ago.',
+    body: [
+      'There is an odd inversion in what the two genres are willing to say. Contemporary worship ' +
+      'music has largely stopped singing about specific sin in the first person. There is a great ' +
+      'deal of brokenness, which is vague and blameless, and rather less about a particular thing ' +
+      'a particular person did on purpose.',
+      'Country never gave that up. It will sing, in the first person, about drinking, adultery, ' +
+      'walking out on children, prison, and the fact that the singer is not confident he is going ' +
+      'to stop. It will do this without resolving it in the last verse, and it will name the ' +
+      'specific damage rather than gesturing at a condition.',
+      'That is closer to the Psalms than most of what is on Christian radio. The penitential ' +
+      'psalms are concrete and personal and occasionally unresolved; they are not about brokenness ' +
+      'in general, they are about a man who did a thing and knows exactly what it was.',
+      'This is why the country lane on this band is not a stylistic concession to a region. It is ' +
+      'carrying a register the rest of the catalogue is thin in — the one where a person can say ' +
+      'what they actually did, out loud, without the song having to fix it by the end.',
+    ],
+  },
+  {
+    slug: 'two-shortest-prayers',
+    kicker: 'Appalachian repentance',
+    title: 'The two shortest prayers in Scripture',
+    dek: 'Yes and amen. Both are agreements, and both are harder to mean than they look.',
+    image: 'yes-and-amen',
+    author: 'elias',
+    stands: 'Amen is not a full stop. It is a signature, and it commits the person who says it.',
+    body: [
+      'Amen has been worn down into punctuation. It is the noise that indicates a prayer has ' +
+      'finished, said by everybody, meaning approximately nothing.',
+      'It started as something considerably stronger. The root carries the sense of firmness and ' +
+      'reliability, and the word functions as agreement — a person saying it is not marking the ' +
+      'end of somebody else’s speech but adding their name to it. In the older assemblies it was ' +
+      'said aloud by the congregation precisely because it was an act of assent, and in ' +
+      'Deuteronomy the people say it after each curse is read out, which is a genuinely serious ' +
+      'thing to be doing with a word.',
+      'Which means saying it after somebody else’s prayer is a small commitment rather than a ' +
+      'courtesy. You have just signed. If you were not listening, or would not have prayed that, ' +
+      'you have signed anyway.',
+      'The yes is the other half. Paul writes that in Christ all the promises are yes, and in him ' +
+      'amen — God’s yes and the answering agreement. Two of the shortest words available, doing ' +
+      'the work of a signature on both sides, which is why a station named after them is not ' +
+      'named after a slogan.',
+    ],
+  },
+  {
+    slug: 'raising-arrows-no-applause',
+    kicker: 'Appalachian repentance',
+    title: 'Raising arrows is a long job with no applause',
+    dek: 'The metaphor is about release, and about a result you will not be present to see.',
+    image: 'raising-arrows',
+    author: 'elias',
+    stands: 'An arrow is not for keeping. The entire purpose of the work is that the thing leaves your hand.',
+    body: [
+      'Like arrows in the hand of a warrior, so are the children of one’s youth. It gets quoted ' +
+      'warmly, usually about a full house, and the warmth skips the part of the image that is ' +
+      'doing the work.',
+      'An arrow is made to be released. All the labour goes into something whose entire purpose is ' +
+      'to leave, travel a distance you cannot control, and land somewhere you may never see. ' +
+      'Nothing about the metaphor suggests keeping them close, and everything about it suggests ' +
+      'that the quality of the work shows up long after the work is finished and out of reach.',
+      'That is an uncomfortable job description, and it explains a great deal of what goes wrong ' +
+      'in earnest households. The temptation is to hold on — to keep the arrow in the quiver where ' +
+      'it can be inspected, because releasing it means accepting that the aim was set years ago ' +
+      'and can no longer be adjusted.',
+      'The consolation on offer is thin and real. You will not get to watch most of it. What you ' +
+      'get is the years of drawing the bow, which nobody sees, and a result you will mostly hear ' +
+      'about second hand.',
+    ],
+  },
+  {
+    slug: 'what-is-given-daily',
+    kicker: 'Appalachian repentance',
+    title: 'What is given daily cannot be stockpiled',
+    dek: 'The manna rotted overnight on purpose, and everybody has tried to store it anyway.',
+    image: 'the-hidden-manna',
+    author: 'elias',
+    stands: 'They were given exactly one day’s worth, and what they hoarded bred worms. The lesson was not about food.',
+    body: [
+      'The manna arrangement is one of the odder logistical setups in the text. Enough for one ' +
+      'day, gathered daily, and anything kept overnight spoiled — with a single exception before ' +
+      'the Sabbath, which proves the spoiling was a rule rather than a property of the substance.',
+      'It reads as a lesson about trust and it is, but it is a sharper one than the usual telling. ' +
+      'They were not being asked to trust that God could provide. They had watched a sea open. ' +
+      'They were being asked to live without a reserve — which is a different and much less ' +
+      'popular request, because a reserve is what allows a person to stop thinking about the ' +
+      'subject.',
+      'And they tried anyway. Of course they tried. Anyone would, and the text records that it ' +
+      'bred worms, which is the kind of detail that survives because somebody was there.',
+      'The pattern holds for most of what actually sustains a person. Prayer does not accumulate ' +
+      'into a balance that covers a dry month. Neither does forgiveness, or attention, or the ' +
+      'energy to be decent to your family. All of it is issued daily, none of it stores, and the ' +
+      'arrangement is deliberate rather than a design flaw.',
+    ],
+  },
+  {
+    slug: 'churches-that-sang-under-surveillance',
+    kicker: 'Appalachian repentance',
+    title: 'The churches that sang under surveillance',
+    dek: 'Romanian praise carries a memory of what it cost, and the music is different because of it.',
+    image: 'jubilee-praise-romana',
+    author: 'elias',
+    stands: 'A congregation that knew an informer was in the room learned to mean every word, because those were the words being reported.',
+    body: [
+      'Romanian evangelical churches spent decades under a state that watched them closely. ' +
+      'Congregations were infiltrated, pastors were pressured and worse, buildings were demolished ' +
+      'on administrative pretexts, and everybody in the room understood that some of what was said ' +
+      'would be written down afterwards by somebody sitting in it.',
+      'That does something to a church’s music that is audible afterwards. It removes the ' +
+      'incidental. Nobody sings a line they are indifferent to when the line is going into a file, ' +
+      'and a repertoire under those conditions gets sifted hard — what survives is what people ' +
+      'were prepared to be reported for.',
+      'It also changes what the singing is for. In a congregation that expects to be watched, ' +
+      'singing together is not a warm-up before the teaching. It is the one thing the room does ' +
+      'with one voice, and it functions as mutual proof that everybody is still here and still ' +
+      'says so.',
+      'Much of that repertoire is still sung, by people who remember the period and by ' +
+      'grandchildren who do not. Putting it on a frequency is not a heritage exercise. It is ' +
+      'keeping the memory of what the words cost attached to the words, which is the only thing ' +
+      'that stops them becoming ordinary again.',
+    ],
+  },
+  {
+    slug: 'purpose-found-is-usually-assigned',
+    kicker: 'Appalachian repentance',
+    title: 'Purpose found is usually purpose assigned',
+    dek: 'The search is conducted inward. Almost every case in the text runs the other way.',
+    image: 'purpose-found',
+    author: 'elias',
+    stands: 'Almost nobody in Scripture discovers their purpose. It is handed to them, usually while they are busy with something else, and usually unwelcome.',
+    body: [
+      'The modern version of the question is introspective. What am I passionate about, what am I ' +
+      'good at, what would I do if money were no object — and somewhere at the intersection of ' +
+      'those the answer is meant to be found. It is a search, conducted inward, and the person ' +
+      'searching is the one who decides when it has succeeded.',
+      'Almost nothing in Scripture works this way. Moses is minding sheep and does not want the ' +
+      'job. Gideon is threshing wheat in a winepress and argues. Amos is explicit that he was no ' +
+      'prophet and no prophet’s son, he was a herdsman, and he was taken from following the flock. ' +
+      'Jonah receives a very clear assignment and sails in the opposite direction.',
+      'In each case the purpose is assigned rather than discovered, arrives while the person is ' +
+      'occupied with something ordinary, and is frequently unwelcome. The consistent feature is ' +
+      'not enthusiasm. It is that somebody else decided.',
+      'That is worse news for the search and better news for the searcher. It means a person can ' +
+      'stop excavating themselves for a calling they were never going to find in there, and can ' +
+      'get on with what is actually in front of them — which, in every one of those accounts, is ' +
+      'precisely where the assignment turned up.',
+    ],
+  },
+
+  /* ---- Eliana Inspire — folk wisdom, a sister voice --------------------- */
+  {
+    slug: 'strong-and-sober-are-different',
+    kicker: 'Folk wisdom',
+    title: 'Strong and sober are two different achievements',
+    dek: 'Stopping is one job. Becoming someone who does not need to start is another, and it takes much longer.',
+    image: 'strong-sober',
+    author: 'eliana',
+    stands: 'Sobriety is a state you can hold by force. Strength is what means you no longer have to.',
+    body: [
+      'The first achievement is stopping, and it is enormous. It is also, on its own, a holding ' +
+      'action — a state maintained by effort, day after day, against a pull that has not gone ' +
+      'anywhere. People sustain that for years, and it is genuine, and it is exhausting in a way ' +
+      'that is hard to describe to anybody who has not done it.',
+      'The second is different work. It is becoming a person for whom the thing is no longer the ' +
+      'obvious answer to a bad evening — which requires the bad evening to have somewhere else to ' +
+      'go. Somewhere to be, someone to ring, something to do with the hands, a reason to be ' +
+      'somewhere at eight in the morning. None of that is about the substance at all.',
+      'Conflating the two does damage in both directions. Somebody white-knuckling it for a decade ' +
+      'is told they are fine because they have not relapsed, and the fact that it is still costing ' +
+      'them everything they have goes unnoticed. And somebody who genuinely has been rebuilt is ' +
+      'told to stay vigilant forever, in language that assumes they are always eight hours from ' +
+      'the edge.',
+      'The station is named for both because both are real and neither is the other. Stopping is ' +
+      'the entry requirement. What comes after is the actual subject.',
+    ],
+  },
+  {
+    slug: 'grief-walked-not-solved',
+    kicker: 'Folk wisdom',
+    title: 'Grief walked, not grief solved',
+    dek: 'The station name is the thesis. Nothing here is going to fix it, and that is the offer.',
+    image: 'grief-walked',
+    author: 'eliana',
+    stands: 'Almost everything said to a grieving person is an attempt to make the sentence stop. Walking alongside is the one response that does not.',
+    body: [
+      'Grief attracts solutions. Stages that suggest an itinerary. Reasons offered on God’s ' +
+      'behalf. Reassurances about where the person is now. Practical suggestions, delivered early, ' +
+      'about what might help.',
+      'Almost all of it is an attempt to make the sentence stop, and the grieving person can tell. ' +
+      'What is being said is: this is unbearable to be near, please move to a stage where I can ' +
+      'talk to you normally. It is rarely conscious and it is nearly always audible.',
+      'The alternative is not silence and it is not wisdom. It is company — which is what Job’s ' +
+      'friends supply for exactly seven days, and it is the only part of that book where anybody ' +
+      'gets it right. They sat with him and said nothing, because they saw that his grief was very ' +
+      'great. Everything that goes wrong afterwards begins the moment they start explaining.',
+      'A station cannot sit with anybody. What it can do is be a voice that is not trying to move ' +
+      'the listener along — that assumes the loss is permanent, does not schedule a recovery, and ' +
+      'keeps turning up at the same time regardless of whether the person is any better. That is ' +
+      'a small imitation of company and it is better than an explanation.',
+    ],
+  },
+  {
+    slug: 'stillwater-is-not-background-music',
+    kicker: 'Folk wisdom',
+    title: 'Stillwater is not background music',
+    dek: 'Quiet music that is doing something is not the same as quiet music that is filling a gap.',
+    image: 'stillwater',
+    author: 'eliana',
+    stands: 'Ambient music is designed not to be noticed. This is designed to be sat with, which is a different brief entirely.',
+    body: [
+      'There is an enormous amount of quiet instrumental music available and most of it is ' +
+      'engineered to be ignored. That is not a criticism — it is the actual brief. Functional ' +
+      'music is designed to occupy a space without attracting attention, and the highest ' +
+      'compliment it can receive is that nobody noticed it was on.',
+      'The difficulty comes when devotional music is made to the same specification. What results ' +
+      'sounds appropriate, causes no friction, and asks nothing — which means it also gives ' +
+      'nothing, and a person can leave it running for an hour and arrive at the end in exactly ' +
+      'the condition they started.',
+      'Music that is meant to be sat with is built differently. It has somewhere to go, it takes ' +
+      'its time getting there, and it will occasionally do something the listener has to notice. ' +
+      'It rewards attention rather than deflecting it, which also means it does not work as ' +
+      'wallpaper and is not trying to.',
+      'The name is from the psalm, and the psalm is worth reading closely on this point. He ' +
+      'leadeth me beside the still waters, he restoreth my soul. Restoration is an action ' +
+      'performed on somebody, not an atmosphere they are left in.',
+    ],
+  },
+  {
+    slug: 'friendship-is-a-means-of-grace',
+    kicker: 'Folk wisdom',
+    title: 'Friendship is the least discussed means of grace',
+    dek: 'Prayer, Scripture, sacrament, and then a category the Church talks about almost never.',
+    image: 'walking-together',
+    author: 'eliana',
+    stands: 'Ask what sustained somebody through the worst decade of their life and you will very rarely be told about a discipline.',
+    body: [
+      'The classic list is well covered. Prayer, the reading of Scripture, the sacraments, ' +
+      'fasting, giving — the practices through which grace is understood to reach a person, all ' +
+      'taught, all with a literature.',
+      'Then ask anybody what actually got them through the worst decade of their life and see what ' +
+      'comes back. It is almost never a discipline. It is a name. One person who kept turning up, ' +
+      'who knew the whole situation without needing it re-explained, and whose continued presence ' +
+      'was the argument against the conclusion they were drifting toward.',
+      'The Church is oddly quiet about this. Friendship is treated as a social good rather than a ' +
+      'theological one, discussed in terms of accountability or fellowship — both of which are ' +
+      'functional words that describe something narrower and more official than what people ' +
+      'actually mean.',
+      'Scripture is less shy. David and Jonathan gets a great deal of space for a relationship ' +
+      'with no institutional function. Ruth’s speech is to a mother-in-law. Paul is constantly ' +
+      'naming people, and the endings of his letters — usually skipped — are lists of individuals ' +
+      'who mattered to him personally. It is difficult to read the text as a whole and conclude ' +
+      'this is peripheral.',
+    ],
+  },
+  {
+    slug: 'japans-tiny-church-old-martyrs',
+    kicker: 'Folk wisdom',
+    title: 'Japan’s church is tiny and its martyrs are four hundred years old',
+    dek: 'One of the smallest Christian populations in the developed world, and one of the most extraordinary histories.',
+    image: 'japan-inspire-nihongo',
+    author: 'eliana',
+    stands: 'For roughly two centuries there were no priests, no Bibles and no buildings, and when the doors finally opened the faith was still there.',
+    body: [
+      'Christianity in Japan today is around one per cent of the population, which is among the ' +
+      'lowest figures anywhere in the developed world and is usually where the conversation stops. ' +
+      'The history behind that number is one of the most remarkable in the whole of church ' +
+      'history and is barely known outside the country.',
+      'The faith arrived in the sixteenth century and grew quickly, and then the persecution began ' +
+      'in earnest. Twenty-six Christians were executed at Nagasaki in 1597. What followed was ' +
+      'systematic: expulsion, executions, a requirement to publicly renounce, and eventually ' +
+      'closure of the country almost entirely.',
+      'What is extraordinary is what happened next. Communities went underground and stayed there ' +
+      'for roughly seven generations — no priests, no Bibles, no buildings, nothing that could be ' +
+      'found in a search. They kept baptism, they kept prayers passed down orally until the words ' +
+      'were half-remembered, and they kept the calendar. When Japan reopened in the nineteenth ' +
+      'century and a church was built at Nagasaki, a group of local people came to it and told the ' +
+      'priest that their hearts were the same as his.',
+      'That is the inheritance behind a station that will never have a large audience. It is worth ' +
+      'a frequency on those grounds alone.',
+    ],
+  },
+  {
+    slug: 'tagalog-travels-with-those-who-leave',
+    kicker: 'Folk wisdom',
+    title: 'Tagalog worship travels with the people who leave',
+    dek: 'A diaspora scattered across every time zone, mostly working, mostly alone on the significant days.',
+    image: 'pilipinas-inspire-tagalog',
+    author: 'eliana',
+    stands: 'Filipino workers are in nearly every country on earth, and a great many of them spend Christmas on somebody else’s schedule.',
+    body: [
+      'There are Filipino workers in almost every country in the world, and the pattern is ' +
+      'consistent wherever they are: employed in care, in shipping, in hospitals and in ' +
+      'households, frequently on contracts that separate them from their own families for years, ' +
+      'and sending money home that a whole national economy is built on.',
+      'What that produces is a diaspora that is simultaneously enormous and dispersed. Not a ' +
+      'neighbourhood you could point at, but individuals, in every time zone, often the only ' +
+      'person from home in the building — and frequently working through the days that matter ' +
+      'most, because those are exactly the days somebody else needs covering.',
+      'Faith carries unusually well through that, and it carries in the form of music and ' +
+      'devotional habit rather than in institutions, because institutions require a building and ' +
+      'a rota and a critical mass in one place. A song, a prayer, a novena and a familiar voice ' +
+      'require none of those and fit in a phone.',
+      'Which makes this frequency more useful than its listener numbers will ever suggest. It is ' +
+      'not serving a community in a place. It is serving a scattered one, at every hour, in the ' +
+      'gaps between other people’s shifts.',
+    ],
+  },
+  {
+    slug: 'before-anyone-is-listening',
+    kicker: 'Folk wisdom',
+    title: 'What a station sounds like before anyone is listening',
+    dek: 'Every frequency on this band spent time playing to nobody, and how it behaved then is the whole test.',
+    image: 'inspire-rising',
+    author: 'eliana',
+    stands: 'The audience arrives, if it arrives, long after the standard has been set. Nothing improves once people are watching.',
+    body: [
+      'Every station here began with an audience of nobody. The catalogue was written, the ' +
+      'schedule was built, the frequency went live, and for some period the number of people ' +
+      'hearing it was approximately zero.',
+      'That period is the only honest test a broadcaster gets. It is very easy to maintain a ' +
+      'standard in front of an audience, because the audience enforces it. What a station does ' +
+      'when nobody is checking — whether the schedule is still filled properly, whether the ' +
+      'quality control still runs, whether the Scripture under each song was still chosen with ' +
+      'care by somebody who knew nobody would notice if it were not — is the thing that determines ' +
+      'what it will be later.',
+      'It does not get fixed afterwards. A station built carelessly in obscurity becomes a station ' +
+      'with an audience and careless habits, and by then the habits are the institution. Nothing ' +
+      'improves once people are watching; it only becomes more visible.',
+      'This is not really about radio. It is the ordinary condition of most faithful work, most of ' +
+      'which is done unobserved, for a long time, with no evidence that it is landing anywhere. ' +
+      'The instruction about the Father who sees in secret is not a consolation prize. It is a ' +
+      'description of where almost everything real is actually built.',
+    ],
+  },
+];
 const HM_ORDER = [
   'what-heavenly-modulation-is',
   'why-it-had-to-be-music',
@@ -1386,11 +3609,112 @@ const HM_ORDER = [
   'for-the-person-who-stopped-going',
   'still-being-built-on-purpose',
   'on-air-today',
+
+  /* ── The voices ──────────────────────────────────────────────────────
+     Seven pieces per persona, grouped so the grid reads as one voice at a
+     time. The band explainers above answer what this is; these answer who
+     is talking, and they run in roster order. */
+  // Nova Inspire
+  'doubt-is-not-the-opposite-of-faith',
+  'questions-you-were-told-not-to-ask',
+  'come-back-without-explaining',
+  'why-midnight-praise-exists',
+  'hymns-were-written-in-trouble',
+  'wisdom-when-advice-runs-out',
+  'nothing-here-closes-the-deal',
+  // Jubilee Inspire
+  'what-plays-on-the-flagship',
+  'four-generations-one-radio',
+  'decisions-before-you-know',
+  'celebrating-without-borrowing',
+  'when-faith-feels-hard-is-not-beginner',
+  'never-twice-in-a-day',
+  'jazz-when-nobody-is-performing',
+  // Melody Inspire
+  'family-faith-is-mostly-logistics',
+  'a-sanctuary-that-is-a-kitchen',
+  'twenty-minutes-in-the-car',
+  'children-do-not-need-a-simplified-god',
+  'beyond-the-trauma-is-not-over-it',
+  'what-grows-back-and-what-does-not',
+  'who-teaches-your-children-the-words',
+  // Zariah Inspire
+  'riddim-was-church-first',
+  'worship-in-a-country-not-yours',
+  'french-is-not-a-translation',
+  'the-commute-belongs-to-you',
+  'holidays-hold-the-old-country',
+  'a-rhythm-your-grandmother-knows',
+  'praying-in-the-language-you-dream-in',
+  // Caleb Inspire
+  'courage-is-mostly-boring',
+  'iron-requires-two-pieces-of-iron',
+  'marriage-matters-is-not-a-conference',
+  'after-the-storm-nobody-films',
+  'acapella-when-production-stops',
+  'the-last-ten-minutes-of-the-day',
+  'a-station-not-a-podcast',
+  // Zev Inspire
+  'the-feasts-are-a-calendar',
+  'when-the-law-is-set-to-music',
+  'shema-means-hear-then-do',
+  'the-subject-every-station-avoids',
+  'washing-feet-before-anyone-watches',
+  'identity-is-not-a-personality-type',
+  'why-heavens-dawn-airs-before-sunrise',
+  // Imani Inspire
+  'fire-is-not-volume',
+  'ten-days-before-one-day',
+  'africa-is-a-broadcaster',
+  'what-yoruba-praise-does',
+  'amharic-worship-is-ancient',
+  'praying-in-swahili-at-three',
+  'chill-is-still-pentecostal',
+  // Santiago Inspire
+  'la-familia-is-a-doctrine',
+  'a-latin-station-sung-in-english',
+  'portuguese-is-not-spanish',
+  'two-generations-one-kitchen',
+  'praying-out-loud-as-a-habit',
+  'focus-is-a-discipline',
+  'wellness-without-the-religion',
+  // Tahoma Inspire
+  'arrived-in-the-wrong-hands',
+  'sobriety-is-a-daily-frequency',
+  'men-with-nowhere-to-be-honest',
+  'anxious-no-more-is-a-command',
+  'be-still-is-the-hardest-instruction',
+  'the-rhythm-that-outlasted-the-hymnbook',
+  'stories-keep-what-is-not-written',
+  // Amir Inspire
+  'the-church-already-there',
+  'ancient-paths-people-who-looked-like-me',
+  'arabic-was-a-language-of-worship',
+  'the-bengali-gap-was-indefensible',
+  'hindi-worship-is-not-western-worship',
+  'praying-in-a-language-your-government',
+  'what-the-five-fold-actually-is',
+  // Elias Inspire
+  'repentance-is-a-turn',
+  'country-never-stopped-being-honest',
+  'two-shortest-prayers',
+  'raising-arrows-no-applause',
+  'what-is-given-daily',
+  'churches-that-sang-under-surveillance',
+  'purpose-found-is-usually-assigned',
+  // Eliana Inspire
+  'strong-and-sober-are-different',
+  'grief-walked-not-solved',
+  'stillwater-is-not-background-music',
+  'friendship-is-a-means-of-grace',
+  'japans-tiny-church-old-martyrs',
+  'tagalog-travels-with-those-who-leave',
+  'before-anyone-is-listening',
 ];
 
 const HM_ARTICLES = (function () {
   const pool = {};
-  HM_CORE.concat(HM_MORE).forEach(function (a) {
+  HM_CORE.concat(HM_MORE, HM_VOICES_1, HM_VOICES_2, HM_VOICES_3, HM_VOICES_4, HM_VOICES_5, HM_VOICES_6).forEach(function (a) {
     if (pool[a.slug]) throw new Error('two HM pieces share the slug ' + a.slug);
     pool[a.slug] = a;
   });
