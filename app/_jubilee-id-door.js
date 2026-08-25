@@ -176,7 +176,10 @@ function SubmitButton({ loading, busyLabel, children }) {
     );
 }
 
-// The read-only email plus "Use a different email", shared by 2A / 2B-1 / 2C.
+// The read-only email plus "Use a different email". On EVERY screen past the
+// first, so the address being signed in or signed up for is always on the
+// screen that acts on it — including Create Account, which showed it only as
+// a link at the very bottom.
 function AccountRow({ email, onChangeEmail }) {
     return (
         <div className="account-row">
@@ -248,6 +251,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
     const [lastName, setLastName] = useState('');
     const [dob, setDob] = useState('');
     const [password, setPassword] = useState('');                 // Outcome C
+    const [confirmPassword, setConfirmPassword] = useState('');   // Outcome C
     const [existingPassword, setExistingPassword] = useState(''); // the Jubilee ID password (2A / 2B-1)
     const [rememberMe, setRememberMe] = useState(true);
     const [error, setError] = useState(initialError);
@@ -287,6 +291,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
     function useDifferentEmail() {
         setExistingPassword('');
         setPassword('');
+        setConfirmPassword('');
         setFirstName('');
         setLastName('');
         setDob('');
@@ -407,6 +412,11 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
         const dobErr = validateDob(dob);
         if (dobErr) return setError(dobErr);
         if (!password || password.length < 8) return setError('Password must be at least 8 characters.');
+        // Creating a Jubilee ID is the one screen where a typo is expensive: it
+        // becomes the password for every Jubilee site, and nothing here reads it
+        // back to confirm. Everywhere else the password is being CHECKED, so a
+        // typo just fails and is retried.
+        if (password !== confirmPassword) return setError('Those passwords do not match.');
 
         setError('');
         setLoading(true);
@@ -428,6 +438,7 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
             // The email gained an account between Screen 1 and here. Send them
             // to the password screen with the address they already typed.
             setPassword('');
+            setConfirmPassword('');
             setStep('welcome');
             return setError('An account already exists for this email — please sign in.');
         }
@@ -510,6 +521,10 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                             your account here.
                         </p>
                         <ErrorAlert message={error} />
+                        {/* Which address this account is being created for. It was two screens
+                            ago and only repeated at the very bottom, so the one question this
+                            screen has to answer — whose account is this? — went unanswered. */}
+                        <AccountRow email={email} onChangeEmail={useDifferentEmail} />
                         <form onSubmit={handleCreateLinked} noValidate>
                             <NameFields firstName={firstName} lastName={lastName}
                                         setFirstName={setFirstName} setLastName={setLastName} />
@@ -517,9 +532,6 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                             <RememberRow checked={rememberMe} onChange={setRememberMe} />
                             <SubmitButton loading={loading} busyLabel="Creating…">Create Account</SubmitButton>
                         </form>
-                        <div className="back-link">
-                            <button type="button" onClick={useDifferentEmail}>Use a different email</button>
-                        </div>
                     </>
                 )}
 
@@ -549,6 +561,15 @@ export default function JubileeIdDoor({ returnUrl = '/', initialEmail = '', init
                                     </div>
                                 ) : (
                                     <div className="password-hint">At least 8 characters</div>
+                                )}
+                            </PasswordField>
+                            <PasswordField id="confirmPassword" label="Confirm password"
+                                           value={confirmPassword} onChange={setConfirmPassword}
+                                           autoComplete="new-password">
+                                {confirmPassword && (
+                                    <div className={`password-match ${password === confirmPassword ? 'is-match' : 'is-mismatch'}`}>
+                                        {password === confirmPassword ? 'Passwords match' : 'Passwords do not match'}
+                                    </div>
                                 )}
                             </PasswordField>
                             <RememberRow checked={rememberMe} onChange={setRememberMe} />

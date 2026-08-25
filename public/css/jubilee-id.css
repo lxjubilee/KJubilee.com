@@ -9,10 +9,27 @@
    Markup is rendered by /js/jubilee-id.js; this file is the whole look.
    ───────────────────────────────────────────────────────────────────────── */
 
+/* The site's own accent, from the header on every other page (public/css/pages).
+   The door used to be gold, inherited from the JubileeVerse sign-in page it was
+   ported from — which meant arriving at /signin looked like leaving the site.
+   Stated as tokens here so a future change is one line, not twenty-eight. */
+:root{
+  --kj-accent:#3DA5FF;        /* the wordmark blue */
+  --kj-accent-hi:#7CC4FF;     /* hover / focus, lighter */
+  --kj-accent-lo:#1B6FB8;     /* pressed / gradient end, darker */
+  --kj-accent-ink:#06182b;    /* text ON the accent — dark, for contrast */
+  --kj-accent-25:rgba(61,165,255,.25);
+  --kj-accent-30:rgba(61,165,255,.30);
+  --kj-accent-40:rgba(61,165,255,.40);
+  --kj-accent-12:rgba(61,165,255,.12);
+  --kj-accent-08:rgba(61,165,255,.08);
+  --kj-accent-35:rgba(61,165,255,.35);
+}
+
 *{box-sizing:border-box;margin:0;padding:0}
 
 /* ── Wave bar ── */
-.wave-bar{position:fixed;top:0;left:0;width:100%;height:6px;z-index:999;background:linear-gradient(90deg,#f0ad4e,#ffcc00,#f0ad4e);background-size:200% 100%;animation:waveSlide 3s linear infinite}
+.wave-bar{position:fixed;top:0;left:0;width:100%;height:6px;z-index:999;background:linear-gradient(90deg,var(--kj-accent),var(--kj-accent-hi),var(--kj-accent));background-size:200% 100%;animation:waveSlide 3s linear infinite}
 @keyframes waveSlide{0%{background-position:0 0}100%{background-position:200% 0}}
 
 body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100vh;display:flex;overflow:hidden}
@@ -31,7 +48,7 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 .auth-bg-panel .bg-overlay{position:absolute;inset:0;background:rgba(0,0,0,0.5);z-index:1}
 
 .bubbles{position:absolute;inset:0;z-index:0;overflow:hidden;list-style:none}
-.bubbles li{position:absolute;bottom:-80px;background:rgba(255,189,89,0.08);border-radius:50%;animation:floatUp linear infinite}
+.bubbles li{position:absolute;bottom:-80px;background:var(--kj-accent-08);border-radius:50%;animation:floatUp linear infinite}
 .bubbles li:nth-child(1){left:5%;width:40px;height:40px;animation-duration:22s;animation-delay:0s}
 .bubbles li:nth-child(2){left:15%;width:20px;height:20px;animation-duration:18s;animation-delay:2s}
 .bubbles li:nth-child(3){left:30%;width:60px;height:60px;animation-duration:28s;animation-delay:4s}
@@ -46,12 +63,12 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 
 .scripture-quote{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);z-index:2;text-align:center;max-width:80%;color:#fff;font-family:Georgia,serif;font-size:1.5rem;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.6}
 .scripture-quote span,.scripture-quote cite{transition:opacity .5s ease}
-.scripture-quote cite{display:block;margin-top:0.75rem;font-size:1rem;font-style:normal;color:#ffbd59;letter-spacing:1px}
+.scripture-quote cite{display:block;margin-top:0.75rem;font-size:1rem;font-style:normal;color:var(--kj-accent-hi);letter-spacing:1px}
 
 /* ── Logo ── */
 .auth-logo{text-align:center;margin-bottom:1.5rem;display:block}
 .auth-logo a{text-decoration:none;display:inline-flex;flex-direction:column;align-items:center}
-.auth-logo-img{width:92px;height:92px;border-radius:50%;border:2px solid #2fd2ff;box-shadow:0 0 15px rgba(0,207,255,0.5);object-fit:cover}
+.auth-logo-img{width:92px;height:92px;border-radius:50%;border:2px solid var(--kj-accent);box-shadow:0 0 15px var(--kj-accent-40);object-fit:cover}
 .auth-logo-text{margin-top:0.75rem;font-family:'Orbitron',sans-serif;font-size:32px;font-weight:700;letter-spacing:1px;color:#fff;line-height:1}
 /* The leading "k" sits 2pt below the rest of the wordmark, as it does in the
    site header. An absolute pt, not an em ratio, so the drop is exactly 2pt. */
@@ -67,33 +84,33 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 /* ── Alerts ── */
 .auth-alert{border-radius:8px;padding:12px 16px;margin-bottom:1.25rem;font-size:.875rem;line-height:1.5}
 .auth-alert--error{background:rgba(248,113,113,0.15);border:1px solid rgba(248,113,113,0.3);color:#f87171}
-.auth-alert--notice{background:rgba(255,189,89,0.12);border:1px solid rgba(255,189,89,0.35);color:#ffbd59}
+.auth-alert--notice{background:var(--kj-accent-12);border:1px solid var(--kj-accent-35);color:var(--kj-accent-hi)}
 
 /* ── Account row (read-only email + "Use a different email") ── */
 .account-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 15px;border:1px solid rgba(255,255,255,0.15);border-radius:8px;background:rgba(255,255,255,0.03);margin-bottom:1.35rem;font-size:.95rem;color:#fff}
 /* A long address stays on ONE line and truncates; the full text is in the title. */
 .account-row .account-email{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.account-row .use-different{flex:0 0 auto;background:none;border:none;color:#f0ad4e;font-size:.8rem;cursor:pointer;white-space:nowrap;text-decoration:underline;padding:0;font-family:inherit}
-.account-row .use-different:hover{color:#ffcc00}
+.account-row .use-different{flex:0 0 auto;background:none;border:none;color:var(--kj-accent);font-size:.8rem;cursor:pointer;white-space:nowrap;text-decoration:underline;padding:0;font-family:inherit}
+.account-row .use-different:hover{color:var(--kj-accent-hi)}
 
 /* ── Fields ── */
 .input-group{position:relative;margin-bottom:1.25rem}
 .input-group input{width:100%;height:58px;padding:22px 16px 8px;background:rgba(80,80,80,0.7);border:2px solid transparent;border-radius:8px;color:#fff;font-size:1rem;font-family:inherit;transition:border-color .2s,box-shadow .2s;outline:none}
-.input-group input:focus{border-color:#ffcc00;box-shadow:0 0 0 3px rgba(240,173,78,0.25)}
+.input-group input:focus{border-color:var(--kj-accent-hi);box-shadow:0 0 0 3px var(--kj-accent-25)}
 .input-group label{position:absolute;left:16px;top:18px;font-size:0.95rem;color:#999;pointer-events:none;transition:all .2s ease}
 .input-group input:not(:placeholder-shown)+label,
-.input-group input:focus+label{top:8px;font-size:0.75rem;color:#f0ad4e}
-.input-group input[type="password"]{color:#f0ad4e;letter-spacing:3px}
+.input-group input:focus+label{top:8px;font-size:0.75rem;color:var(--kj-accent)}
+.input-group input[type="password"]{color:var(--kj-accent);letter-spacing:3px}
 .input-group input[type="password"]::placeholder{color:#999;letter-spacing:0}
 .input-group input[readonly]{opacity:.75;cursor:default}
 
 /* A date input has no empty state to key :placeholder-shown off, so its label
    is parked in the raised position from the start. */
-.input-group.label-up label{top:8px;font-size:0.75rem;color:#f0ad4e}
+.input-group.label-up label{top:8px;font-size:0.75rem;color:var(--kj-accent)}
 .input-group input[type="date"]{color-scheme:dark;padding-right:44px}
 .input-group input[type="date"]::-webkit-calendar-picker-indicator{position:absolute;right:0;top:0;width:44px;height:100%;opacity:0;cursor:pointer}
 .input-group input[type="date"]::-webkit-datetime-edit{padding-top:2px}
-.input-group.date-field::after{content:"";position:absolute;right:14px;top:calc(50% + 4px);transform:translateY(-50%);width:20px;height:20px;pointer-events:none;background:no-repeat center/20px 20px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0ad4e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>")}
+.input-group.date-field::after{content:"";position:absolute;right:14px;top:calc(50% + 4px);transform:translateY(-50%);width:20px;height:20px;pointer-events:none;background:no-repeat center/20px 20px url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233DA5FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><rect x='3' y='4' width='18' height='18' rx='2' ry='2'/><line x1='16' y1='2' x2='16' y2='6'/><line x1='8' y1='2' x2='8' y2='6'/><line x1='3' y1='10' x2='21' y2='10'/></svg>")}
 
 /* Two fields side by side (first / last name) */
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.25rem}
@@ -102,7 +119,7 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 /* ── Password toggle ── */
 .password-wrapper{position:relative}
 .password-toggle{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:#999;cursor:pointer;padding:4px;display:flex;align-items:center}
-.password-toggle:hover{color:#f0ad4e}
+.password-toggle:hover{color:var(--kj-accent)}
 .password-toggle svg{width:20px;height:20px}
 .password-wrapper input{padding-right:46px}
 
@@ -123,25 +140,25 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 
 /* ── Forgot / extras ── */
 .forgot-row{margin:-0.55rem 0 1.35rem;text-align:right;font-size:.85rem}
-.forgot-link{color:#f0ad4e;text-decoration:none;font-weight:500}
+.forgot-link{color:var(--kj-accent);text-decoration:none;font-weight:500}
 .forgot-link:hover{text-decoration:underline}
 
 /* ── Keep me signed in ── */
 .remember-row{margin:1.25rem 0 1.35rem}
 .checkbox-wrapper{display:flex;align-items:center;gap:10px;cursor:pointer;color:#ccc;font-size:.875rem;user-select:none}
-.checkbox-wrapper input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;flex:none;border:2px solid #f0ad4e;border-radius:4px;cursor:pointer;position:relative;background:transparent;transition:background .2s}
-.checkbox-wrapper input[type="checkbox"]:checked{background:#f0ad4e}
-.checkbox-wrapper input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:-2px;left:2px;font-size:13px;color:#1a1a1a;font-weight:700}
-.checkbox-wrapper input[type="checkbox"]:focus-visible{outline:2px solid #ffcc00;outline-offset:2px}
+.checkbox-wrapper input[type="checkbox"]{appearance:none;-webkit-appearance:none;width:18px;height:18px;flex:none;border:2px solid var(--kj-accent);border-radius:4px;cursor:pointer;position:relative;background:transparent;transition:background .2s}
+.checkbox-wrapper input[type="checkbox"]:checked{background:var(--kj-accent)}
+.checkbox-wrapper input[type="checkbox"]:checked::after{content:'✓';position:absolute;top:-2px;left:2px;font-size:13px;color:var(--kj-accent-ink);font-weight:700}
+.checkbox-wrapper input[type="checkbox"]:focus-visible{outline:2px solid var(--kj-accent-hi);outline-offset:2px}
 
 /* ── Consent ── */
 .consent-line{font-size:.78rem;color:#bdbdbd;line-height:1.55;margin:0 0 1.15rem;text-align:center}
-.consent-line a{color:#f0ad4e;text-decoration:none}
+.consent-line a{color:var(--kj-accent);text-decoration:none}
 .consent-line a:hover{text-decoration:underline}
 
 /* ── Primary button ── */
-.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,#f0ad4e,#ec971f);border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px rgba(240,173,78,0.3);transition:all .2s;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:8px}
-.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,#ec971f,#d58512);transform:translateY(-1px);box-shadow:0 6px 16px rgba(240,173,78,0.4)}
+.btn-primary{width:100%;padding:14px;background:linear-gradient(135deg,var(--kj-accent),var(--kj-accent-lo));border:none;border-radius:8px;color:#fff;font-size:1rem;font-weight:600;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px var(--kj-accent-30);transition:all .2s;letter-spacing:.5px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-primary:hover:not(:disabled){background:linear-gradient(135deg,var(--kj-accent-lo),var(--kj-accent-lo));transform:translateY(-1px);box-shadow:0 6px 16px var(--kj-accent-40)}
 .btn-primary:active:not(:disabled){transform:translateY(0)}
 .btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
 
@@ -150,11 +167,11 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 
 /* ── Secondary link under a form ── */
 .back-link{text-align:center;margin-top:1rem}
-.back-link button{background:none;border:none;color:#f0ad4e;font-size:.875rem;font-family:inherit;cursor:pointer;text-decoration:underline}
-.back-link button:hover{color:#ffcc00}
+.back-link button{background:none;border:none;color:var(--kj-accent);font-size:.875rem;font-family:inherit;cursor:pointer;text-decoration:underline}
+.back-link button:hover{color:var(--kj-accent-hi)}
 
 .signup-prompt{text-align:center;font-size:.95rem;color:#fff;margin-bottom:1.5rem}
-.signup-prompt a{color:#f0ad4e;font-weight:600;text-decoration:none}
+.signup-prompt a{color:var(--kj-accent);font-weight:600;text-decoration:none}
 .signup-prompt a:hover{text-decoration:underline}
 
 /* ── Success ── */
@@ -167,7 +184,7 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 /* ── Footer ── */
 .auth-footer{text-align:center;padding-top:1.5rem;margin-top:auto}
 .auth-footer .copyright{font-size:.75rem;color:#fff}
-.auth-footer .copyright a{color:#ffbd59;text-decoration:none;transition:color .2s ease}
+.auth-footer .copyright a{color:var(--kj-accent-hi);text-decoration:none;transition:color .2s ease}
 .auth-footer .copyright a:hover{color:#fff}
 
 /* ── Validation modal ── */
@@ -208,3 +225,10 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 .door-turnstile{width:100%;margin:0 0 1.35rem;overflow:hidden}
 .door-turnstile:empty{margin:0}
 .door-turnstile-inner{width:300px;transform-origin:top left}
+
+/* ── Password match, on the create-a-Jubilee-ID screen ──
+   Green and red rather than the accent: this is a yes/no answer about what was
+   typed, not a piece of site furniture, and it has to read as such at a glance. */
+.password-match{font-size:.72rem;margin-top:6px}
+.password-match.is-match{color:#4ade80}
+.password-match.is-mismatch{color:#f87171}
