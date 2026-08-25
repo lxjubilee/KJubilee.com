@@ -120,30 +120,79 @@ img{display:block;max-width:100%}
   .nav-short{display:inline}
 }
 
-/* ---------- HM articles -------------------------------------------------- */
-.articles{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:18px;margin-bottom:var(--shelf-gap)}
-.article{
-  position:relative;background:var(--card);border:1px solid var(--border);border-radius:10px;
-  padding:24px 26px 26px;overflow:hidden;
+
+/* ---------- The Heavenly Band explainer ---------------------------------- */
+/* The Backstage grid from JubiLujah, to the same numbers: five columns, one
+   wide card per five, and a 12px gutter shared with the station shelves so the
+   two grids line up when they sit on the same page.
+
+   The step-down is JubiLujah's as well, and the important part of it is that
+   .hm-card.wide STOPS being wide below 1080px. A two-column card inside a
+   four-column grid tiles into nothing, and the last row goes ragged; dropping
+   the span is what keeps every breakpoint square. */
+.hm-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:var(--shelf-gap)}
+.hm-card.wide{grid-column:span 2}
+.hm-card{
+  position:relative;width:100%;min-width:0;text-align:left;display:flex;flex-direction:column;
+  background:var(--card);border-radius:8px;overflow:hidden;cursor:pointer;
+  border:1px solid transparent;
+  transition:background .2s ease,transform .2s ease,border-color .2s ease;
 }
-.article.is-live{border-color:var(--accent-soft)}
-.article-kicker{
-  display:inline-block;font-size:10.5px;font-weight:700;text-transform:uppercase;
-  letter-spacing:.14em;color:var(--accent);margin-bottom:10px;
+.hm-card:hover{background:var(--card-hover);transform:translateY(-2px)}
+.hm-card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* The live piece — the one that prints what is on air right now — is the only
+   card that carries a tint, so it reads as the current bulletin rather than as
+   another explainer. */
+.hm-card.is-live{border-color:var(--accent-soft)}
+
+/* Same height ramp as .card-cover, because these cards sit in the same column
+   widths and a different one would make the two grids disagree by a few pixels
+   down the whole page. */
+.hm-card-image{position:relative;width:100%;height:clamp(150px,11vw,210px);flex:none;overflow:hidden;background:#242424}
+.hm-card:hover .cover-art{transform:scale(1.03)}
+
+.hm-card-body{position:relative;display:flex;flex-direction:column;flex:1 1 auto;min-width:0;padding:12px 14px 14px}
+.hm-card-category{
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
+  color:var(--accent);margin-bottom:5px;
 }
-.article h2{font-size:20px;font-weight:800;letter-spacing:-.01em;line-height:1.25;margin:0 0 12px;color:#fff}
-.article p{margin:0 0 12px;font-size:14.5px;line-height:1.62;color:var(--text-dim)}
-.article p:last-child{margin-bottom:0}
-/* The lead article runs the full width and sets the tone for the page. Its
-   body flows into columns rather than one long measure — full-width prose at
-   this size would either run to an unreadable line length or leave half the
-   card empty. */
-.articles .article:first-child{grid-column:1/-1;padding:34px 36px 36px}
-.articles .article:first-child h2{font-size:29px}
-.articles .article:first-child p{font-size:16px}
-.articles .article:first-child .article-body{columns:2;column-gap:46px}
-.articles .article:first-child .article-body p{break-inside:avoid}
-@media (max-width:860px){.articles .article:first-child .article-body{columns:1}}
+/* Clamped to two lines: these headlines are written long on purpose, and a
+   third line pushes the meta row off the bottom of a normal-width card while
+   leaving a wide one looking half empty. */
+.hm-card-title{
+  font-size:17px;font-weight:700;line-height:1.28;color:#fff;margin:0 0 6px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.hm-card.wide .hm-card-title{font-size:20px}
+.hm-card-dek{
+  font-size:12.5px;line-height:1.45;color:var(--text-muted);margin:0 0 10px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.hm-card-meta{
+  display:flex;align-items:center;gap:6px;margin-top:auto;
+  font-size:11px;color:var(--text-muted);min-width:0;white-space:nowrap;
+}
+.hm-card-meta>span{overflow:hidden;text-overflow:ellipsis}
+.hm-card-dot{flex:0 0 auto;color:#6a6a6a}
+.hm-card-read{flex:1 1 auto}
+
+@media (max-width:1080px){
+  .hm-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hm-card.wide{grid-column:span 1}
+}
+@media (max-width:900px){.hm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:680px){
+  .hm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* The blurb is the first thing to go when the card gets narrow: at two
+     columns the headline and the byline are the whole decision. */
+  .hm-card-dek{display:none}
+  .hm-card-image{height:auto;aspect-ratio:16/9}
+}
+@media (max-width:480px){
+  .hm-grid{grid-template-columns:minmax(0,1fr)}
+  /* One per row is wide enough to earn the blurb back. */
+  .hm-card-dek{display:-webkit-box}
+}
 /* Sits after the nav, which scrolls horizontally on narrow screens — the
    solid ground keeps nav items from sliding visibly underneath it. */
 .lang-flag{flex:0 0 auto;padding:4px 4px 4px 10px;background:#1b1b1b;display:inline-flex;transition:box-shadow .2s ease,transform .2s ease}
@@ -212,7 +261,7 @@ img{display:block;max-width:100%}
 /* STAYS ABSOLUTE. The base .ident-freq is absolutely positioned and this rule
    only re-places it; setting `relative` here turned right/bottom into flow
    nudges and the watermark jumped to the top-left corner over the title. */
-.hero-shot .ident-freq{position:absolute;z-index:2;right:44px;top:auto;bottom:26px;transform:none;font-size:clamp(44.8px,6.3vw,105px);color:hsla(0,0%,100%,.225)}
+.hero-shot .ident-freq{position:absolute;z-index:2;right:44px;bottom:auto;top:26px;transform:none;font-size:clamp(44.8px,6.3vw,105px);color:hsla(0,0%,100%,.225)}
 /* The "HM" prefix reads at 70% of the frequency it labels, so the number stays
    the thing you see. em, not px — it has to track the clamp() above. */
 .hero-shot .ident-freq .ident-freq-hm{font-size:.7em}
@@ -223,22 +272,48 @@ img{display:block;max-width:100%}
 .hero-art{z-index:0}
 .hero-shot:hover .hero-art{transform:none}
 .hero-scrim{
+  /* THE PICTURE DISSOLVES INTO THE PAGE, IT IS NOT CURTAINED OFF AT ONE EDGE.
+     This was a 90deg wash that darkened the left third to near-black so a
+     600px column of text could sit on it. That is what pinned the words into a
+     narrow block and left the right two-thirds of every ident doing nothing.
+     A 180deg fade instead: the top of the artwork is left alone, and the image
+     falls away into the page's own black at the bottom, which is the band the
+     words now run along. Nothing is masked — the picture simply ends. */
   position:absolute;inset:0;z-index:1;pointer-events:none;
-  background:linear-gradient(90deg,rgba(6,6,12,.94),rgba(6,6,12,.86) 30%,rgba(6,6,12,.55) 55%,rgba(6,6,12,.18) 78%,rgba(6,6,12,0));
+  background:linear-gradient(180deg,transparent 38%,rgba(0,0,0,.85) 72%,rgba(0,0,0,.96));
 }
-.hero-content{position:relative;z-index:3;max-width:600px;animation:heroIn .5s ease both}
+/* FULL WIDTH. The lines run the whole way across the image rather than wrapping
+   inside a 600px column, so the hero reads as one wide band of type over the
+   artwork instead of a paragraph pasted into its corner. */
+.hero-content{position:relative;z-index:3;width:100%;max-width:var(--site-max);margin:0 auto;animation:heroIn .5s ease both}
 @keyframes heroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.hero-eyebrow{display:block;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.18em;color:hsla(0,0%,100%,.72);margin-bottom:16px}
-.hero-title{font-weight:800;font-size:46px;line-height:1.05;letter-spacing:-.02em;margin:0 0 6px;color:#fff}
-.hero-title button{display:block;text-align:left;font:inherit;letter-spacing:inherit}
+/* ONE ROW OF CHROME, NOT THREE STACKED LINES.
+   "Featured · <format>", the frequency and the host each used to own a line of
+   their own above and below the title, so five things were stacked before the
+   buttons were reached. They are all labels, so they read as a single row. */
+.hero-meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;min-height:22px}
+.hero-eyebrow{display:inline-block;padding:4px 10px;border-radius:4px;background:var(--accent);color:#04121f;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.hero-format{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:hsla(0,0%,100%,.72)}
+.hero-freq{font-family:var(--font-logo);font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--accent)}
+/* ONE LINE, CLIPPED. A station name is short; the nowrap is what guarantees the
+   title stays a single sweep across the picture even when one is not. */
+.hero-title{font-weight:800;font-size:46px;line-height:1.08;letter-spacing:-.02em;margin:0 0 10px;color:#fff;max-width:100%}
+.hero-title,.hero-title button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-title button{display:block;text-align:left;font:inherit;letter-spacing:inherit;width:100%;max-width:100%}
 .hero-title button:hover{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
-.hero-freq{font-family:var(--font-logo);font-weight:700;font-size:15px;letter-spacing:.06em;color:var(--accent);display:block;margin-bottom:14px}
-.hero-by{display:flex;align-items:center;gap:10px;margin:0 0 14px;flex-wrap:wrap}
+/* The host now rides in the actions row, so it carries no margin of its own. */
+.hero-by{display:flex;align-items:center;gap:10px;margin:0;flex-wrap:wrap}
 .hero-face{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid hsla(0,0%,100%,.28);flex:none}
 .hero-by-name{font-size:14.5px;font-weight:700;color:#fff}
 .hero-by-focus{font-size:13px;color:hsla(0,0%,100%,.66)}
 .hero-by-focus::before{content:"· "}
-.hero-blurb{font-size:15.5px;line-height:1.5;color:hsla(0,0%,100%,.85);margin:0 0 22px;max-width:530px}
+/* THE SENTENCE RUNS THE WIDTH OF THE PICTURE AND STOPS.
+   Capped at 530px it wrapped to three or four lines and the hero turned into a
+   paragraph. One line, ellipsised, is the whole of the "too much writing" fix:
+   the description is a taste of the station, and the station page carries the
+   rest. Restored to normal wrapping on narrow screens, where one line would be
+   two words and an ellipsis. */
+.hero-blurb{font-size:17px;line-height:1.55;color:hsla(0,0%,100%,.85);margin:0 0 18px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .btn-accent{
   display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#0a1b12;
@@ -634,7 +709,10 @@ img{display:block;max-width:100%}
 @media (max-width:1024px){
   .hero{padding:28px}   /* height is viewport-derived; see .hero */
   .hero-title{font-size:34px}
-  .hero-scrim{background:linear-gradient(90deg,rgba(6,6,12,.95),rgba(6,6,12,.9) 55%,rgba(6,6,12,.6))}
+  /* Still a bottom fade, just started earlier — a short hero has less room to
+     make the transition in. */
+  .hero-scrim{background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.85) 58%,rgba(0,0,0,.96))}
+  .hero-blurb{font-size:15.5px}
   .nav-textlink{display:none}
 }
 @media (max-width:760px){
@@ -642,6 +720,11 @@ img{display:block;max-width:100%}
   .card-blurb{display:none}
   .hero{padding:22px 20px 46px}   /* height is viewport-derived; see .hero */
   .hero-title{font-size:26px}
+  /* A phone is too narrow for one-line type: clipped to the width of a phone a
+     title is two words and a description is three. Wrap instead. */
+  .hero-title,.hero-title button,.hero-blurb{white-space:normal;overflow:visible;text-overflow:clip}
+  .hero-blurb{font-size:15px}
+  .hero-shot .ident-freq{right:20px;top:18px}
   .hero-by-focus{display:none}
   .hero-arrow{display:none}
   .search-btn{display:none}

@@ -142,19 +142,127 @@
       '</section>';
   }
 
+
   /* -------------------------------------------------------------------- */
-  /* Articles (the HM band explainer)                                      */
+  /* The HM band explainer                                                 */
+  /*                                                                       */
+  /* This tab used to be a stack of text panels, which is the one shape a  */
+  /* reader will not stop on: no picture, no way in, and every piece       */
+  /* shouting its whole argument at once. It is now the Backstage grid     */
+  /* from JubiLujah - five columns of picture cards with one wide card     */
+  /* per five - so the band explains itself the way the shelves do, and a  */
+  /* card is a door rather than the room.                                  */
+  /*                                                                       */
+  /* Cards carry no art of their own. Each article names a station whose   */
+  /* cover already stands for what the piece is about, so the page needs   */
+  /* no new artwork to ship and picks up every cover regeneration for      */
+  /* free. The station's ident gradient sits underneath as the fallback,   */
+  /* exactly as it does on a shelf tile.                                   */
   /* -------------------------------------------------------------------- */
+  var HM_SECTION  = SECTIONS.filter(function (s) { return s.id === 'hm'; })[0] || null;
+  var HM_ARTICLES = (HM_SECTION && HM_SECTION.articles) || [];
+  var hmBySlug = {};
+  HM_ARTICLES.forEach(function (a) { hmBySlug[a.slug] = a; });
+
+  /* Reading time, printed on the card so the reader knows what they are being
+     asked for before they commit. 220wpm is the usual figure for prose on a
+     screen, and the result is rounded UP - a piece announced as shorter than
+     it is reads as a broken promise, one announced as longer never does. */
+  function hmMinutes(a) {
+    var words = a.body.join(' ').split(/\s+/).length;
+    return Math.max(1, Math.ceil(words / 220));
+  }
+
+  /* The cover a card wears. `image` names a station rather than a file, so a
+     typo degrades to the gradient alone instead of to a broken picture. */
+  function hmCoverHTML(a) {
+    var st = bySlug[a.image];
+    // Same three layers as a shelf tile, in the same order: gradient at the
+    // back as the fallback, the cover over it, a scrim on top so a light
+    // photograph cannot swallow the card's rounded top edge. `.ident` is
+    // absolutely positioned, so it is a child of the frame rather than the
+    // frame itself.
+    return '<div class="hm-card-image">' +
+      (st ? '<div class="ident" style="' + gradVars(st) + '"></div>' : '') +
+      (st
+        ? '<img class="cover-art" alt="" loading="lazy" decoding="async"' +
+          ' src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">'
+        : '') +
+      '<div class="cover-scrim"></div>' +
+    '</div>';
+  }
+
+  function hmCardHTML(a, wide) {
+    var by = byMember[a.author];
+    return '' +
+      '<button class="hm-card' + (wide ? ' wide' : '') + (a.live ? ' is-live' : '') + '"' +
+        ' data-hm="' + esc(a.slug) + '">' +
+        hmCoverHTML(a) +
+        '<div class="hm-card-body">' +
+          '<span class="hm-card-category">' + esc(a.kicker) + '</span>' +
+          '<h3 class="hm-card-title">' + esc(a.title) + '</h3>' +
+          '<p class="hm-card-dek">' + esc(a.dek) + '</p>' +
+          '<div class="hm-card-meta">' +
+            '<span>' + esc(by ? by.name : 'Jubilee Inspire') + '</span>' +
+            '<span class="hm-card-dot">·</span>' +
+            '<span class="hm-card-read">' + hmMinutes(a) + ' min read</span>' +
+          '</div>' +
+        '</div>' +
+      '</button>';
+  }
+
+  /* WHICH CARDS ARE WIDE, for any number of them.
+   *
+   * The shelves get away with isWide()'s fixed 0/6/11 because that pattern
+   * tiles only when the count is a multiple of twelve. This grid is editorial
+   * and grows a piece at a time, so the same constants would leave the last
+   * row ragged the moment a thirteenth article was written - and a wide card
+   * that cannot fit the columns left in its row does not shrink, it wraps and
+   * leaves a hole.
+   *
+   * Five columns means a row is either five narrow cards or one wide plus
+   * three narrow. So for R rows carrying k wide cards, n = 5R - k, and R is
+   * pinned between ceil(n/5) and floor(n/4) by those two shapes. Inside that
+   * range we take the R closest to 7n/30, which is one wide card per six -
+   * the density the shelves already read at, and for n = 12 it reproduces
+   * their three-per-twelve exactly.
+   *
+   * Every interior row then comes to exactly five columns for any n, so the
+   * grid never opens a hole. The last row is also full for every count except
+   * 6, 7 and 11, which cannot be tiled by those two row shapes at all - at
+   * those three counts it simply runs short, the way any grid does.
+   */
+  function hmWideSet(n) {
+    var wide = {};
+    if (n < 5) return wide;                 // one short row; a wide card would only unbalance it
+    var lo = Math.ceil(n / 5), hi = Math.floor(n / 4);
+    if (hi < lo) hi = lo;
+    var R = Math.min(hi, Math.max(lo, Math.round(7 * n / 30)));
+    var k = Math.max(0, Math.min(R, 5 * R - n));
+
+    var i = 0, w = 0;
+    for (var r = 0; r < R && i < n; r++) {
+      // ceil() rather than floor() so the FIRST row is a wide row whenever
+      // there is one going: the lead piece is the one that has to stop a
+      // reader, and it is the only card whose position is not negotiable.
+      var wideRow = Math.ceil((r + 1) * k / R) > Math.ceil(r * k / R);
+      if (wideRow && i + 4 <= n) {
+        // Shift one place right on each successive wide row, so the wide cards
+        // run as a diagonal instead of a stripe down one side of the page.
+        wide[i + (w % 4)] = true;
+        i += 4; w++;
+      } else {
+        i += 5;
+      }
+    }
+    return wide;
+  }
+
   function articlesHTML(items) {
     if (!items || !items.length) return '';
-    return '<div class="articles">' + items.map(function (a) {
-      return '<article class="article' + (a.live ? ' is-live' : '') + '">' +
-        (a.kicker ? '<span class="article-kicker">' + esc(a.kicker) + '</span>' : '') +
-        '<h2>' + esc(a.title) + '</h2>' +
-        '<div class="article-body">' +
-          a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('') +
-        '</div>' +
-      '</article>';
+    var wide = hmWideSet(items.length);
+    return '<div class="hm-grid">' + items.map(function (a, i) {
+      return hmCardHTML(a, wide[i]);
     }).join('') + '</div>';
   }
 
@@ -231,18 +339,23 @@
     var box = document.getElementById('hero-content');
     if (!box) return;
 
+    // FOUR ROWS, NOT SIX.
+    //
+    // This used to stack an eyebrow, the title, the frequency, the host and the
+    // blurb as five separate blocks and then the buttons under them, all inside
+    // a 600px column — a column of small print down one edge of a very wide
+    // picture. The labels (Featured, the format, the frequency) are one row of
+    // chrome; the host belongs with the transport controls it sits beside; and
+    // the description is one line rather than a paragraph. The words the hero
+    // actually leads with — the station's name — are what gets the width.
     box.innerHTML = '' +
-      '<span class="hero-eyebrow">Featured · ' + esc(st.format) + '</span>' +
-      '<h2 class="hero-title"><button data-slug="' + st.slug + '">' + esc(st.name) + '</button></h2>' +
-      '<span class="hero-freq">' + esc(st.freq) + '</span>' +
-      (host
-        ? '<div class="hero-by">' +
-            '<img class="hero-face" src="' + esc(host.image) + '" alt="" width="34" height="34">' +
-            '<span class="hero-by-name">' + esc(host.short) + '</span>' +
-            '<span class="hero-by-focus">' + esc(host.focus) + '</span>' +
-          '</div>'
-        : '') +
-      '<p class="hero-blurb">' + esc(st.description) + '</p>' +
+      '<div class="hero-meta-row">' +
+        '<span class="hero-eyebrow">Featured</span>' +
+        '<span class="hero-format">' + esc(st.format) + '</span>' +
+        '<span class="hero-freq">' + esc(st.freq) + '</span>' +
+      '</div>' +
+      '<h2 class="hero-title"><button data-slug="' + st.slug + '" title="' + esc(st.name) + '">' + esc(st.name) + '</button></h2>' +
+      '<p class="hero-blurb" title="' + esc(st.description) + '">' + esc(st.description) + '</p>' +
       '<div class="hero-actions">' +
         // TUNES THE FOOTER PLAYER, it does not navigate. This used to be an
         // <a href="/radio?station=...">, which threw the visitor out of the
@@ -255,6 +368,13 @@
         // below keeps its face honest — the label states what pressing it does,
         // and the footer bar can change that without the hero being touched.
         '<button type="button" class="btn-accent" data-kj-toggle="' + esc(st.slug) + '"></button>' +
+        (host
+          ? '<div class="hero-by">' +
+              '<img class="hero-face" src="' + esc(host.image) + '" alt="" width="34" height="34">' +
+              '<span class="hero-by-name">' + esc(host.short) + '</span>' +
+              '<span class="hero-by-focus">' + esc(host.focus) + '</span>' +
+            '</div>'
+          : '') +
         '<span class="hero-tag">' + esc(st.listeners) + '</span>' +
         '<span class="hero-meta">Reach ' + esc(st.reach) + '</span>' +
       '</div>';
@@ -591,6 +711,156 @@
   }
 
   /*
+   * A BAND ARTICLE, on the same template as a station article.
+   *
+   * Deliberately the kja- template rather than one of its own: a reader who
+   * has opened a station page already knows where the back button, the pull
+   * quote and the sidebar live, and a second layout would spend that for
+   * nothing. What differs is only what the furniture holds - the byline
+   * credits a writer instead of a host, the facts describe the band instead
+   * of one frequency, and the hero wears the cover of the station the piece
+   * is about.
+   *
+   * Addressable at #hm/<slug> for the same reason the station pages are: a
+   * piece explaining what this band is has to survive being pasted into a
+   * message, and it renders into the scroll view rather than navigating, so
+   * the footer player keeps sounding while it is read.
+   */
+  /* Read off the catalogue rather than typed, so the sidebar cannot drift out
+     of step with the dial as frequencies come on air. */
+  function hmBandFacts() {
+    var langs = {};
+    STATIONS.forEach(function (s) { if (s.lang) langs[s.lang] = 1; });
+    var nums = STATIONS.map(function (s) { return parseFloat(s.hm); })
+                       .filter(function (n) { return !isNaN(n); })
+                       .sort(function (x, y) { return x - y; });
+    return [
+      ['Frequencies', String(STATIONS.length)],
+      ['On air now', String(STATIONS.filter(function (s) { return s.prototype; }).length)],
+      ['Languages', String(Object.keys(langs).length)],
+      ['Dial', nums.length ? 'HM ' + nums[0].toFixed(2) + '–' + nums[nums.length - 1].toFixed(2) : '—'],
+      ['Listening', 'Free, no account']
+    ];
+  }
+
+  function renderHmArticle(slug) {
+    var a = hmBySlug[slug];
+    if (!a) { go('hm'); return; }
+    var by = byMember[a.author];
+    var st = bySlug[a.image];
+
+    var body = '<p class="kja-lead">' + esc(a.dek) + '</p>' +
+      a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+
+    var facts = hmBandFacts().map(function (f) {
+      return '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>';
+    }).join('');
+
+    /* The other pieces, capped at TEN - two full rows of five. The cap is a
+       multiple of five on purpose: a last row of three under two empty
+       columns reads as a loading failure rather than as the end of a list.
+       hmWideSet works out to no wide cards at that count, which is what this
+       row wants anyway - the reader is leaving, not arriving. */
+    var others = HM_ARTICLES.filter(function (x) { return x.slug !== a.slug; }).slice(0, 10);
+    var moreWide = hmWideSet(others.length);
+    var more = others.map(function (x, i) { return hmCardHTML(x, moreWide[i]); }).join('');
+
+    view.innerHTML = '' +
+      '<article class="kja">' +
+        '<section class="kja-hero">' +
+          '<div class="kja-hero-art ident"' + (st ? ' style="' + gradVars(st) + '"' : '') + ' aria-hidden="true">' +
+            (st
+              ? '<img class="cover-art kja-hero-photo" alt="" decoding="async"' +
+                ' src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">'
+              : '') +
+            '<span class="kja-hero-sheen"></span>' +
+            '<span class="ident-freq"><span class="ident-freq-hm">HM</span></span>' +
+          '</div>' +
+          '<button class="kja-back" type="button" data-hm-back>' +
+            '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"></path></svg>' +
+            'The Heavenly Band' +
+          '</button>' +
+          '<div class="kja-hero-overlay"><div class="kja-hero-inner">' +
+            '<div class="kja-meta">' +
+              '<span class="kja-tab">' + esc(a.kicker) + '</span>' +
+              '<span class="kja-meta-plain">' + esc(by ? by.name : 'Jubilee Inspire') +
+                ' · ' + hmMinutes(a) + ' min read</span>' +
+            '</div>' +
+            '<h1 class="kja-title">' + esc(a.title) + '</h1>' +
+            '<p class="kja-need"><span class="kja-need-label">In short: </span>' + esc(a.dek) + '</p>' +
+          '</div></div>' +
+        '</section>' +
+
+        '<div class="kja-container">' +
+          '<div class="kja-main">' +
+            '<div class="kja-body">' + body + '</div>' +
+            (a.stands
+              ? '<div class="kja-callout">' +
+                  '<div class="kja-callout-label">' +
+                    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>' +
+                    'The line it rests on' +
+                  '</div>' +
+                  '<p class="kja-callout-text">' + esc(a.stands) + '</p>' +
+                '</div>'
+              : '') +
+            (by
+              ? '<div class="kja-byline">' +
+                  '<img src="' + esc(by.image) + '" alt="" width="46" height="46">' +
+                  '<div>' +
+                    '<div class="kja-byline-credit">Written by</div>' +
+                    '<div class="kja-byline-name">' + esc(by.name) + '</div>' +
+                    '<div class="kja-byline-role">' + esc(by.focus) + '</div>' +
+                  '</div>' +
+                '</div>'
+              : '') +
+            '<p class="kja-note">Every station on the Heavenly Modulation band is free to listen to, ' +
+              'with no advertising and no account required, and the dial is still being built out — ' +
+              'frequencies are assigned before their stations sign on.</p>' +
+          '</div>' +
+
+          '<aside class="kja-sidebar">' +
+            '<div class="kja-widget">' +
+              '<h2 class="kja-widget-title">The band at a glance</h2>' +
+              '<dl class="kja-facts">' + facts + '</dl>' +
+            '</div>' +
+            '<div class="kja-widget">' +
+              '<h2 class="kja-widget-title">Share this article</h2>' +
+              '<div class="kja-share">' +
+                '<button type="button" data-share="link">Copy link</button>' +
+                '<a class="btn-outline" href="/radio">Open the dial</a>' +
+              '</div>' +
+            '</div>' +
+          '</aside>' +
+        '</div>' +
+
+        // The piece ends by handing the reader the station it was written
+        // around, but only when that station can actually be heard - a play
+        // button on a frequency still in build is an invitation to nothing.
+        (st && st.prototype
+          ? '<button type="button" class="kja-cta" data-kj-play="' + esc(st.slug) + '">' +
+              '<span class="kja-cta-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>' +
+              '<span>' +
+                '<span class="kja-cta-label">Hear what this is about</span>' +
+                '<span class="kja-cta-title">' + esc(st.name) + '</span>' +
+                '<span class="kja-cta-sub">' + esc(st.freq + ' · ' + st.listeners) + '</span>' +
+              '</span>' +
+            '</button>'
+          : '') +
+
+        (more
+          ? '<section class="kja-more">' +
+              '<h2 class="kja-more-title">More from the band</h2>' +
+              '<div class="hm-grid">' + more + '</div>' +
+            '</section>'
+          : '') +
+      '</article>';
+
+    painted = true;
+    document.title = a.title + ' — The Heavenly Band · kJubilee.com';
+    scroll.scrollTop = 0;
+  }
+
+  /*
    * What is actually sounding on this station, right now.
    *
    * The same resolution the player does: fetch the day file, find the entry
@@ -634,8 +904,11 @@
   /* -------------------------------------------------------------------- */
   /* #<section-id>          a category view
      #station/<slug>        a station article, opened over its category
-     Station articles are addressable so a frequency can be linked directly. */
+     #hm/<slug>             a band article, opened over the HM tab
+     Both kinds of article are addressable so a frequency, or the piece that
+     explains what this band is, can be linked to directly. */
   var STATION_PREFIX = 'station/';
+  var HM_PREFIX      = 'hm/';
 
   function route() {
     var hash = decodeURIComponent(location.hash.slice(1));
@@ -644,6 +917,16 @@
       var slug = hash.slice(STATION_PREFIX.length);
       if (!bySlug[slug]) { location.hash = currentSection; return; }
       renderArticle(slug);
+      return;
+    }
+
+    /* Checked BEFORE the section lookup below, and it has to be: the section
+       itself is `hm`, so `hm/<slug>` would otherwise fall through to the
+       unknown-id branch and dump the reader on the home page. */
+    if (hash.indexOf(HM_PREFIX) === 0) {
+      var hmSlug = hash.slice(HM_PREFIX.length);
+      if (!hmBySlug[hmSlug]) { location.hash = 'hm'; return; }
+      renderHmArticle(hmSlug);
       return;
     }
 
@@ -1017,6 +1300,15 @@
     // stopImmediatePropagation, and only on a shared node in a fixed order.
     // Back out of an article to the shelf it was opened from.
     if (e.target.closest('[data-article-back]')) { go(currentSection); return; }
+
+    // A band article always goes back to the band, not to `currentSection`:
+    // it can be arrived at from a pasted link, in which case there is no
+    // section behind it and currentSection is still whatever loaded first.
+    if (e.target.closest('[data-hm-back]')) { go('hm'); return; }
+
+    // A card on the band explainer opens its article.
+    var hmCard = e.target.closest('.hm-card[data-hm]');
+    if (hmCard) { go('hm/' + hmCard.dataset.hm); return; }
 
     // Copy this station's own address. The article has a URL precisely so it
     // can be handed to somebody; this saves them selecting the address bar.
