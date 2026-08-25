@@ -1,0 +1,46 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM347.14-EN",
+  "slug": "riddim-and-rhyme",
+  "name": "Riddim and Rhyme",
+  "hm": "347.14",
+  "band": "fivefold",
+  "mount": "riddim-and-rhyme",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Kingston",
+    "timezone": "America/Jamaica"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "zariah-inspire"
+      ],
+      "albums": [
+        "SAIM1043EN",
+        "SAIM1044EN",
+        "SAIM1045EN",
+        "SAIM1046EN",
+        "SAIM1047EN",
+        "SAIM1048EN",
+        "SAIM1049EN",
+        "SAIM1050EN",
+        "SAIM1051EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM347.14-EN/delivery",
+    "file": "HM347.14EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM347.14-EN/delivery/HM347.14EN-20260821.json"
+  },
+  "format": "Afro-Caribbean",
+  "timezone": "America/Los_Angeles"
+}

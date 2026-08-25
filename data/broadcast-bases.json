@@ -1,0 +1,540 @@
+{
+  "schema": "kj.station.bases/1",
+  "note": [
+    "WHERE EACH STATION IS BASED. One station, several home bases — the same",
+    "programming originated from two or three cities so a listener is always",
+    "inside a base's own time zone rather than shifted into somebody else's.",
+    "",
+    "Every base is a recommendation, not a fact on the ground. The first entry",
+    "is the ANCHOR: the city the station belongs to culturally. The rest are",
+    "RELAYS, chosen for two things at once — a time zone the anchor does not",
+    "cover, and a real diaspora or audience concentration in that city. A relay",
+    "that only satisfies the clock is a worse pick than one that satisfies both.",
+    "",
+    "Cities are drawn from the HM tower roster (public/data/hm-towers.json,",
+    "Cloudflare's published edge) wherever a suitable one exists, so the base",
+    "sits on top of a transmitter. It does not have to: Jerusalem carries seven",
+    "stations and is not an edge city, and that is allowed. The builder marks",
+    "which is which rather than rejecting the ones that are not.",
+    "",
+    "Fifteen stations already assert an origin in tenants/*.json. Those origins",
+    "are kept as the anchor. The one deliberate departure is Island Hallelujah",
+    "(Honolulu over the tenant's Seattle) — build-broadcast-bases.js prints it."
+  ],
+
+  "cities": {
+    "Los Angeles":     { "cc": "US", "tz": "America/Los_Angeles" },
+    "San Jose":        { "cc": "US", "tz": "America/Los_Angeles" },
+    "San Diego":       { "cc": "US", "tz": "America/Los_Angeles" },
+    "Sacramento":      { "cc": "US", "tz": "America/Los_Angeles" },
+    "Seattle":         { "cc": "US", "tz": "America/Los_Angeles" },
+    "Portland":        { "cc": "US", "tz": "America/Los_Angeles" },
+    "Las Vegas":       { "cc": "US", "tz": "America/Los_Angeles" },
+    "Honolulu":        { "cc": "US", "tz": "Pacific/Honolulu" },
+    "Phoenix":         { "cc": "US", "tz": "America/Phoenix" },
+    "Denver":          { "cc": "US", "tz": "America/Denver" },
+    "Salt Lake City":  { "cc": "US", "tz": "America/Denver" },
+    "Chicago":         { "cc": "US", "tz": "America/Chicago" },
+    "Dallas":          { "cc": "US", "tz": "America/Chicago" },
+    "Houston":         { "cc": "US", "tz": "America/Chicago" },
+    "Austin":          { "cc": "US", "tz": "America/Chicago" },
+    "San Antonio":     { "cc": "US", "tz": "America/Chicago" },
+    "Nashville":       { "cc": "US", "tz": "America/Chicago" },
+    "Memphis":         { "cc": "US", "tz": "America/Chicago" },
+    "Minneapolis":     { "cc": "US", "tz": "America/Chicago" },
+    "Kansas City":     { "cc": "US", "tz": "America/Chicago" },
+    "St. Louis":       { "cc": "US", "tz": "America/Chicago" },
+    "Omaha":           { "cc": "US", "tz": "America/Chicago" },
+    "Oklahoma City":   { "cc": "US", "tz": "America/Chicago" },
+    "Atlanta":         { "cc": "US", "tz": "America/New_York" },
+    "Miami":           { "cc": "US", "tz": "America/New_York" },
+    "Tampa":           { "cc": "US", "tz": "America/New_York" },
+    "Charlotte":       { "cc": "US", "tz": "America/New_York" },
+    "Raleigh-Durham":  { "cc": "US", "tz": "America/New_York" },
+    "Richmond":        { "cc": "US", "tz": "America/New_York" },
+    "Philadelphia":    { "cc": "US", "tz": "America/New_York" },
+    "Newark":          { "cc": "US", "tz": "America/New_York" },
+    "Boston":          { "cc": "US", "tz": "America/New_York" },
+    "Buffalo":         { "cc": "US", "tz": "America/New_York" },
+    "Pittsburgh":      { "cc": "US", "tz": "America/New_York" },
+    "Cleveland":       { "cc": "US", "tz": "America/New_York" },
+    "Columbus":        { "cc": "US", "tz": "America/New_York" },
+    "Cincinnati":      { "cc": "US", "tz": "America/New_York" },
+    "Detroit":         { "cc": "US", "tz": "America/New_York" },
+    "Ashburn":         { "cc": "US", "tz": "America/New_York" },
+
+    "Montréal":        { "cc": "CA", "tz": "America/Toronto" },
+    "Mexico City":     { "cc": "MX", "tz": "America/Mexico_City" },
+    "Kingston":        { "cc": "JM", "tz": "America/Jamaica" },
+    "São Paulo":       { "cc": "BR", "tz": "America/Sao_Paulo" },
+
+    "Dublin":          { "cc": "IE", "tz": "Europe/Dublin" },
+    "Lisbon":          { "cc": "PT", "tz": "Europe/Lisbon" },
+    "Madrid":          { "cc": "ES", "tz": "Europe/Madrid" },
+    "Paris":           { "cc": "FR", "tz": "Europe/Paris" },
+    "Brussels":        { "cc": "BE", "tz": "Europe/Brussels" },
+    "Frankfurt":       { "cc": "DE", "tz": "Europe/Berlin" },
+    "Rome":            { "cc": "IT", "tz": "Europe/Rome" },
+    "Warsaw":          { "cc": "PL", "tz": "Europe/Warsaw" },
+    "Bucharest":       { "cc": "RO", "tz": "Europe/Bucharest" },
+    "Kyiv":            { "cc": "UA", "tz": "Europe/Kyiv" },
+    "Moscow":          { "cc": "RU", "tz": "Europe/Moscow" },
+
+    "Jerusalem":       { "cc": "IL", "tz": "Asia/Jerusalem", "tower": false },
+    "Tel Aviv":        { "cc": "IL", "tz": "Asia/Jerusalem" },
+    "Amman":           { "cc": "JO", "tz": "Asia/Amman" },
+    "Cairo":           { "cc": "EG", "tz": "Africa/Cairo" },
+    "Dubai":           { "cc": "AE", "tz": "Asia/Dubai" },
+
+    "Nairobi":         { "cc": "KE", "tz": "Africa/Nairobi" },
+    "Dar Es Salaam":   { "cc": "TZ", "tz": "Africa/Dar_es_Salaam" },
+    "Lagos":           { "cc": "NG", "tz": "Africa/Lagos" },
+    "Addis Ababa":     { "cc": "ET", "tz": "Africa/Addis_Ababa" },
+
+    "New Delhi":       { "cc": "IN", "tz": "Asia/Kolkata" },
+    "Kathmandu":       { "cc": "NP", "tz": "Asia/Kathmandu" },
+    "Dhaka":           { "cc": "BD", "tz": "Asia/Dhaka" },
+    "Jakarta":         { "cc": "ID", "tz": "Asia/Jakarta" },
+    "Ho Chi Minh City":{ "cc": "VN", "tz": "Asia/Ho_Chi_Minh" },
+    "Manila":          { "cc": "PH", "tz": "Asia/Manila" },
+    "Cebu":            { "cc": "PH", "tz": "Asia/Manila" },
+    "Taipei":          { "cc": "TW", "tz": "Asia/Taipei" },
+    "Seoul":           { "cc": "KR", "tz": "Asia/Seoul" },
+    "Tokyo":           { "cc": "JP", "tz": "Asia/Tokyo" }
+  },
+
+  "stations": {
+
+    "familia-inspire-espanol": {
+      "bases": ["Mexico City", "Los Angeles", "Miami"],
+      "why": "Mexico City is the largest Spanish-speaking city on earth and the anchor station-map.json already gives this station. Los Angeles and Miami are the two poles of US Hispanic life and sit three zones apart."
+    },
+    "jubilee-prayers-spanish": {
+      "bases": ["Madrid", "Los Angeles", "Miami"],
+      "why": "Anchored in Spain rather than Mexico, matching the Spain dot on the station map — it keeps the two Spanish stations from being the same station twice."
+    },
+    "brasil-inspire-portugues": {
+      "bases": ["São Paulo", "Newark", "Miami"],
+      "why": "São Paulo is the centre of Brazilian evangelical broadcasting. Newark's Ironbound is the densest Brazilian community in the US; Miami covers the Florida corridor."
+    },
+    "jubilee-prayers-portuguese": {
+      "bases": ["Lisbon", "Boston", "Newark"],
+      "why": "Continental Portuguese, so Lisbon. Southeastern New England out of Boston is the oldest and largest Portuguese-American concentration in the country."
+    },
+    "asia-inspire-zhongwen": {
+      "bases": ["Taipei", "San Jose", "Newark"],
+      "why": "Taipei, not the mainland: it is the free base for Mandarin Christian broadcasting and the mainland edge cities cannot carry this signal. San Jose covers the Bay Area; Newark covers Flushing and the NY metro."
+    },
+    "jubilee-prayers-mandarin": {
+      "bases": ["Taipei", "San Jose", "Los Angeles"],
+      "why": "Same reasoning as Asia Inspire, relayed down the Pacific coast where the Mandarin-speaking church is concentrated."
+    },
+    "inspire-india-hindi": {
+      "bases": ["New Delhi", "San Jose", "Newark"],
+      "why": "Delhi anchors the Hindi belt. San Jose and Newark are the two largest Indian-American metros, and Edison sits inside the Newark edge."
+    },
+    "jubilee-prayers-hindi": {
+      "bases": ["Kathmandu", "New Delhi", "Newark"],
+      "why": "Anchored in Nepal per the station map — the Nepali church is one of the fastest-growing in Asia — with Delhi and Newark carrying the wider Hindi-speaking audience."
+    },
+    "inspire-crown-arabic": {
+      "bases": ["Dubai", "Detroit", "Los Angeles"],
+      "why": "Dubai rather than Riyadh: the Gulf's only base from which Christian broadcast is practicable. Dearborn sits inside the Detroit edge and is the largest Arab-American community in the US."
+    },
+    "jubilee-prayers-arabic": {
+      "bases": ["Cairo", "Detroit", "Newark"],
+      "why": "Cairo anchors the largest Christian population in the Middle East. Detroit and Newark carry the Coptic and Levantine diaspora on two US coasts."
+    },
+    "france-inspire-francais": {
+      "bases": ["Paris", "Montréal", "Miami"],
+      "why": "Paris anchors; Montréal is the francophone capital of North America; Miami reaches the Haitian and West African French-speaking church."
+    },
+    "jubilee-prayers-french": {
+      "bases": ["Brussels", "Montréal", "Miami"],
+      "why": "Belgium per the station map, which keeps this distinct from France Inspire, relayed through the same two North American francophone centres."
+    },
+    "jubilee-praise-romana": {
+      "bases": ["Bucharest", "Sacramento", "Chicago"],
+      "why": "Bucharest anchors. Sacramento holds the largest Romanian Pentecostal community in the United States and Chicago the largest Romanian community overall — West Coast and Midwest, ten hours behind the anchor and eight."
+    },
+    "korea-inspire-hangugeo": {
+      "bases": ["Seoul", "Los Angeles", "Newark"],
+      "why": "Seoul anchors. Koreatown in Los Angeles is the largest Korean settlement outside Korea; the Newark edge covers Palisades Park and the NY/NJ Korean church belt."
+    },
+    "jubilee-prayers-korean": {
+      "bases": ["Seoul", "Los Angeles", "Chicago"],
+      "why": "Seoul is the practical base for a prayer line aimed north — the station map's North Korea dot is a target, not a transmitter site."
+    },
+    "deutschland-inspire-deutsch": {
+      "bases": ["Frankfurt", "Chicago", "Philadelphia"],
+      "why": "Frankfurt anchors and is the busiest edge in Europe. Chicago and Philadelphia carry the two oldest German-American concentrations."
+    },
+    "russia-inspire-russkiy": {
+      "bases": ["Moscow", "Sacramento", "Newark"],
+      "why": "Sacramento is the deliberate pick here: the Sacramento–Portland corridor is the centre of Slavic evangelical life in America, far more so than New York. Newark covers Brooklyn."
+    },
+    "jubilee-prayers-russian": {
+      "bases": ["Kyiv", "Sacramento", "Newark"],
+      "why": "Anchored in Kyiv per the station map, sharing the Slavic-diaspora relays. Ukrainian and Russian-speaking believers in the US largely share the same churches."
+    },
+    "italia-inspire-italiano": {
+      "bases": ["Rome", "Newark", "Philadelphia"],
+      "why": "Rome anchors; Newark and Philadelphia are the heart of Italian-American settlement and sit six hours behind it."
+    },
+    "pilipinas-inspire-tagalog": {
+      "bases": ["Manila", "Los Angeles", "Las Vegas"],
+      "why": "Manila anchors. Los Angeles is the largest Filipino community in the US and Las Vegas the fastest-growing."
+    },
+    "jubilee-prayers-tagalog": {
+      "bases": ["Cebu", "San Jose", "Honolulu"],
+      "why": "Cebu rather than Manila keeps the two Tagalog stations distinct. Honolulu is a genuine Filipino centre and closes the Pacific gap between Cebu and the mainland."
+    },
+    "vietnam-inspire-tieng-viet": {
+      "bases": ["Ho Chi Minh City", "San Jose", "Houston"],
+      "why": "San Jose and Houston hold the two largest Vietnamese populations outside Vietnam, and split the US between Pacific and Central."
+    },
+    "africa-inspire-kiswahili": {
+      "bases": ["Nairobi", "Minneapolis", "Seattle"],
+      "why": "Nairobi anchors East African broadcasting. Minneapolis and Seattle carry the largest East African diaspora communities in the US."
+    },
+    "jubilee-prayers-swahili": {
+      "bases": ["Dar Es Salaam", "Nairobi", "Minneapolis"],
+      "why": "Anchored in Tanzania per the station map, with Nairobi as the regional relay and Minneapolis for the American Swahili-speaking church."
+    },
+    "west-africa-inspire-yoruba": {
+      "bases": ["Lagos", "Houston", "Newark"],
+      "why": "Lagos anchors. Houston has the largest Nigerian-American community in the country; Newark covers the Northeast."
+    },
+    "ethiopia-inspire-amharic": {
+      "bases": ["Addis Ababa", "Ashburn", "Los Angeles"],
+      "why": "Ashburn is an unusually exact fit — the Washington DC metro holds the largest Ethiopian population outside Ethiopia, and the edge sits inside it. Los Angeles carries Little Ethiopia."
+    },
+    "polska-inspire-polski": {
+      "bases": ["Warsaw", "Chicago", "Newark"],
+      "why": "Chicago is the second Polish city on earth by population. Warsaw anchors, Newark covers the Northeast."
+    },
+    "indonesia-inspire-bahasa": {
+      "bases": ["Jakarta", "Los Angeles", "Philadelphia"],
+      "why": "Jakarta anchors. Los Angeles and Philadelphia hold the two established Indonesian-American church communities."
+    },
+    "japan-inspire-nihongo": {
+      "bases": ["Tokyo", "Los Angeles", "Honolulu"],
+      "why": "Tokyo anchors; Los Angeles and Honolulu are the historic centres of Japanese-American life and bridge the date line."
+    },
+    "bengal-inspire-bangla": {
+      "bases": ["Dhaka", "Newark", "Detroit"],
+      "why": "Dhaka anchors. Newark covers the largest Bangladeshi community in the US; Hamtramck sits inside the Detroit edge."
+    },
+
+    "jubilee-radio": {
+      "bases": ["Seattle", "Nashville", "Atlanta"],
+      "why": "The flagship keeps the Seattle origin its tenant already carries, relayed through Nashville and Atlanta so all three mainland zones carry the dial's front door."
+    },
+    "jubilee-praise": {
+      "bases": ["Jerusalem", "Los Angeles", "Newark"],
+      "why": "Torah Sings keeps its Jerusalem origin — one of the four stations whose anchor is deliberately not an edge city. Los Angeles and NY/NJ hold the two largest Messianic communities in America."
+    },
+    "jubilee-ccm": {
+      "bases": ["Jerusalem", "Nashville", "Los Angeles"],
+      "why": "Jerusalem per the tenant, with Nashville as the CCM relay and Los Angeles closing the Pacific."
+    },
+    "yes-and-amen": {
+      "bases": ["Nashville", "Phoenix", "Charlotte"],
+      "why": "Nashville per the tenant. Phoenix and Charlotte spread it across Mountain and Eastern without doubling up on a market Nashville already covers."
+    },
+    "country-gospel": {
+      "bases": ["Nashville", "Sacramento", "Charlotte"],
+      "why": "Nashville per the tenant. Sacramento reaches the Central Valley, which is real country-gospel country, and Charlotte the Carolinas."
+    },
+    "jubilee-gospel-fire": {
+      "bases": ["Memphis", "Atlanta", "Los Angeles"],
+      "why": "Memphis per the tenant and the home of COGIC. Atlanta and Los Angeles are the two other centres of Black gospel."
+    },
+    "ancient-paths": {
+      "bases": ["Amman", "Dallas", "Los Angeles"],
+      "why": "Amman per the tenant. Dallas and Los Angeles carry the American audience for Amir's catalogue across two zones."
+    },
+    "riddim-and-rhyme": {
+      "bases": ["Kingston", "Miami", "Newark"],
+      "why": "Kingston per the tenant. Miami and Newark are the two ends of the Caribbean diaspora corridor."
+    },
+    "latin-worship": {
+      "bases": ["Miami", "Los Angeles", "San Antonio"],
+      "why": "Miami per the tenant. Sung in English for a Latino audience, so the relays follow US Latino population rather than Latin America."
+    },
+    "hebraic-celebrations": {
+      "bases": ["Jerusalem", "Miami", "Los Angeles"],
+      "why": "Jerusalem per the tenant — the feasts are kept on Jerusalem time. South Florida and Los Angeles hold the largest US audiences for them."
+    },
+    "midnight-praise": {
+      "bases": ["Dublin", "Chicago", "Seattle"],
+      "why": "The one station where the clock is the whole point. Dublin, Chicago and Seattle are eight hours apart end to end, so midnight rolls continuously rather than arriving everywhere at once."
+    },
+    "island-hallelujah": {
+      "bases": ["Honolulu", "Seattle", "San Diego"],
+      "why": "Honolulu is proposed as the anchor over the tenant's Seattle — a Hawaiian praise station should originate in Hawaii. Seattle is kept as Tahoma's own base; San Diego carries the Pacific mainland."
+    },
+    "radiant-stones-radio": {
+      "bases": ["Seattle", "Denver", "Atlanta"],
+      "why": "A clean three-zone spread with no strong regional claim on the format."
+    },
+    "inspire-hymns-heritage": {
+      "bases": ["Nashville", "Chicago", "Portland"],
+      "why": "Nashville and Chicago are where American hymnody was published and recorded; Portland closes the Pacific."
+    },
+    "inspire-acapella": {
+      "bases": ["Nashville", "Dallas", "Los Angeles"],
+      "why": "Nashville and Dallas anchor the a cappella tradition in American church music; Los Angeles carries the Pacific."
+    },
+
+    "logos": {
+      "bases": ["Boston", "Chicago", "Seattle"],
+      "why": "Nova's apologetics station bases where the questions are asked — three university metros, one per mainland zone."
+    },
+    "wisdom-channel": {
+      "bases": ["Ashburn", "Dallas", "Portland"],
+      "why": "A straightforward East–Central–Pacific spread for a station with no regional character to honour."
+    },
+    "heavens-dawn": {
+      "bases": ["Boston", "Kansas City", "Seattle"],
+      "why": "A dawn devotional, so the bases are chosen to make sunrise roll: Boston first light, then the middle of the country, then the Pacific three hours later."
+    },
+
+    "money-faith": {
+      "bases": ["Dallas", "Charlotte", "Phoenix"],
+      "why": "Dallas and Charlotte are where American Christian financial teaching and banking respectively sit; Phoenix covers the Mountain West."
+    },
+    "marriage-matters": {
+      "bases": ["Denver", "Atlanta", "Sacramento"],
+      "why": "Denver anchors — Colorado is the centre of the American family-ministry world — with Atlanta and Sacramento covering the other two zones."
+    },
+    "raising-arrows": {
+      "bases": ["Nashville", "Salt Lake City", "Raleigh-Durham"],
+      "why": "Parenting and homeschooling, based where those movements are densest: Middle Tennessee, the Wasatch Front and the Research Triangle."
+    },
+    "jubilee-teaching": {
+      "bases": ["Dallas", "Columbus", "Portland"],
+      "why": "A general teaching station, spread evenly rather than tied to a region."
+    },
+    "identity-in-yeshua": {
+      "bases": ["Jerusalem", "Dallas", "Los Angeles"],
+      "why": "Jerusalem anchors the subject matter; Dallas and Los Angeles carry the American audience."
+    },
+    "after-the-storm": {
+      "bases": ["Houston", "Tampa", "Sacramento"],
+      "why": "Chosen for what the station is about rather than for the clock — Houston and Tampa are hurricane country, Sacramento is fire country, and all three know the season this station speaks into."
+    },
+    "purpose-found": {
+      "bases": ["Atlanta", "Denver", "San Jose"],
+      "why": "Three-zone spread across metros with large young-professional populations."
+    },
+    "decisions-that-matter": {
+      "bases": ["Chicago", "Richmond", "Phoenix"],
+      "why": "Even coverage with no regional claim on the format."
+    },
+    "lead-like-yeshua": {
+      "bases": ["Atlanta", "Dallas", "Seattle"],
+      "why": "Leadership teaching based in three large church-conference cities, one per zone."
+    },
+    "iron-sharpening-iron": {
+      "bases": ["Dallas", "Pittsburgh", "Salt Lake City"],
+      "why": "A men's station based in three cities with strong men's-ministry networks, spread East to Mountain."
+    },
+    "daughters-of-the-king": {
+      "bases": ["Nashville", "Atlanta", "Portland"],
+      "why": "Nashville and Atlanta are the centre of American women's Bible study publishing; Portland carries the Pacific."
+    },
+    "when-faith-feels-hard": {
+      "bases": ["Minneapolis", "Philadelphia", "Portland"],
+      "why": "Deliberately based in three northern cities with long dark winters — the season the station is for."
+    },
+    "word-of-fire": {
+      "bases": ["Memphis", "Newark", "Las Vegas"],
+      "why": "Preaching-forward, based where that register carries: the Mid-South, the Northeast, and a Mountain-zone relay."
+    },
+
+    "freedom-steps": {
+      "bases": ["Nashville", "Phoenix", "Cleveland"],
+      "why": "Recovery ministry, based in three cities with established programme networks across three zones."
+    },
+    "the-mended-place": {
+      "bases": ["Kansas City", "Charlotte", "Portland"],
+      "why": "Even three-zone coverage."
+    },
+    "strong-sober": {
+      "bases": ["Minneapolis", "Phoenix", "Tampa"],
+      "why": "Minneapolis is not a filler pick — the Minnesota Model is the origin of modern American addiction treatment. Phoenix and Tampa are the two largest recovery-community metros after it."
+    },
+    "jubilee-sanctuary": {
+      "bases": ["Atlanta", "Dallas", "Seattle"],
+      "why": "An online-church station based in three large multi-site metros, one per zone."
+    },
+    "pure-heart-brothers": {
+      "bases": ["Salt Lake City", "Dallas", "Columbus"],
+      "why": "Three-zone spread weighted to cities with large young-men's ministry populations."
+    },
+    "whole-hearted-sisters": {
+      "bases": ["Nashville", "Denver", "Raleigh-Durham"],
+      "why": "Even coverage across Central, Mountain and Eastern."
+    },
+    "grief-walked": {
+      "bases": ["Boston", "St. Louis", "Sacramento"],
+      "why": "Three-zone spread; grief ministry has no regional centre to honour."
+    },
+    "beyond-the-trauma": {
+      "bases": ["Denver", "Detroit", "San Diego"],
+      "why": "Even coverage, with San Diego and Denver reaching large veteran populations."
+    },
+    "anxious-no-more": {
+      "bases": ["Austin", "Boston", "Portland"],
+      "why": "Three-zone spread across metros with the youngest median ages on the roster."
+    },
+    "the-comeback-room": {
+      "bases": ["Las Vegas", "Memphis", "Cincinnati"],
+      "why": "Las Vegas anchors a station about second chances more honestly than a neutral pick would; Memphis and Cincinnati carry Central and Eastern."
+    },
+    "walking-together": {
+      "bases": ["Omaha", "Richmond", "Portland"],
+      "why": "Even three-zone coverage of mid-sized metros."
+    },
+    "restored-renewed": {
+      "bases": ["Buffalo", "Oklahoma City", "San Diego"],
+      "why": "Even three-zone coverage."
+    },
+
+    "upper-room": {
+      "bases": ["Kansas City", "Atlanta", "Seattle"],
+      "why": "Kansas City is the natural anchor for a continuous prayer room — it is where the 24/7 model in America was built. Atlanta and Seattle keep the watch covered around the clock."
+    },
+    "pentecostal-fire": {
+      "bases": ["Los Angeles", "Memphis", "Oklahoma City"],
+      "why": "Los Angeles anchors because Azusa Street is where this movement began. Memphis is COGIC; Oklahoma City covers the Central belt."
+    },
+
+    "gods-little-lambs": {
+      "bases": ["Nashville", "Sacramento", "Boston"],
+      "why": "Nashville per the tenant, where the Tiny Tiggles catalogue is produced. Sacramento and Boston put a base in the Pacific and Eastern zones so nap and quiet-time programming lands at the right hour."
+    },
+    "jubilee-kids-party": {
+      "bases": ["Nashville", "Los Angeles", "Tampa"],
+      "why": "Nashville per the tenant. Los Angeles and Tampa cover the two coasts for after-school hours."
+    },
+    "bedtime-blessings": {
+      "bases": ["Boston", "Chicago", "Seattle"],
+      "why": "Bedtime is a local hour, not a universal one. Three bases three hours apart mean the same programme reaches every child at their own bedtime."
+    },
+
+    "inspire-lullaby": {
+      "bases": ["Boston", "Chicago", "Seattle"],
+      "why": "Same reasoning as Bedtime Blessings — the night has to roll across the country rather than arrive at once."
+    },
+    "stillwater": {
+      "bases": ["Portland", "Minneapolis", "Raleigh-Durham"],
+      "why": "Even three-zone coverage for a rest station."
+    },
+    "shalom-be-still": {
+      "bases": ["Jerusalem", "Boston", "Seattle"],
+      "why": "Jerusalem anchors the Sabbath rest this station keeps; Boston and Seattle carry it across the American evening."
+    },
+
+    "inspire-talk": {
+      "bases": ["Nashville", "Ashburn", "Los Angeles"],
+      "why": "A talk station based where American Christian talk is produced and where its audience is largest."
+    },
+
+    "shema-roots": {
+      "bases": ["Jerusalem", "Dallas", "Los Angeles"],
+      "why": "Jerusalem anchors. Dallas and Los Angeles hold the largest Hebrew-roots congregations in the US."
+    },
+    "apostolic-five-fold": {
+      "bases": ["Jerusalem", "Atlanta", "Phoenix"],
+      "why": "Jerusalem anchors; Atlanta and Phoenix carry the American apostolic networks across two zones."
+    },
+    "the-hidden-manna": {
+      "bases": ["Tel Aviv", "Charlotte", "San Diego"],
+      "why": "Tel Aviv rather than Jerusalem — it is an edge city, so this one sits on a transmitter — with Charlotte and San Diego covering the US."
+    },
+
+    "story-hour": {
+      "bases": ["Chicago", "Nashville", "Portland"],
+      "why": "Chicago anchors because American network radio drama was made there. Nashville and Portland carry the other two zones."
+    },
+
+    "inspire-family-pop": {
+      "bases": ["Los Angeles", "Nashville", "Atlanta"],
+      "why": "The three cities where American pop is actually made, which is also a clean three-zone spread."
+    },
+    "inspire-kids": {
+      "bases": ["Los Angeles", "Chicago", "Tampa"],
+      "why": "Even three-zone coverage so after-school programming lands locally."
+    },
+    "inspire-cafe": {
+      "bases": ["Seattle", "Austin", "Boston"],
+      "why": "Seattle anchors a coffeehouse station for the obvious reason; Austin and Boston are the other two great American café cities."
+    },
+    "inspire-active": {
+      "bases": ["Los Angeles", "Denver", "Miami"],
+      "why": "Three metros built around outdoor fitness, spread across three zones."
+    },
+    "inspire-focus": {
+      "bases": ["San Jose", "Austin", "Boston"],
+      "why": "Study and deep-work audiences concentrate in these three; they also happen to span Pacific to Eastern."
+    },
+    "inspire-drive": {
+      "bases": ["Los Angeles", "Houston", "Atlanta"],
+      "why": "The three longest commutes in America. Drive time is a local hour, so a base in each zone is what makes the format work."
+    },
+    "inspire-celebrations": {
+      "bases": ["Las Vegas", "Nashville", "Miami"],
+      "why": "Three cities that host celebrations for a living, across three zones."
+    },
+    "inspire-chill": {
+      "bases": ["Portland", "Denver", "Miami"],
+      "why": "Even three-zone coverage."
+    },
+    "inspire-classical": {
+      "bases": ["Boston", "Chicago", "San Jose"],
+      "why": "Boston and Chicago are the anchors of American classical broadcasting; San Jose covers the Pacific."
+    },
+    "inspire-throwback": {
+      "bases": ["Detroit", "Philadelphia", "Los Angeles"],
+      "why": "Motown and Philadelphia soul are where this catalogue comes from; Los Angeles closes the Pacific."
+    },
+    "inspire-jazz": {
+      "bases": ["Memphis", "Chicago", "Newark"],
+      "why": "New Orleans has no edge, so Memphis anchors the Southern end. Chicago and the NY metro out of Newark are the other two jazz capitals."
+    },
+    "inspire-latin": {
+      "bases": ["Miami", "Los Angeles", "San Antonio"],
+      "why": "The three centres of Latin music production in the US, one per zone."
+    },
+    "inspire-country": {
+      "bases": ["Nashville", "Dallas", "Sacramento"],
+      "why": "Nashville and Dallas anchor; Sacramento reaches the Central Valley country audience."
+    },
+    "inspire-80s-90s": {
+      "bases": ["Los Angeles", "Chicago", "Atlanta"],
+      "why": "Even three-zone coverage across three large radio markets."
+    },
+    "inspire-wellness": {
+      "bases": ["Denver", "San Diego", "Minneapolis"],
+      "why": "Three metros that consistently top American health rankings, spread across three zones."
+    },
+    "inspire-holiday": {
+      "bases": ["Chicago", "Boston", "Salt Lake City"],
+      "why": "Holiday programming is timed to local evenings, so the bases are spread East, Central and Mountain."
+    },
+    "inspire-stories": {
+      "bases": ["Chicago", "Portland", "Raleigh-Durham"],
+      "why": "Chicago and Portland are the centres of American audio storytelling; Raleigh-Durham covers the Southeast."
+    },
+    "inspire-live": {
+      "bases": ["Austin", "Nashville", "Los Angeles"],
+      "why": "The live music capital, the songwriting capital and the recording capital — and three zones between them."
+    },
+    "inspire-rising": {
+      "bases": ["Nashville", "Los Angeles", "Atlanta"],
+      "why": "New and rising artists sign in these three cities; the spread across zones comes free."
+    }
+  }
+}

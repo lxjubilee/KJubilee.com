@@ -1,0 +1,36 @@
+# kJubilee — nightly broadcast schedule publish
+#
+# Install on the app host:
+#   cp scripts/kjubilee-schedules.cron /etc/cron.d/kjubilee-schedules
+#   chmod 644 /etc/cron.d/kjubilee-schedules
+#   systemctl restart cron
+#
+# ── why 12:00 UTC and not just after midnight ───────────────────────────────
+# The engine spec's own scheduler runs at 00:05 UTC, and that is the wrong hour
+# for THIS job for two reasons:
+#
+#   1. Today's schedule has to exist BEFORE today starts. A job that generates
+#      the current day at 00:05 leaves five minutes in which every listener
+#      resolves against a file that is not there yet.
+#   2. Tomorrow's file wants to be at the Cloudflare edge before the rollover,
+#      or every client in the world fetches it from the origin within the same
+#      minute.
+#
+# Running at midday with --days 3 solves both: today is already published (and
+# republishing it is a no-op, since the generator is deterministic), tomorrow
+# goes out twelve hours early and is warm at the edge by midnight, and the day
+# after that is a spare. A completely failed run therefore costs nothing —
+# there are two more days already published before anyone notices.
+#
+# ── pools ────────────────────────────────────────────────────────────────────
+# --rebuild-pools is deliberately NOT set. Rebuilding reads the frame headers of
+# every track off J:\kjubilee.com\music, which this host cannot see: pools are
+# built on the workstation after an ingest and copied to tmp/pools/. A nightly
+# job that tried to rebuild them would fail every night on a machine that has no
+# music share. See ensurePool() in r2-publish-schedules.js.
+#
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=""
+
+0 12 * * * root cd /var/www/kjubilee.com && /usr/bin/node scripts/r2-publish-schedules.js --apply --days 3 >> /var/log/kjubilee-schedules.log 2>&1

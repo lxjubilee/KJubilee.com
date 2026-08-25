@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM399.18-EN",
+  "slug": "island-hallelujah",
+  "name": "Island Hallelujah",
+  "hm": "399.18",
+  "band": "fivefold",
+  "mount": "island-hallelujah",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Seattle",
+    "timezone": "America/Los_Angeles"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "tahoma-inspire"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM399.18-EN/delivery",
+    "file": "HM399.18EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM399.18-EN/delivery/HM399.18EN-20260821.json"
+  },
+  "format": "Hawaiian Praise",
+  "timezone": "America/Los_Angeles"
+}

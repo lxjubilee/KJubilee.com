@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM325.18-EN",
+  "slug": "gods-little-lambs",
+  "name": "God's Little Lambs",
+  "hm": "325.18",
+  "band": "fivefold",
+  "mount": "little-lambs",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Nashville",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "tiny-tiggles"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM325.18-EN/delivery",
+    "file": "HM325.18EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM325.18-EN/delivery/HM325.18EN-20260821.json"
+  },
+  "format": "Kids",
+  "timezone": "America/Los_Angeles"
+}

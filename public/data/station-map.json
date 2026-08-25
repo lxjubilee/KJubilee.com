@@ -1,0 +1,185 @@
+{
+ "schema": "kj.stationmap/1",
+ "dots": [
+  {
+   "slug": "bengal-inspire-bangla",
+   "country": "Bangladesh",
+   "lon": 90.22,
+   "lat": 23.9
+  },
+  {
+   "slug": "jubilee-prayers-french",
+   "country": "Belgium",
+   "lon": 4.64,
+   "lat": 50.64
+  },
+  {
+   "slug": "brasil-inspire-portugues",
+   "country": "Brazil",
+   "lon": -53.12,
+   "lat": -10.84
+  },
+  {
+   "slug": "asia-inspire-zhongwen",
+   "country": "China",
+   "lon": 103.8,
+   "lat": 36.62
+  },
+  {
+   "slug": "jubilee-prayers-arabic",
+   "country": "Egypt",
+   "lon": 29.86,
+   "lat": 26.5
+  },
+  {
+   "slug": "ethiopia-inspire-amharic",
+   "country": "Ethiopia",
+   "lon": 39.6,
+   "lat": 8.62
+  },
+  {
+   "slug": "france-inspire-francais",
+   "country": "France",
+   "lon": 2.45,
+   "lat": 46.62
+  },
+  {
+   "slug": "deutschland-inspire-deutsch",
+   "country": "Germany",
+   "lon": 10.37,
+   "lat": 51.09
+  },
+  {
+   "slug": "inspire-india-hindi",
+   "country": "India",
+   "lon": 79.59,
+   "lat": 22.91
+  },
+  {
+   "slug": "indonesia-inspire-bahasa",
+   "country": "Indonesia",
+   "lon": 114.01,
+   "lat": -0.19
+  },
+  {
+   "slug": "italia-inspire-italiano",
+   "country": "Italy",
+   "lon": 12.15,
+   "lat": 43.53
+  },
+  {
+   "slug": "japan-inspire-nihongo",
+   "country": "Japan",
+   "lon": 137.99,
+   "lat": 36.65
+  },
+  {
+   "slug": "africa-inspire-kiswahili",
+   "country": "Kenya",
+   "lon": 37.8,
+   "lat": 0.6
+  },
+  {
+   "slug": "familia-inspire-espanol",
+   "country": "Mexico",
+   "lon": -102.51,
+   "lat": 23.94
+  },
+  {
+   "slug": "jubilee-prayers-hindi",
+   "country": "Nepal",
+   "lon": 83.92,
+   "lat": 28.25
+  },
+  {
+   "slug": "west-africa-inspire-yoruba",
+   "country": "Nigeria",
+   "lon": 8.09,
+   "lat": 9.6
+  },
+  {
+   "slug": "jubilee-prayers-korean",
+   "country": "North Korea",
+   "lon": 127.19,
+   "lat": 40.15
+  },
+  {
+   "slug": "pilipinas-inspire-tagalog",
+   "country": "Philippines",
+   "lon": 121.42,
+   "lat": 15.96
+  },
+  {
+   "slug": "jubilee-prayers-tagalog",
+   "country": "Philippines",
+   "lon": 123.62,
+   "lat": 12.96
+  },
+  {
+   "slug": "polska-inspire-polski",
+   "country": "Poland",
+   "lon": 19.39,
+   "lat": 52.13
+  },
+  {
+   "slug": "jubilee-prayers-portuguese",
+   "country": "Portugal",
+   "lon": -7.98,
+   "lat": 39.68
+  },
+  {
+   "slug": "jubilee-praise-romana",
+   "country": "Romania",
+   "lon": 24.97,
+   "lat": 45.85
+  },
+  {
+   "slug": "russia-inspire-russkiy",
+   "country": "Russia",
+   "lon": 99.73,
+   "lat": 61.7
+  },
+  {
+   "slug": "inspire-crown-arabic",
+   "country": "Saudi Arabia",
+   "lon": 44.54,
+   "lat": 24.12
+  },
+  {
+   "slug": "korea-inspire-hangugeo",
+   "country": "South Korea",
+   "lon": 127.87,
+   "lat": 36.46
+  },
+  {
+   "slug": "jubilee-prayers-spanish",
+   "country": "Spain",
+   "lon": -3.56,
+   "lat": 40.4
+  },
+  {
+   "slug": "jubilee-prayers-mandarin",
+   "country": "Taiwan",
+   "lon": 120.96,
+   "lat": 23.75
+  },
+  {
+   "slug": "jubilee-prayers-swahili",
+   "country": "Tanzania",
+   "lon": 34.8,
+   "lat": -6.28
+  },
+  {
+   "slug": "jubilee-prayers-russian",
+   "country": "Ukraine",
+   "lon": 31.25,
+   "lat": 49.16
+  },
+  {
+   "slug": "vietnam-inspire-tieng-viet",
+   "country": "Vietnam",
+   "lon": 106.3,
+   "lat": 16.65
+  }
+ ]
+}

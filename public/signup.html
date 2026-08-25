@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>kJubilee - Sign Up</title>
+  <link rel="icon" type="image/png" href="/images/members/JubileeNova-Circle-200.png">
+  <link rel="apple-touch-icon" href="/images/members/JubileeNova-Circle-200.png">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/scrollbars.css">
+  <style>
+    @font-face {
+      font-family: 'Agency FB';
+      font-weight: bold;
+      font-display: swap;
+      src: url('/fonts/AGENCYB.TTF');
+    }
+    @font-face {
+      font-family: 'Agency FB';
+      font-display: swap;
+      src: url('/fonts/AGENCYR.TTF');
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #1a1a1a;
+      color: #ffffff;
+    }
+
+    .wave-bar {
+      position: fixed; top: 0; left: 0; width: 100%; height: 6px;
+      background-color: #555555; z-index: 9999; overflow: hidden;
+    }
+    .wave-bar::before {
+      content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+      background: linear-gradient(90deg, transparent 0%, #f0ad4e 20%, #ffcc00 50%, #f0ad4e 80%, transparent 100%);
+      animation: yellowWave 2s ease-in-out infinite;
+    }
+    @keyframes yellowWave { 0% { left: -50%; } 100% { left: 100%; } }
+
+    .signup-container { min-height: 100vh; width: 100%; }
+    .signup-row { display: flex; min-height: 100vh; }
+
+    .signup-form-panel {
+      width: 33%; min-width: 380px; max-width: 520px;
+      background-color: #2b2b2b; display: flex; align-items: center;
+      justify-content: center; padding: 30px;
+    }
+    .signup-form-content { width: 100%; max-width: 380px; }
+    .signup-form-inner { display: flex; flex-direction: column; min-height: calc(100vh - 80px); }
+
+    .signup-logo { text-align: center; margin-bottom: 0; }
+    .signup-logo a { text-decoration: none; display: inline-flex; flex-direction: column; align-items: center; gap: 0; }
+    .signup-logo-img { width: 100px; height: 100px; border-radius: 50%; border: 2px solid #2fd2ff; box-shadow: 0 0 15px rgba(0, 207, 255, 0.5); }
+    .signup-logo-text { font-family: 'Orbitron', sans-serif; font-size: 36px; font-weight: bold; color: #ffffff; margin-top: 0.75rem; }
+    .signup-logo-text .verse { color: #ffbd59; }
+    .signup-logo-text .dotcom { color: #ffffff; }
+
+    .signup-welcome { text-align: center; margin-bottom: 32px; margin-top: 0; }
+    .signup-welcome p { font-size: 16px; color: #ffffff; }
+    .signup-welcome a { color: #ffbd59; text-decoration: none; font-weight: 600; }
+    .signup-welcome a:hover { text-decoration: underline; }
+
+    .auth-alert { padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-size: 14px; display: flex; align-items: center; }
+    .auth-alert--success { background-color: rgba(74, 222, 128, 0.15); border: 1px solid #4ade80; color: #4ade80; }
+    .auth-alert--error { background-color: rgba(248, 113, 113, 0.15); border: 1px solid #f87171; color: #f87171; }
+
+    .signup-form { flex: 1; }
+
+    .floating-label-group { position: relative; margin-bottom: -8px; }
+    .floating-label {
+      position: absolute; top: 6px; left: 14px; color: #c0c0c0;
+      font-size: 12px; font-weight: 500; pointer-events: none; z-index: 5;
+      transition: all 0.2s ease;
+    }
+
+    .form-control {
+      width: 100%; background-color: rgba(80, 80, 80, 0.7); border: 2px solid #f0ad4e;
+      border-radius: 8px; color: #ffffff; padding: 28px 14px 10px 14px; height: 58px;
+      font-size: 16px; font-family: inherit; outline: none;
+      transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-control:focus { background-color: rgba(80, 80, 80, 0.9); border-color: #ffcc00; box-shadow: 0 0 0 3px rgba(240, 173, 78, 0.25); }
+    .form-control::placeholder { color: transparent; }
+    .form-control.is-error { border-color: #f87171; }
+    .form-control.is-error:focus { box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.25); }
+
+    .field-error { display: block; font-size: 12px; color: #f87171; margin-top: 4px; min-height: 16px; }
+
+    .password-div { position: relative; }
+    .password-input-wrapper { position: relative; }
+    .password-input-wrapper .floating-label { position: absolute; top: 6px; left: 14px; z-index: 5; }
+    input[type="password"] { color: #f0ad4e; }
+
+    .btn-eye {
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: transparent; border: none; color: #f0ad4e; cursor: pointer;
+      z-index: 10; padding: 4px; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-eye:hover { color: #ffffff; }
+    .btn-eye svg { width: 22px; height: 22px; }
+
+    /* Terms Checkbox */
+    .terms-row { margin-top: 12px; margin-bottom: 20px; }
+    .checkbox-wrapper { display: flex; align-items: flex-start; cursor: pointer; user-select: none; }
+    .checkbox-wrapper input[type="checkbox"] { display: none; }
+    .checkmark {
+      width: 18px; height: 18px; min-width: 18px; border: 2px solid #f0ad4e; border-radius: 4px;
+      margin-right: 10px; margin-top: 2px; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .checkbox-wrapper input[type="checkbox"]:checked + .checkmark { background-color: #f0ad4e; }
+    .checkbox-wrapper input[type="checkbox"]:checked + .checkmark::after {
+      content: ''; width: 5px; height: 10px; border: solid #1a1a1a;
+      border-width: 0 2px 2px 0; transform: rotate(45deg); margin-bottom: 2px;
+    }
+    .checkbox-label { font-size: 13px; color: #cccccc; line-height: 1.4; }
+    .checkbox-label a { color: #ffbd59; text-decoration: none; }
+    .checkbox-label a:hover { text-decoration: underline; }
+
+    .btn-signup {
+      width: 100%; background: linear-gradient(135deg, #f0ad4e 0%, #ec971f 100%);
+      border: none; border-radius: 8px; color: #000000; font-size: 16px; font-weight: 600;
+      padding: 14px 24px; cursor: pointer; transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(240, 173, 78, 0.3);
+    }
+    .btn-signup:hover { background: linear-gradient(135deg, #ec971f 0%, #d58512 100%); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(240, 173, 78, 0.4); }
+    .btn-signup:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+    .spinner {
+      display: inline-block; width: 16px; height: 16px;
+      border: 2px solid rgba(0, 0, 0, 0.3); border-radius: 50%;
+      border-top-color: #000000; animation: spin 0.8s linear infinite;
+      margin-right: 8px; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .signup-footer {
+      position: fixed; bottom: 20px; left: 0; width: 33%;
+      min-width: 380px; max-width: 520px; text-align: center; padding: 0 30px;
+    }
+    .copyright { font-size: 12px; color: #ffffff; }
+    .copyright a { color: #ffbd59; text-decoration: none; transition: color 0.2s ease; }
+    .copyright a:hover { color: #ffffff; }
+
+    /* Right Panel */
+    .signup-bg-panel {
+      flex: 1; position: relative; background-size: cover; background-position: center;
+      background-repeat: no-repeat; display: flex; align-items: center;
+      justify-content: center; min-height: 100vh;
+    }
+    .bg-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); }
+
+    .bg-bubbles { position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; list-style: none; }
+    .bg-bubbles li { position: absolute; display: block; width: 40px; height: 40px; background-color: rgba(255, 189, 89, 0.1); bottom: -160px; border-radius: 50%; animation: floatUp 25s infinite; }
+    .bg-bubbles li:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 18s; }
+    .bg-bubbles li:nth-child(2) { left: 20%; width: 40px; height: 40px; animation-delay: 2s; animation-duration: 22s; }
+    .bg-bubbles li:nth-child(3) { left: 25%; width: 60px; height: 60px; animation-delay: 4s; animation-duration: 20s; }
+    .bg-bubbles li:nth-child(4) { left: 40%; width: 80px; height: 80px; animation-delay: 0s; animation-duration: 24s; }
+    .bg-bubbles li:nth-child(5) { left: 70%; width: 50px; height: 50px; animation-delay: 0s; animation-duration: 19s; }
+    .bg-bubbles li:nth-child(6) { left: 80%; width: 100px; height: 100px; animation-delay: 3s; animation-duration: 26s; }
+    .bg-bubbles li:nth-child(7) { left: 32%; width: 120px; height: 120px; animation-delay: 7s; animation-duration: 28s; }
+    .bg-bubbles li:nth-child(8) { left: 55%; width: 50px; height: 50px; animation-delay: 15s; animation-duration: 30s; }
+    .bg-bubbles li:nth-child(9) { left: 5%; width: 40px; height: 40px; animation-delay: 2s; animation-duration: 32s; }
+    .bg-bubbles li:nth-child(10) { left: 90%; width: 80px; height: 80px; animation-delay: 11s; animation-duration: 20s; }
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0.2; }
+      50% { opacity: 0.4; }
+      100% { transform: translateY(-1500px) rotate(720deg); opacity: 0; }
+    }
+
+    .bg-content { position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 1; text-align: center; padding: 40px; max-width: 600px; width: 100%; }
+    .bg-quote blockquote { font-family: 'Georgia', serif; font-size: 28px; font-style: italic; color: #ffffff; line-height: 1.5; margin-bottom: 16px; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); }
+    .bg-quote cite { font-family: 'Open Sans', sans-serif; font-size: 16px; font-style: normal; color: #ffbd59; display: block; }
+
+    @media (max-width: 1024px) {
+      .signup-row { flex-direction: column; }
+      .signup-form-panel { max-width: 100%; width: 100%; min-width: auto; min-height: auto; padding: 30px 20px; }
+      .signup-form-inner { min-height: auto; }
+      .signup-bg-panel { display: none; }
+      .signup-footer { position: relative; width: 100%; max-width: 100%; min-width: auto; margin-top: 30px; }
+    }
+    @media (max-width: 480px) {
+      .signup-form-panel { padding: 20px 16px; }
+      .signup-form-content { max-width: 100%; }
+      .signup-logo-img { width: 60px; height: 60px; }
+      .signup-logo-text { font-size: 26px; }
+      .form-control { height: 54px; padding: 26px 14px 8px 14px; }
+    }
+
+    input::-webkit-credentials-auto-fill-button, input::-webkit-caps-lock-indicator, input::-ms-reveal, input::-ms-clear {
+      display: none !important; visibility: hidden !important;
+    }
+    input ~ div[data-lastpass-root], input ~ div[data-dashlanecreated], div[data-norton-safeweb],
+    [class*="norton"], [id*="norton"], [class*="Norton"], [id*="Norton"],
+    [class*="lastpass"], [id*="lastpass"], [class*="dashlane"], [id*="dashlane"],
+    div[data-google-oa], div[class*="credential"], iframe[src*="accounts.google"], div[id*="credential_picker"] {
+      display: none !important; visibility: hidden !important; pointer-events: none !important;
+    }
+    input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+      -webkit-box-shadow: 0 0 0px 1000px rgba(80, 80, 80, 0.9) inset !important;
+      -webkit-text-fill-color: #fff !important; border: 2px solid #f0ad4e !important;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+
+    .success-modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.7); display: flex; align-items: center;
+      justify-content: center; z-index: 10000;
+    }
+    .success-modal { background-color: #2b2b2b; border-radius: 16px; padding: 40px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5); }
+    .success-icon { margin-bottom: 20px; }
+    .success-icon svg { filter: drop-shadow(0 0 10px rgba(74, 222, 128, 0.5)); }
+    .success-modal h2 { color: #ffffff; font-size: 28px; margin-bottom: 12px; }
+    .success-modal p { color: #cccccc; font-size: 16px; line-height: 1.5; margin-bottom: 24px; }
+    .terms-error-modal { padding: 30px 40px; max-width: 480px; }
+    .terms-error-modal .success-icon svg { filter: drop-shadow(0 0 10px rgba(240, 173, 78, 0.5)); }
+    .terms-error-modal p { margin-bottom: 0; font-size: 18px; }
+
+  </style>
+<!-- Same-document navigation, so moving between pages does not stop the
+     music. MUST stay first and MUST NOT be deferred: it wraps
+     addEventListener before any page script can register anything. -->
+<script src="/js/kj-nav.js"></script>
+</head>
+<body>
+  <div class="wave-bar"></div>
+
+  <div class="signup-container">
+    <div class="signup-row">
+      <!-- Left Panel - Form -->
+      <div class="signup-form-panel">
+        <div class="signup-form-content">
+          <div class="signup-form-inner">
+            <div class="signup-logo">
+              <a href="/">
+                <img src="/images/members/JubileeNova-Circle-200.png" alt="kJubilee" class="signup-logo-img">
+                <div class="signup-logo-text">
+                  Jubilee<span class="verse">Verse</span><span class="dotcom">.com</span>
+                </div>
+              </a>
+            </div>
+
+            <div class="signup-welcome">
+              <p>Already have an account? <a href="/signin">Sign In</a>.</p>
+            </div>
+
+            <div id="auth-alert" class="auth-alert" style="display: none;"></div>
+
+            <form id="signup-form" class="signup-form" novalidate>
+              <!-- Display Name -->
+              <div class="floating-label-group">
+                <input type="text" class="form-control" id="displayName" name="displayName" autocomplete="name" tabindex="1" placeholder=" " required>
+                <label class="floating-label">Display Name</label>
+                <span class="field-error" id="displayName-error"></span>
+              </div>
+
+              <!-- Email -->
+              <div class="floating-label-group">
+                <input type="email" class="form-control" id="email" name="email" autocomplete="email" tabindex="2" placeholder=" " required>
+                <label class="floating-label">Email Address</label>
+                <span class="field-error" id="email-error"></span>
+              </div>
+
+              <!-- Password -->
+              <div class="floating-label-group password-div">
+                <div class="password-input-wrapper">
+                  <input type="password" class="form-control" id="password" name="password" autocomplete="new-password" data-form-type="other" tabindex="3" placeholder=" " required>
+                  <label class="floating-label">Password</label>
+                  <button class="btn-eye" type="button" id="password-toggle" tabindex="5">
+                    <svg class="eye-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                      <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  </button>
+                </div>
+                <span class="field-error" id="password-error"></span>
+              </div>
+
+              <!-- Confirm Password -->
+              <div class="floating-label-group password-div">
+                <div class="password-input-wrapper">
+                  <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" autocomplete="new-password" data-form-type="other" tabindex="4" placeholder=" " required>
+                  <label class="floating-label">Confirm Password</label>
+                  <button class="btn-eye" type="button" id="confirm-password-toggle" tabindex="6">
+                    <svg class="eye-open" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                    <svg class="eye-closed" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                      <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                      <line x1="1" y1="1" x2="23" y2="23"/>
+                    </svg>
+                  </button>
+                </div>
+                <span class="field-error" id="confirmPassword-error"></span>
+              </div>
+
+              <!-- Terms Checkbox -->
+              <div class="terms-row">
+                <label class="checkbox-wrapper">
+                  <input type="checkbox" id="terms" name="terms">
+                  <span class="checkmark"></span>
+                  <span class="checkbox-label">I agree to the <a href="/terms.html" id="termsLink" target="_blank">Terms of Use</a> and <a href="/privacy.html" id="privacyLink" target="_blank">Privacy Policy</a></span>
+                </label>
+              </div>
+
+              <button type="submit" class="btn-signup" id="submit-btn" tabindex="7" disabled>
+                Create Account
+              </button>
+            </form>
+
+            <div class="signup-footer">
+              <p class="copyright">
+                &copy; <span id="currentYear"></span> kJubilee.com |
+                <a href="/terms.html" target="_blank">Terms of Use</a> |
+                <a href="/privacy.html" target="_blank">Privacy Policy</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="signup-bg-panel" id="backgroundImageContainer">
+        <div class="bg-overlay"></div>
+        <ul class="bg-bubbles">
+          <li></li><li></li><li></li><li></li><li></li>
+          <li></li><li></li><li></li><li></li><li></li>
+        </ul>
+        <div class="bg-content">
+          <div class="bg-quote">
+            <blockquote>"Therefore, if anyone is in Christ, the new creation has come: The old has gone, the new is here!"</blockquote>
+            <cite>2 Corinthians 5:17</cite>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Validation Error Modal -->
+  <div class="success-modal-overlay" id="validationModal" style="display: none;">
+    <div class="success-modal terms-error-modal">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" width="60" height="60" fill="none" stroke="#f0ad4e" stroke-width="2">
+          <circle cx="12" cy="12" r="10"/><path d="M15 9l-6 6M9 9l6 6"/>
+        </svg>
+      </div>
+      <p id="validationMessage">Please fill in all required fields.</p>
+    </div>
+  </div>
+
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var API = '';
+
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+      // Check if already logged in
+      var authData = localStorage.getItem('jubileeVerseAuth');
+      if (authData) {
+        try {
+          var parsed = JSON.parse(authData);
+          if (parsed.authenticated) { window.location.href = '/'; return; }
+        } catch(e) {}
+      }
+
+      // Background image rotation
+      var backgroundImages = [
+        'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=1920&q=80',
+        'https://images.unsplash.com/photo-1473186505569-9c61870c11f9?w=1920&q=80',
+        'https://images.unsplash.com/photo-1506157786151-b8491531f063?w=1920&q=80',
+        'https://images.unsplash.com/photo-1499002238440-d264edd596ec?w=1920&q=80',
+        'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&q=80'
+      ];
+      var bgContainer = document.getElementById('backgroundImageContainer');
+      function changeBackgroundImage() {
+        var randomIndex = Math.floor(Math.random() * backgroundImages.length);
+        bgContainer.style.backgroundImage = "url('" + backgroundImages[randomIndex] + "')";
+      }
+      changeBackgroundImage();
+      setInterval(changeBackgroundImage, 4000);
+
+      // Form elements
+      var form = document.getElementById('signup-form');
+      var displayNameInput = document.getElementById('displayName');
+      var emailInput = document.getElementById('email');
+      var passwordInput = document.getElementById('password');
+      var confirmPasswordInput = document.getElementById('confirmPassword');
+      var termsCheckbox = document.getElementById('terms');
+      var submitBtn = document.getElementById('submit-btn');
+      var validationModal = document.getElementById('validationModal');
+      var validationMessage = document.getElementById('validationMessage');
+
+      // Toggle Create Account button based on terms checkbox
+      termsCheckbox.addEventListener('change', function() {
+          submitBtn.disabled = !termsCheckbox.checked;
+      });
+
+      // Password visibility toggles
+      function setupPasswordToggle(toggleId, inputId) {
+        var toggle = document.getElementById(toggleId);
+        var input = document.getElementById(inputId);
+        toggle.addEventListener('click', function() {
+          var type = input.type === 'password' ? 'text' : 'password';
+          input.type = type;
+          var eyeOpen = this.querySelector('.eye-open');
+          var eyeClosed = this.querySelector('.eye-closed');
+          if (type === 'text') { eyeOpen.style.display = 'none'; eyeClosed.style.display = 'block'; }
+          else { eyeOpen.style.display = 'block'; eyeClosed.style.display = 'none'; }
+        });
+      }
+      setupPasswordToggle('password-toggle', 'password');
+      setupPasswordToggle('confirm-password-toggle', 'confirmPassword');
+
+      // Form submission
+      form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        clearErrors();
+
+        var errorMessage = null;
+
+        if (!displayNameInput.value.trim()) {
+          errorMessage = 'Display name is required.';
+          displayNameInput.classList.add('is-error');
+        } else if (displayNameInput.value.trim().length < 2) {
+          errorMessage = 'Display name must be at least 2 characters.';
+          displayNameInput.classList.add('is-error');
+        } else if (!emailInput.value.trim()) {
+          errorMessage = 'Email is required.';
+          emailInput.classList.add('is-error');
+        } else if (!isValidEmail(emailInput.value)) {
+          errorMessage = 'Please enter a valid email.';
+          emailInput.classList.add('is-error');
+        } else if (!passwordInput.value) {
+          errorMessage = 'Password is required.';
+          passwordInput.classList.add('is-error');
+        } else if (passwordInput.value.length < 6) {
+          errorMessage = 'Password must be at least 6 characters.';
+          passwordInput.classList.add('is-error');
+        } else if (passwordInput.value !== confirmPasswordInput.value) {
+          errorMessage = 'Passwords do not match.';
+          confirmPasswordInput.classList.add('is-error');
+        } else if (!termsCheckbox.checked) {
+          errorMessage = 'You must agree to the Terms of Use and Privacy Policy.';
+        }
+
+        if (errorMessage) {
+          validationMessage.textContent = errorMessage;
+          validationModal.style.display = 'flex';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Creating Account...';
+
+        try {
+          var response = await fetch(API + '/api/auth/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            body: JSON.stringify({
+              displayName: displayNameInput.value.trim(),
+              email: emailInput.value.trim(),
+              password: passwordInput.value
+            })
+          });
+
+          var data = await response.json();
+
+          if (response.ok && data.success) {
+            window.location.href = '/signin?registered=true';
+          } else {
+            validationMessage.textContent = data.error || 'Registration failed. Please try again.';
+            validationModal.style.display = 'flex';
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Create Account';
+          }
+        } catch (error) {
+          console.error('Registration error:', error);
+          validationMessage.textContent = 'Connection error. Please check your internet and try again.';
+          validationModal.style.display = 'flex';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Account';
+        }
+      });
+
+      function clearErrors() {
+        document.querySelectorAll('.form-control').forEach(function(input) { input.classList.remove('is-error'); });
+        document.querySelectorAll('.field-error').forEach(function(error) { error.textContent = ''; });
+      }
+
+      function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+      // Block extension popups
+      (function() {
+        var observer = new MutationObserver(function(mutations) {
+          mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+              if (node.nodeType === 1) {
+                var shouldHide = false;
+                if (node.id && (node.id.toLowerCase().includes('norton') || node.id.toLowerCase().includes('lastpass') || node.id.toLowerCase().includes('dashlane') || node.id.toLowerCase().includes('credential'))) shouldHide = true;
+                if (node.className && typeof node.className === 'string' && (node.className.toLowerCase().includes('norton') || node.className.toLowerCase().includes('lastpass') || node.className.toLowerCase().includes('dashlane') || node.className.toLowerCase().includes('credential'))) shouldHide = true;
+                if (node.tagName === 'IFRAME' && node.src && node.src.includes('accounts.google')) shouldHide = true;
+                if (shouldHide) { node.style.display = 'none'; node.style.visibility = 'hidden'; }
+              }
+            });
+          });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
+      })();
+
+      // Close validation modal
+      validationModal.addEventListener('click', function() { validationModal.style.display = 'none'; });
+
+    });
+  </script>
+  <script src="/js/site-translate.js"></script>
+<!-- The bar is on every page, so a visitor can start listening from wherever
+     they land. It needs the catalogue to know what the stations are. -->
+<script src="/js/stations-data.js"></script>
+<script>window.KJNav && window.KJNav.pageDone();</script>  <!-- closes the window in which registrations count as this page's; see js/kj-nav.js. The footer player loads after this. -->
+</body>
+</html>

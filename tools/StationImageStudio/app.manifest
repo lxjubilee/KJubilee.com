@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
+  <assemblyIdentity version="1.0.0.0" name="StationImageStudio.app" />
+
+  <!--
+    PER-MONITOR V2 DPI AWARENESS.
+
+    Without this the process is system-DPI-aware: Windows picks one scale factor
+    at startup and BITMAP-STRETCHES the window whenever it sits on a monitor with
+    a different one. That breaks window placement in a way that looks like a
+    placement bug and is not: the saved rectangle is restored to exactly the right
+    physical pixels, then stretched, so it comes back the right position and the
+    wrong apparent size on a 150% display.
+
+    PerMonitorV2 is the one that also rescales non-client area (the title bar and
+    borders) and dialogs, which the original PerMonitor value did not. Both are
+    listed: Windows takes the first it understands, so PerMonitorV2 wins on
+    Windows 10 1703 and later and PerMonitor is the fallback.
+
+    longPathAware is unrelated to DPI and included because this tool walks corpus
+    paths on a mapped network drive.
+  -->
+  <application xmlns="urn:schemas-microsoft-com:asm.v3">
+    <windowsSettings>
+      <dpiAwareness xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">PerMonitorV2, PerMonitor</dpiAwareness>
+      <dpiAware xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">true/pm</dpiAware>
+      <longPathAware xmlns="http://schemas.microsoft.com/SMI/2016/WindowsSettings">true</longPathAware>
+    </windowsSettings>
+  </application>
+
+  <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1">
+    <application>
+      <!-- Windows 10 and 11. Declaring support is what lets PerMonitorV2 apply. -->
+      <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}" />
+    </application>
+  </compatibility>
+</assembly>

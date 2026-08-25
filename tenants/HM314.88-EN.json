@@ -1,0 +1,33 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM314.88-EN",
+  "slug": "yes-and-amen",
+  "name": "Yes and Amen",
+  "hm": "314.88",
+  "band": "fivefold",
+  "mount": "yes-and-amen",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "Nashville",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "albumPattern": "^[A-Z]{4}200[0-9][A-Z]{2}$"
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM314.88-EN/delivery",
+    "file": "HM314.88EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM314.88-EN/delivery/HM314.88EN-20260821.json"
+  },
+  "format": "Covenant Worship",
+  "timezone": "America/Los_Angeles"
+}

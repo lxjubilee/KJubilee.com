@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM305.12-EN",
+  "slug": "torah-sings",
+  "name": "Torah Sings",
+  "hm": "305.12",
+  "band": "fivefold",
+  "mount": "torah-sings",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "Jerusalem",
+    "timezone": "Asia/Jerusalem"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "torah-sings"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM305.12-EN/delivery",
+    "file": "HM305.12EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM305.12-EN/delivery/HM305.12EN-20260821.json"
+  },
+  "format": "Angel Songs",
+  "timezone": "America/Los_Angeles"
+}

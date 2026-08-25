@@ -1,0 +1,685 @@
+<Window x:Class="StationImageStudio.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="kJubilee Station Image Studio" Icon="app.ico" Height="900" Width="1560"
+        Background="#1b1e28">
+    <Window.Resources>
+        <!-- Tab chrome that reads on the dark panel. WPF's default tab headers
+             are light grey on light grey and vanish against #232733. -->
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="#9aa0ad" />
+            <!-- A dozen headers have to share one strip inside a 344px panel, so
+                 they are single words at 10pt with tight side padding. On a panel
+                 dragged near its 260px minimum the strip wraps to a second row,
+                 which is harmless: the worklist below is star sized and simply
+                 gets one row shorter. -->
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Padding" Value="3,5" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="Chrome" Background="#12141c" BorderBrush="#2c3040"
+                                BorderThickness="1,1,1,0" CornerRadius="3,3,0,0" Margin="0,0,2,0">
+                            <ContentPresenter ContentSource="Header" Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="#2b3040" />
+                                <Setter Property="Foreground" Value="#E6AC00" />
+                                <Setter Property="FontWeight" Value="SemiBold" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="#1f2331" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ============================ SCROLLBARS ============================
+             WPF's stock ScrollBar is the Aero one: a wide light-grey trough with
+             two arrow buttons at the ends. On a #12141c panel it is the single
+             brightest thing on screen and it looks like it belongs to a different
+             application, which it does.
+
+             These are implicit styles (no x:Key), so every ScrollViewer, ListBox
+             and TextBox in the window picks them up without being told. The arrow
+             RepeatButtons are kept, because they still page when clicked, but
+             rendered as nothing: removing them from the template entirely breaks
+             the Track's arithmetic in some layouts. -->
+        <Style TargetType="RepeatButton" x:Key="ScrollPageButton">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RepeatButton">
+                        <Border Background="Transparent" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Thumb" x:Key="ScrollThumb">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border x:Name="Bar" Background="#39415380" CornerRadius="4" Margin="3" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Bar" Property="Background" Value="#4d566c" />
+                            </Trigger>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Setter TargetName="Bar" Property="Background" Value="#E6AC00" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Width" Value="11" />
+            <Setter Property="MinWidth" Value="11" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Track x:Name="PART_Track" IsDirectionReversed="True">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource ScrollPageButton}" Command="ScrollBar.PageUpCommand" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource ScrollThumb}" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Style="{StaticResource ScrollPageButton}" Command="ScrollBar.PageDownCommand" />
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="Orientation" Value="Horizontal">
+                    <Setter Property="Width" Value="Auto" />
+                    <Setter Property="MinWidth" Value="0" />
+                    <Setter Property="Height" Value="11" />
+                    <Setter Property="MinHeight" Value="11" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ScrollBar">
+                                <Grid Background="{TemplateBinding Background}">
+                                    <Track x:Name="PART_Track" IsDirectionReversed="False">
+                                        <Track.DecreaseRepeatButton>
+                                            <RepeatButton Style="{StaticResource ScrollPageButton}" Command="ScrollBar.PageLeftCommand" />
+                                        </Track.DecreaseRepeatButton>
+                                        <Track.Thumb>
+                                            <Thumb Style="{StaticResource ScrollThumb}" />
+                                        </Track.Thumb>
+                                        <Track.IncreaseRepeatButton>
+                                            <RepeatButton Style="{StaticResource ScrollPageButton}" Command="ScrollBar.PageRightCommand" />
+                                        </Track.IncreaseRepeatButton>
+                                    </Track>
+                                </Grid>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Worklist rows. Three columns rather than one string, so the tick and
+             the host can be coloured independently of the name: a tick earned in
+             THIS session is green, one inherited from a previous run is muted,
+             and a single string cannot carry two colours. -->
+        <Style TargetType="ListBox" x:Key="JobList">
+            <Setter Property="Background" Value="#12141c" />
+            <Setter Property="Foreground" Value="#dfe4ee" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="18" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{Binding Mark}"
+                                       Foreground="{Binding MarkBrush}" FontWeight="Bold"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Grid.Column="1" Text="{Binding Title}"
+                                       TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                            <!-- The host persona, on every row. The whole point of
+                                 this studio is which of the twelve is in the
+                                 picture, so it is never more than a glance away. -->
+                            <TextBlock Grid.Column="2" Text="{Binding Host}"
+                                       Foreground="#6f7684" FontSize="10"
+                                       VerticalAlignment="Center" Margin="6,0,2,0" />
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- The rail buttons. RadioButton rather than ToggleButton so the views
+             are mutually exclusive without a line of code: a GroupName does what
+             hand-managed IsChecked juggling would otherwise get wrong the first
+             time a third view is added.
+
+             Round is a CornerRadius of exactly half the 40px box. The glyphs come
+             from Segoe MDL2 Assets, which ships with Windows 10 and 11; the app
+             already requires a WebView2 runtime of that vintage, so there is no
+             new dependency here.
+
+             Trigger ORDER is load-bearing. IsMouseOver is declared first and
+             IsChecked second, because the later trigger wins in WPF: reversed,
+             hovering the active button would repaint it as inactive. -->
+        <Style TargetType="RadioButton" x:Key="RailButton">
+            <Setter Property="Width" Value="40" />
+            <Setter Property="Height" Value="40" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#9aa0ad" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="17" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <Border x:Name="Disc" Background="#1b1e28" CornerRadius="20"
+                                BorderBrush="#2c3040" BorderThickness="1">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Disc" Property="Background" Value="#2b3040" />
+                                <Setter Property="Foreground" Value="#dfe4ee" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Disc" Property="Background" Value="#E6AC00" />
+                                <Setter TargetName="Disc" Property="BorderBrush" Value="#E6AC00" />
+                                <Setter Property="Foreground" Value="#12141c" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="RailCaption">
+            <Setter Property="Foreground" Value="#6f7684" />
+            <Setter Property="FontSize" Value="9" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,-6,0,10" />
+        </Style>
+
+        <!-- The one action in the stations view. Templated rather than just given
+             a Background, because WPF's default button chrome repaints itself on
+             hover and would flash the system grey straight back over the yellow.
+             Every state is therefore declared here, disabled included: without it
+             a run in progress leaves a bright yellow button that looks clickable
+             and is not. -->
+        <Style TargetType="Button" x:Key="GenerateButton">
+            <Setter Property="Height" Value="46" />
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#12141c" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Face" Background="#E6AC00" CornerRadius="4">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Face" Property="Background" Value="#FFC21F" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Face" Property="Background" Value="#C08F00" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Face" Property="Background" Value="#4a442c" />
+                                <Setter Property="Foreground" Value="#8b8570" />
+                                <Setter Property="Cursor" Value="Arrow" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="SectionLabel">
+            <Setter Property="Foreground" Value="#9aa0ad" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,0,0,3" />
+        </Style>
+
+        <!-- Shared by the header Persona picker and the per-station Host picker.
+             The row highlight is drawn by ComboBoxItem's template, not by the
+             ComboBox, so Background/Foreground on the parent cannot reach it.
+             This restyles the item itself: black by default, the house yellow
+             with black text when highlighted or selected. -->
+        <Style x:Key="PickerItemStyle" TargetType="ComboBoxItem">
+            <Setter Property="Background" Value="#000000" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Padding" Value="6,3" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="Bd" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#FFD24A" />
+                                <Setter Property="Foreground" Value="#000000" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="#FFD24A" />
+                                <Setter Property="Foreground" Value="#000000" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- FULLY RETEMPLATED, and it has to be. Setting Background on a WPF
+             ComboBox does not reach the closed state: the default template paints
+             its own ToggleButton chrome and ignores the property, which is why an
+             unstyled picker stays white with white text and is unreadable. The
+             only way to own the closed box is to own the template. -->
+        <Style x:Key="DarkPicker" TargetType="ComboBox">
+            <Setter Property="Background" Value="#000000" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#3a4050" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="ItemContainerStyle" Value="{StaticResource PickerItemStyle}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <ToggleButton x:Name="Toggle"
+                                      Focusable="False" ClickMode="Press"
+                                      IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border Background="#000000" BorderBrush="#3a4050" BorderThickness="1" CornerRadius="3">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="18" />
+                                            </Grid.ColumnDefinitions>
+                                            <!-- Column 0 is left empty: the ContentPresenter below
+                                                 draws the selected text over it, so the label and
+                                                 the chrome cannot disagree about colour. -->
+                                            <Path Grid.Column="1" Data="M 0 0 L 4 4 L 8 0 Z"
+                                                  Fill="#FFFFFF" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <!-- The selected item, in white, over the black box. -->
+                        <ContentPresenter x:Name="Sel" IsHitTestVisible="False"
+                                          Content="{TemplateBinding SelectionBoxItem}"
+                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                          Margin="8,0,22,0" VerticalAlignment="Center"
+                                          TextElement.Foreground="#FFFFFF" />
+
+                        <Popup x:Name="PART_Popup" AllowsTransparency="True" Focusable="False"
+                               IsOpen="{TemplateBinding IsDropDownOpen}" Placement="Bottom"
+                               PopupAnimation="Slide">
+                            <Border Background="#000000" BorderBrush="#3a4050" BorderThickness="1"
+                                    MinWidth="{TemplateBinding ActualWidth}" MaxHeight="620">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Toggle" Property="Opacity" Value="0.9" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <!-- Outer shell: the header band, then the three columns and the rail.
+         The band spans the full width above all four columns, so the pickers are
+         never hidden by a splitter drag and never scroll away. -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" Background="#12141c" BorderBrush="#2c3040" BorderThickness="0,0,0,1">
+            <DockPanel LastChildFill="False" Margin="14,0,12,0" Height="44">
+                <TextBlock DockPanel.Dock="Left" Text="kJubilee Station Image Studio"
+                           Foreground="#E6AC00" FontSize="16" FontWeight="SemiBold"
+                           VerticalAlignment="Center" />
+                <!-- ONE SITE. The InspireManna studio this is ported from carried a
+                     website picker over sixty tenant corpora; this one is pointed
+                     at kjubilee.com and nothing else, so the band spends its width
+                     on the two scopes that do vary here: which of the twelve is in
+                     the picture, and which station you are looking for. -->
+                <TextBlock DockPanel.Dock="Left" Text="www.kjubilee.com"
+                           Foreground="#6f7684" FontSize="12" VerticalAlignment="Center"
+                           Margin="12,0,0,0" />
+
+                <!-- Docked Right, so DECLARATION ORDER IS RIGHT TO LEFT. Persona is
+                     declared first and therefore sits furthest right, which puts
+                     the two scopes in reading order across the band: Find, then
+                     Persona. -->
+                <ComboBox x:Name="PersonaPicker" DockPanel.Dock="Right"
+                          Style="{StaticResource DarkPicker}" Width="180"
+                          SelectionChanged="PersonaPicker_SelectionChanged"
+                          ToolTip="Narrow every worklist to the stations hosted by one of the twelve. Applies to what a run processes as well as to what is shown." />
+                <TextBlock DockPanel.Dock="Right" Text="Persona"
+                           Foreground="#9aa0ad" FontSize="12" VerticalAlignment="Center"
+                           Margin="16,0,8,0" />
+
+                <TextBox x:Name="StationFilter" DockPanel.Dock="Right" Width="150" Height="26"
+                         Background="#000000" Foreground="#FFFFFF" CaretBrush="#FFFFFF"
+                         BorderBrush="#3a4050" BorderThickness="1" Padding="6,0"
+                         VerticalContentAlignment="Center" FontSize="12"
+                         VerticalAlignment="Center" Margin="0,0,6,0"
+                         TextChanged="StationFilter_TextChanged"
+                         ToolTip="Type to narrow the worklists. Matches the station name, its slug, its HM frequency and its format, so 088.70, praise or hindi all work. Clear it to see every station again." />
+                <TextBlock x:Name="StationCount" DockPanel.Dock="Right" Text=""
+                           Foreground="#6b7280" FontSize="11" VerticalAlignment="Center"
+                           Margin="0,0,8,0"
+                           ToolTip="How many stations the current scope is showing, out of the whole dial." />
+                <TextBlock DockPanel.Dock="Right" Text="Find"
+                           Foreground="#9aa0ad" FontSize="12" VerticalAlignment="Center"
+                           Margin="0,0,8,0" />
+            </DockPanel>
+        </Border>
+
+        <Grid Grid.Row="1">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="420" />
+            <ColumnDefinition Width="6" />
+            <!-- The DEFAULT panel width, not a fixed one: the splitter to its left
+                 resizes it and the width is remembered in studio.config.json.
+                 MinWidth stops a drag from hiding the panel somewhere
+                 unrecoverable. -->
+            <ColumnDefinition x:Name="PanelCol" Width="344" MinWidth="260" />
+            <!-- The rail. Fixed: it holds two 40px discs and nothing else, so
+                 there is nothing in it that a drag could usefully make wider. -->
+            <ColumnDefinition Width="58" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Browser above, log below, splitter between. The log gets the full
+             window width, which is what a log of file paths and prompt fragments
+             actually needs; in the 344px panel a single line naming a path
+             wrapped across four rows. -->
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="200" />
+                <RowDefinition Height="6" />
+                <RowDefinition x:Name="LogRow" Height="170" MinHeight="52" />
+            </Grid.RowDefinitions>
+
+            <wv2:WebView2 x:Name="Wv" Grid.Row="0" />
+
+            <GridSplitter Grid.Row="1" ResizeDirection="Rows" ResizeBehavior="PreviousAndNext"
+                          HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                          Background="#2c3040" ShowsPreview="False" Cursor="SizeNS"
+                          ToolTip="Drag to resize the log. The height is remembered." />
+
+            <!-- No heading. The panel is unmistakably a log and the label cost a
+                 line of height that the log itself should have. -->
+            <TextBox x:Name="LogBox" Grid.Row="2" IsReadOnly="True"
+                     Background="#12141c" Foreground="#a8f0c0" FontFamily="Consolas" FontSize="11"
+                     BorderThickness="0" Padding="8,4,8,4"
+                     TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" />
+        </Grid>
+
+        <GridSplitter Grid.Column="1" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext"
+                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                      Background="#2c3040" ShowsPreview="False" Cursor="SizeWE"
+                      ToolTip="Drag to resize the control panel. The width is remembered." />
+
+        <!-- Control panel: a title, then whichever view the rail has selected. -->
+        <Grid Grid.Column="2" Background="#232733">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="PanelTitle" Grid.Row="0" Text="Station Images" Foreground="#E6AC00"
+                       FontSize="16" FontWeight="Bold" Margin="10,10,10,8" />
+
+            <!-- ============================ SETTINGS ============================
+                 Everything that configures the tool rather than drives a run. One
+                 rail click away, so the working view starts at the worklist rather
+                 than at four text boxes. -->
+            <ScrollViewer x:Name="ViewSettings" Grid.Row="1" Visibility="Collapsed"
+                          VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+
+                <StackPanel Margin="10,0,10,10">
+                    <TextBlock Style="{StaticResource SectionLabel}"
+                               Text="Site root, the kjubilee.com repository" />
+                    <TextBox x:Name="SiteRoot" Height="26" Margin="0,0,0,4"
+                             VerticalContentAlignment="Center"
+                             ToolTip="The folder holding public/, tools/ and server.js. The station catalog is read from public/js/stations-data.js underneath it." />
+                    <TextBlock x:Name="CatalogPath" Foreground="#6f7684" FontSize="10"
+                               TextWrapping="Wrap" Margin="0,0,0,6" Text="" />
+                    <Grid>
+                        <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="5"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                        <Button x:Name="BtnScan" Grid.Column="0" Content="Rescan stations" Height="26" FontSize="11" Click="BtnScan_Click" />
+                        <Button x:Name="BtnSaveCfg" Grid.Column="2" Content="Save settings" Height="26" FontSize="11" Click="BtnSaveCfg_Click"
+                                ToolTip="Writes studio.config.json next to the tool (git-ignored). Saves the panel and log sizes too." />
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Margin="10,0,10,10">
+                    <TextBlock Style="{StaticResource SectionLabel}"
+                               Text="Images out, one &lt;slug&gt;.webp per station" />
+                    <TextBox x:Name="ImagesRoot" Height="26" Margin="0,0,0,4"
+                             VerticalContentAlignment="Center"
+                             ToolTip="Where the rendered station images are written. Defaults to public/images/stations under the site root, which is what the site serves." />
+                    <TextBlock Text="A station counts as done when its file is on disk here. Nothing else records it, so deleting the file requeues the station."
+                               Foreground="#6f7684" FontSize="10" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <!-- The host references. Each station's assigned persona picks
+                     persona_<Name>.png out of this folder, and that portrait is
+                     attached to the ChatGPT turn so the generated image carries
+                     the family member who fronts the station. -->
+                <StackPanel Margin="10,0,10,10">
+                    <TextBlock Style="{StaticResource SectionLabel}"
+                               Text="Host reference portraits, persona_&lt;Name&gt;.png, one per Family voice" />
+                    <TextBox x:Name="PersonasRoot" Height="26" Margin="0,0,0,4"
+                             VerticalContentAlignment="Center"
+                             ToolTip="Folder holding persona_Amir.png, persona_Caleb.png and the other ten. Attached to each turn as the likeness reference for that station's host." />
+                    <CheckBox x:Name="ChkIncludeHost" IsChecked="True"
+                              Foreground="#c9cede" FontSize="11" Margin="0,2,0,0"
+                              ToolTip="On: the station's host persona is rendered into every image, listening along in clothing that suits the scene. Off: the scene is generated with listeners only and no reference is attached.">
+                        <TextBlock Text="Put the station's host persona in the image" TextWrapping="Wrap" />
+                    </CheckBox>
+                    <TextBlock Text="With this on, a station whose host portrait is missing is skipped rather than imaged without its host."
+                               Foreground="#6f7684" FontSize="10" Margin="18,2,0,0" TextWrapping="Wrap" />
+                </StackPanel>
+
+                <StackPanel Margin="10,0,10,10">
+                    <TextBlock Style="{StaticResource SectionLabel}"
+                               Text="Generation location, open your Images project in the browser then click below" />
+                    <TextBox x:Name="LocationUrl" Text="https://chatgpt.com/" Height="26" Margin="0,0,0,4"
+                             VerticalContentAlignment="Center" />
+                    <Button x:Name="BtnUseLocation" Content="Use current page as location" Height="26" FontSize="11" Click="BtnUseLocation_Click" />
+                </StackPanel>
+
+                <TextBlock Margin="10,4,10,12" Foreground="#6f7684" FontSize="10" TextWrapping="Wrap"
+                           Text="Log in to ChatGPT in the browser pane, then pick a programming tab on the stations view and generate. The panel and log sizes are remembered." />
+            </StackPanel>
+            </ScrollViewer>
+
+            <!-- ============================ STATIONS ============================
+                 Four rows: the controls, the worklist, the preview, the button. -->
+            <Grid x:Name="ViewImages" Grid.Row="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="90" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+            <!-- Refresh and Stop together, because they are the two things you
+                 reach for WHILE a run is going. -->
+            <Grid Grid.Row="0" Margin="10,6,10,6">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button x:Name="BtnReload" Grid.Column="0" Content="Refresh" Height="28" Width="66"
+                        VerticalAlignment="Top" Click="BtnReload_Click" />
+                <Button x:Name="BtnStop" Grid.Column="2" Content="Stop" Height="28" Width="56"
+                        VerticalAlignment="Top" Click="BtnStop_Click" IsEnabled="False"
+                        ToolTip="Halts after the image currently generating. Nothing in flight is lost." />
+                <CheckBox x:Name="ChkShowAll" Grid.Column="3"
+                          Foreground="#c9cede" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"
+                          Checked="ChkShowAll_Click" Unchecked="ChkShowAll_Click">
+                    <TextBlock Text="Show stations with images" TextWrapping="Wrap" />
+                </CheckBox>
+            </Grid>
+
+            <!-- All first, then one tab per programming type. The tabs are built
+                 in code by BuildGroupTabs() from the catalog itself, so a station
+                 type added to the dial shows up without a code change here. -->
+            <TabControl x:Name="Tabs" Grid.Row="1" Margin="10,0,10,8" Background="#2b3040" BorderBrush="#2c3040"
+                        BorderThickness="1" SelectionChanged="Tabs_SelectionChanged">
+                <TabItem Header="All" Tag="__all" ToolTip="Every station on the dial, in frequency order">
+                    <ListBox x:Name="LstAll" Style="{StaticResource JobList}"
+                             SelectionChanged="StationList_SelectionChanged" />
+                </TabItem>
+            </TabControl>
+
+            <!-- The preview. Whatever is selected above, shown here. Full panel
+                 width and a 16:9 box, which is the ratio every station image is
+                 generated at, so the picture fills the frame exactly and the panel
+                 width alone decides how tall this gets. That is why the worklist
+                 row above carries a MinHeight: as the panel widens the preview
+                 grows with it, and without a floor it would eventually squeeze the
+                 list it is previewing from. -->
+            <Border Grid.Row="2" Margin="10,0,10,8" Background="#12141c"
+                    BorderBrush="#2c3040" BorderThickness="1" CornerRadius="4">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Viewbox Grid.Row="0" Stretch="Uniform" StretchDirection="Both">
+                        <Grid Width="320" Height="180">
+                            <!-- Sits under the image so a station with no render
+                                 yet shows a labelled frame rather than a hole. -->
+                            <TextBlock x:Name="PreviewEmpty" Foreground="#4d566c" FontSize="11"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"
+                                       TextAlignment="Center" TextWrapping="Wrap" Margin="16,0"
+                                       Text="Select a station to preview its image" />
+                            <Image x:Name="PreviewImage" Stretch="UniformToFill"
+                                   RenderOptions.BitmapScalingMode="HighQuality" />
+                        </Grid>
+                    </Viewbox>
+
+                    <TextBlock x:Name="PreviewCaption" Grid.Row="1" Foreground="#9aa0ad" FontSize="10"
+                               Margin="8,6,8,7" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                               MaxHeight="46" Text="" />
+
+                    <!-- THE PERSONA ASSIGNMENT, on the selected station.
+                         Every station on the dial has one of the twelve as its
+                         main host, and that is who this studio puts in its
+                         picture. The catalog's own `host` field is the default;
+                         changing it here writes an override to station-hosts.json
+                         beside the tool, which wins from then on. -->
+                    <Grid Grid.Row="2" Margin="8,0,8,8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Host" Foreground="#9aa0ad" FontSize="11"
+                                   VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox x:Name="HostPicker" Grid.Column="1"
+                                  Style="{StaticResource DarkPicker}"
+                                  SelectionChanged="HostPicker_SelectionChanged"
+                                  ToolTip="The Inspire Family member who fronts this station and is rendered into its image. Changing it is remembered in station-hosts.json." />
+                    </Grid>
+
+                    <!-- Only shown when the selected station ALREADY has an image.
+                         Regenerating is the one action the worklist cannot express:
+                         a finished station is filtered out of the queue by design,
+                         so without this the only way to redo a picture was to
+                         delete the file by hand and rescan. -->
+                    <TextBlock x:Name="RegenRow" Grid.Row="3" Margin="8,0,8,8" Visibility="Collapsed">
+                        <Hyperlink x:Name="RegenLink" Click="Regenerate_Click"
+                                   Foreground="#FFD24A" FontSize="11"
+                                   ToolTip="Delete this station&apos;s image and generate it again.">Regenerate this image</Hyperlink>
+                    </TextBlock>
+                </Grid>
+            </Border>
+
+            <!-- One button, and it does what the selected tab says. The tab is the
+                 only place scope is expressed, so it cannot disagree with the
+                 button the way a set of per-scope buttons could. -->
+            <StackPanel Grid.Row="3" Margin="0,0,0,12">
+                <Button x:Name="BtnGenerate" Content="Generate Images"
+                        Style="{StaticResource GenerateButton}" Margin="10,0,10,0"
+                        Click="BtnGenerate_Click"
+                        ToolTip="Generates every station in the selected tab that is still missing an image. Pick All to sweep the whole dial." />
+                <TextBlock x:Name="ScopeNote" Foreground="#6f7684" FontSize="10"
+                           Margin="10,7,10,0" TextWrapping="Wrap" Text="" />
+            </StackPanel>
+
+            </Grid>
+            <!-- ========================== END STATIONS ========================== -->
+
+        </Grid>
+
+        <!-- ============================== THE RAIL ==============================
+             Stations at the top, settings pinned at the bottom. DockPanel rather
+             than a Grid with rows, because "top group, bottom group" is exactly
+             what Dock expresses and it survives the rail growing another button
+             without anyone re-numbering rows. -->
+        <Border Grid.Column="3" Background="#12141c" BorderBrush="#2c3040" BorderThickness="1,0,0,0">
+            <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Top" Margin="0,12,0,0">
+                    <RadioButton x:Name="RailImages" GroupName="Rail" Style="{StaticResource RailButton}"
+                                 IsChecked="True" Content="&#xEB9F;" Checked="Rail_Checked"
+                                 ToolTip="Station images. The worklist, the preview and the generate button." />
+                    <TextBlock Style="{StaticResource RailCaption}" Text="Stations" />
+                </StackPanel>
+
+                <StackPanel DockPanel.Dock="Bottom" Margin="0,0,0,12">
+                    <RadioButton x:Name="RailSettings" GroupName="Rail" Style="{StaticResource RailButton}"
+                                 Content="&#xE713;" Checked="Rail_Checked" Margin="0,0,0,4"
+                                 ToolTip="Settings. Site root, images out, host portraits, generation location." />
+                    <TextBlock Style="{StaticResource RailCaption}" Text="Settings" Margin="0,0,0,0" />
+                </StackPanel>
+            </DockPanel>
+        </Border>
+        </Grid>
+    </Grid>
+</Window>

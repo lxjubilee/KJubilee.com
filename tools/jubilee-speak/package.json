@@ -1,0 +1,22 @@
+{
+    "name": "jubilee-speak",
+    "displayName": "Jubilee Speak",
+    "description": "Read selected text aloud using Microsoft Edge neural voices",
+    "version": "0.0.1",
+    "publisher": "jubilee",
+    "engines": { "vscode": "^1.70.0" },
+    "main": "./extension.js",
+    "activationEvents": ["onCommand:jubilee-speak.speakSelection", "onCommand:jubilee-speak.stopSpeaking"],
+    "contributes": {
+        "commands": [
+            { "command": "jubilee-speak.speakSelection", "title": "Speak Selection" },
+            { "command": "jubilee-speak.stopSpeaking",   "title": "Stop Speaking"   }
+        ],
+        "menus": {
+            "editor/context": [
+                { "command": "jubilee-speak.speakSelection", "when": "editorHasSelection", "group": "1_speak@1" },
+                { "command": "jubilee-speak.stopSpeaking",   "group": "1_speak@2" }
+            ]
+        }
+    }
+}

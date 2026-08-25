@@ -1,0 +1,220 @@
+# KJubilee.com — Build Specification
+
+Developer-ready spec derived from the working prototype (`KJubilee.dc.html`). It describes the site as designed: a browse-first, artwork-rich radio discovery experience with a **persistent footer player** that never stops audio on navigation, and an **Encounter Layer** (Scripture + declaration) as the emotional core of every station page.
+
+> Scope of this document: the five surfaces built in the prototype — Home, Tune Me, Station detail, Browse, and the persistent footer player — plus the data model, visual system, behaviors, and production notes needed to build them for real.
+
+---
+
+## 1. Architecture principles
+
+1. **Single persistent shell.** The whole site is one app shell. Views (Home / Tune / Station / Browse) swap *inside* the shell; the top bar and footer player are rendered once and never unmount.
+2. **Audio never restarts on navigation.** The `<audio>` element lives in the shell. Changing views must not tear it down. This is the single most important constraint.
+3. **Single-stream rule.** Starting a new station cleanly stops the previous one — no double audio.
+4. **Data-driven now-playing.** Track, artist/persona, on-air host, Scripture, and presence all flow from a realtime feed and re-render the footer + station page in place.
+5. **Browse-first, artwork-forward.** Dark, cinematic chrome; the station artwork does the talking.
+
+### View state
+| State key | Values | Purpose |
+|---|---|---|
+| `view` | `home` \| `tune` \| `station` \| `browse` | Which surface is shown |
+| `playingId` | station id \| null | The station whose stream is live (footer visible when set) |
+| `trackIndex`, `elapsed` | number | Position inside the current program |
+| `isPlaying` | bool | Transport state |
+| `onAir` | persona name \| null | Set during a voice break |
+| `selectedId` | station id | Station being viewed on the detail page |
+| `favs` | string[] | Favorited station ids → "My Stations" |
+| `tuneStep`, `tune` | 0–2, {need,moment,lang} | Tune Me onboarding progress |
+| `bf` | format \| `all` | Browse filter |
+
+---
+
+## 2. Visual system
+
+**Mood:** dark, cinematic, warm. Chrome is minimal; artwork and Scripture carry the page.
+
+### Color tokens
+| Token | Value | Use |
+|---|---|---|
+| Base background | `#0d0b08` (radial wash to `#1c1610` at top) | Page |
+| Surface | `rgba(255,255,255,0.03)` | Cards |
+| Border | `rgba(255,255,255,0.06–0.10)` | Card/hairline borders |
+| Text primary | `#f3ecdd` | Headings, body |
+| Text muted | `#8a8172` / `#a89e88` | Secondary/labels |
+| **Accent gold** | `#f5b840` (gradient `#ffd479 → #d98a1f`) | Play buttons, active nav, LIVE glow, Encounter accent |
+| Live red | `#ff5a4d` | LIVE dots |
+| Encounter tint | `rgba(245,184,64,0.13)` panel | Scripture card |
+| Presence tint | teal `#7fe3d0` / indigo `#b3a7ff` | Presence + dedication cards |
+
+### Typography
+- **Display / headings / station names:** `Space Grotesk` (500–700), tight letter-spacing (`-0.02em`).
+- **Body / UI:** `Manrope` (400–800).
+- Home hero title: `clamp(38px, 4.5vw, 56px)`. Station hero: 52px. Section headings: 20–22px. Never below 12px.
+
+### Station cover art (generative)
+Each station renders as a **CSS gradient tile** with a large `Space Grotesk` monogram (e.g. `TR`, `SP`). Formula:
+```
+background:
+  radial-gradient(125% 125% at 28% 16%, {c0}, transparent 60%),
+  linear-gradient(155deg, {c1} 8%, {c2} 96%);
+```
+`c0/c1/c2` are per-station colors (see registry). Tiles are `aspect-ratio:1/1`, `border-radius:16px`, with a bottom scrim `linear-gradient(180deg,transparent 42%,rgba(0,0,0,0.5))`, a LIVE badge (top-left), the dial number (top-right), and an equalizer overlay when that station is the one playing. **In production, replace the gradient with `cdn.jubileeverse.com` artwork** (`tile`, `hero`, `square`), keeping the gradient as a loading/fallback state.
+
+### Motion (keyframes)
+- `eq` — equalizer bars (playing state, footer + tiles).
+- `glow` — pulsing LIVE dots.
+- `pulse` — presence dots, on-air mic.
+- `fadeup` — sections entering.
+- `shimmer` — presence count.
+- **Respect `prefers-reduced-motion`** → disable all of the above.
+
+---
+
+## 3. Station data model
+
+One record per station in the **Station Registry** (source of truth, synced from the Radio Engine). Prototype fields:
+
+```jsonc
+{
+  "id": "throne-room",
+  "dial": 344.50,                       // HM band 300.00–399.90
+  "name": "Throne Room",
+  "tag": "Praise that never sits down",
+  "glyph": "TR",                        // monogram for fallback art
+  "c": ["#ffd479", "#d98a1f", "#5c3407"],// gradient stops (fallback art)
+  "fmt": ["Praise", "Worship"],         // format tags → shelves + browse filter
+  "time": ["morning", "anytime"],       // powers Tune Me + Night
+  "lang": "en",                         // "en" | "es" | ...
+  "host": "jubilee",                    // persona key
+  "listeners": 4231,                    // presence seed
+  "featured": true,
+  "story": "Long-form station vibe copy.",
+  "tracks": [
+    ["Enthroned", "Throne Room, Vol. I", "TR1", "enthroned"]
+    // [title, album, albumCode, scriptureKey]
+  ]
+}
+```
+
+**Production additions** (from master spec): `slug`, `call_sign`, `artwork{tile,hero,square}` URLs, `stream.variants[]` (aac/opus/mp3 + a `data_saver` low-bitrate variant), `voice_host{}` config, `sacred_calendar{}`, `night{}` flags, and `status` (`live|automated|offline`).
+
+### Personas (host records)
+Keyed map: `name`, `office` (five-fold), `music` (style), `bio`. The 11 in the prototype: **Jubilee, Imani, Zev, Santiago, Zariah, Eliana, Elias, Nova, Caleb, Melody, Tahoma** — all `… Inspire`.
+
+### Encounter payload (per track)
+```jsonc
+{
+  "ref": "Tehillim (Psalms) 22:3",
+  "text": "Yet You are set-apart, enthroned on the praises of Yisra'el.",
+  "decl": "Yahuah is enthroned on my praise; His presence fills this place now."
+}
+```
+Sourced from the JSV. The prototype maps each track to a scripture key; in production, enrich per-track metadata with the live verse.
+
+### Naming discipline (OHI, default)
+- God-references: **Yahuah, Yeshua, Elohim, Ruach HaKodesh** (feminine).
+- Hebrew article rule: write **"Ruach HaKodesh"** or **"the Ruach Kodesh"** — never "the Ruach HaKodesh."
+- Persona spelling/gender is fixed: **Eliana** (not Ileana); **Tahoma Inspire is male** ("Tahoma appreciates; he never represents").
+- Use "interpretation," never "reading," for interpretive work. Mode labels never appear in reader-facing copy.
+
+---
+
+## 4. Surfaces
+
+### 4.1 App shell (always present)
+- **Top bar:** logo (→ Home), primary nav (HOME · STATIONS · INSPIRE FAMILY · CHILDREN · GENRES · SCHEDULE), secondary links (Articles → JubileeVerse, AI Bible Chat → JubileeInspire), search, language selector (🌐 EN), Sign In (Jubilee Account SSO). Active nav item highlighted in gold.
+- **Footer player:** see §5.
+
+### 4.2 Home (`/`)
+- **Featured hero** — large artwork, LIVE badge, dial, name, tagline, "N worshiping now", **▶ Play Station** (docks footer, no navigation) + **✦ Tune Me**.
+- **Tune Me entry band** — "Not sure where to start?" → opens the flow.
+- **Shelves** (horizontal scroll rows of station tiles): My Stations (if favorites) · Featured · On Now · The Inspire Family (one per persona) · Praise & Adoration · Presence & Encounter · Healing & Restoration · Night & Soaking · Shabbat & the Feasts. Each tile: art + name + dial + LIVE + `🎙 host · format`, a favorite heart, and a playing-equalizer when live.
+- **Tap a tile → open station page AND start playback.**
+
+### 4.3 Tune Me (`/tune`)
+Three-tap onboarding, big-tile questions:
+1. **What do you need right now?** Peace · Breakthrough · Worship · Healing · For the kids · Just the Word
+2. **What's the moment?** Morning · Focus/Work · Prayer · Winding down
+3. **Language?** (optional, skippable) English · Español
+
+On the final tap, score every station (need→format tags = +3 each; moment→time match = +2; language match = +6 / mismatch −4; featured tiebreak) and **open the best match, already playing**. Back button; Skip on the language step.
+
+### 4.4 Station detail (`/station?f=` or `/station/{slug}`)
+Top → bottom:
+1. **Hero** — full-bleed artwork, LIVE, dial, format, language, name, tagline, transport (Play/Pause, Favorite, Share, Share Card), Back.
+2. **Encounter Layer (hero moment)** — reference, large Scripture quote, a one-tap **declaration** button (logs a private "received" state), and links into **AI Bible Chat** and **InspireManna**.
+3. **Now Playing** — track, artist/persona, album (deep-links to `jubilujah.com/album?c=CODE`), on-air host; flips to "🎙 On air: [persona]" during a voice break. Recently-played list.
+4. **The Station** — story/vibe copy.
+5. **Presence** — "N believers with you right now", light dots ("40+ nations"), **🙌 Amen** counter.
+6. **Your Host** — persona portrait (monogram), office + musical style, bio, hub link.
+7. **On Air Today** — On now / Up next / Tonight.
+8. **Dedication** — "Send a dedication or prayer request" → the host may voice it on air (moderation-gated in production).
+9. **More like this** — related-stations shelf.
+
+Arriving from a tile means audio is already playing; the page **reflects** state, never restarts the stream.
+
+### 4.5 Browse (`/stations`)
+- Heading + "N live stations on the HM band · 300.00–399.90".
+- Format filter chips (All + every format tag), sorted by dial.
+- Responsive grid of station tiles (same tile component as shelves).
+
+---
+
+## 5. Persistent footer player
+
+Pinned bottom, every route. Left → right:
+- **Station block** (click → expand to station page): square art, name + dial, and the now-playing line — track — artist, or "🎙 On air: [persona]" during a break.
+- **Transport:** round Play/Pause, LIVE badge, live equalizer (when playing), elapsed time. **No seek bar** — a live stream has no scrubber.
+- **Right:** presence glyph (🙌 N), favorite, share-card shortcut, volume slider (gold accent).
+
+**Production behaviors:** adaptive bitrate + data-saver toggle, auto-reconnect with backoff, resume-last-station, **Media Session API** (lock-screen/CarPlay/Android Auto shows art/track/host + working controls), sleep timer + wake-with-worship. Keyboard-operable; ARIA live region announces track/station/host changes.
+
+---
+
+## 6. Now-playing & voice-host pipeline (production)
+
+```
+Liquidsoap (per station) → ICY metadata + scheduled persona VOICE BREAKS
+   → Icecast-KH (/status-json.xsl: now-playing + listener counts)
+   → Now-Playing Service (normalize to registry schema; enrich with album art,
+        album_code → JubiLujah link, JSV verse + declaration; aggregate presence;
+        flag active voice breaks)
+   → Realtime channel (WebSocket / SSE)
+   → Footer player + Station page (subscribe to active station + lightweight On-Now feed)
+```
+- **Voice breaks** (station ID, song intro, Scripture drop, encouragement, dedication) render via **Inspire Voice Studio / OmniVoice** using each persona's locked voice profile, scheduled into Liquidsoap so they ride the same stream. Now-playing flips to "On air" while a break plays.
+- **Guardrails:** OHI naming + Hebrew article rule; locked persona identity/gender; Tahoma cultural framework; safe-content review gate before fresh dedications air.
+- All background processes are **services** (never "daemons").
+
+**Prototype simulation:** a 1s interval advances `elapsed`, cycles tracks at the end, and ~40% of transitions trigger a 7-second voice break. No real audio.
+
+---
+
+## 7. Signature differentiators (map to sections)
+Persona voice hosts (§6) · Tune Me (§4.3) · Encounter Layer (§4.4) · Sacred-calendar programming (Shabbat/Feast skins + auto-lineups) · Corporate presence (§4.4) · Hands-free at launch (Media Session + universal stream URLs + voice intents) · Share-card viral loop · Night/sleep/soaking · Redeemed dedications (§4.4) · Adaptive curation.
+
+---
+
+## 8. Performance, reliability, accessibility
+- Lazy-load shelves + tile art; responsive artwork from CDN; edge stream delivery.
+- Targets: interactive home < 2s; first audio < 3s of pressing play.
+- Client buffer ~5–15s; adaptive bitrate; auto-reconnect; data-saver variant; offline mounts show an "Off Air" tile, never a broken player.
+- Full keyboard control; ARIA live announcements; `prefers-reduced-motion`; WCAG AA contrast across day/night/Shabbat skins.
+
+---
+
+## 9. Recommended stack
+- **Frontend:** persistent-shell SPA; HTML5 `<audio>` + hls.js; WebSocket/SSE for now-playing/presence; Media Session API.
+- **Streaming:** Jubilee Radio Engine v3.0 (Liquidsoap + Icecast-KH), voice breaks scheduled into the program.
+- **Services:** Now-Playing, Voice-Break, Calendar (sunset-aware Shabbat/Feast), Presence, Curation + Tune/Dedication/Share-Card/Voice endpoints.
+- **CDN:** `cdn.jubileeverse.com` (art); `stream.kjubilee.com` (audio edge).
+- **Auth:** Jubilee Account SSO. **Data:** Station Registry as single source of truth.
+
+---
+
+## 10. Inputs still needed
+Definitive 101-station list (dial numbers, formats, hosting personas) · per-station voice-host scope + break cadence · voice render path confirmation · sacred-calendar sunset source + Feast list · dedication moderation flow · free vs. Premium split · licensing posture · stream/skill hostnames · presence privacy (coarse/region-level only).
+
+---
+
+*Prototype reference: `KJubilee.dc.html` (Home, Tune Me, Station, Browse, persistent footer player; 18 sample stations, 11 personas, simulated audio). Swap the sample registry for the real Radio Engine registry to go live.*

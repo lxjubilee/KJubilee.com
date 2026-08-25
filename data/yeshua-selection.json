@@ -1,0 +1,756 @@
+{
+  "_generated": "tools/scan-lyrics-for-name.js — do not edit by hand",
+  "name": "Yeshua",
+  "artists": [
+    "jubilee-inspire",
+    "melody-inspire",
+    "caleb-inspire",
+    "nova-inspire"
+  ],
+  "scanned": {
+    "sheets": 406,
+    "songs": 4592,
+    "duplicateSheetTracks": 6
+  },
+  "counts": {
+    "singingTheName": 89,
+    "nameOnly": 74,
+    "bothNames": 15,
+    "withAudio": 12,
+    "pendingAudio": 77
+  },
+  "albums": [
+    "JEIM1016EN",
+    "JEIM1026EN",
+    "JEIM1027EN",
+    "JEIM1065EN"
+  ],
+  "songIds": [
+    "6P4WY92USMV5",
+    "93EK2HJC8D3S",
+    "BDCCFAOS72D7",
+    "C479MRJN9D5M",
+    "CLHHD5B42OFM",
+    "DQTYPJQ3XP57",
+    "ED3WIPBMHFFA",
+    "JY2Y8VD6HWX3",
+    "L9QPN6J0D723",
+    "PGJHEOE59UH8",
+    "QMA4TFORETW9",
+    "YX07PLJKQLYD"
+  ],
+  "songs": [
+    {
+      "songId": null,
+      "album": "CAIM1045EN",
+      "track": 12,
+      "title": "Go And Tell",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "CAIM1056EN",
+      "track": 12,
+      "title": "Alive to Tell It",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": "PGJHEOE59UH8",
+      "album": "JEIM1016EN",
+      "track": 3,
+      "title": "Global Knee",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": "YX07PLJKQLYD",
+      "album": "JEIM1016EN",
+      "track": 12,
+      "title": "All The World Bows",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1016RO",
+      "track": 3,
+      "title": "Pământul În Genunchi",
+      "lang": "RO",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1016RO",
+      "track": 12,
+      "title": "Lumea Toată Se Pleacă",
+      "lang": "RO",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024BG",
+      "track": 5,
+      "title": "Всяко коляно ще се преклони",
+      "lang": "BG",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024BG",
+      "track": 11,
+      "title": "Властите се прекланят",
+      "lang": "BG",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024BG",
+      "track": 12,
+      "title": "Възкресението няма край",
+      "lang": "BG",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 1,
+      "title": "Η Πέτρα Μόλις Κύλησε",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 2,
+      "title": "Βγήκε Από Τον Τάφο",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 3,
+      "title": "Φωνάξτε Το Στο Βουνό",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 4,
+      "title": "Ο Θάνατος Έχασε Την Πύλη",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 5,
+      "title": "Κάθε Γόνατο Θα Λυγίσει",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 6,
+      "title": "Ο Βασιλιάς Αναλαμβάνεται",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 7,
+      "title": "Καθισμένος Στη Δόξα",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 8,
+      "title": "Το Σύμπαν Απαντά Με Τραγούδι",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 9,
+      "title": "Η Βασιλεία Δεν Έχει Τέλος",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 10,
+      "title": "Κουβάλα Την Ανάσταση",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 11,
+      "title": "Οι Αρχές Λυγίζουν",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EL",
+      "track": 12,
+      "title": "Η Ανάσταση Δεν Τελειώνει",
+      "lang": "EL",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 1,
+      "title": "Stone Just Rolled",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 2,
+      "title": "He Walked Out",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 3,
+      "title": "Tell It On The Hill",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 4,
+      "title": "Death Lost the Door",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 5,
+      "title": "Every Knee Will Bow",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 6,
+      "title": "The King Ascends",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 7,
+      "title": "Seated in Glory",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 8,
+      "title": "Universe Sings Back",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 9,
+      "title": "Kingdom Has No End",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 10,
+      "title": "Carry the Rising",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 11,
+      "title": "Principalities Bow",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024EN",
+      "track": 12,
+      "title": "Rising Won't End",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1024RO",
+      "track": 12,
+      "title": "Învierea Nu Se Sfârșește",
+      "lang": "RO",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1025EN",
+      "track": 12,
+      "title": "He Will Be Our God",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": "CLHHD5B42OFM",
+      "album": "JEIM1026EN",
+      "track": 5,
+      "title": "Bow the Knee",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": "6P4WY92USMV5",
+      "album": "JEIM1026EN",
+      "track": 12,
+      "title": "Forever Crowned",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": "BDCCFAOS72D7",
+      "album": "JEIM1027EN",
+      "track": 1,
+      "title": "Jubilee Horn",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": "JY2Y8VD6HWX3",
+      "album": "JEIM1027EN",
+      "track": 3,
+      "title": "Land Comes Back",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": "93EK2HJC8D3S",
+      "album": "JEIM1027EN",
+      "track": 4,
+      "title": "Slaves Are Walking",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": "L9QPN6J0D723",
+      "album": "JEIM1027EN",
+      "track": 5,
+      "title": "Debts Cancelled",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": "QMA4TFORETW9",
+      "album": "JEIM1027EN",
+      "track": 8,
+      "title": "Year of Favor Forever",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": "ED3WIPBMHFFA",
+      "album": "JEIM1027EN",
+      "track": 12,
+      "title": "Jubilee Won't End",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1063RO",
+      "track": 12,
+      "title": "De la Perdea la Tron",
+      "lang": "RO",
+      "bothNames": true
+    },
+    {
+      "songId": "C479MRJN9D5M",
+      "album": "JEIM1065EN",
+      "track": 10,
+      "title": "You Shall Call Him Jesus",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": "DQTYPJQ3XP57",
+      "album": "JEIM1065EN",
+      "track": 12,
+      "title": "The World Wakes New",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1067EN",
+      "track": 12,
+      "title": "Covenant Established",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 1,
+      "title": "Behold the Lamb",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 2,
+      "title": "Blood on the Doorpost",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 3,
+      "title": "This Cup Is My Blood",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 4,
+      "title": "Hyssop and the Spotless One",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 5,
+      "title": "Garden Where He Knelt",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 6,
+      "title": "Crown of Thorns, King of Glory",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 7,
+      "title": "Three Nails Held Me",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 8,
+      "title": "Lamb Conquering Lion",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 9,
+      "title": "Stone Rolled Wide",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 10,
+      "title": "Worthy Is the Lamb",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 11,
+      "title": "Marked by the Blood",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068EN",
+      "track": 12,
+      "title": "Crown the Lamb",
+      "lang": "EN",
+      "bothNames": true
+    },
+    {
+      "songId": null,
+      "album": "JEIM1068RO",
+      "track": 12,
+      "title": "Încununați Mielul",
+      "lang": "RO",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 1,
+      "title": "The House Is Open",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 2,
+      "title": "What Is the Name",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 5,
+      "title": "Until You Come",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 7,
+      "title": "One Touch from You",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 9,
+      "title": "The Empty Chair",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 11,
+      "title": "You Came, You Came",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1082EN",
+      "track": 12,
+      "title": "Hover Still",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 1,
+      "title": "Only One Name",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 2,
+      "title": "You Never Pass By",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 3,
+      "title": "You Were Moved",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 4,
+      "title": "The Hem of Your Robe",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 5,
+      "title": "By Your Stripes",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 6,
+      "title": "Only Say the Word",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 7,
+      "title": "Right Where It Hurts",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 8,
+      "title": "You Are Still the Same",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 9,
+      "title": "Not Yet Is Not No",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 11,
+      "title": "Tell It in the Street",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1083EN",
+      "track": 12,
+      "title": "One Word, Yeshua",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 1,
+      "title": "The Scroll Is Open",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 2,
+      "title": "You Called Him by Name",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 3,
+      "title": "Chains Know Your Voice",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 4,
+      "title": "What I Could Not Name",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 5,
+      "title": "The Ledger Closed",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 6,
+      "title": "Untie the Whole Row",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 7,
+      "title": "Take It Off Me",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 8,
+      "title": "The Grave Could Not Hold You",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 9,
+      "title": "The Long Way Out",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 11,
+      "title": "The Whole Land Went Free",
+      "lang": "EN",
+      "bothNames": false
+    },
+    {
+      "songId": null,
+      "album": "JEIM1084EN",
+      "track": 12,
+      "title": "You Closed the Scroll",
+      "lang": "EN",
+      "bothNames": false
+    }
+  ]
+}

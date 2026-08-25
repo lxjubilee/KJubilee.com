@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM332.16-RO",
+  "slug": "jubilee-praise-romana",
+  "name": "Jubilee Praise (Română)",
+  "hm": "332.16",
+  "band": "multi",
+  "mount": "romana",
+  "language": {
+    "code": "RO",
+    "name": "Romanian",
+    "tag": "ro-RO"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "București",
+    "timezone": "Europe/Bucharest"
+  },
+  "catalogue": {
+    "pool": "inspire-family"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM332.16-RO/delivery",
+    "file": "HM332.16RO-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM332.16-RO/delivery/HM332.16RO-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

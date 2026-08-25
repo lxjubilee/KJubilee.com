@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM377.70-EN",
+  "slug": "hebraic-celebrations",
+  "name": "Hebraic Celebrations",
+  "hm": "377.70",
+  "band": "fivefold",
+  "mount": "hebraic-celebrations",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "Jerusalem",
+    "timezone": "Asia/Jerusalem"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "zev-inspire"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM377.70-EN/delivery",
+    "file": "HM377.70EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM377.70-EN/delivery/HM377.70EN-20260821.json"
+  },
+  "format": "Messianic Worship",
+  "timezone": "America/Los_Angeles"
+}

@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM345.24-EN",
+  "slug": "ancient-paths",
+  "name": "The Ancient Paths",
+  "hm": "345.24",
+  "band": "fivefold",
+  "mount": "ancient-paths",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Amman",
+    "timezone": "Asia/Amman"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "amir-inspire"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM345.24-EN/delivery",
+    "file": "HM345.24EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM345.24-EN/delivery/HM345.24EN-20260821.json"
+  },
+  "format": "Middle Eastern",
+  "timezone": "America/Los_Angeles"
+}

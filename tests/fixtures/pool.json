@@ -1,0 +1,4099 @@
+{
+  "schema_version": "2.0",
+  "content_type": "music",
+  "station_id": "HM339.18-EN",
+  "station_slug": "jubilee-gospel-fire",
+  "mount": "gospel-fire",
+  "station_name": "Jubilee Gospel Fire",
+  "hm": "339.18",
+  "language": "en",
+  "language_name": "English",
+  "language_tag": "en-US",
+  "mode": "CCI",
+  "host_city": "Memphis",
+  "timezone": "America/Chicago",
+  "generated_at": "2026-08-21T17:21:34.169Z",
+  "generator": "tools/build-station-manifest.js",
+  "source": {
+    "repository": "J:\\kjubilee.com\\music",
+    "ledger": "songid-registry.tsv",
+    "url_layout": "canonical",
+    "url_base": "/cdn/music"
+  },
+  "selection": {
+    "rule": "every English track by Imani Inspire",
+    "languages": [
+      "EN"
+    ],
+    "artist_pool": "inspire-family",
+    "artists_eligible": [
+      "amir-inspire",
+      "caleb-inspire",
+      "eliana-inspire",
+      "elias-inspire",
+      "imani-inspire",
+      "jubilee-inspire",
+      "melody-inspire",
+      "nova-inspire",
+      "santiago-inspire",
+      "tahoma-inspire",
+      "zariah-inspire",
+      "zev-inspire"
+    ],
+    "artists_present": [
+      "imani-inspire"
+    ],
+    "explicit": {
+      "artists": [
+        "imani-inspire"
+      ],
+      "albums": [],
+      "songs": []
+    },
+    "note": "Explicit selection — unlike the language stations this catalog does not grow automatically when new audio is ingested. Re-run the selection analysis and update `select` in tools/build-station-manifest.js when new albums land."
+  },
+  "rotation": {
+    "order": "shuffle",
+    "repeat": "continuous"
+  },
+  "totals": {
+    "albums": 16,
+    "tracks": 188,
+    "artists": 1,
+    "duration_s": 41810
+  },
+  "albums": [
+    {
+      "album_id": "IMIM1001EN",
+      "album_slug": "the-sound-of-deliverance",
+      "title": "The Sound of Deliverance",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "0V61OGJUZ2UO",
+          "track_number": 1,
+          "title": "Hear That Sound",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN01-0V61OGJUZ2UO-IMAN-PCGC_the-sound-of-deliverance_hear-that-sound.mp3",
+          "duration_s": 222,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "GFG4E1NNV0FC",
+          "track_number": 2,
+          "title": "First Chord, First Holler",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN02-GFG4E1NNV0FC-IMAN-PCGC_the-sound-of-deliverance_first-chord-first-holler.mp3",
+          "duration_s": 187,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "YS6HN4GMZ3T4",
+          "track_number": 3,
+          "title": "Hammond Knows My Name",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN03-YS6HN4GMZ3T4-IMAN-PCGC_the-sound-of-deliverance_hammond-knows-my-name.mp3",
+          "duration_s": 195,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "WYPQEOKR8DIX",
+          "track_number": 4,
+          "title": "Room Where I Used to Hide",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN04-WYPQEOKR8DIX-IMAN-PCGC_the-sound-of-deliverance_room-where-i-used-to-hide.mp3",
+          "duration_s": 196,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "NM5RAYHF7CSV",
+          "track_number": 5,
+          "title": "Chains Hit the Floor",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN05-NM5RAYHF7CSV-IMAN-PCGC_the-sound-of-deliverance_chains-hit-the-floor.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2OH3I0EZRIS5",
+          "track_number": 6,
+          "title": "Funeral Got Flipped",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN06-2OH3I0EZRIS5-IMAN-PCGC_the-sound-of-deliverance_funeral-got-flipped.mp3",
+          "duration_s": 175,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2KZL3O21AOVS",
+          "track_number": 7,
+          "title": "Midnight Kitchen pray",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN07-2KZL3O21AOVS-IMAN-PCGC_the-sound-of-deliverance_midnight-kitchen-pray.mp3",
+          "duration_s": 203,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "D2EKMLS2ZBTV",
+          "track_number": 8,
+          "title": "I Heard It Crack",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN08-D2EKMLS2ZBTV-IMAN-PCGC_the-sound-of-deliverance_i-heard-it-crack.mp3",
+          "duration_s": 240,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Y5PKBQLDLXK3",
+          "track_number": 9,
+          "title": "Still Small Shout",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN09-Y5PKBQLDLXK3-IMAN-PCGC_the-sound-of-deliverance_still-small-shout.mp3",
+          "duration_s": 194,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "D3V2PNXEOIMV",
+          "track_number": 10,
+          "title": "Walk Out Different",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN10-D3V2PNXEOIMV-IMAN-PCGC_the-sound-of-deliverance_walk-out-different.mp3",
+          "duration_s": 200,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "CKMPRW0KLGDL",
+          "track_number": 11,
+          "title": "Grandmama's Tambourine",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN11-CKMPRW0KLGDL-IMAN-PCGC_the-sound-of-deliverance_grandmamas-tambourine.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "WXN1O9EP637I",
+          "track_number": 12,
+          "title": "Carry This Sound",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Sound of Deliverance",
+          "album_id": "IMIM1001EN",
+          "url": "/cdn/music/imani-inspire/en/the-sound-of-deliverance/HMX2026EN12-WXN1O9EP637I-IMAN-PCGC_the-sound-of-deliverance_carry-this-sound.mp3",
+          "duration_s": 224,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1002EN",
+      "album_slug": "break-these-chains",
+      "title": "Break These Chains",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "1H2FE2WQAYN8",
+          "track_number": 1,
+          "title": "Name That Chain",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN01-1H2FE2WQAYN8-IMAN-PCGC_break-these-chains_name-that-chain.mp3",
+          "duration_s": 171,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "00Z7BPJJP5QC",
+          "track_number": 2,
+          "title": "Drums of Heaven",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN02-00Z7BPJJP5QC-IMAN-PCGC_break-these-chains_drums-of-heaven.mp3",
+          "duration_s": 174,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "V7ZOYR0CQ65Z",
+          "track_number": 3,
+          "title": "Say It to Jesus",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN03-V7ZOYR0CQ65Z-IMAN-PCGC_break-these-chains_say-it-to-jesus.mp3",
+          "duration_s": 172,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "B2BFZV9MMQGM",
+          "track_number": 4,
+          "title": "Addiction Is a Liar",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN04-B2BFZV9MMQGM-IMAN-PCGC_break-these-chains_addiction-is-a-liar.mp3",
+          "duration_s": 190,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Q4TXHGZTHJTQ",
+          "track_number": 5,
+          "title": "Earthquake",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN05-Q4TXHGZTHJTQ-IMAN-PCGC_break-these-chains_earthquake.mp3",
+          "duration_s": 171,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "ZDW9DBNMN7NI",
+          "track_number": 6,
+          "title": "Fear Has No Address",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN06-ZDW9DBNMN7NI-IMAN-PCGC_break-these-chains_fear-has-no-address.mp3",
+          "duration_s": 212,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "YB37Y2DHYGB3",
+          "track_number": 7,
+          "title": "Generations Off",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN07-YB37Y2DHYGB3-IMAN-PCGC_break-these-chains_generations-off.mp3",
+          "duration_s": 192,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "MX7ZLGENV7VM",
+          "track_number": 8,
+          "title": "The Yoke Came Off",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN08-MX7ZLGENV7VM-IMAN-PCGC_break-these-chains_the-yoke-came-off.mp3",
+          "duration_s": 199,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "0GX7F20OB4NN",
+          "track_number": 9,
+          "title": "Quiet War Won",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN09-0GX7F20OB4NN-IMAN-PCGC_break-these-chains_quiet-war-won.mp3",
+          "duration_s": 197,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "95RNOEJYP02T",
+          "track_number": 10,
+          "title": "Armor On",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN10-95RNOEJYP02T-IMAN-PCGC_break-these-chains_armor-on.mp3",
+          "duration_s": 189,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "V8H6N4M1WGQN",
+          "track_number": 11,
+          "title": "Teach Her to Pray",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN11-V8H6N4M1WGQN-IMAN-PCGC_break-these-chains_teach-her-to-pray.mp3",
+          "duration_s": 177,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "YTG9GBPPQ4MU",
+          "track_number": 12,
+          "title": "Dance Over Chains",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Break These Chains",
+          "album_id": "IMIM1002EN",
+          "url": "/cdn/music/imani-inspire/en/break-these-chains/HMX2026EN12-YTG9GBPPQ4MU-IMAN-PCGC_break-these-chains_dance-over-chains.mp3",
+          "duration_s": 242,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1003EN",
+      "album_slug": "chains-break-open",
+      "title": "Chains Break Open",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "756H7YIOLNY3",
+          "track_number": 1,
+          "title": "Chains Break Open",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN01-756H7YIOLNY3-IMAN-PCGC_chains-break-open_chains-break-open.mp3",
+          "duration_s": 189,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "O5ZIJLHG68NV",
+          "track_number": 2,
+          "title": "The Long Battle's Done",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN02-O5ZIJLHG68NV-IMAN-PCGC_chains-break-open_the-long-battles-done.mp3",
+          "duration_s": 201,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "NP4CF6N6CXRP",
+          "track_number": 3,
+          "title": "First Breath Free",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN03-NP4CF6N6CXRP-IMAN-PCGC_chains-break-open_first-breath-free.mp3",
+          "duration_s": 222,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "VDD9OTMP8KYX",
+          "track_number": 4,
+          "title": "Healed in Cut-Time",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN04-VDD9OTMP8KYX-IMAN-PCGC_chains-break-open_healed-in-cut-time.mp3",
+          "duration_s": 195,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "E8774C1I6VEK",
+          "track_number": 5,
+          "title": "Snap Back to Freedom",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN05-E8774C1I6VEK-IMAN-PCGC_chains-break-open_snap-back-to-freedom.mp3",
+          "duration_s": 195,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "R5LR482TKNBB",
+          "track_number": 6,
+          "title": "The Phone Rings",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN06-R5LR482TKNBB-IMAN-PCGC_chains-break-open_the-phone-rings.mp3",
+          "duration_s": 189,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "DAB19VTYE86M",
+          "track_number": 7,
+          "title": "Covenant Reopens",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN07-DAB19VTYE86M-IMAN-PCGC_chains-break-open_covenant-reopens.mp3",
+          "duration_s": 187,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "L5HDANNZOHXN",
+          "track_number": 8,
+          "title": "I AM Free Now",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN08-L5HDANNZOHXN-IMAN-PCGC_chains-break-open_i-am-free-now.mp3",
+          "duration_s": 265,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "FUSJLB6XJLVM",
+          "track_number": 9,
+          "title": "Stillness After the Snap",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN09-FUSJLB6XJLVM-IMAN-PCGC_chains-break-open_stillness-after-the-snap.mp3",
+          "duration_s": 213,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "OJN5G27RTZDR",
+          "track_number": 10,
+          "title": "Every Morning Free",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN10-OJN5G27RTZDR-IMAN-PCGC_chains-break-open_every-morning-free.mp3",
+          "duration_s": 198,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2HMIVRKB7ADV",
+          "track_number": 11,
+          "title": "Daughter Knows the Snap",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN11-2HMIVRKB7ADV-IMAN-PCGC_chains-break-open_daughter-knows-the-snap.mp3",
+          "duration_s": 194,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "3AORJ7ZW64RF",
+          "track_number": 12,
+          "title": "Live in Cut-Time",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Chains Break Open",
+          "album_id": "IMIM1003EN",
+          "url": "/cdn/music/imani-inspire/en/chains-break-open/HMX2026EN12-3AORJ7ZW64RF-IMAN-PCGC_chains-break-open_live-in-cut-time.mp3",
+          "duration_s": 192,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1004EN",
+      "album_slug": "the-deliverance-decree",
+      "title": "The Deliverance Decree",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "IIVU0SZV2HXY",
+          "track_number": 1,
+          "title": "Tell It (He Got Me Out)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN01-IIVU0SZV2HXY-IMAN-PCGC_the-deliverance-decree_tell-it-he-got-me-out.mp3",
+          "duration_s": 250,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "BPBHMM3DFH0M",
+          "track_number": 2,
+          "title": "What Jesus Did Last Tuesday",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN02-BPBHMM3DFH0M-IMAN-PCGC_the-deliverance-decree_what-jesus-did-last-tuesday.mp3",
+          "duration_s": 220,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "G1LQBQXKHC0J",
+          "track_number": 3,
+          "title": "Decree It Like You Saw It",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN03-G1LQBQXKHC0J-IMAN-PCGC_the-deliverance-decree_decree-it-like-you-saw-it.mp3",
+          "duration_s": 237,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "XHMHENMRLDEG",
+          "track_number": 4,
+          "title": "Fear Don't Live Here No More",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN04-XHMHENMRLDEG-IMAN-PCGC_the-deliverance-decree_fear-dont-live-here-no-more.mp3",
+          "duration_s": 233,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Y80PHMUZVQED",
+          "track_number": 5,
+          "title": "Addiction Lost Its Address",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN05-Y80PHMUZVQED-IMAN-PCGC_the-deliverance-decree_addiction-lost-its-address.mp3",
+          "duration_s": 248,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "QPPRWM75835L",
+          "track_number": 6,
+          "title": "Generations Got Free",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN06-QPPRWM75835L-IMAN-PCGC_the-deliverance-decree_generations-got-free.mp3",
+          "duration_s": 276,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "RU98FJ72JHE5",
+          "track_number": 7,
+          "title": "Shame Don't Know My Name",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN07-RU98FJ72JHE5-IMAN-PCGC_the-deliverance-decree_shame-dont-know-my-name.mp3",
+          "duration_s": 250,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "0IYESS8PUEVC",
+          "track_number": 8,
+          "title": "Receipts in My Mouth",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN08-0IYESS8PUEVC-IMAN-PCGC_the-deliverance-decree_receipts-in-my-mouth.mp3",
+          "duration_s": 222,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "5NZQ5B8B9CRA",
+          "track_number": 9,
+          "title": "Late-Night Holy Ghost Call",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN09-5NZQ5B8B9CRA-IMAN-PCGC_the-deliverance-decree_late-night-holy-ghost-call.mp3",
+          "duration_s": 259,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "KN4V8YW8LYGF",
+          "track_number": 10,
+          "title": "Open Your Mouth and Say It",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN10-KN4V8YW8LYGF-IMAN-PCGC_the-deliverance-decree_open-your-mouth-and-say-it.mp3",
+          "duration_s": 233,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "5HESVHJ0JQYV",
+          "track_number": 11,
+          "title": "Testimony Is My Weapon",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN11-5HESVHJ0JQYV-IMAN-PCGC_the-deliverance-decree_testimony-is-my-weapon.mp3",
+          "duration_s": 243,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "UY9S1NBO87TV",
+          "track_number": 12,
+          "title": "Pass the Mic, Pass the Fire",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Deliverance Decree",
+          "album_id": "IMIM1004EN",
+          "url": "/cdn/music/imani-inspire/en/the-deliverance-decree/HMX2026EN12-UY9S1NBO87TV-IMAN-PCGC_the-deliverance-decree_pass-the-mic-pass-the-fire.mp3",
+          "duration_s": 247,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1005EN",
+      "album_slug": "apostolic-deliverance",
+      "title": "Apostolic Deliverance",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "WB8Z40XEP3KE",
+          "track_number": 1,
+          "title": "The Prayer Team Is in the Room",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN01-WB8Z40XEP3KE-IMAN-PCGC_apostolic-deliverance_the-prayer-team-is-in-the-room.mp3",
+          "duration_s": 227,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "RTFMLLN28NE8",
+          "track_number": 2,
+          "title": "Oil in the Bottle, Word in My Mouth",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN02-RTFMLLN28NE8-IMAN-PCGC_apostolic-deliverance_oil-in-the-bottle-word-in-my-mouth.mp3",
+          "duration_s": 223,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "KWEF7X19VXW5",
+          "track_number": 3,
+          "title": "We Came to Set the Captive Free",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN03-KWEF7X19VXW5-IMAN-PCGC_apostolic-deliverance_we-came-to-set-the-captive-free.mp3",
+          "duration_s": 253,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "8MD9RD4G3Y31",
+          "track_number": 4,
+          "title": "Intercession Holds the Line",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN04-8MD9RD4G3Y31-IMAN-PCGC_apostolic-deliverance_intercession-holds-the-line.mp3",
+          "duration_s": 245,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "0SIQRZDY24AQ",
+          "track_number": 5,
+          "title": "Hands On (Lay 'Em On)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN05-0SIQRZDY24AQ-IMAN-PCGC_apostolic-deliverance_hands-on-lay-em-on.mp3",
+          "duration_s": 275,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "MXARGWVVKIP4",
+          "track_number": 6,
+          "title": "Cast It Out in Jesus' Name",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN06-MXARGWVVKIP4-IMAN-PCGC_apostolic-deliverance_cast-it-out-in-jesus-name.mp3",
+          "duration_s": 230,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "AZ1BJ50SVHKY",
+          "track_number": 7,
+          "title": "Anointed Above the Doorpost",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN07-AZ1BJ50SVHKY-IMAN-PCGC_apostolic-deliverance_anointed-above-the-doorpost.mp3",
+          "duration_s": 251,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "JFFHAS5YKC3M",
+          "track_number": 8,
+          "title": "Chains Hit the Floor",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN08-JFFHAS5YKC3M-IMAN-PCGC_apostolic-deliverance_chains-hit-the-floor.mp3",
+          "duration_s": 236,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "B4PGXVNCK7TE",
+          "track_number": 9,
+          "title": "Anointing-Oil Hum",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN09-B4PGXVNCK7TE-IMAN-PCGC_apostolic-deliverance_anointing-oil-hum.mp3",
+          "duration_s": 240,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "APBM0OUHQT21",
+          "track_number": 10,
+          "title": "The Mantle Falls on You",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN10-APBM0OUHQT21-IMAN-PCGC_apostolic-deliverance_the-mantle-falls-on-you.mp3",
+          "duration_s": 235,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "AGRXQZ9Y2UWF",
+          "track_number": 11,
+          "title": "Apostles in the Aisle",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN11-AGRXQZ9Y2UWF-IMAN-PCGC_apostolic-deliverance_apostles-in-the-aisle.mp3",
+          "duration_s": 200,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "3PX7VOQOMJWQ",
+          "track_number": 12,
+          "title": "Now You Go Lay Hands",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Apostolic Deliverance",
+          "album_id": "IMIM1005EN",
+          "url": "/cdn/music/imani-inspire/en/apostolic-deliverance/HMX2026EN12-3PX7VOQOMJWQ-IMAN-PCGC_apostolic-deliverance_now-you-go-lay-hands.mp3",
+          "duration_s": 266,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1006EN",
+      "album_slug": "pentecost-fire-double-time",
+      "title": "Pentecost Fire (Double Time)",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "58ISX68CGO0P",
+          "track_number": 1,
+          "title": "120 in the Upper Room",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN01-58ISX68CGO0P-IMAN-PCGC_pentecost-fire-double-time_120-in-the-upper-room.mp3",
+          "duration_s": 223,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "IW15Q9V641VJ",
+          "track_number": 2,
+          "title": "We Won't Leave Till the Fire Falls",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN02-IW15Q9V641VJ-IMAN-PCGC_pentecost-fire-double-time_we-wont-leave-till-the-fire-falls.mp3",
+          "duration_s": 211,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "HJX1720QCJ7X",
+          "track_number": 3,
+          "title": "The Wind Is Already Moving",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN03-HJX1720QCJ7X-IMAN-PCGC_pentecost-fire-double-time_the-wind-is-already-moving.mp3",
+          "duration_s": 254,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "ZJ7WWHJQ45SS",
+          "track_number": 4,
+          "title": "Fall on Me (Fall on Me!)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN04-ZJ7WWHJQ45SS-IMAN-PCGC_pentecost-fire-double-time_fall-on-me-fall-on-me.mp3",
+          "duration_s": 224,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "CGFRTCMZCQA1",
+          "track_number": 5,
+          "title": "Tongues of Fire",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN05-CGFRTCMZCQA1-IMAN-PCGC_pentecost-fire-double-time_tongues-of-fire.mp3",
+          "duration_s": 237,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "57MJN1DDSF8U",
+          "track_number": 6,
+          "title": "Dance Till the Room Spins",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN06-57MJN1DDSF8U-IMAN-PCGC_pentecost-fire-double-time_dance-till-the-room-spins.mp3",
+          "duration_s": 225,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "4R3Q78PW7QNR",
+          "track_number": 7,
+          "title": "Your Sons and Daughters",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN07-4R3Q78PW7QNR-IMAN-PCGC_pentecost-fire-double-time_your-sons-and-daughters.mp3",
+          "duration_s": 258,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "6MPG7TA3TJNE",
+          "track_number": 8,
+          "title": "Acts 2 Right Now",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN08-6MPG7TA3TJNE-IMAN-PCGC_pentecost-fire-double-time_acts-2-right-now.mp3",
+          "duration_s": 269,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "VAYYOBM6KE20",
+          "track_number": 9,
+          "title": "Upper Room Hush",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN09-VAYYOBM6KE20-IMAN-PCGC_pentecost-fire-double-time_upper-room-hush.mp3",
+          "duration_s": 255,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "VS7RON37KY1R",
+          "track_number": 10,
+          "title": "The Church Was Born Today",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN10-VS7RON37KY1R-IMAN-PCGC_pentecost-fire-double-time_the-church-was-born-today.mp3",
+          "duration_s": 247,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "3PQ52PAWKBDR",
+          "track_number": 11,
+          "title": "Three Thousand Saved",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN11-3PQ52PAWKBDR-IMAN-PCGC_pentecost-fire-double-time_three-thousand-saved.mp3",
+          "duration_s": 236,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "868NEJPJA6G8",
+          "track_number": 12,
+          "title": "Fire in the Streets",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pentecost Fire (Double Time)",
+          "album_id": "IMIM1006EN",
+          "url": "/cdn/music/imani-inspire/en/pentecost-fire-double-time/HMX2026EN12-868NEJPJA6G8-IMAN-PCGC_pentecost-fire-double-time_fire-in-the-streets.mp3",
+          "duration_s": 244,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1007EN",
+      "album_slug": "burn-it-all",
+      "title": "Burn It All",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "LMQ9UH8JQBUM",
+          "track_number": 1,
+          "title": "Fire Fall (Burn It All)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN01-LMQ9UH8JQBUM-IMAN-PCGC_burn-it-all_fire-fall-burn-it-all.mp3",
+          "duration_s": 204,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "E31WPUWD7XU3",
+          "track_number": 2,
+          "title": "Lay Down The Crown",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN02-E31WPUWD7XU3-IMAN-PCGC_burn-it-all_lay-down-the-crown.mp3",
+          "duration_s": 267,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "7HE9E6TH8KYS",
+          "track_number": 3,
+          "title": "Tear Up The Blueprint",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN03-7HE9E6TH8KYS-IMAN-PCGC_burn-it-all_tear-up-the-blueprint.mp3",
+          "duration_s": 215,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "VSEHGWX1RISZ",
+          "track_number": 4,
+          "title": "Burn The Fear Down",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN04-VSEHGWX1RISZ-IMAN-PCGC_burn-it-all_burn-the-fear-down.mp3",
+          "duration_s": 220,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "RVNSR0N9V7WB",
+          "track_number": 5,
+          "title": "Burn The Bottle",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN05-RVNSR0N9V7WB-IMAN-PCGC_burn-it-all_burn-the-bottle.mp3",
+          "duration_s": 239,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Z9B1CKRG068L",
+          "track_number": 6,
+          "title": "Burn The Anger Out",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN06-Z9B1CKRG068L-IMAN-PCGC_burn-it-all_burn-the-anger-out.mp3",
+          "duration_s": 226,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "940TA0I740DB",
+          "track_number": 7,
+          "title": "Burn The Lust Away",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN07-940TA0I740DB-IMAN-PCGC_burn-it-all_burn-the-lust-away.mp3",
+          "duration_s": 224,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "1Z7HGRP5QMT4",
+          "track_number": 8,
+          "title": "What Survives The Fire",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN08-1Z7HGRP5QMT4-IMAN-PCGC_burn-it-all_what-survives-the-fire.mp3",
+          "duration_s": 283,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2OTPTL8W6WBO",
+          "track_number": 9,
+          "title": "Burn The Wheel",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN09-2OTPTL8W6WBO-IMAN-PCGC_burn-it-all_burn-the-wheel.mp3",
+          "duration_s": 224,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "GHMP18CG02CW",
+          "track_number": 10,
+          "title": "Living Sacrifice Walks Out",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN10-GHMP18CG02CW-IMAN-PCGC_burn-it-all_living-sacrifice-walks-out.mp3",
+          "duration_s": 208,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "PWUHOANDLM4L",
+          "track_number": 11,
+          "title": "Ashes Singing Back",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN11-PWUHOANDLM4L-IMAN-PCGC_burn-it-all_ashes-singing-back.mp3",
+          "duration_s": 198,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "PIQDW1BHIQD0",
+          "track_number": 12,
+          "title": "Walk Away Light",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Burn It All",
+          "album_id": "IMIM1007EN",
+          "url": "/cdn/music/imani-inspire/en/burn-it-all/HMX2026EN12-PIQDW1BHIQD0-IMAN-PCGC_burn-it-all_walk-away-light.mp3",
+          "duration_s": 258,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1008EN",
+      "album_slug": "the-line-holds",
+      "title": "The Line Holds",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "Q6A72ABYMLPO",
+          "track_number": 1,
+          "title": "The Line Holds (5 AM Prayer)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN01-Q6A72ABYMLPO-IMAN-PCGC_the-line-holds_the-line-holds-5-am-prayer.mp3",
+          "duration_s": 190,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "BGZQO0Q1V33T",
+          "track_number": 2,
+          "title": "Break The Curse (Plant The Blessing)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN02-BGZQO0Q1V33T-IMAN-PCGC_the-line-holds_break-the-curse-plant-the-blessing.mp3",
+          "duration_s": 191,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "P2TZUUIV5PH6",
+          "track_number": 3,
+          "title": "Sow The Promise (Reap The Line)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN03-P2TZUUIV5PH6-IMAN-PCGC_the-line-holds_sow-the-promise-reap-the-line.mp3",
+          "duration_s": 189,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "H03VVF6HAFI9",
+          "track_number": 4,
+          "title": "Bless This Child (Dedication)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN04-H03VVF6HAFI9-IMAN-PCGC_the-line-holds_bless-this-child-dedication.mp3",
+          "duration_s": 202,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "KVWHOKYNM5N7",
+          "track_number": 5,
+          "title": "Teen Walks In It",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN05-KVWHOKYNM5N7-IMAN-PCGC_the-line-holds_teen-walks-in-it.mp3",
+          "duration_s": 199,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "6NILBZUST28H",
+          "track_number": 6,
+          "title": "Mama Was Right (Adult Returns)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN06-6NILBZUST28H-IMAN-PCGC_the-line-holds_mama-was-right-adult-returns.mp3",
+          "duration_s": 201,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "ORIITFQLBJ1F",
+          "track_number": 7,
+          "title": "Parent Passes The Mantle",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN07-ORIITFQLBJ1F-IMAN-PCGC_the-line-holds_parent-passes-the-mantle.mp3",
+          "duration_s": 192,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "KX7P696NAKQJ",
+          "track_number": 8,
+          "title": "Grandma Goes Home (The Line Still Holds)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN08-KX7P696NAKQJ-IMAN-PCGC_the-line-holds_grandma-goes-home-the-line-still-holds.mp3",
+          "duration_s": 208,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "NQVZMQ7E8GO3",
+          "track_number": 9,
+          "title": "Great-Grandma Finishes Strong",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN09-NQVZMQ7E8GO3-IMAN-PCGC_the-line-holds_great-grandma-finishes-strong.mp3",
+          "duration_s": 165,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Q02K4GYDQPKH",
+          "track_number": 10,
+          "title": "The Line Is In My Hand",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN10-Q02K4GYDQPKH-IMAN-PCGC_the-line-holds_the-line-is-in-my-hand.mp3",
+          "duration_s": 197,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "WM26OWM8QNUV",
+          "track_number": 11,
+          "title": "Praying For The Unborn",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN11-WM26OWM8QNUV-IMAN-PCGC_the-line-holds_praying-for-the-unborn.mp3",
+          "duration_s": 195,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "XHT9NWJNZC60",
+          "track_number": 12,
+          "title": "Pass It On (Unborn Hears The Song)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "The Line Holds",
+          "album_id": "IMIM1008EN",
+          "url": "/cdn/music/imani-inspire/en/the-line-holds/HMX2026EN12-XHT9NWJNZC60-IMAN-PCGC_the-line-holds_pass-it-on-unborn-hears-the-song.mp3",
+          "duration_s": 214,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1009EN",
+      "album_slug": "healing-streams",
+      "title": "Healing Streams",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "QS7760KDTN7R",
+          "track_number": 1,
+          "title": "The Name Above The Report",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN01-QS7760KDTN7R-IMAN-PCGC_healing-streams_the-name-above-the-report.mp3",
+          "duration_s": 300,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "IY5CHDJ0XRYF",
+          "track_number": 2,
+          "title": "By His Stripes",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN02-IY5CHDJ0XRYF-IMAN-PCGC_healing-streams_by-his-stripes.mp3",
+          "duration_s": 260,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "BY6R0DUPEEKB",
+          "track_number": 3,
+          "title": "Jehovah-Rapha",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN03-BY6R0DUPEEKB-IMAN-PCGC_healing-streams_jehovah-rapha.mp3",
+          "duration_s": 229,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "J3QY8SNCQMDA",
+          "track_number": 4,
+          "title": "Lord, I Wait On You",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN04-J3QY8SNCQMDA-IMAN-PCGC_healing-streams_lord-i-wait-on-you.mp3",
+          "duration_s": 298,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "LFYVZW4UIGON",
+          "track_number": 5,
+          "title": "The God Who Healed Them",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN05-LFYVZW4UIGON-IMAN-PCGC_healing-streams_the-god-who-healed-them.mp3",
+          "duration_s": 292,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "3C5L7YU8JDZE",
+          "track_number": 6,
+          "title": "Lay Your Hand On Us",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN06-3C5L7YU8JDZE-IMAN-PCGC_healing-streams_lay-your-hand-on-us.mp3",
+          "duration_s": 358,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "TD23N3YXMP6P",
+          "track_number": 7,
+          "title": "Jesus Is Breaking Through",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN07-TD23N3YXMP6P-IMAN-PCGC_healing-streams_jesus-is-breaking-through.mp3",
+          "duration_s": 275,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "MTI8U2W2XKBB",
+          "track_number": 8,
+          "title": "Healing Streams",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN08-MTI8U2W2XKBB-IMAN-PCGC_healing-streams_healing-streams.mp3",
+          "duration_s": 308,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "R5QM9OXDBUYM",
+          "track_number": 9,
+          "title": "Tell What Jesus Did",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN09-R5QM9OXDBUYM-IMAN-PCGC_healing-streams_tell-what-jesus-did.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "A6A7LWLWFROQ",
+          "track_number": 10,
+          "title": "Jesus, Heal The Heart",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN10-A6A7LWLWFROQ-IMAN-PCGC_healing-streams_jesus-heal-the-heart.mp3",
+          "duration_s": 290,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "RRL59APMWHD6",
+          "track_number": 11,
+          "title": "Jesus, Flow Through Me",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN11-RRL59APMWHD6-IMAN-PCGC_healing-streams_jesus-flow-through-me.mp3",
+          "duration_s": 242,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "ONCX07J6C4F4",
+          "track_number": 12,
+          "title": "Every Stream From Calvary",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Healing Streams",
+          "album_id": "IMIM1009EN",
+          "url": "/cdn/music/imani-inspire/en/healing-streams/HMX2026EN12-ONCX07J6C4F4-IMAN-PCGC_healing-streams_every-stream-from-calvary.mp3",
+          "duration_s": 279,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1010EN",
+      "album_slug": "triple-time-power",
+      "title": "Triple-Time Power",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 10,
+      "tracks": [
+        {
+          "track_id": "XSJ3UTVJSZUO",
+          "track_number": 1,
+          "title": "The Promise Still Stands",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN01-XSJ3UTVJSZUO-IMAN-PCGC_triple-time-power_the-promise-still-stands.mp3",
+          "duration_s": 258,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "EULC1187YT9C",
+          "track_number": 2,
+          "title": "The Upper Room Is Loaded",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN02-EULC1187YT9C-IMAN-PCGC_triple-time-power_the-upper-room-is-loaded.mp3",
+          "duration_s": 205,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "YAUMQSJ20OFP",
+          "track_number": 3,
+          "title": "He Came On Me (Holy Ghost Encounter)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN03-YAUMQSJ20OFP-IMAN-PCGC_triple-time-power_he-came-on-me-holy-ghost-encounter.mp3",
+          "duration_s": 219,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Z66DKVEM0CBH",
+          "track_number": 4,
+          "title": "Speaking My New Language",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN04-Z66DKVEM0CBH-IMAN-PCGC_triple-time-power_speaking-my-new-language.mp3",
+          "duration_s": 194,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "BA98URG0EL71",
+          "track_number": 5,
+          "title": "Gifts for the Body",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN05-BA98URG0EL71-IMAN-PCGC_triple-time-power_gifts-for-the-body.mp3",
+          "duration_s": 234,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "KSSEJ795LRXM",
+          "track_number": 6,
+          "title": "Anointing That Stays",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN06-KSSEJ795LRXM-IMAN-PCGC_triple-time-power_anointing-that-stays.mp3",
+          "duration_s": 230,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "9JYSU2MVFXOS",
+          "track_number": 7,
+          "title": "Groan With Me, Holy Ghost",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN07-9JYSU2MVFXOS-IMAN-PCGC_triple-time-power_groan-with-me-holy-ghost.mp3",
+          "duration_s": 236,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "3G9JPIX9PO0E",
+          "track_number": 9,
+          "title": "Walking In The Spirit",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN09-3G9JPIX9PO0E-IMAN-PCGC_triple-time-power_walking-in-the-spirit.mp3",
+          "duration_s": 222,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "9WR8CJQ9Z2F6",
+          "track_number": 10,
+          "title": "Shout Break (Because He Filled Me)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN10-9WR8CJQ9Z2F6-IMAN-PCGC_triple-time-power_shout-break-because-he-filled-me.mp3",
+          "duration_s": 199,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "S8WWRP9BKXK8",
+          "track_number": 11,
+          "title": "Sealed Until The Day",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Triple-Time Power",
+          "album_id": "IMIM1010EN",
+          "url": "/cdn/music/imani-inspire/en/triple-time-power/HMX2026EN11-S8WWRP9BKXK8-IMAN-PCGC_triple-time-power_sealed-until-the-day.mp3",
+          "duration_s": 248,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1011EN",
+      "album_slug": "earthquake-at-midnight",
+      "title": "Earthquake at Midnight",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "CC3YH3QE3WSJ",
+          "track_number": 1,
+          "title": "Midnight Finds Me Praying",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN01-CC3YH3QE3WSJ-IMAN-PCGC_earthquake-at-midnight_midnight-finds-me-praying.mp3",
+          "duration_s": 234,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "36QK37X8GDPQ",
+          "track_number": 2,
+          "title": "The 3 AM Watch",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN02-36QK37X8GDPQ-IMAN-PCGC_earthquake-at-midnight_the-3-am-watch.mp3",
+          "duration_s": 256,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "RSB75JF7PHDA",
+          "track_number": 3,
+          "title": "Tarry With Me Holy Ghost",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN03-RSB75JF7PHDA-IMAN-PCGC_earthquake-at-midnight_tarry-with-me-holy-ghost.mp3",
+          "duration_s": 226,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "FS1YU2LPNXWK",
+          "track_number": 4,
+          "title": "Persistent Widow Prayer",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN04-FS1YU2LPNXWK-IMAN-PCGC_earthquake-at-midnight_persistent-widow-prayer.mp3",
+          "duration_s": 226,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "7AY0Y779OG4U",
+          "track_number": 5,
+          "title": "Groanings Too Deep for Words",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN05-7AY0Y779OG4U-IMAN-PCGC_earthquake-at-midnight_groanings-too-deep-for-words.mp3",
+          "duration_s": 288,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "I92LOVGO09Q4",
+          "track_number": 6,
+          "title": "Sing Hymns At Midnight",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN06-I92LOVGO09Q4-IMAN-PCGC_earthquake-at-midnight_sing-hymns-at-midnight.mp3",
+          "duration_s": 236,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "1HF65S8KOK73",
+          "track_number": 7,
+          "title": "The Watchman Does Not Sleep",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN07-1HF65S8KOK73-IMAN-PCGC_earthquake-at-midnight_the-watchman-does-not-sleep.mp3",
+          "duration_s": 233,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "S7MPMZVTDZ2J",
+          "track_number": 8,
+          "title": "Earthquake (At Midnight)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN08-S7MPMZVTDZ2J-IMAN-PCGC_earthquake-at-midnight_earthquake-at-midnight.mp3",
+          "duration_s": 280,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Z0RCFH808SZ3",
+          "track_number": 9,
+          "title": "Chains Fell Off",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN09-Z0RCFH808SZ3-IMAN-PCGC_earthquake-at-midnight_chains-fell-off.mp3",
+          "duration_s": 212,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "U60VBJ73KONC",
+          "track_number": 10,
+          "title": "Jailer Saved Tonight",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN10-U60VBJ73KONC-IMAN-PCGC_earthquake-at-midnight_jailer-saved-tonight.mp3",
+          "duration_s": 274,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "ZI8NP49XF37S",
+          "track_number": 11,
+          "title": "Morning Has Broken Through",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN11-ZI8NP49XF37S-IMAN-PCGC_earthquake-at-midnight_morning-has-broken-through.mp3",
+          "duration_s": 255,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Y0UVVY9R9PNS",
+          "track_number": 12,
+          "title": "Sunrise on the Prison Wall",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Earthquake at Midnight",
+          "album_id": "IMIM1011EN",
+          "url": "/cdn/music/imani-inspire/en/earthquake-at-midnight/HMX2026EN12-Y0UVVY9R9PNS-IMAN-PCGC_earthquake-at-midnight_sunrise-on-the-prison-wall.mp3",
+          "duration_s": 236,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1012EN",
+      "album_slug": "miracle-worker-subway-funk",
+      "title": "Miracle Worker (Subway Funk)",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 10,
+      "tracks": [
+        {
+          "track_id": "FM60HOPHO6AM",
+          "track_number": 1,
+          "title": "I Need a Miracle (149th Street Cry)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN01-FM60HOPHO6AM-IMAN-PCGC_miracle-worker-subway-funk_i-need-a-miracle-149th-street-cry.mp3",
+          "duration_s": 215,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "535ACOK0CG4A",
+          "track_number": 2,
+          "title": "Miracle Worker (149th Street)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN02-535ACOK0CG4A-IMAN-PCGC_miracle-worker-subway-funk_miracle-worker-149th-street.mp3",
+          "duration_s": 244,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "12XNH4WUW2VA",
+          "track_number": 4,
+          "title": "Open My Eyes (Lincoln Hospital)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN04-12XNH4WUW2VA-IMAN-PCGC_miracle-worker-subway-funk_open-my-eyes-lincoln-hospital.mp3",
+          "duration_s": 259,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "O5FEEXH2VYGZ",
+          "track_number": 5,
+          "title": "Walk (Gate Beautiful Now)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN05-O5FEEXH2VYGZ-IMAN-PCGC_miracle-worker-subway-funk_walk-gate-beautiful-now.mp3",
+          "duration_s": 212,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "B77OMR2TQ1QG",
+          "track_number": 6,
+          "title": "Praise Break on the 6 Train",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN06-B77OMR2TQ1QG-IMAN-PCGC_miracle-worker-subway-funk_praise-break-on-the-6-train.mp3",
+          "duration_s": 268,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "EMDXA8YIIUHY",
+          "track_number": 7,
+          "title": "Lazarus Come Forth (Project Tower)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN07-EMDXA8YIIUHY-IMAN-PCGC_miracle-worker-subway-funk_lazarus-come-forth-project-tower.mp3",
+          "duration_s": 245,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "JQYB7N3UC82H",
+          "track_number": 8,
+          "title": "What God Has Done (Altar Track)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN08-JQYB7N3UC82H-IMAN-PCGC_miracle-worker-subway-funk_what-god-has-done-altar-track.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "Q79SDWRE2R9P",
+          "track_number": 9,
+          "title": "Ravens at My Window (Webster Ave Kitchen)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN09-Q79SDWRE2R9P-IMAN-PCGC_miracle-worker-subway-funk_ravens-at-my-window-webster-ave-kitchen.mp3",
+          "duration_s": 223,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "PZVHXJ864BEP",
+          "track_number": 11,
+          "title": "Signs Shall Follow (Mark 16)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN11-PZVHXJ864BEP-IMAN-PCGC_miracle-worker-subway-funk_signs-shall-follow-mark-16.mp3",
+          "duration_s": 221,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "1PQ77MDN6L8N",
+          "track_number": 12,
+          "title": "The Streets Still Sing",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Miracle Worker (Subway Funk)",
+          "album_id": "IMIM1012EN",
+          "url": "/cdn/music/imani-inspire/en/miracle-worker-subway-funk/HMX2026EN12-1PQ77MDN6L8N-IMAN-PCGC_miracle-worker-subway-funk_the-streets-still-sing.mp3",
+          "duration_s": 244,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1013EN",
+      "album_slug": "vamp-forever",
+      "title": "Vamp Forever",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "4PP8JW9YAY4I",
+          "track_number": 1,
+          "title": "The Upper Room Won't End",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN01-4PP8JW9YAY4I-IMAN-PCGC_vamp-forever_the-upper-room-wont-end.mp3",
+          "duration_s": 204,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "T3FU5TWTYB9T",
+          "track_number": 2,
+          "title": "We Gather Like The Hundred Twenty",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN02-T3FU5TWTYB9T-IMAN-PCGC_vamp-forever_we-gather-like-the-hundred-twenty.mp3",
+          "duration_s": 193,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "GT6EOUFIXGVG",
+          "track_number": 3,
+          "title": "The Wind Is In The Building",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN03-GT6EOUFIXGVG-IMAN-PCGC_vamp-forever_the-wind-is-in-the-building.mp3",
+          "duration_s": 188,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "H2HH5OUG210E",
+          "track_number": 4,
+          "title": "Holy Ghost Language (Speak It)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN04-H2HH5OUG210E-IMAN-PCGC_vamp-forever_holy-ghost-language-speak-it.mp3",
+          "duration_s": 192,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "GCCR0FO5KGI3",
+          "track_number": 5,
+          "title": "Vamp Of Fire",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN05-GCCR0FO5KGI3-IMAN-PCGC_vamp-forever_vamp-of-fire.mp3",
+          "duration_s": 213,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "CK2EZP8N8QE1",
+          "track_number": 6,
+          "title": "Healing In The Hammond",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN06-CK2EZP8N8QE1-IMAN-PCGC_vamp-forever_healing-in-the-hammond.mp3",
+          "duration_s": 200,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "PAF2P0Y9VUYS",
+          "track_number": 7,
+          "title": "Devil, You Can't Stay Here",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN07-PAF2P0Y9VUYS-IMAN-PCGC_vamp-forever_devil-you-cant-stay-here.mp3",
+          "duration_s": 186,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "FAACV286CI7P",
+          "track_number": 8,
+          "title": "Praise Break Forever",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN08-FAACV286CI7P-IMAN-PCGC_vamp-forever_praise-break-forever.mp3",
+          "duration_s": 234,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "RD4XN2R0EYDT",
+          "track_number": 9,
+          "title": "Preach Until The Walls Shake",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN09-RD4XN2R0EYDT-IMAN-PCGC_vamp-forever_preach-until-the-walls-shake.mp3",
+          "duration_s": 168,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "LGTBH66RF4U3",
+          "track_number": 10,
+          "title": "Every Prayer Is Upper Room",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN10-LGTBH66RF4U3-IMAN-PCGC_vamp-forever_every-prayer-is-upper-room.mp3",
+          "duration_s": 189,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "JQG4SUJ1DX2M",
+          "track_number": 11,
+          "title": "When Two Or Three (Still Pentecost)",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN11-JQG4SUJ1DX2M-IMAN-PCGC_vamp-forever_when-two-or-three-still-pentecost.mp3",
+          "duration_s": 180,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "MXIFYGMUBPOE",
+          "track_number": 12,
+          "title": "Same Spirit, Same Fire",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Vamp Forever",
+          "album_id": "IMIM1013EN",
+          "url": "/cdn/music/imani-inspire/en/vamp-forever/HMX2026EN12-MXIFYGMUBPOE-IMAN-PCGC_vamp-forever_same-spirit-same-fire.mp3",
+          "duration_s": 192,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1044EN",
+      "album_slug": "pit-to-the-party",
+      "title": "Pit To The Party",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "38U4MMZ0FEZS",
+          "track_number": 1,
+          "title": "Pit to the Party",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN01-38U4MMZ0FEZS-IMAN-PCGC_pit-to-the-party_pit-to-the-party.mp3",
+          "duration_s": 209,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "TDT4GCWJD6EO",
+          "track_number": 2,
+          "title": "Best Robe On",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN02-TDT4GCWJD6EO-IMAN-PCGC_pit-to-the-party_best-robe-on.mp3",
+          "duration_s": 203,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "D9PWIFL9IUXD",
+          "track_number": 3,
+          "title": "Mourning Into Dancing",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN03-D9PWIFL9IUXD-IMAN-PCGC_pit-to-the-party_mourning-into-dancing.mp3",
+          "duration_s": 206,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "1T83RGVRALGG",
+          "track_number": 4,
+          "title": "He Carried Me",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN04-1T83RGVRALGG-IMAN-PCGC_pit-to-the-party_he-carried-me.mp3",
+          "duration_s": 215,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "DKR3PK8YJEDM",
+          "track_number": 5,
+          "title": "New Creation Now",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN05-DKR3PK8YJEDM-IMAN-PCGC_pit-to-the-party_new-creation-now.mp3",
+          "duration_s": 206,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "6NYRN3F6W5ZI",
+          "track_number": 6,
+          "title": "Look Where He Found Me",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN06-6NYRN3F6W5ZI-IMAN-PCGC_pit-to-the-party_look-where-he-found-me.mp3",
+          "duration_s": 225,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "H25K51ID4X1O",
+          "track_number": 7,
+          "title": "Mama's Kitchen Prayer",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN07-H25K51ID4X1O-IMAN-PCGC_pit-to-the-party_mamas-kitchen-prayer.mp3",
+          "duration_s": 199,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "5H7ZAFF2XXPR",
+          "track_number": 8,
+          "title": "The Bottom Fell Out for Good",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN08-5H7ZAFF2XXPR-IMAN-PCGC_pit-to-the-party_the-bottom-fell-out-for-good.mp3",
+          "duration_s": 223,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2OWWEYFO1AXD",
+          "track_number": 9,
+          "title": "Grace on a Wednesday",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN09-2OWWEYFO1AXD-IMAN-PCGC_pit-to-the-party_grace-on-a-wednesday.mp3",
+          "duration_s": 213,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "IBPMDG229Y37",
+          "track_number": 10,
+          "title": "Whole Block Invited",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN10-IBPMDG229Y37-IMAN-PCGC_pit-to-the-party_whole-block-invited.mp3",
+          "duration_s": 193,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "S5EIXL7P3GN0",
+          "track_number": 11,
+          "title": "Beauty for the Ashes",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN11-S5EIXL7P3GN0-IMAN-PCGC_pit-to-the-party_beauty-for-the-ashes.mp3",
+          "duration_s": 234,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "E570A7KQX7Q1",
+          "track_number": 12,
+          "title": "Dance Out the Door",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Pit To The Party",
+          "album_id": "IMIM1044EN",
+          "url": "/cdn/music/imani-inspire/en/pit-to-the-party/HMX2026EN12-E570A7KQX7Q1-IMAN-PCGC_pit-to-the-party_dance-out-the-door.mp3",
+          "duration_s": 234,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1045EN",
+      "album_slug": "streets-of-gold-jump-up",
+      "title": "Streets Of Gold Jump Up",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "QB81FDZO951K",
+          "track_number": 1,
+          "title": "Streets of Gold Jump Up",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN01-QB81FDZO951K-IMAN-PCGC_streets-of-gold-jump-up_streets-of-gold-jump-up.mp3",
+          "duration_s": 213,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "CV0K0DN64USD",
+          "track_number": 2,
+          "title": "Wave the Flag",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN02-CV0K0DN64USD-IMAN-PCGC_streets-of-gold-jump-up_wave-the-flag.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "X11MNTIDZK27",
+          "track_number": 3,
+          "title": "Jump for the Lamb",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN03-X11MNTIDZK27-IMAN-PCGC_streets-of-gold-jump-up_jump-for-the-lamb.mp3",
+          "duration_s": 199,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "KQQPN12LPVD4",
+          "track_number": 4,
+          "title": "Every Tribe on the Road",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN04-KQQPN12LPVD4-IMAN-PCGC_streets-of-gold-jump-up_every-tribe-on-the-road.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "4Q14YNBGQGPU",
+          "track_number": 5,
+          "title": "Steelpan Hallelujah",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN05-4Q14YNBGQGPU-IMAN-PCGC_streets-of-gold-jump-up_steelpan-hallelujah.mp3",
+          "duration_s": 210,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "YIOX4M1MCVCA",
+          "track_number": 6,
+          "title": "Robe of White",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN06-YIOX4M1MCVCA-IMAN-PCGC_streets-of-gold-jump-up_robe-of-white.mp3",
+          "duration_s": 202,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "S85ZRQD37W8O",
+          "track_number": 7,
+          "title": "She Came to the Feast",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN07-S85ZRQD37W8O-IMAN-PCGC_streets-of-gold-jump-up_she-came-to-the-feast.mp3",
+          "duration_s": 216,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "8I9STU8TV9TO",
+          "track_number": 8,
+          "title": "Rev Nineteen Riddim",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN08-8I9STU8TV9TO-IMAN-PCGC_streets-of-gold-jump-up_rev-nineteen-riddim.mp3",
+          "duration_s": 194,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "6JNQDOGO0155",
+          "track_number": 9,
+          "title": "Dance Till the Sunrise",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN09-6JNQDOGO0155-IMAN-PCGC_streets-of-gold-jump-up_dance-till-the-sunrise.mp3",
+          "duration_s": 218,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "88BAXXD5FBNR",
+          "track_number": 10,
+          "title": "Marching Into Glory",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN10-88BAXXD5FBNR-IMAN-PCGC_streets-of-gold-jump-up_marching-into-glory.mp3",
+          "duration_s": 213,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "9IA6V2KW8HVW",
+          "track_number": 11,
+          "title": "Never Coming Down",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN11-9IA6V2KW8HVW-IMAN-PCGC_streets-of-gold-jump-up_never-coming-down.mp3",
+          "duration_s": 199,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2PH1H8916A9E",
+          "track_number": 12,
+          "title": "Endless Jubilee",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Streets Of Gold Jump Up",
+          "album_id": "IMIM1045EN",
+          "url": "/cdn/music/imani-inspire/en/streets-of-gold-jump-up/HMX2026EN12-2PH1H8916A9E-IMAN-PCGC_streets-of-gold-jump-up_endless-jubilee.mp3",
+          "duration_s": 225,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    },
+    {
+      "album_id": "IMIM1047EN",
+      "album_slug": "ashes-into-gold",
+      "title": "Ashes Into Gold",
+      "artist": "Imani Inspire",
+      "artist_slug": "imani-inspire",
+      "language": "en",
+      "year": 2026,
+      "genre_code": "PCGC",
+      "genre": [
+        "Pentecostal / Charismatic Praise",
+        "Gospel Choir / Afro-Gospel"
+      ],
+      "track_count": 12,
+      "tracks": [
+        {
+          "track_id": "3PQOWUUGNULF",
+          "track_number": 1,
+          "title": "Ashes into Gold",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN01-3PQOWUUGNULF-IMAN-PCGC_ashes-into-gold_ashes-into-gold.mp3",
+          "duration_s": 204,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "IKZC8WWDP9YW",
+          "track_number": 2,
+          "title": "Oil of Joy",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN02-IKZC8WWDP9YW-IMAN-PCGC_ashes-into-gold_oil-of-joy.mp3",
+          "duration_s": 204,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "X2AXYKJMZEFM",
+          "track_number": 3,
+          "title": "Mourning into Dancing",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN03-X2AXYKJMZEFM-IMAN-PCGC_ashes-into-gold_mourning-into-dancing.mp3",
+          "duration_s": 204,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "ERHOPMUONI29",
+          "track_number": 4,
+          "title": "Restore the Years",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN04-ERHOPMUONI29-IMAN-PCGC_ashes-into-gold_restore-the-years.mp3",
+          "duration_s": 221,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "JGYILZ5RJVNL",
+          "track_number": 5,
+          "title": "Rivers in the Desert",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN05-JGYILZ5RJVNL-IMAN-PCGC_ashes-into-gold_rivers-in-the-desert.mp3",
+          "duration_s": 211,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "T2C8T1ATZ5VY",
+          "track_number": 6,
+          "title": "Heart of Flesh",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN06-T2C8T1ATZ5VY-IMAN-PCGC_ashes-into-gold_heart-of-flesh.mp3",
+          "duration_s": 222,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "VCJOP4YRQZQ0",
+          "track_number": 7,
+          "title": "The Day the House Burned",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN07-VCJOP4YRQZQ0-IMAN-PCGC_ashes-into-gold_the-day-the-house-burned.mp3",
+          "duration_s": 212,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "T25OMH09NK72",
+          "track_number": 8,
+          "title": "Beauty from the Break",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN08-T25OMH09NK72-IMAN-PCGC_ashes-into-gold_beauty-from-the-break.mp3",
+          "duration_s": 253,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "2T7A0N2EY1JX",
+          "track_number": 9,
+          "title": "New Every Morning",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN09-2T7A0N2EY1JX-IMAN-PCGC_ashes-into-gold_new-every-morning.mp3",
+          "duration_s": 189,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "R1U2U6VMSIOC",
+          "track_number": 10,
+          "title": "All Things New",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN10-R1U2U6VMSIOC-IMAN-PCGC_ashes-into-gold_all-things-new.mp3",
+          "duration_s": 188,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "1JRQ3IXGC1ZQ",
+          "track_number": 11,
+          "title": "New Creation",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN11-1JRQ3IXGC1ZQ-IMAN-PCGC_ashes-into-gold_new-creation.mp3",
+          "duration_s": 208,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        },
+        {
+          "track_id": "VX6DY0OPH65C",
+          "track_number": 12,
+          "title": "Dance in the Gold",
+          "artist": "Imani Inspire",
+          "artist_slug": "imani-inspire",
+          "album": "Ashes Into Gold",
+          "album_id": "IMIM1047EN",
+          "url": "/cdn/music/imani-inspire/en/ashes-into-gold/HMX2026EN12-VX6DY0OPH65C-IMAN-PCGC_ashes-into-gold_dance-in-the-gold.mp3",
+          "duration_s": 237,
+          "language": "en",
+          "genre_code": "PCGC",
+          "genre": [
+            "Pentecostal / Charismatic Praise",
+            "Gospel Choir / Afro-Gospel"
+          ],
+          "mode": "CCI",
+          "explicit": false,
+          "family_friendly": true
+        }
+      ]
+    }
+  ]
+}

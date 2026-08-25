@@ -1,0 +1,36 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM339.18-EN",
+  "slug": "jubilee-gospel-fire",
+  "name": "Pentecostal Shout",
+  "hm": "339.18",
+  "band": "fivefold",
+  "mount": "gospel-fire",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Memphis",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "imani-inspire",
+        "zariah-inspire"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM339.18-EN/delivery",
+    "file": "HM339.18EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM339.18-EN/delivery/HM339.18EN-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

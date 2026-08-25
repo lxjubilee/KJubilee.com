@@ -1,0 +1,81 @@
+{
+  "folders": [
+    {
+      "name": "kJubilee",
+      "path": "."
+    }
+  ],
+  "settings": {
+    "files.exclude": {
+      "node_modules": true,
+      ".env": false
+    },
+    "search.exclude": {
+      "node_modules": true,
+      "public/audio": true,
+      "cdn": true,
+      "**/*.mp3": true,
+      "**/*.mp4": true,
+      "**/*.m4a": true,
+      "**/*.ogg": true
+    },
+    "files.associations": {
+      "*.env.example": "properties",
+      ".env": "properties"
+    },
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.detectIndentation": true,
+    "editor.formatOnSave": false,
+    "[json]": { "editor.tabSize": 2 },
+    "[jsonc]": { "editor.tabSize": 2 },
+    "[markdown]": { "editor.wordWrap": "on", "editor.tabSize": 2 },
+    "[html]": { "editor.tabSize": 2 },
+    "[sql]": { "editor.tabSize": 2 },
+    "terminal.integrated.cwd": "${workspaceFolder}",
+    "javascript.preferences.importModuleSpecifier": "relative",
+    "eslint.enable": false
+  },
+  "extensions": {
+    "recommendations": [
+      "dbaeumer.vscode-eslint",
+      "esbenp.prettier-vscode",
+      "ms-azuretools.vscode-docker",
+      "redhat.vscode-yaml",
+      "yzhang.markdown-all-in-one"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "kJubilee — start",
+        "program": "${workspaceFolder}/server.js",
+        "cwd": "${workspaceFolder}",
+        "envFile": "${workspaceFolder}/.env",
+        "console": "integratedTerminal",
+        "skipFiles": ["<node_internals>/**"]
+      },
+      {
+        "type": "node",
+        "request": "launch",
+        "name": "kJubilee — migrate",
+        "program": "${workspaceFolder}/scripts/run-migrations.js",
+        "cwd": "${workspaceFolder}",
+        "envFile": "${workspaceFolder}/.env",
+        "console": "integratedTerminal"
+      }
+    ]
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      { "label": "npm: start",   "type": "npm", "script": "start",   "problemMatcher": [] },
+      { "label": "npm: dev",     "type": "npm", "script": "dev",     "problemMatcher": [] },
+      { "label": "npm: migrate", "type": "npm", "script": "migrate", "problemMatcher": [] },
+      { "label": "npm: test",    "type": "npm", "script": "test",    "problemMatcher": [] }
+    ]
+  }
+}

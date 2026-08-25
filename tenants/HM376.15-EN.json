@@ -1,0 +1,48 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM376.15-EN",
+  "slug": "latin-worship",
+  "name": "Latin Worship (Sung in English)",
+  "hm": "376.15",
+  "band": "fivefold",
+  "mount": "latin-worship",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Miami",
+    "timezone": "America/New_York"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "artists": [
+        "santiago-inspire"
+      ],
+      "exclude": {
+        "albums": [
+          "SAIM1043EN",
+          "SAIM1044EN",
+          "SAIM1045EN",
+          "SAIM1046EN",
+          "SAIM1047EN",
+          "SAIM1048EN",
+          "SAIM1049EN",
+          "SAIM1050EN",
+          "SAIM1051EN"
+        ]
+      }
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM376.15-EN/delivery",
+    "file": "HM376.15EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM376.15-EN/delivery/HM376.15EN-20260821.json"
+  },
+  "format": "Latin Worship",
+  "timezone": "America/Los_Angeles"
+}

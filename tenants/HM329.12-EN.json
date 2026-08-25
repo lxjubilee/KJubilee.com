@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM329.12-EN",
+  "slug": "jubilee-kids-party",
+  "name": "Jubilee Kids Party",
+  "hm": "329.12",
+  "band": "fivefold",
+  "mount": "kids-party",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Nashville",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "party-giggles"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM329.12-EN/delivery",
+    "file": "HM329.12EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM329.12-EN/delivery/HM329.12EN-20260821.json"
+  },
+  "format": "Kids Praise",
+  "timezone": "America/Los_Angeles"
+}

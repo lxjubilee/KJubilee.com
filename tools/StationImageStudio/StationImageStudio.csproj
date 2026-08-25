@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>StationImageStudio</AssemblyName>
+    <RootNamespace>StationImageStudio</RootNamespace>
+    <!-- The Jubilee circle is the studio's mark, so the taskbar, Alt+Tab and
+         Explorer all show it. ApplicationIcon is what Windows stamps on the exe;
+         the Window also sets Icon="app.ico" so the title bar agrees even when the
+         window is hosted rather than launched. Nine sizes, 16 through 256, so
+         Windows picks a real bitmap at every DPI instead of scaling one. -->
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <!-- Per-monitor v2. Without it Windows bitmap-stretches the window when it
+         crosses to a monitor with different scaling, so a restored rectangle is
+         the right pixels in the wrong apparent size. -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Also embedded as a resource, which is what Window.Icon resolves against. -->
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!--
+      Pinned rather than floating (1.0.*), because this machine may build with no
+      network and a floating version has to reach nuget.org to resolve even when
+      a perfectly good copy is already in the local package cache.
+    -->
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4129.50" />
+    <!--
+      WebP encoding for downloaded images. Windows Imaging Component ships a
+      WebP *decoder* but no encoder, so this cannot be done with the built-in
+      WPF imaging types.
+
+      Pinned to 2.1.x deliberately: ImageSharp 3.0 moved to the Six Labors Split
+      License, which requires a paid licence above a revenue threshold. The 2.x
+      line is Apache-2.0 and has the WebP encoder we need.
+    -->
+    <PackageReference Include="SixLabors.ImageSharp" Version="2.1.13" />
+  </ItemGroup>
+
+</Project>
