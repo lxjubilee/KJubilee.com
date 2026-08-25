@@ -83,7 +83,7 @@ document.addEventListener('error', function (e) {
             // BAND 1 — Five-Fold Ministry (51 stations)
             // ===================================================================
             {
-                slug: "logos", hm: "301.12", frequency: "HM 301.12", name: "The Logos",
+                slug: "logos", hm: "380.20", frequency: "HM 380.20", name: "The Logos",
                 band: "fivefold", primary: "devotionals",
                 mode: "Both", phase: 1, bestseller: 92, reach: "350M",
                 image: "/images/jubilee-profile.png",
@@ -97,7 +97,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "wisdom-channel", hm: "303.14", frequency: "HM 303.14", name: "The Wisdom Channel",
+                slug: "wisdom-channel", hm: "380.50", frequency: "HM 380.50", name: "The Wisdom Channel",
                 band: "fivefold", primary: "devotionals",
                 mode: "Both", phase: 4, bestseller: 91, reach: "800M",
                 image: "/images/jubilee-profile.png",
@@ -111,7 +111,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-praise", hm: "305.12", frequency: "HM 305.12", name: "Torah Sings",
+                slug: "jubilee-praise", hm: "305.40", frequency: "HM 305.40", name: "Torah Sings",
                 band: "fivefold", primary: "music",
                 // The card category comes from FORMAT[primary] unless a station
                 // overrides it here — this one carries its own format name
@@ -139,7 +139,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "money-faith", hm: "306.18", frequency: "HM 306.18", name: "Money & Faith",
+                slug: "money-faith", hm: "387.20", frequency: "HM 387.20", name: "Money & Faith",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 93, reach: "320M",
                 image: "/images/jubilee-profile.png",
@@ -153,7 +153,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "heavens-dawn", hm: "307.16", frequency: "HM 307.16", name: "Heaven's Dawn",
+                slug: "heavens-dawn", hm: "380.80", frequency: "HM 380.80", name: "Heaven's Dawn",
                 band: "fivefold", primary: "devotionals",
                 mode: "Both", phase: 4, bestseller: 92, reach: "700M",
                 image: "/images/jubilee-profile.png",
@@ -167,7 +167,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "freedom-steps", hm: "308.14", frequency: "HM 308.14", name: "Freedom Steps",
+                slug: "freedom-steps", hm: "391.20", frequency: "HM 391.20", name: "Freedom Steps",
                 band: "fivefold", primary: "online_church",
                 mode: "Non-OHI", phase: 6, bestseller: 93, reach: "380M",
                 image: "/images/jubilee-profile.png",
@@ -181,7 +181,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "upper-room", hm: "309.12", frequency: "HM 309.12", name: "The Upper Room",
+                slug: "upper-room", hm: "340.30", frequency: "HM 340.30", name: "The Upper Room",
                 band: "fivefold", primary: "prayer",
                 mode: "Both", phase: 1, bestseller: 91, reach: "180M",
                 image: "/images/jubilee-profile.png",
@@ -195,7 +195,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "marriage-matters", hm: "311.14", frequency: "HM 311.14", name: "Marriage Matters",
+                slug: "marriage-matters", hm: "385.20", frequency: "HM 385.20", name: "Marriage Matters",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 94, reach: "380M",
                 image: "/images/jubilee-profile.png",
@@ -209,7 +209,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "the-mended-place", hm: "312.14", frequency: "HM 312.14", name: "The Mended Place",
+                slug: "the-mended-place", hm: "392.20", frequency: "HM 392.20", name: "The Mended Place",
                 band: "fivefold", primary: "online_church",
                 mode: "Both", phase: 6, bestseller: 92, reach: "290M",
                 image: "/images/jubilee-profile.png",
@@ -223,7 +223,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-ccm", hm: "313.12", frequency: "HM 313.12", name: "Celebrate Yeshua!",
+                slug: "jubilee-ccm", hm: "304.80", frequency: "HM 304.80", name: "Celebrate Yeshua!",
                 band: "fivefold", primary: "music",
                 // The slug stays jubilee-ccm. It is the station's identity, not
                 // its display name: the generated cover, the published CDN copy
@@ -252,7 +252,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "yes-and-amen", hm: "314.88", frequency: "HM 314.88", name: "Yes and Amen",
+                slug: "yes-and-amen", hm: "303.10", frequency: "HM 303.10", name: "Yes and Amen",
                 band: "fivefold", primary: "music",
                 // Its own format name. These are declaration records — first-person
                 // covenant identity sung before Yahuah — and "Praise & Worship"
@@ -277,7 +277,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "raising-arrows", hm: "315.18", frequency: "HM 315.18", name: "Raising Arrows",
+                slug: "raising-arrows", hm: "385.50", frequency: "HM 385.50", name: "Raising Arrows",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 92, reach: "290M",
                 image: "/images/jubilee-profile.png",
@@ -291,7 +291,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "strong-sober", hm: "316.18", frequency: "HM 316.18", name: "Strong Sober",
+                slug: "strong-sober", hm: "391.50", frequency: "HM 391.50", name: "Strong Sober",
                 band: "fivefold", primary: "online_church",
                 mode: "Non-OHI", phase: 6, bestseller: 94, reach: "420M",
                 image: "/images/jubilee-profile.png",
@@ -305,7 +305,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-sanctuary", hm: "317.14", frequency: "HM 317.14", name: "Jubilee Sanctuary",
+                slug: "jubilee-sanctuary", hm: "390.30", frequency: "HM 390.30", name: "Jubilee Sanctuary",
                 band: "fivefold", primary: "online_church",
                 mode: "Mixed", phase: 1, bestseller: 87, reach: "250M",
                 image: "/images/jubilee-profile.png",
@@ -319,7 +319,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "pure-heart-brothers", hm: "320.12", frequency: "HM 320.12", name: "Pure Heart Brothers",
+                slug: "pure-heart-brothers", hm: "396.20", frequency: "HM 396.20", name: "Pure Heart Brothers",
                 band: "fivefold", primary: "online_church",
                 mode: "Non-OHI", phase: 6, bestseller: 92, reach: "310M",
                 image: "/images/jubilee-profile.png",
@@ -333,7 +333,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-teaching", hm: "321.16", frequency: "HM 321.16", name: "Jubilee Teaching",
+                slug: "jubilee-teaching", hm: "383.20", frequency: "HM 383.20", name: "Jubilee Teaching",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 1, bestseller: 89, reach: "220M",
                 image: "/images/jubilee-profile.png",
@@ -347,7 +347,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "identity-in-yeshua", hm: "323.14", frequency: "HM 323.14", name: "Identity in Yeshua",
+                slug: "identity-in-yeshua", hm: "384.20", frequency: "HM 384.20", name: "Identity in Yeshua",
                 band: "fivefold", primary: "bible_studies",
                 mode: "OHI", phase: 6, bestseller: 95, reach: "410M",
                 image: "/images/jubilee-profile.png",
@@ -361,7 +361,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "gods-little-lambs", hm: "325.18", frequency: "HM 325.18", name: "God's Little Lambs",
+                slug: "gods-little-lambs", hm: "360.30", frequency: "HM 360.30", name: "God's Little Lambs",
                 band: "fivefold", primary: "children",
                 mode: "Non-OHI", phase: 1, bestseller: 88, reach: "140M",
                 image: "/images/jubilee-profile.png",
@@ -381,7 +381,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "whole-hearted-sisters", hm: "326.18", frequency: "HM 326.18", name: "Whole Hearted Sisters",
+                slug: "whole-hearted-sisters", hm: "396.50", frequency: "HM 396.50", name: "Whole Hearted Sisters",
                 band: "fivefold", primary: "online_church",
                 mode: "Non-OHI", phase: 6, bestseller: 93, reach: "330M",
                 image: "/images/jubilee-profile.png",
@@ -395,7 +395,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "after-the-storm", hm: "327.18", frequency: "HM 327.18", name: "After the Storm",
+                slug: "after-the-storm", hm: "388.20", frequency: "HM 388.20", name: "After the Storm",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 91, reach: "220M",
                 image: "/images/jubilee-profile.png",
@@ -409,7 +409,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-kids-party", hm: "329.12", frequency: "HM 329.12", name: "Jubilee Kids Party",
+                slug: "jubilee-kids-party", hm: "361.90", frequency: "HM 361.90", name: "Jubilee Kids Party",
                 band: "fivefold", primary: "children",
                 // Its own label rather than the shared "Kids" that primary:children
                 // gives the other two children's stations — this one is a praise
@@ -428,7 +428,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "grief-walked", hm: "330.16", frequency: "HM 330.16", name: "Grief Walked",
+                slug: "grief-walked", hm: "393.10", frequency: "HM 393.10", name: "Grief Walked",
                 band: "fivefold", primary: "online_church",
                 mode: "Both", phase: 6, bestseller: 91, reach: "240M",
                 image: "/images/jubilee-profile.png",
@@ -442,7 +442,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-lullaby", hm: "331.14", frequency: "HM 331.14", name: "Inspire Lullaby",
+                slug: "inspire-lullaby", hm: "364.80", frequency: "HM 364.80", name: "Inspire Lullaby",
                 band: "fivefold", primary: "sleep_rest",
                 mode: "Non-OHI", phase: 4, bestseller: 94, reach: "2000M",
                 image: "/images/jubilee-profile.png",
@@ -456,7 +456,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "purpose-found", hm: "333.16", frequency: "HM 333.16", name: "Purpose Found",
+                slug: "purpose-found", hm: "384.50", frequency: "HM 384.50", name: "Purpose Found",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 93, reach: "350M",
                 image: "/images/jubilee-profile.png",
@@ -470,7 +470,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "country-gospel", hm: "335.16", frequency: "HM 335.16", name: "Gospel Country",
+                slug: "country-gospel", hm: "309.30", frequency: "HM 309.30", name: "Gospel Country",
                 band: "fivefold", primary: "music",
                 mode: "Non-OHI", phase: 1, bestseller: 90, reach: "95M",
                 image: "/images/jubilee-profile.png",
@@ -495,7 +495,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "beyond-the-trauma", hm: "336.14", frequency: "HM 336.14", name: "Beyond the Trauma",
+                slug: "beyond-the-trauma", hm: "392.50", frequency: "HM 392.50", name: "Beyond the Trauma",
                 band: "fivefold", primary: "online_church",
                 mode: "Non-OHI", phase: 6, bestseller: 92, reach: "280M",
                 image: "/images/jubilee-profile.png",
@@ -509,7 +509,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "decisions-that-matter", hm: "338.12", frequency: "HM 338.12", name: "Decisions That Matter",
+                slug: "decisions-that-matter", hm: "384.80", frequency: "HM 384.80", name: "Decisions That Matter",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 90, reach: "180M",
                 image: "/images/jubilee-profile.png",
@@ -523,7 +523,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-gospel-fire", hm: "339.18", frequency: "HM 339.18", name: "Pentecostal Shout",
+                slug: "jubilee-gospel-fire", hm: "302.50", frequency: "HM 302.50", name: "Pentecostal Shout",
                 band: "fivefold", primary: "music",
                 mode: "Both", phase: 1, bestseller: 88, reach: "155M",
                 image: "/images/jubilee-profile.png",
@@ -546,7 +546,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "anxious-no-more", hm: "340.18", frequency: "HM 340.18", name: "Anxious No More",
+                slug: "anxious-no-more", hm: "394.80", frequency: "HM 394.80", name: "Anxious No More",
                 band: "fivefold", primary: "online_church",
                 mode: "Non-OHI", phase: 6, bestseller: 94, reach: "410M",
                 image: "/images/jubilee-profile.png",
@@ -560,7 +560,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "lead-like-yeshua", hm: "342.18", frequency: "HM 342.18", name: "Lead Like Yeshua",
+                slug: "lead-like-yeshua", hm: "387.50", frequency: "HM 387.50", name: "Lead Like Yeshua",
                 band: "fivefold", primary: "bible_studies",
                 mode: "OHI", phase: 6, bestseller: 91, reach: "260M",
                 image: "/images/jubilee-profile.png",
@@ -574,7 +574,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-hymns-heritage", hm: "343.12", frequency: "HM 343.12", name: "Inspire Hymns & Heritage",
+                slug: "inspire-hymns-heritage", hm: "300.30", frequency: "HM 300.30", name: "Inspire Hymns & Heritage",
                 band: "fivefold", primary: "music",
                 mode: "Non-OHI", phase: 1, bestseller: 84, reach: "110M",
                 image: "/images/jubilee-profile.png",
@@ -588,7 +588,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "riddim-and-rhyme", hm: "347.14", frequency: "HM 347.14", name: "Riddim and Rhyme",
+                slug: "riddim-and-rhyme", hm: "311.50", frequency: "HM 311.50", name: "Riddim and Rhyme",
                 band: "fivefold", primary: "music",
                 // Its own format name — reggae, dancehall and soca under teaching
                 // hymnody is not what "Praise & Worship" puts in a listener's head.
@@ -609,7 +609,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "ancient-paths", hm: "345.24", frequency: "HM 345.24", name: "The Ancient Paths",
+                slug: "ancient-paths", hm: "313.80", frequency: "HM 313.80", name: "The Ancient Paths",
                 band: "fivefold", primary: "music",
                 // Its own format name — maqam and oud under acoustic lament is a
                 // long way from what "Praise & Worship" suggests.
@@ -630,7 +630,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "iron-sharpening-iron", hm: "348.16", frequency: "HM 348.16", name: "Iron Sharpening Iron",
+                slug: "iron-sharpening-iron", hm: "386.20", frequency: "HM 386.20", name: "Iron Sharpening Iron",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 92, reach: "240M",
                 image: "/images/jubilee-profile.png",
@@ -644,7 +644,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "the-comeback-room", hm: "350.14", frequency: "HM 350.14", name: "The Comeback Room",
+                slug: "the-comeback-room", hm: "395.40", frequency: "HM 395.40", name: "The Comeback Room",
                 band: "fivefold", primary: "online_church",
                 mode: "Both", phase: 6, bestseller: 91, reach: "260M",
                 image: "/images/jubilee-profile.png",
@@ -658,7 +658,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "radiant-stones-radio", hm: "351.16", frequency: "HM 351.16", name: "Radiant Stones Radio",
+                slug: "radiant-stones-radio", hm: "301.90", frequency: "HM 301.90", name: "Radiant Stones Radio",
                 band: "fivefold", primary: "music",
                 mode: "Both", phase: 2, bestseller: 84, reach: "120M",
                 image: "/images/jubilee-profile.png",
@@ -672,7 +672,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "stillwater", hm: "355.18", frequency: "HM 355.18", name: "Stillwater",
+                slug: "stillwater", hm: "365.40", frequency: "HM 365.40", name: "Stillwater",
                 band: "fivefold", primary: "sleep_rest",
                 mode: "Both", phase: 4, bestseller: 91, reach: "1200M",
                 image: "/images/jubilee-profile.png",
@@ -686,7 +686,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "daughters-of-the-king", hm: "358.14", frequency: "HM 358.14", name: "Daughters of the King",
+                slug: "daughters-of-the-king", hm: "386.50", frequency: "HM 386.50", name: "Daughters of the King",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 94, reach: "340M",
                 image: "/images/jubilee-profile.png",
@@ -700,7 +700,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "shalom-be-still", hm: "359.12", frequency: "HM 359.12", name: "Shalom: Be Still",
+                slug: "shalom-be-still", hm: "366.20", frequency: "HM 366.20", name: "Shalom: Be Still",
                 band: "fivefold", primary: "sleep_rest",
                 mode: "OHI", phase: 2, bestseller: 89, reach: "95M",
                 image: "/images/jubilee-profile.png",
@@ -714,7 +714,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "walking-together", hm: "360.16", frequency: "HM 360.16", name: "Walking Together",
+                slug: "walking-together", hm: "397.60", frequency: "HM 397.60", name: "Walking Together",
                 band: "fivefold", primary: "online_church",
                 mode: "Both", phase: 6, bestseller: 93, reach: "350M",
                 image: "/images/jubilee-profile.png",
@@ -728,7 +728,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "bedtime-blessings", hm: "363.14", frequency: "HM 363.14", name: "Bedtime Blessings",
+                slug: "bedtime-blessings", hm: "363.10", frequency: "HM 363.10", name: "Bedtime Blessings",
                 band: "fivefold", primary: "children",
                 mode: "Non-OHI", phase: 2, bestseller: 90, reach: "105M",
                 image: "/images/jubilee-profile.png",
@@ -742,7 +742,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "pentecostal-fire", hm: "367.16", frequency: "HM 367.16", name: "Pentecostal Fire",
+                slug: "pentecostal-fire", hm: "341.90", frequency: "HM 341.90", name: "Pentecostal Fire",
                 band: "fivefold", primary: "prayer",
                 mode: "Both", phase: 2, bestseller: 83, reach: "145M",
                 image: "/images/jubilee-profile.png",
@@ -756,7 +756,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-acapella", hm: "371.18", frequency: "HM 371.18", name: "Inspire Acapella",
+                slug: "inspire-acapella", hm: "307.60", frequency: "HM 307.60", name: "Inspire Acapella",
                 band: "fivefold", primary: "music",
                 mode: "Both", phase: 2, bestseller: 79, reach: "50M",
                 image: "/images/jubilee-profile.png",
@@ -770,7 +770,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "when-faith-feels-hard", hm: "372.16", frequency: "HM 372.16", name: "When Faith Feels Hard",
+                slug: "when-faith-feels-hard", hm: "388.50", frequency: "HM 388.50", name: "When Faith Feels Hard",
                 band: "fivefold", primary: "bible_studies",
                 mode: "Both", phase: 6, bestseller: 93, reach: "280M",
                 image: "/images/jubilee-profile.png",
@@ -784,7 +784,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-talk", hm: "375.12", frequency: "HM 375.12", name: "Inspire Talk",
+                slug: "inspire-talk", hm: "382.50", frequency: "HM 382.50", name: "Inspire Talk",
                 band: "fivefold", primary: "talk_podcasts",
                 mode: "Mixed", phase: 2, bestseller: 85, reach: "110M",
                 image: "/images/jubilee-profile.png",
@@ -798,7 +798,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "midnight-praise", hm: "379.14", frequency: "HM 379.14", name: "Midnight Praise",
+                slug: "midnight-praise", hm: "314.40", frequency: "HM 314.40", name: "Midnight Praise",
                 // Its own format name — Celtic ambient and contemplative cinematic
                 // is the opposite of what "Praise & Worship" leads a listener to
                 // expect, and this frequency exists for the hours nobody is loud.
@@ -820,7 +820,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "word-of-fire", hm: "383.16", frequency: "HM 383.16", name: "Word of Fire!",
+                slug: "word-of-fire", hm: "383.50", frequency: "HM 383.50", name: "Word of Fire!",
                 band: "fivefold", primary: "bible_studies",
                 mode: "OHI", phase: 3, bestseller: 87, reach: "85M",
                 image: "/images/jubilee-profile.png",
@@ -834,7 +834,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "shema-roots", hm: "387.18", frequency: "HM 387.18", name: "Shema Roots",
+                slug: "shema-roots", hm: "381.20", frequency: "HM 381.20", name: "Shema Roots",
                 band: "fivefold", primary: "hebrew_roots",
                 mode: "OHI", phase: 3, bestseller: 80, reach: "28M",
                 image: "/images/jubilee-profile.png",
@@ -848,7 +848,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "restored-renewed", hm: "388.16", frequency: "HM 388.16", name: "Restored & Renewed",
+                slug: "restored-renewed", hm: "398.70", frequency: "HM 398.70", name: "Restored & Renewed",
                 band: "fivefold", primary: "online_church",
                 mode: "Both", phase: 6, bestseller: 92, reach: "270M",
                 image: "/images/jubilee-profile.png",
@@ -862,7 +862,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "apostolic-five-fold", hm: "391.12", frequency: "HM 391.12", name: "Apostolic & Five-Fold",
+                slug: "apostolic-five-fold", hm: "381.50", frequency: "HM 381.50", name: "Apostolic & Five-Fold",
                 band: "fivefold", primary: "hebrew_roots",
                 mode: "OHI", phase: 3, bestseller: 78, reach: "35M",
                 image: "/images/jubilee-profile.png",
@@ -876,7 +876,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "story-hour", hm: "393.14", frequency: "HM 393.14", name: "Story Hour",
+                slug: "story-hour", hm: "367.20", frequency: "HM 367.20", name: "Story Hour",
                 band: "fivefold", primary: "radio_theater",
                 mode: "Non-OHI", phase: 3, bestseller: 84, reach: "75M",
                 image: "/images/jubilee-profile.png",
@@ -890,7 +890,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "the-hidden-manna", hm: "397.16", frequency: "HM 397.16", name: "The Hidden Manna",
+                slug: "the-hidden-manna", hm: "381.80", frequency: "HM 381.80", name: "The Hidden Manna",
                 band: "fivefold", primary: "hebrew_roots",
                 mode: "OHI", phase: 3, bestseller: 74, reach: "18M",
                 image: "/images/jubilee-profile.png",
@@ -904,7 +904,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "island-hallelujah", hm: "399.18", frequency: "HM 399.18", name: "Island Hallelujah",
+                slug: "island-hallelujah", hm: "312.10", frequency: "HM 312.10", name: "Island Hallelujah",
                 band: "fivefold", primary: "music",
                 // Its own format name rather than the shared "Praise & Worship"
                 // label — slack-key, 'ukulele and island reggae are not what a
@@ -930,7 +930,7 @@ document.addEventListener('error', function (e) {
             // BAND 2 — Multilingual / Nations-Based (30 stations)
             // ===================================================================
             {
-                slug: "familia-inspire-espanol", hm: "302.12", frequency: "HM 302.12", name: "Familia Inspire (Español)",
+                slug: "familia-inspire-espanol", hm: "320.30", frequency: "HM 320.30", name: "Familia Inspire (Español)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 2, bestseller: 95, reach: "450M",
                 image: "/images/jubilee-profile.png",
@@ -944,7 +944,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-spanish", hm: "304.12", frequency: "HM 304.12", name: "Jubilee Prayers in Spanish",
+                slug: "jubilee-prayers-spanish", hm: "350.50", frequency: "HM 350.50", name: "Jubilee Prayers in Spanish",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 93, reach: "380M",
                 image: "/images/jubilee-profile.png",
@@ -958,7 +958,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "brasil-inspire-portugues", hm: "307.14", frequency: "HM 307.14", name: "Brasil Inspire (Português)",
+                slug: "brasil-inspire-portugues", hm: "321.90", frequency: "HM 321.90", name: "Brasil Inspire (Português)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 93, reach: "250M",
                 image: "/images/jubilee-profile.png",
@@ -972,7 +972,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "asia-inspire-zhongwen", hm: "312.16", frequency: "HM 312.16", name: "Asia Inspire (中文)",
+                slug: "asia-inspire-zhongwen", hm: "334.40", frequency: "HM 334.40", name: "Asia Inspire (中文)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 91, reach: "350M",
                 image: "/images/jubilee-profile.png",
@@ -986,7 +986,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-mandarin", hm: "314.14", frequency: "HM 314.14", name: "Jubilee Prayers in Mandarin",
+                slug: "jubilee-prayers-mandarin", hm: "357.30", frequency: "HM 357.30", name: "Jubilee Prayers in Mandarin",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 92, reach: "280M",
                 image: "/images/jubilee-profile.png",
@@ -1000,7 +1000,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-india-hindi", hm: "317.18", frequency: "HM 317.18", name: "Inspire India (हिन्दी)",
+                slug: "inspire-india-hindi", hm: "332.10", frequency: "HM 332.10", name: "Inspire India (हिन्दी)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 91, reach: "600M",
                 image: "/images/jubilee-profile.png",
@@ -1014,7 +1014,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-hindi", hm: "319.16", frequency: "HM 319.16", name: "Jubilee Prayers in Hindi",
+                slug: "jubilee-prayers-hindi", hm: "356.70", frequency: "HM 356.70", name: "Jubilee Prayers in Hindi",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 91, reach: "320M",
                 image: "/images/jubilee-profile.png",
@@ -1028,7 +1028,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-crown-arabic", hm: "322.12", frequency: "HM 322.12", name: "Inspire Crown (العربية)",
+                slug: "inspire-crown-arabic", hm: "328.70", frequency: "HM 328.70", name: "Inspire Crown (العربية)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 90, reach: "400M",
                 image: "/images/jubilee-profile.png",
@@ -1042,7 +1042,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-arabic", hm: "324.18", frequency: "HM 324.18", name: "Jubilee Prayers in Arabic",
+                slug: "jubilee-prayers-arabic", hm: "354.20", frequency: "HM 354.20", name: "Jubilee Prayers in Arabic",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 92, reach: "250M",
                 image: "/images/jubilee-profile.png",
@@ -1056,7 +1056,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "france-inspire-francais", hm: "327.14", frequency: "HM 327.14", name: "France Inspire (Français)",
+                slug: "france-inspire-francais", hm: "322.50", frequency: "HM 322.50", name: "France Inspire (Français)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 5, bestseller: 90, reach: "220M",
                 image: "/images/jubilee-profile.png",
@@ -1070,7 +1070,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-praise-romana", hm: "332.16", frequency: "HM 332.16", name: "Jubilee Praise (Română)",
+                slug: "jubilee-praise-romana", hm: "326.20", frequency: "HM 326.20", name: "Jubilee Praise (Română)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "OHI", phase: 1, bestseller: 92, reach: "18M",
                 image: "/images/jubilee-profile.png",
@@ -1088,7 +1088,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-portuguese", hm: "334.12", frequency: "HM 334.12", name: "Jubilee Prayers in Portuguese",
+                slug: "jubilee-prayers-portuguese", hm: "351.10", frequency: "HM 351.10", name: "Jubilee Prayers in Portuguese",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 92, reach: "200M",
                 image: "/images/jubilee-profile.png",
@@ -1102,7 +1102,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "korea-inspire-hangugeo", hm: "337.18", frequency: "HM 337.18", name: "Korea Inspire (한국어)",
+                slug: "korea-inspire-hangugeo", hm: "335.20", frequency: "HM 335.20", name: "Korea Inspire (한국어)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 92, reach: "60M",
                 image: "/images/jubilee-profile.png",
@@ -1116,7 +1116,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "deutschland-inspire-deutsch", hm: "342.12", frequency: "HM 342.12", name: "Deutschland Inspire (Deutsch)",
+                slug: "deutschland-inspire-deutsch", hm: "323.10", frequency: "HM 323.10", name: "Deutschland Inspire (Deutsch)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 5, bestseller: 89, reach: "160M",
                 image: "/images/jubilee-profile.png",
@@ -1130,7 +1130,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-french", hm: "344.14", frequency: "HM 344.14", name: "Jubilee Prayers in French",
+                slug: "jubilee-prayers-french", hm: "352.80", frequency: "HM 352.80", name: "Jubilee Prayers in French",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 91, reach: "180M",
                 image: "/images/jubilee-profile.png",
@@ -1144,7 +1144,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "russia-inspire-russkiy", hm: "347.18", frequency: "HM 347.18", name: "Russia Inspire (Русский)",
+                slug: "russia-inspire-russkiy", hm: "327.60", frequency: "HM 327.60", name: "Russia Inspire (Русский)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 5, bestseller: 88, reach: "280M",
                 image: "/images/jubilee-profile.png",
@@ -1158,7 +1158,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "italia-inspire-italiano", hm: "352.14", frequency: "HM 352.14", name: "Italia Inspire (Italiano)",
+                slug: "italia-inspire-italiano", hm: "324.80", frequency: "HM 324.80", name: "Italia Inspire (Italiano)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 5, bestseller: 89, reach: "70M",
                 image: "/images/jubilee-profile.png",
@@ -1172,7 +1172,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-russian", hm: "354.16", frequency: "HM 354.16", name: "Jubilee Prayers in Russian",
+                slug: "jubilee-prayers-russian", hm: "353.40", frequency: "HM 353.40", name: "Jubilee Prayers in Russian",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 90, reach: "220M",
                 image: "/images/jubilee-profile.png",
@@ -1186,7 +1186,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "pilipinas-inspire-tagalog", hm: "357.16", frequency: "HM 357.16", name: "Pilipinas Inspire (Tagalog)",
+                slug: "pilipinas-inspire-tagalog", hm: "339.90", frequency: "HM 339.90", name: "Pilipinas Inspire (Tagalog)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 92, reach: "90M",
                 image: "/images/jubilee-profile.png",
@@ -1200,7 +1200,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "vietnam-inspire-tieng-viet", hm: "362.18", frequency: "HM 362.18", name: "Vietnam Inspire (Tiếng Việt)",
+                slug: "vietnam-inspire-tieng-viet", hm: "337.70", frequency: "HM 337.70", name: "Vietnam Inspire (Tiếng Việt)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 88, reach: "25M",
                 image: "/images/jubilee-profile.png",
@@ -1214,7 +1214,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-korean", hm: "364.18", frequency: "HM 364.18", name: "Jubilee Prayers in Korean",
+                slug: "jubilee-prayers-korean", hm: "358.90", frequency: "HM 358.90", name: "Jubilee Prayers in Korean",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 95, reach: "80M",
                 image: "/images/jubilee-profile.png",
@@ -1228,7 +1228,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "africa-inspire-kiswahili", hm: "369.12", frequency: "HM 369.12", name: "Africa Inspire (Kiswahili)",
+                slug: "africa-inspire-kiswahili", hm: "329.30", frequency: "HM 329.30", name: "Africa Inspire (Kiswahili)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 92, reach: "200M",
                 image: "/images/jubilee-profile.png",
@@ -1242,7 +1242,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "west-africa-inspire-yoruba", hm: "374.14", frequency: "HM 374.14", name: "West Africa Inspire (Yorùbá)",
+                slug: "west-africa-inspire-yoruba", hm: "330.90", frequency: "HM 330.90", name: "West Africa Inspire (Yorùbá)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 90, reach: "50M",
                 image: "/images/jubilee-profile.png",
@@ -1256,7 +1256,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-swahili", hm: "379.18", frequency: "HM 379.18", name: "Jubilee Prayers in Swahili",
+                slug: "jubilee-prayers-swahili", hm: "355.60", frequency: "HM 355.60", name: "Jubilee Prayers in Swahili",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 91, reach: "170M",
                 image: "/images/jubilee-profile.png",
@@ -1270,7 +1270,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "ethiopia-inspire-amharic", hm: "381.16", frequency: "HM 381.16", name: "Ethiopia Inspire (አማርኛ)",
+                slug: "ethiopia-inspire-amharic", hm: "331.50", frequency: "HM 331.50", name: "Ethiopia Inspire (አማርኛ)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 88, reach: "35M",
                 image: "/images/jubilee-profile.png",
@@ -1284,7 +1284,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "polska-inspire-polski", hm: "386.12", frequency: "HM 386.12", name: "Polska Inspire (Polski)",
+                slug: "polska-inspire-polski", hm: "325.40", frequency: "HM 325.40", name: "Polska Inspire (Polski)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 5, bestseller: 89, reach: "45M",
                 image: "/images/jubilee-profile.png",
@@ -1298,7 +1298,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "indonesia-inspire-bahasa", hm: "389.14", frequency: "HM 389.14", name: "Indonesia Inspire (Bahasa)",
+                slug: "indonesia-inspire-bahasa", hm: "338.30", frequency: "HM 338.30", name: "Indonesia Inspire (Bahasa)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 89, reach: "30M",
                 image: "/images/jubilee-profile.png",
@@ -1312,7 +1312,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "japan-inspire-nihongo", hm: "392.16", frequency: "HM 392.16", name: "Japan Inspire (日本語)",
+                slug: "japan-inspire-nihongo", hm: "336.60", frequency: "HM 336.60", name: "Japan Inspire (日本語)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 87, reach: "5M",
                 image: "/images/jubilee-profile.png",
@@ -1326,7 +1326,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "jubilee-prayers-tagalog", hm: "394.12", frequency: "HM 394.12", name: "Jubilee Prayers in Tagalog",
+                slug: "jubilee-prayers-tagalog", hm: "359.50", frequency: "HM 359.50", name: "Jubilee Prayers in Tagalog",
                 band: "multi", primary: "multilanguage", parentColor: "red",
                 mode: "Both", phase: 6, bestseller: 91, reach: "75M",
                 image: "/images/jubilee-profile.png",
@@ -1340,7 +1340,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "bengal-inspire-bangla", hm: "396.12", frequency: "HM 396.12", name: "Bengal Inspire (বাংলা)",
+                slug: "bengal-inspire-bangla", hm: "333.80", frequency: "HM 333.80", name: "Bengal Inspire (বাংলা)",
                 band: "multi", primary: "multilanguage", parentColor: "blue",
                 mode: "Both", phase: 4, bestseller: 88, reach: "8M",
                 image: "/images/jubilee-profile.png",
@@ -1358,7 +1358,7 @@ document.addEventListener('error', function (e) {
             // BAND 3 — Mainstream (20 stations)
             // ===================================================================
             {
-                slug: "inspire-family-pop", hm: "304.13", frequency: "HM 304.13", name: "Inspire Family Pop",
+                slug: "inspire-family-pop", hm: "368.70", frequency: "HM 368.70", name: "Inspire Family Pop",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 93, reach: "2500M",
                 image: "/images/jubilee-profile.png",
@@ -1372,7 +1372,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-kids", hm: "309.15", frequency: "HM 309.15", name: "Inspire Kids",
+                slug: "inspire-kids", hm: "362.50", frequency: "HM 362.50", name: "Inspire Kids",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 94, reach: "1800M",
                 image: "/images/jubilee-profile.png",
@@ -1386,7 +1386,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-cafe", hm: "315.17", frequency: "HM 315.17", name: "Inspire Cafe",
+                slug: "inspire-cafe", hm: "369.30", frequency: "HM 369.30", name: "Inspire Cafe",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 91, reach: "1500M",
                 image: "/images/jubilee-profile.png",
@@ -1400,7 +1400,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-active", hm: "320.19", frequency: "HM 320.19", name: "Inspire Active",
+                slug: "inspire-active", hm: "376.20", frequency: "HM 376.20", name: "Inspire Active",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 90, reach: "1200M",
                 image: "/images/jubilee-profile.png",
@@ -1414,7 +1414,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-focus", hm: "326.15", frequency: "HM 326.15", name: "Inspire Focus",
+                slug: "inspire-focus", hm: "376.50", frequency: "HM 376.50", name: "Inspire Focus",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 92, reach: "1400M",
                 image: "/images/jubilee-profile.png",
@@ -1428,7 +1428,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-drive", hm: "331.17", frequency: "HM 331.17", name: "Inspire Drive",
+                slug: "inspire-drive", hm: "376.80", frequency: "HM 376.80", name: "Inspire Drive",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 90, reach: "900M",
                 image: "/images/jubilee-profile.png",
@@ -1442,7 +1442,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-celebrations", hm: "336.19", frequency: "HM 336.19", name: "Inspire Celebrations",
+                slug: "inspire-celebrations", hm: "378.20", frequency: "HM 378.20", name: "Inspire Celebrations",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 91, reach: "800M",
                 image: "/images/jubilee-profile.png",
@@ -1456,7 +1456,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-chill", hm: "341.15", frequency: "HM 341.15", name: "Inspire Chill",
+                slug: "inspire-chill", hm: "370.90", frequency: "HM 370.90", name: "Inspire Chill",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 90, reach: "1000M",
                 image: "/images/jubilee-profile.png",
@@ -1470,7 +1470,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-classical", hm: "346.17", frequency: "HM 346.17", name: "Inspire Classical",
+                slug: "inspire-classical", hm: "371.50", frequency: "HM 371.50", name: "Inspire Classical",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 92, reach: "1000M",
                 image: "/images/jubilee-profile.png",
@@ -1484,7 +1484,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-throwback", hm: "351.19", frequency: "HM 351.19", name: "Inspire Throwback",
+                slug: "inspire-throwback", hm: "375.20", frequency: "HM 375.20", name: "Inspire Throwback",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 90, reach: "800M",
                 image: "/images/jubilee-profile.png",
@@ -1498,7 +1498,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-jazz", hm: "356.13", frequency: "HM 356.13", name: "Inspire Jazz",
+                slug: "inspire-jazz", hm: "372.10", frequency: "HM 372.10", name: "Inspire Jazz",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 91, reach: "600M",
                 image: "/images/jubilee-profile.png",
@@ -1512,7 +1512,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-latin", hm: "361.15", frequency: "HM 361.15", name: "Inspire Latin",
+                slug: "inspire-latin", hm: "374.40", frequency: "HM 374.40", name: "Inspire Latin",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 92, reach: "1100M",
                 image: "/images/jubilee-profile.png",
@@ -1526,7 +1526,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-country", hm: "366.17", frequency: "HM 366.17", name: "Inspire Country",
+                slug: "inspire-country", hm: "373.80", frequency: "HM 373.80", name: "Inspire Country",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 91, reach: "950M",
                 image: "/images/jubilee-profile.png",
@@ -1540,7 +1540,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-80s-90s", hm: "371.19", frequency: "HM 371.19", name: "Inspire 80s & 90s",
+                slug: "inspire-80s-90s", hm: "375.50", frequency: "HM 375.50", name: "Inspire 80s & 90s",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 89, reach: "700M",
                 image: "/images/jubilee-profile.png",
@@ -1554,7 +1554,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "latin-worship", hm: "376.15", frequency: "HM 376.15", name: "Latin Worship (Sung in English)",
+                slug: "latin-worship", hm: "310.90", frequency: "HM 310.90", name: "Latin Worship (Sung in English)",
                 band: "fivefold", primary: "music",
                 // Carries its own format name rather than the shared
                 // "Praise & Worship" label — the whole point of this frequency is
@@ -1577,7 +1577,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "hebraic-celebrations", hm: "377.70", frequency: "HM 377.70", name: "Hebraic Celebrations",
+                slug: "hebraic-celebrations", hm: "306.20", frequency: "HM 306.20", name: "Hebraic Celebrations",
                 band: "fivefold", primary: "music",
                 // Its own format name rather than the shared "Praise & Worship"
                 // label — this frequency is the feasts, not a worship set.
@@ -1598,7 +1598,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-wellness", hm: "382.17", frequency: "HM 382.17", name: "Inspire Wellness",
+                slug: "inspire-wellness", hm: "377.60", frequency: "HM 377.60", name: "Inspire Wellness",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 90, reach: "850M",
                 image: "/images/jubilee-profile.png",
@@ -1612,7 +1612,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-holiday", hm: "387.19", frequency: "HM 387.19", name: "Inspire Holiday",
+                slug: "inspire-holiday", hm: "378.50", frequency: "HM 378.50", name: "Inspire Holiday",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 91, reach: "1000M",
                 image: "/images/jubilee-profile.png",
@@ -1626,7 +1626,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-stories", hm: "391.15", frequency: "HM 391.15", name: "Inspire Stories",
+                slug: "inspire-stories", hm: "367.50", frequency: "HM 367.50", name: "Inspire Stories",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 89, reach: "600M",
                 image: "/images/jubilee-profile.png",
@@ -1640,7 +1640,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-live", hm: "395.17", frequency: "HM 395.17", name: "Inspire Live",
+                slug: "inspire-live", hm: "379.90", frequency: "HM 379.90", name: "Inspire Live",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 90, reach: "750M",
                 image: "/images/jubilee-profile.png",
@@ -1654,7 +1654,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-rising", hm: "399.19", frequency: "HM 399.19", name: "Inspire Rising",
+                slug: "inspire-rising", hm: "375.80", frequency: "HM 375.80", name: "Inspire Rising",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 6, bestseller: 90, reach: "900M",
                 image: "/images/jubilee-profile.png",
@@ -3051,7 +3051,7 @@ document.addEventListener('error', function (e) {
             // showing "No station selected" — the deep-link branch and
             // the default-station branch are pure DOM updates.
             //
-            // Default tuned station: Jubilee Praise (HM 305.12). On a
+            // Default tuned station: Jubilee Praise (HM 305.40). On a
             // ?station= deep link we honour that instead and also start
             // playback (the user explicitly asked for it via URL).
             try {

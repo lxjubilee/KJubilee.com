@@ -95,11 +95,11 @@ that isn't in the manifest (BR-G2).
 | Station | HM | Rotation |
 |---|---|---|
 | Jubilee Radio | 088.70 | the Inspire Family catalog |
-| Jubilee Praise (Română) | 332.16 | every Romanian track by one of the twelve Inspire Family members |
-| Country Gospel | 335.16 | 420 country tracks — Elias & Eliana whole, plus selected albums and cuts |
-| Jubilee Gospel Fire | 339.18 | 188 tracks — Imani Inspire's whole English catalog |
-| Torah Sings | 305.12 | 1,749 tracks — the Bible sung book by book, Genesis to Revelation |
-| Yes and Amen | 314.88 | 191 tracks — the SingItDone declaration albums, all twelve personas, one record each |
+| Jubilee Praise (Română) | 326.20 | every Romanian track by one of the twelve Inspire Family members |
+| Country Gospel | 309.30 | 420 country tracks — Elias & Eliana whole, plus selected albums and cuts |
+| Jubilee Gospel Fire | 302.50 | 188 tracks — Imani Inspire's whole English catalog |
+| Torah Sings | 305.40 | 1,749 tracks — the Bible sung book by book, Genesis to Revelation |
+| Yes and Amen | 303.10 | 191 tracks — the SingItDone declaration albums, all twelve personas, one record each |
 
 Manifests are generated from `songid-registry.tsv` — the ledger is the authority, so a
 track can only reach a manifest under the SongID the play logs already know.

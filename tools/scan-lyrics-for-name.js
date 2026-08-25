@@ -7,7 +7,7 @@
  *
  * WHY THIS EXISTS
  *
- * HM 313.12 Celebrate Yeshua! is a station defined by a WORD, not by an artist,
+ * HM 304.80 Celebrate Yeshua! is a station defined by a WORD, not by an artist,
  * a genre or a label. Nothing in the ledger records which songs sing "Yeshua"
  * rather than "Jesus" — the registry carries titles, and not one title of the
  * Inspire Family contains the name. The only place the answer exists is the

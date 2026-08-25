@@ -96,4 +96,4 @@ same-length substitution.
    album-code shape (`IX401EN`) that `ingest_music.py`'s `ALBUM_RE` does not yet
    match, and needs an `artist_codes` entry and a genre lane in
    `catalog-config.json`.
-3. Point HM 329.12 at the ingested result and activate it.
+3. Point HM 361.90 at the ingested result and activate it.

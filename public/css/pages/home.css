@@ -605,7 +605,16 @@ img{display:block;max-width:100%}
   font-size:13.5px;line-height:1.6;color:var(--text-dim)}
 .kja-banner strong{color:var(--accent)}
 .kja-body{font-size:17.5px;line-height:1.8;color:#e0e0e0}
-.kja-body p{margin:0 0 22px}
+/* JUSTIFIED, AND HYPHENATED BECAUSE OF IT.
+   Justification alone stretches the word spacing of every line to reach the
+   right edge, and at this measure that opens rivers of white down the column
+   and leaves a short last-line-but-one gaping. Automatic hyphenation lets the
+   browser break a long word instead of stretching the line around it, so the
+   two belong together — turning on justify without hyphens is what makes
+   justified web text look worse than ragged-right, not better.
+   text-wrap:pretty then cleans up the widows justification cannot help with. */
+.kja-body p{margin:0 0 22px;text-align:justify;text-justify:inter-word;
+  hyphens:auto;-webkit-hyphens:auto;text-wrap:pretty}
 /* The drop cap is the one flourish, and it only ever lands on the lead. */
 .kja-body p.kja-lead::first-letter{float:left;font-size:4rem;line-height:.8;font-weight:800;
   padding:6px 12px 0 0;color:var(--accent)}
@@ -662,6 +671,10 @@ img{display:block;max-width:100%}
 .kja-cta-play{width:52px;height:52px;border-radius:50%;background:var(--accent);color:#06121f;
   display:grid;place-items:center;flex:none}
 .kja-cta-play svg{width:22px;height:22px;fill:currentColor}
+/* The label, the station name and the frequency are three lines, not three
+   words. Without this they are inline spans inside an inline wrapper and the
+   browser sets them on one run with no separator at all. */
+.kja-cta-text{display:flex;flex-direction:column;gap:3px;min-width:0}
 .kja-cta-label{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .kja-cta-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:-.01em}
 .kja-cta-sub{font-size:13.5px;color:var(--text-muted)}

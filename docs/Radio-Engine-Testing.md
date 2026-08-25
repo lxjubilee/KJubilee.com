@@ -2360,7 +2360,7 @@ curl -i -X POST https://www.jubileeverse.com/api/current-events/<id>/regenerate-
 
 ### TC-RADIO-LEGACY-SKIP-001 — Next button starts playback on the next station
 **Surface**: `/radio` page, `#playerBtnNext` in the player footer.
-**Setup**: Page loaded; default station auto-selected (Jubilee Praise, HM 305.12); no manual play yet so `isPlaying === false`.
+**Setup**: Page loaded; default station auto-selected (Jubilee Praise, HM 305.40); no manual play yet so `isPlaying === false`.
 **Steps**:
 1. Confirm `#playerStationName` reads `Jubilee Praise`.
 2. Confirm `#playerBtnNext` is not `disabled`.

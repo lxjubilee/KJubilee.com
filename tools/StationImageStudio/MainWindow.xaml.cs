@@ -107,6 +107,33 @@ public partial class MainWindow : Window
         /// The rendered file on disk, or "" when the station is still pending.
         public string ImageFile = "";
         public bool HasImage => ImageFile.Length > 0;
+
+        // ---- the three hooks that let a BAND ARTICLE ride this pipeline ------
+        //
+        // An article is not a station, but everything downstream of the prompt —
+        // the retry ladder, the content-filter rewrites, the host portrait, the
+        // WebP conversion, the stale-sibling sweep, RunBatch itself — is work
+        // that has already been debugged once and should not be written twice.
+        // So an article is turned into one of these (see ArticleJob) and the
+        // only three things that actually differ are carried here.
+        //
+        // Empty means "behave exactly as a station", so every existing station
+        // keeps its current path through the code with nothing to re-check.
+
+        /// This job's hand-written SCENE, when it is a band article rather than
+        /// a station. Non-empty switches StationPrompt onto the article wording.
+        ///
+        /// The scene is carried rather than a finished prompt because the
+        /// persona's first name is not known until the host is resolved, one
+        /// step before the prompt is submitted — and the name is what selects
+        /// the pronouns and the wardrobe. Composing here would have to guess it.
+        public string ArticleScene = "";
+        /// Where the render lands, when it is not public/images/stations.
+        public string OutDirOverride = "";
+        /// Set on jobs that must not be pushed to the CDN by the run that made
+        /// them. Band article art is reviewed before it goes near the site, and
+        /// the publish target is a station-image directory in any case.
+        public bool NoPublish;
     }
 
     /// <summary>Every station, in catalog order.</summary>
@@ -290,6 +317,7 @@ public partial class MainWindow : Window
         public string Title { get; init; } = "";
         public string Host { get; init; } = "";
         public Station? Station { get; init; }        // null on a placeholder row
+        public Article? Article { get; init; }        // set instead on an articles row
         public override string ToString() => Title;   // keeps log lines readable
     }
 
@@ -355,14 +383,27 @@ public partial class MainWindow : Window
     // inside InitializeComponent, so the app dies before showing a window.
     private void Rail_Checked(object sender, RoutedEventArgs e)
     {
-        if (ViewImages == null || ViewSettings == null || PanelTitle == null) return;
+        // Every view has to be named here, not just the one being shown: this
+        // was a two-way bool and adding a third view to it would have left
+        // whichever one the bool did not mention permanently visible underneath.
+        if (ViewImages == null || ViewArticles == null || ViewSettings == null || PanelTitle == null) return;
 
         var which = (sender as FrameworkElement)?.Name ?? "";
-        var images = which == "RailImages";
 
-        ViewImages.Visibility = images ? Visibility.Visible : Visibility.Collapsed;
-        ViewSettings.Visibility = images ? Visibility.Collapsed : Visibility.Visible;
-        PanelTitle.Text = images ? "Station Images" : "Settings";
+        ViewImages.Visibility = which == "RailImages" ? Visibility.Visible : Visibility.Collapsed;
+        ViewArticles.Visibility = which == "RailArticles" ? Visibility.Visible : Visibility.Collapsed;
+        ViewSettings.Visibility = which == "RailSettings" ? Visibility.Visible : Visibility.Collapsed;
+
+        PanelTitle.Text = which switch
+        {
+            "RailArticles" => "Band Articles",
+            "RailSettings" => "Settings",
+            _ => "Station Images",
+        };
+
+        // The pieces are read on first arrival rather than at startup, so the
+        // app opens as fast as it did before this view existed.
+        if (which == "RailArticles" && _articles.Count == 0) ScanArticles();
     }
 
     // ---- paths -------------------------------------------------------------
@@ -622,6 +663,266 @@ public partial class MainWindow : Window
 
     private static string Str(JsonObject o, string key) =>
         o[key] is JsonNode n && n.GetValueKind() == JsonValueKind.String ? n.GetValue<string>() : "";
+
+    // ================= THE HEAVENLY BAND ARTICLES ============================
+    //
+    // The second thing this studio makes pictures for, and it is a DIFFERENT
+    // KIND OF PICTURE from a station cover, so almost none of the station
+    // tables apply.
+    //
+    // A station cover is an album sleeve: one persona, alone, filling the frame
+    // against a cinematic backdrop. That is right for a shelf tile whose job is
+    // to be recognised at a glance. A band article is an essay about what this
+    // ministry is doing, and its picture has to carry the ARGUMENT — so the
+    // persona is NOT alone in it. They are among ordinary people, and the white
+    // headphones everybody is wearing are unremarkable to everyone in the shot.
+    //
+    // That is the whole idea, and it is the opposite of the station rule: the
+    // headphones are not the subject, they are the furniture. Praise and worship
+    // is already part of an ordinary day — on a roller coaster, halfway up a
+    // hill, on a paddleboard — and a picture argues that faster than a paragraph.
+    //
+    // WHERE THE SCENE COMES FROM. Unlike a station, an article HAS words, and the
+    // picture should come out of them. But a scene cannot be derived
+    // mechanically from prose, so each piece carries a hand-written scene in
+    // tools/article-image-prompts.json, keyed by slug. ArticlePrompt wraps that
+    // scene in the house standard — white headphones, modest dress, the golden
+    // glow, no lettering — so the ministry rules live in ONE place and a scene
+    // that forgets one of them still cannot ship without it.
+    //
+    // A separate file rather than a field in build-home-data.js: that generator
+    // is nearly four thousand lines and is edited constantly, and a prompt is
+    // production direction rather than site content. Keeping them apart also
+    // means a scene can be rewritten and the art regenerated without rebuilding
+    // the site.
+
+    /// <summary>One piece from the Heavenly Band section of the catalog.</summary>
+    private sealed class Article
+    {
+        public string Slug = "";
+        public string Kicker = "";
+        public string Title = "";
+        public string Dek = "";
+        public string Author = "";        // one of the twelve persona slugs
+        public string Stands = "";        // the pull quote
+        public string StationImage = "";  // the station cover the card borrows
+        public List<string> Body = new();
+        public int Order;
+
+        /// The hand-written scene for this piece, from article-image-prompts.json.
+        public string Scene = "";
+        public bool HasScene => Scene.Length > 0;
+
+        /// The rendered file on disk, or "" while the piece is still pending.
+        public string ImageFile = "";
+        public bool HasImage => ImageFile.Length > 0;
+
+        /// Words in the body. On the row because a very short piece is a piece
+        /// whose picture has little to be drawn from, and this view is where
+        /// that becomes obvious.
+        public int Words
+        {
+            get
+            {
+                var n = 0;
+                foreach (var para in Body)
+                    n += para.Split((char[]?)null, StringSplitOptions.RemoveEmptyEntries).Length;
+                return n;
+            }
+        }
+    }
+
+    private readonly List<Article> _articles = new();
+
+    private const string ArticleImagesRelative = @"public\images\articles";
+    private const string ArticlePromptsRelative = @"tools\article-image-prompts.json";
+    private string ArticleImagesRoot => Path.Combine(_siteRoot, ArticleImagesRelative);
+    private string ArticlePromptsFile => Path.Combine(_siteRoot, ArticlePromptsRelative);
+
+    /// <summary>
+    /// Read the band articles out of window.KJ_SECTIONS.
+    ///
+    /// Same blunt one-line parse as the dial, for the same reason — the
+    /// generator emits every assignment through JSON.stringify on a single line.
+    /// The articles are found by looking for whichever section carries an
+    /// `articles` array rather than by a hardcoded section id, so renaming that
+    /// tab does not silently empty this view.
+    /// </summary>
+    private bool LoadArticles()
+    {
+        _articles.Clear();
+        var file = CatalogFile;
+        if (!File.Exists(file)) { Log("No catalog for articles: " + file); return false; }
+
+        try
+        {
+            var json = ExtractAssignment(File.ReadAllText(file), "KJ_SECTIONS");
+            if (json == null) { Log("No window.KJ_SECTIONS assignment in " + file); return false; }
+            if (JsonNode.Parse(json) is not JsonArray sections) { Log("KJ_SECTIONS is not an array."); return false; }
+
+            foreach (var sec in sections)
+            {
+                if (sec is not JsonObject so || so["articles"] is not JsonArray arts) continue;
+                foreach (var node in arts)
+                {
+                    if (node is not JsonObject o) continue;
+                    var a = new Article
+                    {
+                        Slug = Str(o, "slug"),
+                        Kicker = Str(o, "kicker"),
+                        Title = Str(o, "title"),
+                        Dek = Str(o, "dek"),
+                        Author = Str(o, "author"),
+                        Stands = Str(o, "stands"),
+                        StationImage = Str(o, "image"),
+                        Order = _articles.Count,
+                    };
+                    if (o["body"] is JsonArray body)
+                        foreach (var para in body)
+                            if (para is JsonNode pn && pn.GetValueKind() == JsonValueKind.String)
+                                a.Body.Add(pn.GetValue<string>());
+                    if (a.Slug.Length == 0) continue;
+                    _articles.Add(a);
+                }
+            }
+            return _articles.Count > 0;
+        }
+        catch (Exception ex)
+        {
+            Log("Could not read the band articles: " + ex.Message);
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// Attach each article's hand-written scene. A missing file is NOT an error:
+    /// it means no scenes have been written yet, and the view says so per row
+    /// rather than refusing to load.
+    /// </summary>
+    private void LoadArticleScenes()
+    {
+        foreach (var a in _articles) a.Scene = "";
+        var file = ArticlePromptsFile;
+        if (!File.Exists(file)) { Log("  No article-image-prompts.json yet at " + file); return; }
+        try
+        {
+            if (JsonNode.Parse(File.ReadAllText(file)) is not JsonObject root) return;
+
+            var byslug = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var kv in root)
+            {
+                // Keys beginning with an underscore are notes to whoever opens
+                // the file, not slugs.
+                if (kv.Key.StartsWith("_", StringComparison.Ordinal)) continue;
+                if (kv.Value is JsonObject scene) byslug[kv.Key] = Str(scene, "scene");
+                else if (kv.Value is JsonNode v && v.GetValueKind() == JsonValueKind.String)
+                    byslug[kv.Key] = v.GetValue<string>();
+            }
+            foreach (var a in _articles)
+                if (byslug.TryGetValue(a.Slug, out var sc)) a.Scene = sc.Trim();
+
+            var orphans = new List<string>();
+            foreach (var k in byslug.Keys)
+                if (!_articles.Any(a => a.Slug.Equals(k, StringComparison.OrdinalIgnoreCase))) orphans.Add(k);
+            if (orphans.Count > 0)
+                Log($"  {orphans.Count} scene(s) name articles that no longer exist: "
+                    + string.Join(", ", orphans.Take(5)) + (orphans.Count > 5 ? ", and more" : ""));
+        }
+        catch (Exception ex) { Log("  Could not read article-image-prompts.json: " + ex.Message); }
+    }
+
+    /// <summary>The rendered file for an article, or null. Mirrors ExistingImage.</summary>
+    private string? ExistingArticleImage(Article a)
+    {
+        foreach (var ext in new[] { WebpExt, ".png", ".jpg", ".jpeg" })
+        {
+            var name = a.Slug + ext;
+            if (File.Exists(Path.Combine(ArticleImagesRoot, name))) return name;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Compose an article's whole prompt: its own scene, wrapped in the rules
+    /// every picture on this ministry's sites has to satisfy.
+    ///
+    /// ONE LINE and no newlines anywhere, exactly as StationPrompt — see
+    /// AspectSuffix: the composer treats a blank line as a paragraph break and
+    /// sends only the last paragraph.
+    ///
+    /// The rules are stated as SUBSTITUTIONS rather than prohibitions wherever
+    /// they can be. "Nothing revealing" leaves the model choosing what counts;
+    /// "anywhere the activity would suggest swimwear, the clothing is a full
+    /// wetsuit or a long rash guard and shorts instead" does not.
+    /// </summary>
+    private static string ArticlePrompt(string scene, string firstName)
+    {
+        var who = firstName.Length > 0 ? firstName : "one of the Inspire Family";
+        var wardrobe = firstName.Length > 0 ? WardrobeFor(firstName) : "";
+
+        var prompt =
+            "Editorial illustration for a magazine feature. " + scene.TrimEnd(' ', '.') + ". " +
+            // Named, not described: the portrait rides along on the same turn as
+            // a likeness reference, exactly as it does for a station cover.
+            who + " is clearly recognisable and is PART of what is happening rather than posed in front of it" +
+            (wardrobe.Length > 0 ? ", wearing " + wardrobe : "") + ". " +
+            // The one constant across every kJubilee picture, station or article.
+            "EVERY PERSON WEARING HEADPHONES IN THIS PICTURE WEARS WHITE OVER-EAR HEADPHONES — clean matte white, plain " +
+            "and modern, with no branding, lettering, numbers or logos on them of any kind, worn over the ears and clearly " +
+            "visible. " +
+            // The argument the whole series exists to make.
+            "The white headphones are completely unremarkable to everyone in the picture: nobody poses with them, points at " +
+            "them, adjusts them or looks at them, and they are simply what people wear while they get on with the day, the " +
+            "way a wristwatch is. " +
+            "The other people are ORDINARY PEOPLE of mixed ages and backgrounds, each dressed differently, caught mid-action " +
+            "and mid-expression rather than lined up or facing the camera. " +
+            // Modesty, as substitutions.
+            "Everybody in the picture is dressed MODESTLY: shoulders and knees covered, nothing tight, short or revealing, " +
+            "and anywhere the activity would normally suggest swimwear the clothing is instead a full-length wetsuit, or a " +
+            "long-sleeved rash guard with knee-length shorts, or ordinary outdoor clothes. " +
+            "The mood is warm, joyful and full of movement, and the faces show it. " +
+            // The house light, which is a ministry standard rather than a taste.
+            "THE WHOLE IMAGE IS BATHED IN A WARM GOLDEN GLOW: rich warm yellow light flooding the scene from a low sun or a " +
+            "bright warm source just out of frame, a warm yellow colour grade throughout, light catching every strand of " +
+            "hair and every fold of fabric. " +
+            "Luminous, cinematic, painterly photorealism, extremely richly detailed, beautiful and striking. " +
+            "No text, no captions, no lettering, no signature, no title, no border or frame, no logos and no watermark " +
+            "anywhere in the image. 16:9";
+
+        return Regex.Replace(Fill(prompt, firstName), @"\s+", " ").Trim();
+    }
+
+    /// <summary>
+    /// An article dressed as a station, so RunBatch and everything beneath it
+    /// carries it without knowing the difference. See the hook fields on Station
+    /// for why this is a wrapper rather than a second pipeline.
+    /// </summary>
+    private Station ArticleJob(Article a)
+    {
+        var host = a.Author.Length > 0 ? a.Author : "jubilee";
+        return new Station
+        {
+            Slug = a.Slug,
+            Name = a.Title,
+            Primary = ArticleGroup,        // the run log groups by this
+            Format = a.Kicker,
+            Description = a.Dek,
+            CatalogHost = host,
+            Host = host,
+            Lang = "English",
+            Region = "domestic",
+            ImageFile = a.ImageFile,
+            ArticleScene = a.Scene,
+            OutDirOverride = ArticleImagesRoot,
+            // Looked at by eye before it goes anywhere near the site, and the
+            // publish target is a station directory in any case.
+            NoPublish = true,
+        };
+    }
+
+    /// <summary>Not a programming type, and no slug on the dial can collide.</summary>
+    private const string ArticleGroup = "__band_article";
+
 
     /// <summary>The JSON array literal assigned to window.&lt;name&gt;, or null.</summary>
     private static string? ExtractAssignment(string source, string name)
@@ -1559,7 +1860,7 @@ public partial class MainWindow : Window
 
     private static readonly Dictionary<string, Bespoke> BespokeStations = new(StringComparer.OrdinalIgnoreCase)
     {
-        // HM 335.16 Gospel Country — Elias, and he is a cowboy, not a man near a horse.
+        // HM 309.30 Gospel Country — Elias, and he is a cowboy, not a man near a horse.
         ["country-gospel"] = new(
             "wide open Western range at golden hour, a split-rail fence running out to distant mesas, " +
             "dust hanging in the low light and a saddled horse standing off to one side",
@@ -1567,7 +1868,7 @@ public partial class MainWindow : Window
             "buckled belt — caught mid-stride with one thumb hooked in {P} belt, coat moving with the step",
             null),
 
-        // HM 339.18 Pentecostal Shout — Imani inside the choir, not in front of it.
+        // HM 302.50 Pentecostal Shout — Imani inside the choir, not in front of it.
         ["jubilee-gospel-fire"] = new(
             "the front of a packed Pentecostal sanctuary, a full robed gospel choir banked up the risers " +
             "behind, a Hammond organ and drum kit to one side, hands up across the whole room",
@@ -1577,7 +1878,7 @@ public partial class MainWindow : Window
             "close around and behind {O}, faces lit and mouths open mid-note. {SU} IS THE ONLY PERSON " +
             "WEARING HEADPHONES — no one else in the choir or the congregation wears any."),
 
-        // HM 329.12 Jubilee Kids Party — two children, not a family persona.
+        // HM 361.90 Jubilee Kids Party — two children, not a family persona.
         //
         // The only station on the dial whose picture has two equal subjects, and
         // the reason Subject/Who exist. Its host is Party Giggles, a catalogue
@@ -1613,7 +1914,7 @@ public partial class MainWindow : Window
             "melody",
             NoPortrait: true),
 
-        // HM 345.24 The Ancient Paths — Amir inside the dabke line. A joined-hands
+        // HM 313.80 The Ancient Paths — Amir inside the dabke line. A joined-hands
         // line, not a ring: that is how the dance actually goes in his region, and
         // getting it wrong would read as costume rather than home.
         ["ancient-paths"] = new(
@@ -1628,7 +1929,7 @@ public partial class MainWindow : Window
             "at the end of the line. {SU} IS THE ONLY ONE WEARING HEADPHONES — " +
             "nobody else in the line wears any."),
 
-        // HM 379.14 Midnight Praise — Nova inside a Celtic circle dance. Her lane is
+        // HM 314.40 Midnight Praise — Nova inside a Celtic circle dance. Her lane is
         // Celtic/European ambient, so the ring is a ceilidh rather than a powwow,
         // and the hour is late because the station is the overnight watch.
         ["midnight-praise"] = new(
@@ -1642,7 +1943,7 @@ public partial class MainWindow : Window
             "fire's edge. {SU} IS THE ONLY ONE WEARING HEADPHONES — nobody else in the " +
             "ring wears any."),
 
-        // HM 347.14 Riddim and Rhyme — Zariah in the middle of the dance, not fronting it.
+        // HM 311.50 Riddim and Rhyme — Zariah in the middle of the dance, not fronting it.
         ["riddim-and-rhyme"] = new(
             "an open-air Caribbean yard party at golden hour, corrugated roofs and " +
             "palms against the sky, a speaker stack to one side and bunting strung " +
@@ -1655,7 +1956,7 @@ public partial class MainWindow : Window
             "the frame, everyone mid-motion and laughing. {SU} IS THE ONLY ONE WEARING " +
             "HEADPHONES — nobody else in the crowd wears any."),
 
-        // HM 399.18 Hawaiian Praise — the persona inside the island gathering,
+        // HM 312.10 Hawaiian Praise — the persona inside the island gathering,
         // one of the circle rather than a figure observed by it.
         //
         ["island-hallelujah"] = new(
@@ -1671,9 +1972,9 @@ public partial class MainWindow : Window
             "ipu gourd drum players to one side. {SU} IS THE ONLY ONE WEARING HEADPHONES — " +
             "no singer, dancer or player wears any."),
 
-        // HM 377.70 Hebraic Celebrations — Zev inside the circle dance, not leading
+        // HM 306.20 Hebraic Celebrations — Zev inside the circle dance, not leading
         // it. The joy of the feast is the subject; he is one of the dancers.
-        // HM 377.70 Hebraic Celebrations — Zev inside the hora, not beside it.
+        // HM 306.20 Hebraic Celebrations — Zev inside the hora, not beside it.
         //
         // Deliberately not the same picture as his other station. Both are now
         // Jerusalem, so the difference is carried by what is happening: this one
@@ -1703,7 +2004,7 @@ public partial class MainWindow : Window
             "wears any.",
             "a single figure, Zev, in the middle of a ring of dancers and filling the frame"),
 
-        // HM 305.12 Torah Sings — Zev singing over Jerusalem, people around him.
+        // HM 305.40 Torah Sings — Zev singing over Jerusalem, people around him.
         //
         // The other Zev station, and still deliberately not the same picture:
         // Hebraic Celebrations is a moving circle at night in a courtyard, this
@@ -1749,7 +2050,7 @@ public partial class MainWindow : Window
         // apart is what the crowd's faces are doing, which is also the only
         // thing that distinguishes a declaration from a celebration.
 
-        // HM 314.88 Yes and Amen — Elias in the first century, and nobody around
+        // HM 303.10 Yes and Amen — Elias in the first century, and nobody around
         // him can account for what he is wearing.
         //
         // The station is the SingItDone declaration property: twelve voices
@@ -1798,7 +2099,7 @@ public partial class MainWindow : Window
                 "to the wrist, a coarse woven cloak over one shoulder, a folded cloth belt at the waist and " +
                 "worn leather sandals, all of it dusty from the road. Nothing he wears is modern"),
 
-        // HM 313.12 Celebrate Yeshua! — Jubilee in the first century, and the
+        // HM 304.80 Celebrate Yeshua! — Jubilee in the first century, and the
         // village is delighted with her.
         //
         // The mirror of Yes and Amen, and written directly beneath it so the two
@@ -2349,6 +2650,10 @@ public partial class MainWindow : Window
     /// </summary>
     private static string StationPrompt(Station s, string firstName)
     {
+        // A band article is a different kind of picture and says so by carrying
+        // a scene. Everything below this line is station wording.
+        if (s.ArticleScene.Length > 0) return ArticlePrompt(s.ArticleScene, firstName);
+
         var bespoke = BespokeFor(s);
         var who = bespoke?.Who ?? (firstName.Length > 0 ? firstName : "one person");
         var language = s.Lang.Length > 0 && !s.Lang.Equals("English", StringComparison.OrdinalIgnoreCase)
@@ -3599,7 +3904,8 @@ public partial class MainWindow : Window
         try
         {
             var original = Convert.FromBase64String(b64);
-            Directory.CreateDirectory(_imagesRoot);
+            var outRoot = job.OutDirOverride.Length > 0 ? job.OutDirOverride : _imagesRoot;
+            Directory.CreateDirectory(outRoot);
 
             // Convert as soon as it lands. ChatGPT hands back multi-megabyte
             // PNG/JPEG; WebP is a fraction of that for the same picture, and
@@ -3609,13 +3915,13 @@ public partial class MainWindow : Window
             if (note.Length > 0) Log("  " + note);
 
             var fileName = job.Slug + ext;
-            var dest = Path.Combine(_imagesRoot, fileName);
+            var dest = Path.Combine(outRoot, fileName);
             await File.WriteAllBytesAsync(dest, bytes, ct);
 
             // Remove a previous render of this station in another format, or the
             // folder accumulates an orphan .jpg beside every new .webp — and
             // ExistingImage would then keep finding whichever one it checks first.
-            foreach (var stale in StaleSiblings(_imagesRoot, job.Slug, fileName))
+            foreach (var stale in StaleSiblings(outRoot, job.Slug, fileName))
             {
                 try { File.Delete(stale); Log($"  Removed superseded {Path.GetFileName(stale)}"); }
                 catch { /* not worth failing the save over */ }
@@ -3627,7 +3933,7 @@ public partial class MainWindow : Window
             // Straight out to the CDN. Deliberately after the local write and
             // the manifest, so a publish that fails leaves a complete local
             // record to retry from rather than losing the render.
-            if (_publishEnabled) await PublishOne(dest, job.Slug, ct);
+            if (_publishEnabled && !job.NoPublish) await PublishOne(dest, job.Slug, ct);
 
             var saved = original.Length > 0 ? 100 - (int)(bytes.LongLength * 100 / original.LongLength) : 0;
             Log($"  Saved {fileName}  ({bytes.Length:N0} bytes"
@@ -4084,6 +4390,12 @@ public partial class MainWindow : Window
         BtnScan.IsEnabled = !busy;
         BtnReload.IsEnabled = !busy;
         BtnStop.IsEnabled = busy;
+        // The articles view has its own copy of the same three controls, and a
+        // run started from either view drives both — without this its Stop stays
+        // disabled for the whole run and the only way out is to close the app.
+        if (BtnArticlesGenerate != null) BtnArticlesGenerate.IsEnabled = !busy;
+        if (BtnArticlesReload != null) BtnArticlesReload.IsEnabled = !busy;
+        if (BtnArticlesStop != null) BtnArticlesStop.IsEnabled = busy;
         // Tabs stay live while busy so the worklist can be read during a run.
         // Scope was fixed when Generate was pressed, so changing tabs mid-run
         // cannot redirect it.
@@ -4209,4 +4521,192 @@ public partial class MainWindow : Window
             if (btn != null) btn.IsEnabled = true;
         }
     }
+
+    // ---- the articles view ---------------------------------------------------
+    //
+    // Deliberately thin. Everything that actually does work — resolving the
+    // host, attaching the portrait, submitting, retrying past the content
+    // filter, converting and saving — already exists for stations and is reached
+    // through ArticleJob and RunBatch. What is left here is the list, the
+    // preview and the two buttons.
+
+    /// <summary>Load the pieces, attach their scenes, and see what is already rendered.</summary>
+    private void ScanArticles()
+    {
+        LoadArticles();
+        LoadArticleScenes();
+        foreach (var a in _articles) a.ImageFile = ExistingArticleImage(a) ?? "";
+
+        var done = _articles.Count(a => a.HasImage);
+        var scened = _articles.Count(a => a.HasScene);
+        Log($"\nScanned {_articles.Count} band article(s): {done} with an image, {_articles.Count - done} pending.");
+        if (scened < _articles.Count)
+            Log($"  {_articles.Count - scened} have no scene written yet and cannot be generated. "
+                + "Add them to tools/article-image-prompts.json.");
+        RenderArticles();
+    }
+
+    /// <summary>
+    /// The pieces the list is showing: pending only, unless the box is ticked.
+    /// Anything finished in THIS session stays visible either way, so a row does
+    /// not vanish out from under the operator the moment it completes.
+    /// </summary>
+    private List<Article> VisibleArticles()
+    {
+        IEnumerable<Article> rows = ChkShowAllArticles.IsChecked == true
+            ? _articles
+            : _articles.Where(a => !a.HasImage || _sessionDone.Contains(a.Slug));
+        return rows.OrderBy(a => a.Order).ToList();
+    }
+
+    /// <summary>Pending AND generatable. A piece with no scene is neither.</summary>
+    private List<Article> PendingArticles() =>
+        _articles.Where(a => a.HasScene && !a.HasImage && !_completedSlugs.Contains(a.Slug)).ToList();
+
+    private void RenderArticles()
+    {
+        if (LstArticles == null) return;
+        var keep = (LstArticles.SelectedItem as Row)?.Article;
+        LstArticles.Items.Clear();
+
+        var visible = VisibleArticles();
+        if (visible.Count == 0)
+        {
+            var why = "no articles match this filter";
+            if (_articles.Count == 0) why = "no catalog loaded — press Refresh";
+            else if (ChkShowAllArticles.IsChecked != true)
+                why = "nothing pending — tick “Show articles with images” to regenerate one";
+            LstArticles.Items.Add(new Row { Title = why, MarkBrush = RowPlain });
+            UpdateArticleScopeNote();
+            return;
+        }
+
+        foreach (var a in visible)
+        {
+            var fresh = _sessionDone.Contains(a.Slug);
+            LstArticles.Items.Add(new Row
+            {
+                // A piece with no scene is marked differently from one that is
+                // merely pending, because the fix is different: one needs the
+                // generate button, the other needs somebody to write a scene.
+                Mark = a.HasImage ? "✓" : (a.HasScene ? "" : "•"),
+                MarkBrush = a.HasImage ? (fresh ? TickFresh : TickOld) : RowPlain,
+                Title = $"{a.Kicker}  —  {a.Title}   ({a.Words} words)",
+                Host = FamilyNameFor(a.Author),
+                Article = a,
+            });
+        }
+
+        if (keep != null)
+            for (int i = 0; i < LstArticles.Items.Count; i++)
+                if (ReferenceEquals((LstArticles.Items[i] as Row)?.Article, keep)) { LstArticles.SelectedIndex = i; break; }
+
+        UpdateArticleScopeNote();
+    }
+
+    private void UpdateArticleScopeNote()
+    {
+        if (ArticleScopeNote == null) return;
+        var pending = PendingArticles().Count;
+        var noScene = _articles.Count(a => !a.HasScene && !a.HasImage);
+        ArticleScopeNote.Text = pending == 0
+            ? (noScene > 0
+                ? $"Nothing to generate. {noScene} piece(s) still need a scene in article-image-prompts.json."
+                : "Nothing pending.")
+            : $"Generates {pending} article image(s) into public\\images\\articles."
+              + (noScene > 0 ? $" {noScene} more are waiting on a scene." : "");
+    }
+
+    private void BtnArticlesReload_Click(object sender, RoutedEventArgs e)
+    {
+        ReadRootsFromUi();
+        ScanArticles();
+    }
+
+    private void ChkShowAllArticles_Click(object sender, RoutedEventArgs e) => RenderArticles();
+
+    private void ArticleList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var a = (LstArticles.SelectedItem as Row)?.Article;
+        if (a == null)
+        {
+            ArticlePreviewImage.Source = null;
+            ArticlePreviewEmpty.Visibility = Visibility.Visible;
+            ArticlePreviewCaption.Text = "";
+            ArticleSceneText.Text = "";
+            ArticleRegenRow.Visibility = Visibility.Collapsed;
+            return;
+        }
+
+        ArticlePreviewCaption.Text = $"{a.Title} — {FamilyNameFor(a.Author)} — {a.Words} words"
+            + (a.HasScene ? "" : "  —  NO SCENE YET");
+        ArticleSceneText.Text = a.HasScene
+            ? a.Scene
+            : "No scene written for this piece. Add it to tools/article-image-prompts.json, keyed by “" + a.Slug + "”.";
+
+        var file = a.HasImage ? Path.Combine(ArticleImagesRoot, a.ImageFile) : null;
+        if (file != null && File.Exists(file))
+        {
+            // Same decode-once helper the stations preview uses; it hands back
+            // the pixel size as well, which is worth showing because a render
+            // that came back square rather than 16:9 is a render to redo.
+            var (bmp, w, h) = LoadPreview(file);
+            ArticlePreviewImage.Source = bmp;
+            if (bmp != null) ArticlePreviewCaption.Text += $"  ({w}x{h})";
+        }
+        else ArticlePreviewImage.Source = null;
+        ArticlePreviewEmpty.Visibility = ArticlePreviewImage.Source == null ? Visibility.Visible : Visibility.Collapsed;
+        ArticleRegenRow.Visibility = a.HasImage ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private async void BtnArticlesGenerate_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureReady()) return;
+        if (_articles.Count == 0) ScanArticles();
+        var pending = PendingArticles();
+        if (pending.Count == 0) { Log("Nothing pending in the band articles."); return; }
+        Log($"\n=== Heavenly Band articles: {pending.Count} image(s) ===");
+        await RunArticleBatch(pending);
+    }
+
+    private async void ArticleRegenerate_Click(object sender, RoutedEventArgs e)
+    {
+        if (!EnsureReady()) return;
+        var a = (LstArticles.SelectedItem as Row)?.Article;
+        if (a == null) return;
+        if (!a.HasScene) { Log($"{a.Title} has no scene yet — nothing to generate from."); return; }
+
+        // Same contract as the stations view: the file on disk IS the record, so
+        // regenerating means removing it first. Anything else leaves the old
+        // picture in place if the new one fails and calls that success.
+        var path = Path.Combine(ArticleImagesRoot, a.ImageFile);
+        try { if (File.Exists(path)) File.Delete(path); }
+        catch (Exception ex) { Log("Could not delete " + path + ": " + ex.Message); return; }
+        a.ImageFile = "";
+        _completedSlugs.Remove(a.Slug);
+        _sessionDone.Remove(a.Slug);
+        RenderArticles();
+
+        Log($"\n=== Regenerating {a.Title} ===");
+        await RunArticleBatch(new List<Article> { a });
+    }
+
+    /// <summary>
+    /// Hand the pieces to the station batch driver, then copy what it learned
+    /// back onto the articles.
+    ///
+    /// The jobs are throwaway wrappers, so the ImageFile RunBatch sets lands on
+    /// the wrapper and not on the Article the list is bound to. Copying it back
+    /// is what makes the row tick.
+    /// </summary>
+    private async Task RunArticleBatch(List<Article> pieces)
+    {
+        var jobs = pieces.Select(ArticleJob).ToList();
+        await RunBatch(jobs);
+        for (int i = 0; i < pieces.Count; i++)
+            if (jobs[i].ImageFile.Length > 0) pieces[i].ImageFile = jobs[i].ImageFile;
+        foreach (var a in pieces) if (a.ImageFile.Length == 0) a.ImageFile = ExistingArticleImage(a) ?? "";
+        RenderArticles();
+    }
+
 }

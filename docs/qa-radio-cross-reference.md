@@ -50,7 +50,7 @@ The 8 radio smoke cases in this suite (`TC-RADIO-SMOKE-001` through
 `TC-RADIO-SMOKE-008`) confirm:
 
 1. The page loads.
-2. The default station (Jubilee Praise, HM 305.12) is selected.
+2. The default station (Jubilee Praise, HM 305.40) is selected.
 3. Console is clean of regression bugs.
 4. Audio plays from the primary stream.
 5. Locked dimensions render correctly.

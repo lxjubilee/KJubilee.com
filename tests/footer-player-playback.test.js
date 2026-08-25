@@ -51,7 +51,7 @@ const pool = poolFrom(path.join(__dirname, 'fixtures', 'pool.json'), STATION);
 const DAY_SECONDS = 86400;
 const DOC = {
     schema: 'kj.tenant.day/1',
-    tenant: STATION, name: 'Jubilee Gospel Fire', hm: '339.18', format: 'Gospel',
+    tenant: STATION, name: 'Jubilee Gospel Fire', hm: '302.50', format: 'Gospel',
     slug: 'jubilee-gospel-fire', date: DATE, tz: 'America/Los_Angeles',
     startsAt: DATE + 'T07:00:00.000Z', seconds: DAY_SECONDS,
     cdnBase: 'https://cdn.kjubilee.com', prefix: 'music/',

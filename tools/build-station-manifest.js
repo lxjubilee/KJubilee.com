@@ -17,8 +17,8 @@
  * the repository yet.
  *
  * Usage:
- *   node tools/build-station-manifest.js --station HM332.16-RO --dry-run
- *   node tools/build-station-manifest.js --station HM332.16-RO
+ *   node tools/build-station-manifest.js --station HM326.20-RO --dry-run
+ *   node tools/build-station-manifest.js --station HM326.20-RO
  *   node tools/build-station-manifest.js --all
  *
  * Output: <CDN_ROOT>/radio/<STATION_ID>/delivery/music.json, or --out <path>.
@@ -46,7 +46,7 @@
 const fs = require('fs');
 const path = require('path');
 
-/* HM 313.12 is selected by a WORD rather than by an artist or a genre — the
+/* HM 304.80 is selected by a WORD rather than by an artist or a genre — the
    songs that sing "Yeshua" rather than "Jesus". Nothing in the ledger records
    that, so it is derived from the lyric sheets by tools/scan-lyrics-for-name.js
    and read here. Re-run that tool after an ingest and the station grows on its
@@ -195,10 +195,10 @@ const STATIONS = {
             exclude: { albums: ['CAIM1027EN'] },
         },
     },
-    'HM332.16-RO': {
+    'HM326.20-RO': {
         slug: 'jubilee-praise-romana',
         name: 'Jubilee Praise (Română)',
-        hm: '332.16',
+        hm: '326.20',
         mount: 'romana',   // Icecast mount + playlist basename on the radio host
         language: 'RO',
         // Every Romanian track in the repository, from whichever of the twelve
@@ -221,10 +221,10 @@ const STATIONS = {
     // record sits under CCPW and Tahoma's country-gospel record under INCL.
     // `select` is therefore explicit; see the block above it for how the three
     // tiers were established.
-    'HM335.16-EN': {
+    'HM309.30-EN': {
         slug: 'country-gospel',
         name: 'Gospel Country',
-        hm: '335.16',
+        hm: '309.30',
         mount: 'country-gospel',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
         languageName: 'English',
@@ -240,10 +240,10 @@ const STATIONS = {
     // A persona station: Imani Inspire's whole English catalogue. Her lane
     // (PCGC — Pentecostal/Charismatic Praise × Gospel Choir/Afro-Gospel) *is*
     // the format, so unlike Country Gospel this one needs no album picking.
-    'HM339.18-EN': {
+    'HM302.50-EN': {
         slug: 'jubilee-gospel-fire',
         name: 'Pentecostal Shout',
-        hm: '339.18',
+        hm: '302.50',
         mount: 'gospel-fire',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
         languageName: 'English',
@@ -263,10 +263,10 @@ const STATIONS = {
     //
     // Selected explicitly by artist, so it grows when more Party Giggles albums
     // are ingested and never picks up anyone else's tracks.
-    'HM329.12-EN': {
+    'HM361.90-EN': {
         slug: 'jubilee-kids-party',
         name: 'Jubilee Kids Party',
-        hm: '329.12',
+        hm: '361.90',
         mount: 'kids-party',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
         languageName: 'English',
@@ -277,16 +277,16 @@ const STATIONS = {
         pool: 'catalogues',
         select: { artists: ['party-giggles'] },
     },
-    // HM 325.18 God's Little Lambs - My Tiny Tiggles, for the youngest listeners.
+    // HM 360.30 God's Little Lambs - My Tiny Tiggles, for the youngest listeners.
     //
     // The catalogue's own station, and the second children's act on the dial.
     // Kids 3-5 where Jubilee Kids Party is 6-8, which is why the two are
     // separate stations selecting separate artists rather than one shelf of
     // everything filed as children's music.
-    'HM325.18-EN': {
+    'HM360.30-EN': {
         slug: 'gods-little-lambs',
         name: "God's Little Lambs",
-        hm: '325.18',
+        hm: '360.30',
         mount: 'little-lambs',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
         languageName: 'English',
@@ -299,10 +299,10 @@ const STATIONS = {
     },
     // The Bible sung book by book — 276 albums, ordered by the album code so the
     // catalogue runs Genesis to Revelation rather than alphabetically.
-    'HM305.12-EN': {
+    'HM305.40-EN': {
         slug: 'torah-sings',
         name: 'Torah Sings',
-        hm: '305.12',
+        hm: '305.40',
         mount: 'torah-sings',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
         languageName: 'English',
@@ -317,10 +317,10 @@ const STATIONS = {
     // is Latin; the words are not — which is the whole proposition, and why it
     // is an EN station rather than the Spanish edition. His Spanish-language
     // material is only 24 tracks, nowhere near enough to carry a frequency.
-    'HM376.15-EN': {
+    'HM310.90-EN': {
         slug: 'latin-worship',
         name: 'Latin Worship (Sung in English)',
-        hm: '376.15',
+        hm: '310.90',
         mount: 'latin-worship',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
         languageName: 'English',
@@ -331,7 +331,7 @@ const STATIONS = {
         pool: 'inspire-family',
         // Santiago's catalogue minus his nine Caribbean records. SAIM1043-1051
         // are soca, dancehall, steelpan, calypso, kompa and drill — the lane
-        // HM 347.14 Riddim and Rhyme exists to carry. They aired here only
+        // HM 311.50 Riddim and Rhyme exists to carry. They aired here only
         // because the rule said "everything by Santiago". Audited 2026-08-23.
         select: {
             artists: ['santiago-inspire'],
@@ -343,10 +343,10 @@ const STATIONS = {
     // chant and modern electronic-cinematic fusion. OHI mode — this is the one
     // persona that names God as Yahuah and Yeshua by default, so the station
     // carries that naming end to end rather than mixing conventions.
-    'HM377.70-EN': {
+    'HM306.20-EN': {
         slug: 'hebraic-celebrations',
         name: 'Hebraic Celebrations',
-        hm: '377.70',
+        hm: '306.20',
         mount: 'hebraic-celebrations',   // Icecast mount + playlist basename
         language: 'EN',
         languageName: 'English',
@@ -366,10 +366,10 @@ const STATIONS = {
     // vocable, while 301 are explicitly Hawaiian. One track says so outright:
     // "not vocables or chant." The roster was always coherent; only the label
     // was wrong, so the label is what changed.
-    'HM399.18-EN': {
+    'HM312.10-EN': {
         slug: 'island-hallelujah',
         name: 'Island Hallelujah',
-        hm: '399.18',
+        hm: '312.10',
         mount: 'island-hallelujah',   // Icecast mount + playlist basename
         language: 'EN',
         languageName: 'English',
@@ -383,10 +383,10 @@ const STATIONS = {
     // Zariah's Afro-Caribbean fusion: reggae, dancehall, soca, Afrobeats and
     // gospel-soul under teaching hymnody. Her catalogue also airs inside
     // Pentecostal Shout — deliberate; a station is a way in, not an inventory.
-    'HM347.14-EN': {
+    'HM311.50-EN': {
         slug: 'riddim-and-rhyme',
         name: 'Riddim and Rhyme',
-        hm: '347.14',
+        hm: '311.50',
         mount: 'riddim-and-rhyme',   // Icecast mount + playlist basename
         language: 'EN',
         languageName: 'English',
@@ -424,10 +424,10 @@ const STATIONS = {
        The album list is generated, not typed. When JEIM1068EN and the rest are
        recorded, re-running the scan adds them here with no edit to this file.
        Owner decision, 2026-08-23. */
-    'HM313.12-EN': {
+    'HM304.80-EN': {
         slug: 'jubilee-ccm',
         name: 'Celebrate Yeshua!',
-        hm: '313.12',
+        hm: '304.80',
         mount: 'celebrate-yeshua',   // Icecast mount + playlist basename
         language: 'EN',
         languageName: 'English',
@@ -444,12 +444,12 @@ const STATIONS = {
     // those languages' frequencies, not this one.
     //
     // This is also the overnight slot. It replaces the ambient station lost when
-    // HM 376.15 became Latin Worship, and the Radio Engine spec names night and
+    // HM 310.90 became Latin Worship, and the Radio Engine spec names night and
     // soaking programming as a signature feature.
-    'HM379.14-EN': {
+    'HM314.40-EN': {
         slug: 'midnight-praise',
         name: 'Midnight Praise',
-        hm: '379.14',
+        hm: '314.40',
         mount: 'midnight-praise',   // Icecast mount + playlist basename
         language: 'EN',
         languageName: 'English',
@@ -497,10 +497,10 @@ const STATIONS = {
        191 tracks across sixteen records today. Eighteen more albums are written
        and awaiting audio; each joins this station the moment it is ingested,
        with no edit to this file. */
-    'HM314.88-EN': {
+    'HM303.10-EN': {
         slug: 'yes-and-amen',
         name: 'Yes and Amen',
-        hm: '314.88',
+        hm: '303.10',
         mount: 'yes-and-amen',   // Icecast mount + playlist basename
         language: 'EN',
         languageName: 'English',
@@ -513,10 +513,10 @@ const STATIONS = {
         // ends so it cannot reach a jubilujah 1xxx record or a five-digit code.
         select: { albumPattern: '^[A-Z]{4}200[0-9][A-Z]{2}$' },
     },
-    'HM345.24-EN': {
+    'HM313.80-EN': {
         slug: 'ancient-paths',
         name: 'The Ancient Paths',
-        hm: '345.24',
+        hm: '313.80',
         mount: 'ancient-paths',
         language: 'EN',
         languageName: 'English',

@@ -231,14 +231,14 @@ const HOST_OVERRIDE = {
     'jubilee-radio': 'jubilee', 'jubilee-praise': 'zev', 'logos': 'nova',
     // Stations built around one persona's catalog, so the host is the artist
     // actually on air rather than the next name off the rota.
-    'country-gospel': 'elias',        // Elias & Eliana Inspire — HM335.16-EN
-    'jubilee-gospel-fire': 'imani',   // Imani Inspire — HM339.18-EN
-    'latin-worship': 'santiago',      // Santiago Inspire — HM376.15-EN
-    'hebraic-celebrations': 'zev',    // Zev Inspire — HM377.70-EN
-    'jubilee-ccm': 'jubilee',         // Celebrate Yeshua! — HM313.12, fronted by Jubilee
+    'country-gospel': 'elias',        // Elias & Eliana Inspire — HM309.30-EN
+    'jubilee-gospel-fire': 'imani',   // Imani Inspire — HM302.50-EN
+    'latin-worship': 'santiago',      // Santiago Inspire — HM310.90-EN
+    'hebraic-celebrations': 'zev',    // Zev Inspire — HM306.20-EN
+    'jubilee-ccm': 'jubilee',         // Celebrate Yeshua! — HM304.80, fronted by Jubilee
     // The two children's catalogues front their own stations.
-    'gods-little-lambs': 'tiny-tiggles',    // HM325.18 — plays the Tiny Tiggles catalogue
-    'jubilee-kids-party': 'party-giggles',  // HM329.12 — plays the Party Giggles catalogue
+    'gods-little-lambs': 'tiny-tiggles',    // HM360.30 — plays the Tiny Tiggles catalogue
+    'jubilee-kids-party': 'party-giggles',  // HM361.90 — plays the Party Giggles catalogue
     // Pinned to the host it already had: the two entries above take two slots
     // out of the `children` rota, which re-dealt this one. Its cover is
     // already rendered with Caleb in it.
@@ -250,11 +250,11 @@ const HOST_OVERRIDE = {
     'inspire-hymns-heritage': 'nova', 'riddim-and-rhyme': 'zariah',
     'radiant-stones-radio': 'jubilee', 'inspire-acapella': 'caleb',
     'midnight-praise': 'nova', 'island-hallelujah': 'tahoma',
-    'ancient-paths': 'amir',          // Amir Inspire — HM345.24-EN
+    'ancient-paths': 'amir',          // Amir Inspire — HM313.80-EN
     // Yes and Amen plays all twelve of them, so no artist is 'the artist on
     // air'. Elias fronts it because the property opens with his record and
     // apostolic commission is the register the whole catalogue declares in.
-    'yes-and-amen': 'elias',          // Yes and Amen — HM314.88-EN
+    'yes-and-amen': 'elias',          // Yes and Amen — HM303.10-EN
 };
 
 // Family-friendly picks out of the mainstream band.
@@ -321,7 +321,7 @@ function programmedStations() {
     try { m = JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { continue; }
     const tracks = (m.totals && m.totals.tracks) || 0;
     // Join on the HM frequency, not the slug. The site slug and the manifest
-    // slug are allowed to differ — HM 305.12 is `jubilee-praise` in the station
+    // slug are allowed to differ — HM 305.40 is `jubilee-praise` in the station
     // catalog and `torah-sings` in the manifest — but a frequency identifies
     // exactly one station on the dial, by definition (BR-B2).
     if (tracks > 0 && m.hm) byHm.set(String(m.hm), { id, tracks, mount: m.mount, slug: m.station_slug });
@@ -404,11 +404,11 @@ const stations = raw.map(function (s, i) {
     // THE TENANT ID, where this station has one.
     //
     // Without it the player cannot find the station's daily programming file —
-    // that file is keyed by tenant id (HM305.12-EN), and the catalogue only
-    // carries the frequency (305.12) and the language name. The player was
+    // that file is keyed by tenant id (HM305.40-EN), and the catalogue only
+    // carries the frequency (305.40) and the language name. The player was
     // therefore showing the station name where the song title belongs, because
     // for a stream-backed station it had no way to know what was playing.
-    // Matched on hm, which is unambiguous; slug is not (see HM 305.12).
+    // Matched on hm, which is unambiguous; slug is not (see HM 305.40).
     tenant: tenantByHm[s.hm] || null,
     manifest: s.musicManifestUrl || null,
     stream: s.streamUrl || null,
@@ -488,14 +488,14 @@ const flatOrder = function (slugs) {
 // explicitly rather than left to rank: it ties with Gospel Country on 90, and a
 // tie would drop it into the middle of the live block instead of the end.
 const HOME_PINNED = [
-  { slug: 'jubilee-kids-party', after: 'jubilee-gospel-fire' },   // HM329.12 after HM339.18
+  { slug: 'jubilee-kids-party', after: 'jubilee-gospel-fire' },   // HM361.90 after HM302.50
   /* God's Little Lambs is primary 'children', so it lands on Family Friendly on
      its own and would never reach Home — but it is Bible songs, which is
      Christian music by any reading, and a parent looking for it arrives at the
      front door like everyone else. Anchored to the other kids station rather
      than dropped among the adult worship formats, so the two sit together.
      It keeps its Family Friendly place as well; the shelves overlap by design. */
-  { slug: 'gods-little-lambs',  after: 'jubilee-kids-party' },    // HM325.18 after HM329.12
+  { slug: 'gods-little-lambs',  after: 'jubilee-kids-party' },    // HM360.30 after HM361.90
 ];
 
 // The opening twelve cards, in the order they are meant to be read. Rank
@@ -517,7 +517,7 @@ const HOME_LEAD = [
   'hebraic-celebrations',     // Hebraic Celebrations
   'inspire-hymns-heritage',   // Inspire Hymns & Heritage
   'country-gospel',           // Gospel Country
-  'yes-and-amen',             // Yes and Amen — HM 314.88, the SingItDone declarations
+  'yes-and-amen',             // Yes and Amen — HM 303.10, the SingItDone declarations
 ];
 
 // The closing card(s), in order. God's Little Lambs is pinned onto Home above
@@ -525,7 +525,7 @@ const HOME_LEAD = [
 // drops it into the middle of the shelf; this puts it at the end where it was
 // asked for. Same strictness as HOME_LEAD — a bad slug fails the build.
 const HOME_TAIL = [
-  'gods-little-lambs',        // HM 325.18 — last card on Home
+  'gods-little-lambs',        // HM 360.30 — last card on Home
 ];
 
 const englishMusic = function () {
@@ -619,32 +619,120 @@ const HM_CORE = [
   {
     slug: 'what-heavenly-modulation-is',
     kicker: 'The band',
-    title: 'What Heavenly Modulation actually is',
+    title: 'What Heavenly Modulation Actually Is',
     dek: 'A broadcast band that no regulator allocated, because a ministry allocated it instead.',
     image: 'jubilee-radio',
     author: 'jubilee',
     stands: 'A frequency is a promise that the same thing is in the same place every time you tune there.',
     body: [
+      'It is two in the morning somewhere and a man is driving a road he does not like, and he ' +
+      'reaches out and turns the dial. He is not searching. There is nothing to search. He does not ' +
+      'know what is on the other side of the hiss and that is the entire reason he is turning it. ' +
+      'A station arrives halfway through a song. It has been playing for hours. It was playing ' +
+      'before he found it and it will keep playing after he arrives, and not one second of it was ' +
+      'arranged for him.',
+      'That experience is nearly extinct, and almost nobody noticed it going. It did not die of ' +
+      'unpopularity. It died because something more convenient replaced it, and the more convenient ' +
+      'thing quietly removed the one property that made it worth having.',
       'AM modulates amplitude. FM modulates frequency. HM — Heavenly Modulation — is a band that ' +
       'does not exist on any tuner you can buy, because it was never allocated by a regulator. It ' +
       'was allocated by a ministry.',
+      'The name is not only a pun, and it is worth taking literally for a moment. Modulation is the ' +
+      'business of carrying one thing on top of another. A carrier wave on its own is featureless ' +
+      'and says nothing; it is bent, very slightly and very precisely, until it holds a voice. What ' +
+      'gets bent on this band is an ordinary day. The signal rides on the commute, on the washing ' +
+      'up, on the ninety minutes before a night shift, on the hour after a house has gone quiet and ' +
+      'nobody has decided what to do with it. The day is the carrier. What the day is made to carry ' +
+      'is the modulation, and that is the whole design.',
       'The dial runs from HM ' + hmFacts.low + ' to HM ' + hmFacts.high + ', and it currently carries ' +
       hmFacts.total + ' stations. Every station holds one frequency and no two stations share a ' +
-      'number, exactly as on a real broadcast band. That constraint is deliberate: a frequency is a ' +
+      'number, exactly as on a real broadcast band.',
+      'That constraint is deliberate, and it is one of the more expensive decisions here. A number ' +
+      'that belongs to one station permanently cannot be handed to a more popular station later. It ' +
+      'cannot be recycled when programming is retired, and it cannot be quietly reassigned because ' +
+      'the numbers would look better arranged some other way. The dial is therefore full of ' +
+      'commitments that a product manager would want back. They are not given back. A frequency is a ' +
       'promise that the same thing is in the same place every time you tune there.',
+      'Promises of that shape have become strange. The ordinary experience of software now is that ' +
+      'the thing you liked has been moved, that the shelf you relied on has been replaced by a ' +
+      'better shelf you did not ask for, and that the home screen has been rearranged overnight by ' +
+      'somebody measuring something. None of that is malice. It is simply what happens when every ' +
+      'surface is optimised and nothing is promised. The cost is that nothing can become a habit, ' +
+      'because a habit needs the world to hold still long enough for one to form.',
       'The band is partitioned the way a broadcast band is — a five-fold band for the ministry ' +
       'stations, a multilanguage band for the nations, a mainstream band for the always-on formats. ' +
-      'You are not scrolling a content library. You are turning a dial.',
-      'That difference is not decoration. A library asks you what you want before it will play ' +
-      'anything, which means it can only ever hand back something you already knew to ask for. A ' +
-      'dial plays whether or not you chose. It is the format that lets a song find someone who was ' +
-      'not looking for it, and that is the entire point of putting the gospel on the air.',
+      'Learn roughly where things sit and you can find your way about without looking, which is ' +
+      'precisely the skill a real dial teaches and a search box never can. People who grew up with ' +
+      'radio can still put a hand on a frequency in the dark.',
+      'You are not scrolling a content library. You are turning a dial. That difference is not ' +
+      'decoration, and it is not nostalgia either.',
+      'A library asks what you want before it will play anything. That sounds like service and it ' +
+      'is a trap, because it means a library can only ever hand back something you already knew to ' +
+      'ask for. It is a mirror with a search box in front of it. The better the recommendations get, ' +
+      'the more exactly they return you to yourself, and a person who is only ever returned to ' +
+      'themselves is not being reached by anything. They are being confirmed. There is a particular ' +
+      'loneliness in a service that has ten thousand hours of music and no capacity to surprise you.',
+      'A dial plays whether or not you chose.',
+      'Consider what that actually looks like. A woman puts a station on in her mother\'s room ' +
+      'because the silence there had become the loudest thing in the house. She is not choosing ' +
+      'songs; she has neither the attention nor the heart for it, and choosing would mean thinking ' +
+      'about why she was choosing. She simply leaves it running. Over three weeks the room fills up ' +
+      'with music that nobody in it selected. Some of it she would have skipped. One of the songs she ' +
+      'catches herself singing at a bus stop a month after the funeral, and she could not tell you ' +
+      'its name, and it is doing more for her at that bus stop than any sermon she can remember.',
+      'Nothing in that sequence required her to have been looking. That is the mechanism, and it ' +
+      'cannot be reproduced by a service that waits to be asked.',
+      'This costs something, and it is only honest to name it. A dial will play you a song you would ' +
+      'not have chosen. It will play a language you do not speak, a style you find dated, a ' +
+      'programme you would have skipped past in a list. You are not the editor here. Somebody else ' +
+      'decided, hours ago, and left it running, and there are moments when that is genuinely ' +
+      'irritating.',
+      'The irritation is not a defect in the format. It is the format. Every good thing a broadcast ' +
+      'band has ever done for anybody depends on the listener not being in charge of the next three ' +
+      'minutes. Nobody was ever argued into the hymn they found themselves singing at a graveside ' +
+      'forty years later. It was put in front of them by someone else, repeatedly, at an hour when ' +
+      'they were not paying attention, and it stayed.',
+      'So the band is not a metaphor and it is not a skin over a playlist. The frequencies are real ' +
+      'commitments, the schedule is published before it airs, and two people who tune to the same ' +
+      'number at the same second hear the same song. It is the one format that lets a song find ' +
+      'someone who was not looking for it, and that is the entire point of putting the gospel on ' +
+      'the air.',
+      'All of which is theory until something is actually playing. So here is the part that is not ' +
+      'theory.',
+      'The dial carries four kinds of programming, and it is worth knowing they are there before ' +
+      'you start turning. There is music, which is most of the band \u2014 praise and worship, ' +
+      'contemporary, country, gospel, hymns, and a good deal besides. There is teaching and prayer, ' +
+      'where the Word is opened and explained and prayed through rather than sung. There is family ' +
+      'programming, which is simply safe: entertaining, clean, and playable in a room with children ' +
+      'in it whether or not every track names God out loud. And there are the international ' +
+      'stations, hosted in their own languages for the nations rather than translated into them ' +
+      'afterwards. Four kinds, one dial, and no menu to work your way through.',
+      'If you want somewhere to start, start at HM 308.70 \u2014 kJubilee Radio. It is the flagship of ' +
+      'the band and it is the station built for exactly the case this article has been describing: ' +
+      'the one where you do not want to make a decision. It carries continuous worship and teaching ' +
+      'from the Inspire Family catalog, running day and night, and it will not play you the same ' +
+      'song twice in a day. It is the one to leave on in a kitchen, in a car, in a workshop, in a ' +
+      'room where ' +
+      'somebody is ill and the silence has got too loud. You will not love every track. That is not ' +
+      'a fault in the station; that is the format doing the one thing a playlist cannot do for you.',
+      'There is nothing to install. No app, no download and no card. Open kJubilee.com on whatever ' +
+      'phone or laptop is nearest, press play, and it plays \u2014 it is deliberately built for ' +
+      'inexpensive phones and thin connections, so it starts on the hardware people actually have. ' +
+      'If you would like it closer to hand, add the page to your home screen and it will open like ' +
+      'anything else on it. And do make yourself an account while you are there. It is free, it ' +
+      'keeps your favourites with you across every Jubilee site, and it is how this band finds out ' +
+      'which frequencies people are actually reaching for \u2014 which is how the next one gets built.',
+      'So consider this an invitation rather than an offer. Do not evaluate it, and do not explore ' +
+      'it \u2014 those are library words, and this is not a library. Put HM 308.70 on this afternoon ' +
+      'while you are doing something else, and then leave it alone. Let it play whether or not you ' +
+      'chose. Give it a week of ordinary days and you will know perfectly well whether it belongs ' +
+      'in your house, and you will not have had to decide a single thing to find out.',
     ],
   },
   {
     slug: 'why-it-had-to-be-music',
     kicker: 'Why music',
-    title: 'Why it had to be music',
+    title: 'Why It Had to Be Music',
     dek: 'Scripture teaches itself in songs, and a song is the only sermon anyone repeats on purpose.',
     image: 'inspire-hymns-heritage',
     author: 'melody',
@@ -671,15 +759,14 @@ const HM_CORE = [
   {
     slug: 'free-and-built-to-stay-free',
     kicker: 'What it costs',
-    title: 'Free, and built to stay free',
+    title: 'Free, and Built to Stay Free',
     dek: 'No subscription, no advertising, no pledge drive — and a structural reason it can stay that way.',
     image: 'gods-little-lambs',
     author: 'jubilee',
     stands: 'Free is not a launch promotion here. It is what is left once you remove the two costs that normally force a price.',
     body: [
       'Every station on this band is free to listen to. There is no subscription tier, no advert ' +
-      'between songs, no pledge week, and no account required before the audio will start. You ' +
-      'open the page, you press play, and it plays.',
+      'between songs and no pledge week. You open the page, you press play, and it plays.',
       'That is easy to promise and hard to keep, so it is worth saying exactly why it can be kept. ' +
       'Internet radio is normally squeezed by two costs. The first is licensing: every play of ' +
       'every song owes a fee to a rights body, which is why such services must either sell ' +
@@ -698,7 +785,7 @@ const HM_CORE = [
   {
     slug: 'ai-pointed-at-the-kingdom',
     kicker: 'The tools',
-    title: 'AI, pointed at the Kingdom',
+    title: 'AI, Pointed at the Kingdom',
     dek: 'The music, the voices and the artwork on this band are AI-made. Here is why that is said out loud.',
     image: 'jubilee-ccm',
     author: 'amir',
@@ -728,7 +815,7 @@ const HM_CORE = [
   {
     slug: 'everywhere-there-is-a-signal',
     kicker: 'The reach',
-    title: 'Everywhere there is a signal',
+    title: 'Everywhere There Is a Signal',
     dek: 'Served from the edge, built for cheap phones and thin connections, with no app to install.',
     image: 'africa-inspire-kiswahili',
     author: 'zariah',
@@ -753,7 +840,7 @@ const HM_CORE = [
   {
     slug: 'voices-not-strangers',
     kicker: 'The difference',
-    title: 'Twelve voices, and none of them are strangers',
+    title: 'Twelve Voices, and None of Them Are Strangers',
     dek: 'A playlist has no host, which is why a playlist never becomes a habit.',
     image: 'inspire-live',
     author: 'nova',
@@ -776,7 +863,7 @@ const HM_CORE = [
   {
     slug: 'a-frequency-nobody-pays-to-reach',
     kicker: 'Why it matters',
-    title: 'A frequency nobody has to pay to reach',
+    title: 'A Frequency Nobody Has to Pay to Reach',
     dek: 'Terrestrial Christian radio runs on an auction. This band removes the auction.',
     image: 'jubilee-praise',
     author: 'elias',
@@ -802,7 +889,7 @@ const HM_CORE = [
   {
     slug: 'the-kingdom-calendar',
     kicker: 'The difference',
-    title: 'A dial that keeps the Kingdom calendar',
+    title: 'A Dial That Keeps the Kingdom Calendar',
     dek: 'From Friday sundown the whole band changes character, and nobody flips a switch.',
     image: 'hebraic-celebrations',
     author: 'zev',
@@ -824,7 +911,7 @@ const HM_CORE = [
   {
     slug: 'every-song-carries-the-word',
     kicker: 'The difference',
-    title: 'Every song carries the Word with it',
+    title: 'Every Song Carries the Word with It',
     dek: 'A track here is not just audio. It carries the Scripture it stands on.',
     image: 'identity-in-yeshua',
     author: 'caleb',
@@ -844,7 +931,7 @@ const HM_CORE = [
   {
     slug: 'hosted-in-the-language',
     kicker: 'The nations',
-    title: 'Hosted in the language, not translated into it',
+    title: 'Hosted in the Language, Not Translated into It',
     dek: 'Stations written in their own languages rather than run through a translator.',
     image: 'familia-inspire-espanol',
     author: 'santiago',
@@ -867,7 +954,7 @@ const HM_CORE = [
   {
     slug: 'still-being-built-on-purpose',
     kicker: 'What is next',
-    title: 'Still being built, on purpose',
+    title: 'Still Being Built, on Purpose',
     dek: 'Frequencies are reserved before their stations are finished, and the dial keeps growing.',
     image: 'inspire-rising',
     author: 'caleb',
@@ -893,7 +980,7 @@ const HM_CORE = [
   {
     slug: 'on-air-today',
     kicker: 'On air now',
-    title: 'What is actually broadcasting today',
+    title: 'What Is Actually Broadcasting Today',
     dek: 'The live count, the station names, and the discipline behind what reaches the air.',
     image: 'jubilee-gospel-fire',
     author: 'imani',
@@ -922,7 +1009,7 @@ const HM_MORE = [
   {
     slug: 'can-a-machine-worship',
     kicker: 'The AI question',
-    title: 'Can a machine worship?',
+    title: 'Can a Machine Worship?',
     dek: 'No. And the answer matters more than the question, because of what it tells you this band is for.',
     image: 'inspire-acapella',
     author: 'nova',
@@ -949,7 +1036,7 @@ const HM_MORE = [
   {
     slug: 'what-ai-never-decides',
     kicker: 'The AI question',
-    title: 'What we will never let AI decide',
+    title: 'What We Will Never Let AI Decide',
     dek: 'A short list, published on purpose, so that it can be held against us.',
     image: 'logos',
     author: 'zev',
@@ -974,7 +1061,7 @@ const HM_MORE = [
   {
     slug: 'who-wrote-this-song',
     kicker: 'The AI question',
-    title: 'Who wrote this song?',
+    title: 'Who Wrote This Song?',
     dek: 'The whole credit chain for one track, from the passage it stands on to the play log.',
     image: 'yes-and-amen',
     author: 'caleb',
@@ -999,7 +1086,7 @@ const HM_MORE = [
   {
     slug: 'the-cost-of-a-station',
     kicker: 'The AI question',
-    title: 'The cost of a station, then and now',
+    title: 'The Cost of a Station, Then and Now',
     dek: 'Why round-the-clock gospel radio in a minority language was, until very recently, simply unaffordable.',
     image: 'inspire-india-hindi',
     author: 'amir',
@@ -1026,7 +1113,7 @@ const HM_MORE = [
   {
     slug: 'every-tool-the-church-feared',
     kicker: 'The AI question',
-    title: 'Every tool the Church was afraid of',
+    title: 'Every Tool the Church Was Afraid Of',
     dek: 'The press, radio, television, the internet — the same argument each time, and what being late cost.',
     image: 'ancient-paths',
     author: 'elias',
@@ -1054,7 +1141,7 @@ const HM_MORE = [
   {
     slug: 'the-first-song-after-the-sea',
     kicker: 'Why music',
-    title: 'The first thing anyone did after the sea closed',
+    title: 'The First Thing Anyone Did After the Sea Closed',
     dek: 'Exodus 15 — deliverance happens, and the immediate response is a song.',
     image: 'midnight-praise',
     author: 'zev',
@@ -1078,7 +1165,7 @@ const HM_MORE = [
   {
     slug: 'lament-has-a-frequency',
     kicker: 'Why music',
-    title: 'Lament has a frequency too',
+    title: 'Lament Has a Frequency Too',
     dek: 'Why there are stations for grief and for walking out of addiction, and not only for praise.',
     image: 'grief-walked',
     author: 'eliana',
@@ -1103,7 +1190,7 @@ const HM_MORE = [
   {
     slug: 'the-song-you-sang-at-eleven',
     kicker: 'Why music',
-    title: 'The song you sang at eleven and still know',
+    title: 'The Song You Sang at Eleven and Still Know',
     dek: 'Why the children’s stations on this band are not the easy end of it.',
     image: 'bedtime-blessings',
     author: 'melody',
@@ -1127,7 +1214,7 @@ const HM_MORE = [
   {
     slug: 'two-people-at-once',
     kicker: 'Why music',
-    title: 'Every worship song is talking to two people at once',
+    title: 'Every Worship Song Is Talking to Two People at Once',
     dek: 'One line goes up. The next goes sideways. Most songs never announce that they are doing both.',
     image: 'jubilee-sanctuary',
     author: 'jubilee',
@@ -1152,7 +1239,7 @@ const HM_MORE = [
   {
     slug: 'what-a-songid-is',
     kicker: 'How it works',
-    title: 'What a SongID is, and why you should care',
+    title: 'What a SongID Is, and Why You Should Care',
     dek: 'Twelve characters that turn a song from a file into a fixed object.',
     image: 'jubilee-teaching',
     author: 'caleb',
@@ -1177,7 +1264,7 @@ const HM_MORE = [
   {
     slug: 'published-before-it-airs',
     kicker: 'How it works',
-    title: 'The schedule is published before it airs',
+    title: 'The Schedule Is Published Before It Airs',
     dek: 'Two listeners tuning in at the same second hear the same song. That is the whole difference between a band and a shuffle.',
     image: 'shema-roots',
     author: 'zev',
@@ -1202,7 +1289,7 @@ const HM_MORE = [
   {
     slug: 'how-a-frequency-is-assigned',
     kicker: 'How it works',
-    title: 'How a frequency gets assigned',
+    title: 'How a Frequency Gets Assigned',
     dek: 'The life of a station, from a need somebody could state in a sentence to the moment it signs on.',
     image: 'wisdom-channel',
     author: 'jubilee',
@@ -1228,7 +1315,7 @@ const HM_MORE = [
   {
     slug: 'the-languages-still-missing',
     kicker: 'The nations',
-    title: 'Twenty languages, and the ones still missing',
+    title: 'Twenty Languages, and the Ones Still Missing',
     dek: 'Naming the gaps out loud, because a list of what is missing is more use than a list of what is done.',
     image: 'asia-inspire-zhongwen',
     author: 'eliana',
@@ -1252,7 +1339,7 @@ const HM_MORE = [
   {
     slug: 'where-this-band-is-going',
     kicker: 'The reach',
-    title: 'Where this band is going',
+    title: 'Where This Band Is Going',
     dek: 'A map, a set of assigned frequencies, and an honest account of what is not known yet.',
     image: 'island-hallelujah',
     author: 'zariah',
@@ -1277,7 +1364,7 @@ const HM_MORE = [
   {
     slug: 'how-to-use-this-band',
     kicker: 'For listeners',
-    title: 'How to use a radio band you cannot buy a radio for',
+    title: 'How to Use a Radio Band You Cannot Buy a Radio For',
     dek: 'The dial, the player that never stops, favourites, and how to hand somebody a frequency.',
     image: 'inspire-drive',
     author: 'melody',
@@ -1301,7 +1388,7 @@ const HM_MORE = [
   {
     slug: 'leave-it-on',
     kicker: 'For listeners',
-    title: 'Leave it on',
+    title: 'Leave It On',
     dek: 'The case for a house with something true playing in it that nobody had to choose.',
     image: 'stillwater',
     author: 'eliana',
@@ -1325,7 +1412,7 @@ const HM_MORE = [
   {
     slug: 'for-the-person-who-stopped-going',
     kicker: 'For listeners',
-    title: 'For the person who stopped going',
+    title: 'For the Person Who Stopped Going',
     dek: 'No argument, no guilt, and nothing you have to sign up for.',
     image: 'when-faith-feels-hard',
     author: 'nova',
@@ -1369,7 +1456,7 @@ const HM_VOICES_1 = [
   {
     slug: 'doubt-is-not-the-opposite-of-faith',
     kicker: 'For the doubting',
-    title: 'Doubt is not the opposite of faith. Certainty is.',
+    title: 'Doubt Is Not the Opposite of Faith. Certainty Is.',
     dek: 'The thing almost nobody says to a person who has started asking questions.',
     image: 'the-mended-place',
     author: 'nova',
@@ -1395,7 +1482,7 @@ const HM_VOICES_1 = [
   {
     slug: 'questions-you-were-told-not-to-ask',
     kicker: 'For the doubting',
-    title: 'The questions you were told not to ask in church',
+    title: 'The Questions You Were Told Not to Ask in Church',
     dek: 'Not because they are dangerous, but because somebody in the room did not have an answer.',
     image: 'logos',
     author: 'nova',
@@ -1421,7 +1508,7 @@ const HM_VOICES_1 = [
   {
     slug: 'come-back-without-explaining',
     kicker: 'For the doubting',
-    title: 'You can come back without explaining where you went',
+    title: 'You Can Come Back Without Explaining Where You Went',
     dek: 'The debrief nobody owes anybody, and the station built on not asking for one.',
     image: 'the-comeback-room',
     author: 'nova',
@@ -1438,15 +1525,15 @@ const HM_VOICES_1 = [
       'all. The father runs down the road before the son gets a word out. The speech the son had ' +
       'rehearsed the whole way home is never actually needed, and the text is careful to tell us ' +
       'he had rehearsed it.',
-      'So The Comeback Room asks nothing. There is no account, nobody is counted, and no one is ' +
-      'going to ring you. You put it on, and you are back, and the terms of that are entirely ' +
-      'yours.',
+      'So The Comeback Room asks nothing. Nobody is counted, nothing is filed against your name, ' +
+      'and no one is going to ring you. You put it on, and you are back, and the terms of that ' +
+      'are entirely yours.',
     ],
   },
   {
     slug: 'why-midnight-praise-exists',
     kicker: 'For the doubting',
-    title: 'Why Midnight Praise exists',
+    title: 'Why Midnight Praise Exists',
     dek: 'Three in the morning has its own theology, and almost nothing is scheduled for it.',
     image: 'midnight-praise',
     author: 'nova',
@@ -1471,7 +1558,7 @@ const HM_VOICES_1 = [
   {
     slug: 'hymns-were-written-in-trouble',
     kicker: 'For the doubting',
-    title: 'Hymns survive because they were written by people in trouble',
+    title: 'Hymns Survive Because They Were Written by People in Trouble',
     dek: 'Not heritage, and not nostalgia — the ones that lasted were forged in the worst year of somebody’s life.',
     image: 'inspire-hymns-heritage',
     author: 'nova',
@@ -1497,7 +1584,7 @@ const HM_VOICES_1 = [
   {
     slug: 'wisdom-when-advice-runs-out',
     kicker: 'For the doubting',
-    title: 'What wisdom is, when advice has run out',
+    title: 'What Wisdom Is, When Advice Has Run Out',
     dek: 'Advice tells you what to do. Wisdom is for the situations where nobody can.',
     image: 'wisdom-channel',
     author: 'nova',
@@ -1522,7 +1609,7 @@ const HM_VOICES_1 = [
   {
     slug: 'nothing-here-closes-the-deal',
     kicker: 'For the doubting',
-    title: 'Nothing here is trying to close the deal',
+    title: 'Nothing Here Is Trying to Close the Deal',
     dek: 'An editorial policy, stated plainly, so you can hold the station to it.',
     image: 'whole-hearted-sisters',
     author: 'nova',
@@ -1549,7 +1636,7 @@ const HM_VOICES_1 = [
   {
     slug: 'what-plays-on-the-flagship',
     kicker: 'The whole house sings',
-    title: 'What plays on the flagship, and why that is the hardest choice',
+    title: 'What Plays on the Flagship, and Why That Is the Hardest Choice',
     dek: 'A station for everybody is the most difficult remit on the dial, not the easiest.',
     image: 'jubilee-radio',
     author: 'jubilee',
@@ -1575,7 +1662,7 @@ const HM_VOICES_1 = [
   {
     slug: 'four-generations-one-radio',
     kicker: 'The whole house sings',
-    title: 'A house where four generations have to agree on the radio',
+    title: 'A House Where Four Generations Have to Agree on the Radio',
     dek: 'The real design problem behind a family station, and why most of them solve it badly.',
     image: 'inspire-family-pop',
     author: 'jubilee',
@@ -1600,7 +1687,7 @@ const HM_VOICES_1 = [
   {
     slug: 'decisions-before-you-know',
     kicker: 'The whole house sings',
-    title: 'The ones you make before you know they were decisions',
+    title: 'The Ones You Make Before You Know They Were Decisions',
     dek: 'Almost nothing that changes a life arrives labelled as a fork in the road.',
     image: 'decisions-that-matter',
     author: 'jubilee',
@@ -1625,7 +1712,7 @@ const HM_VOICES_1 = [
   {
     slug: 'celebrating-without-borrowing',
     kicker: 'The whole house sings',
-    title: 'Celebrating Yeshua without borrowing the world’s party',
+    title: 'Celebrating Yeshua Without Borrowing the World’s Party',
     dek: 'Joy is not the same thing as a loud room, and the difference is audible.',
     image: 'radiant-stones-radio',
     author: 'jubilee',
@@ -1650,7 +1737,7 @@ const HM_VOICES_1 = [
   {
     slug: 'when-faith-feels-hard-is-not-beginner',
     kicker: 'The whole house sings',
-    title: 'When Faith Feels Hard is not a beginner station',
+    title: 'When Faith Feels Hard Is Not a Beginner Station',
     dek: 'The people who need it most have usually been at this for decades.',
     image: 'when-faith-feels-hard',
     author: 'jubilee',
@@ -1676,7 +1763,7 @@ const HM_VOICES_1 = [
   {
     slug: 'never-twice-in-a-day',
     kicker: 'The whole house sings',
-    title: 'Why the flagship never plays a song twice in a day',
+    title: 'Why the Flagship Never Plays a Song Twice in a Day',
     dek: 'Commercial radio repeats its best track every four hours. Here is the argument against.',
     image: 'jubilee-ccm',
     author: 'jubilee',
@@ -1702,7 +1789,7 @@ const HM_VOICES_1 = [
   {
     slug: 'jazz-when-nobody-is-performing',
     kicker: 'The whole house sings',
-    title: 'Jazz is what worship sounds like when nobody is performing',
+    title: 'Jazz Is What Worship Sounds Like When Nobody Is Performing',
     dek: 'A form built on listening to each other rather than on delivering a rehearsed thing.',
     image: 'inspire-jazz',
     author: 'jubilee',
@@ -1731,7 +1818,7 @@ const HM_VOICES_2 = [
   {
     slug: 'family-faith-is-mostly-logistics',
     kicker: 'Everyday family faith',
-    title: 'Family faith is mostly logistics',
+    title: 'Family Faith Is Mostly Logistics',
     dek: 'The unglamorous truth, and why admitting it takes the guilt out of the whole subject.',
     image: 'inspire-kids',
     author: 'melody',
@@ -1758,7 +1845,7 @@ const HM_VOICES_2 = [
   {
     slug: 'a-sanctuary-that-is-a-kitchen',
     kicker: 'Everyday family faith',
-    title: 'What a sanctuary sounds like when it is a kitchen',
+    title: 'What a Sanctuary Sounds Like When It Is a Kitchen',
     dek: 'The word does not mean a building. It means a place where something is protected.',
     image: 'jubilee-sanctuary',
     author: 'melody',
@@ -1782,7 +1869,7 @@ const HM_VOICES_2 = [
   {
     slug: 'twenty-minutes-in-the-car',
     kicker: 'Everyday family faith',
-    title: 'The twenty minutes in the car are the discipleship',
+    title: 'The Twenty Minutes in the Car Are the Discipleship',
     dek: 'Side by side, no eye contact, and a fixed end point. It is a nearly perfect format.',
     image: 'inspire-latin',
     author: 'melody',
@@ -1807,7 +1894,7 @@ const HM_VOICES_2 = [
   {
     slug: 'children-do-not-need-a-simplified-god',
     kicker: 'Everyday family faith',
-    title: 'Children do not need a simplified God',
+    title: 'Children Do Not Need a Simplified God',
     dek: 'Simple language, yes. A smaller God, no — and children can tell the difference immediately.',
     image: 'inspire-kids',
     author: 'melody',
@@ -1833,7 +1920,7 @@ const HM_VOICES_2 = [
   {
     slug: 'beyond-the-trauma-is-not-over-it',
     kicker: 'Everyday family faith',
-    title: 'Beyond the trauma is not the same as over it',
+    title: 'Beyond the Trauma Is Not the Same as over It',
     dek: 'A station name that is doing careful work, and a distinction most recovery language misses.',
     image: 'beyond-the-trauma',
     author: 'melody',
@@ -1858,7 +1945,7 @@ const HM_VOICES_2 = [
   {
     slug: 'what-grows-back-and-what-does-not',
     kicker: 'Everyday family faith',
-    title: 'What actually grows back, and what does not',
+    title: 'What Actually Grows Back, and What Does Not',
     dek: 'Restoration is a real promise and a specific one. It is not the same as replacement.',
     image: 'restored-renewed',
     author: 'melody',
@@ -1884,7 +1971,7 @@ const HM_VOICES_2 = [
   {
     slug: 'who-teaches-your-children-the-words',
     kicker: 'Everyday family faith',
-    title: 'Whose job is it to teach your children the words?',
+    title: 'Whose Job Is It to Teach Your Children the Words?',
     dek: 'The uncomfortable one, asked plainly, with no guilt attached to the answer.',
     image: 'jubilee-sanctuary',
     author: 'melody',
@@ -1915,7 +2002,7 @@ const HM_VOICES_2 = [
   {
     slug: 'riddim-was-church-first',
     kicker: 'Caribbean and diaspora',
-    title: 'Riddim was church before it was radio',
+    title: 'Riddim Was Church Before It Was Radio',
     dek: 'The rhythm arrived in the sanctuary first. The charts came along later and took the credit.',
     image: 'riddim-and-rhyme',
     author: 'zariah',
@@ -1939,7 +2026,7 @@ const HM_VOICES_2 = [
   {
     slug: 'worship-in-a-country-not-yours',
     kicker: 'Caribbean and diaspora',
-    title: 'Worshipping in a country that is not yours',
+    title: 'Worshipping in a Country That Is Not Yours',
     dek: 'The particular loneliness of praising God in a place where your praise is an accent.',
     image: 'france-inspire-francais',
     author: 'zariah',
@@ -1963,7 +2050,7 @@ const HM_VOICES_2 = [
   {
     slug: 'french-is-not-a-translation',
     kicker: 'Caribbean and diaspora',
-    title: 'Why the French station is not a translation of the English one',
+    title: 'Why the French Station Is Not a Translation of the English One',
     dek: 'It has a different playlist, a different pace and a different set of concerns, on purpose.',
     image: 'jubilee-prayers-french',
     author: 'zariah',
@@ -1988,7 +2075,7 @@ const HM_VOICES_2 = [
   {
     slug: 'the-commute-belongs-to-you',
     kicker: 'Caribbean and diaspora',
-    title: 'The commute is the only hour that belongs to you',
+    title: 'The Commute Is the Only Hour That Belongs to You',
     dek: 'Nobody can reach you, nothing is expected, and it is the last unclaimed slot in most days.',
     image: 'inspire-drive',
     author: 'zariah',
@@ -2013,7 +2100,7 @@ const HM_VOICES_2 = [
   {
     slug: 'holidays-hold-the-old-country',
     kicker: 'Caribbean and diaspora',
-    title: 'Holidays are where the old country survives',
+    title: 'Holidays Are Where the Old Country Survives',
     dek: 'Language goes first, then food, then the songs. The feast days are where the last of it holds on.',
     image: 'inspire-holiday',
     author: 'zariah',
@@ -2038,7 +2125,7 @@ const HM_VOICES_2 = [
   {
     slug: 'a-rhythm-your-grandmother-knows',
     kicker: 'Caribbean and diaspora',
-    title: 'A rhythm your grandmother would recognise',
+    title: 'A Rhythm Your Grandmother Would Recognise',
     dek: 'Continuity is not conservatism. It is the test of whether a thing was ever really yours.',
     image: 'riddim-and-rhyme',
     author: 'zariah',
@@ -2063,7 +2150,7 @@ const HM_VOICES_2 = [
   {
     slug: 'praying-in-the-language-you-dream-in',
     kicker: 'Caribbean and diaspora',
-    title: 'Praying in the language you dream in',
+    title: 'Praying in the Language You Dream In',
     dek: 'Fluency is not the issue. There is a language a person is most themselves in, and God speaks it.',
     image: 'jubilee-prayers-french',
     author: 'zariah',
@@ -2094,7 +2181,7 @@ const HM_VOICES_3 = [
   {
     slug: 'courage-is-mostly-boring',
     kicker: 'Young, courageous worship',
-    title: 'Courage is mostly boring',
+    title: 'Courage Is Mostly Boring',
     dek: 'The word gets used for the dramatic version. Almost all of the real thing is repetitive and unwitnessed.',
     image: 'inspire-talk',
     author: 'caleb',
@@ -2120,7 +2207,7 @@ const HM_VOICES_3 = [
   {
     slug: 'iron-requires-two-pieces-of-iron',
     kicker: 'Young, courageous worship',
-    title: 'Iron sharpening iron requires two pieces of iron',
+    title: 'Iron Sharpening Iron Requires Two Pieces of Iron',
     dek: 'The verse gets quoted at men who have no such friendship, as if naming it produced one.',
     image: 'iron-sharpening-iron',
     author: 'caleb',
@@ -2145,7 +2232,7 @@ const HM_VOICES_3 = [
   {
     slug: 'marriage-matters-is-not-a-conference',
     kicker: 'Young, courageous worship',
-    title: 'Marriage Matters is not a conference',
+    title: 'Marriage Matters Is Not a Conference',
     dek: 'A weekend produces resolve. A marriage runs on Tuesdays, and nothing is scheduled for Tuesdays.',
     image: 'marriage-matters',
     author: 'caleb',
@@ -2170,7 +2257,7 @@ const HM_VOICES_3 = [
   {
     slug: 'after-the-storm-nobody-films',
     kicker: 'Young, courageous worship',
-    title: 'After the storm: the part nobody films',
+    title: 'After the Storm: The Part Nobody Films',
     dek: 'The testimony ends at the rescue. The clearing up takes years and has no audience.',
     image: 'after-the-storm',
     author: 'caleb',
@@ -2196,7 +2283,7 @@ const HM_VOICES_3 = [
   {
     slug: 'acapella-when-production-stops',
     kicker: 'Young, courageous worship',
-    title: 'Acapella is what is left when the production stops',
+    title: 'Acapella Is What Is Left When the Production Stops',
     dek: 'Strip the arrangement and you find out whether the song was ever carrying anything.',
     image: 'inspire-acapella',
     author: 'caleb',
@@ -2220,7 +2307,7 @@ const HM_VOICES_3 = [
   {
     slug: 'the-last-ten-minutes-of-the-day',
     kicker: 'Young, courageous worship',
-    title: 'The last ten minutes of the day belong to somebody',
+    title: 'The Last Ten Minutes of the Day Belong to Somebody',
     dek: 'Whatever occupies them is what the mind works on all night. That slot is worth defending.',
     image: 'bedtime-blessings',
     author: 'caleb',
@@ -2245,7 +2332,7 @@ const HM_VOICES_3 = [
   {
     slug: 'a-station-not-a-podcast',
     kicker: 'Young, courageous worship',
-    title: 'Why a young man needs a station and not a podcast',
+    title: 'Why a Young Man Needs a Station and Not a Podcast',
     dek: 'One of these builds a habit. The other builds an appetite, and they are not the same.',
     image: 'inspire-cafe',
     author: 'caleb',
@@ -2273,7 +2360,7 @@ const HM_VOICES_3 = [
   {
     slug: 'the-feasts-are-a-calendar',
     kicker: 'Hebrew roots and the feasts',
-    title: 'The feasts are not Jewish nostalgia. They are a calendar.',
+    title: 'The Feasts Are Not Jewish Nostalgia. They Are a Calendar.',
     dek: 'Everyone keeps a calendar. The only question is whose, and what it is quietly teaching.',
     image: 'hebraic-celebrations',
     author: 'zev',
@@ -2300,7 +2387,7 @@ const HM_VOICES_3 = [
   {
     slug: 'when-the-law-is-set-to-music',
     kicker: 'Hebrew roots and the feasts',
-    title: 'What happens when the Law is set to music',
+    title: 'What Happens When the Law Is Set to Music',
     dek: 'It stops being a list of rules and starts being something you can carry around.',
     image: 'jubilee-praise',
     author: 'zev',
@@ -2326,7 +2413,7 @@ const HM_VOICES_3 = [
   {
     slug: 'shema-means-hear-then-do',
     kicker: 'Hebrew roots and the feasts',
-    title: 'Shema means hear, and then it means do',
+    title: 'Shema Means Hear, and Then It Means Do',
     dek: 'A word with no clean English equivalent, and a whole posture lost in the translation.',
     image: 'shema-roots',
     author: 'zev',
@@ -2352,7 +2439,7 @@ const HM_VOICES_3 = [
   {
     slug: 'the-subject-every-station-avoids',
     kicker: 'Hebrew roots and the feasts',
-    title: 'The subject every station avoids at the same time',
+    title: 'The Subject Every Station Avoids at the Same Time',
     dek: 'Scripture discusses money constantly. Christian radio discusses it almost never, and the reason is not mysterious.',
     image: 'money-faith',
     author: 'zev',
@@ -2378,7 +2465,7 @@ const HM_VOICES_3 = [
   {
     slug: 'washing-feet-before-anyone-watches',
     kicker: 'Hebrew roots and the feasts',
-    title: 'Washing feet before anyone is watching',
+    title: 'Washing Feet Before Anyone Is Watching',
     dek: 'The gesture has been thoroughly domesticated. What it originally demonstrated was rank.',
     image: 'lead-like-yeshua',
     author: 'zev',
@@ -2404,7 +2491,7 @@ const HM_VOICES_3 = [
   {
     slug: 'identity-is-not-a-personality-type',
     kicker: 'Hebrew roots and the feasts',
-    title: 'Identity in Yeshua is not a personality type',
+    title: 'Identity in Yeshua Is Not a Personality Type',
     dek: 'The word has been absorbed by an industry that means something else by it entirely.',
     image: 'identity-in-yeshua',
     author: 'zev',
@@ -2432,7 +2519,7 @@ const HM_VOICES_3 = [
   {
     slug: 'why-heavens-dawn-airs-before-sunrise',
     kicker: 'Hebrew roots and the feasts',
-    title: 'Why Heaven’s Dawn airs before sunrise',
+    title: 'Why Heaven’s Dawn Airs Before Sunrise',
     dek: 'The day starts the night before on this calendar, and the schedule follows it.',
     image: 'heavens-dawn',
     author: 'zev',
@@ -2460,7 +2547,7 @@ const HM_VOICES_4 = [
   {
     slug: 'fire-is-not-volume',
     kicker: 'Pentecostal fire',
-    title: 'Fire is not volume',
+    title: 'Fire Is Not Volume',
     dek: 'The correction Pentecostal radio needs most, from inside the tradition rather than outside it.',
     image: 'jubilee-gospel-fire',
     author: 'imani',
@@ -2486,7 +2573,7 @@ const HM_VOICES_4 = [
   {
     slug: 'ten-days-before-one-day',
     kicker: 'Pentecostal fire',
-    title: 'Ten days of waiting before one day of fire',
+    title: 'Ten Days of Waiting Before One Day of Fire',
     dek: 'Everybody preaches the second chapter. The first one is where the people actually live.',
     image: 'upper-room',
     author: 'imani',
@@ -2512,7 +2599,7 @@ const HM_VOICES_4 = [
   {
     slug: 'africa-is-a-broadcaster',
     kicker: 'Pentecostal fire',
-    title: 'Africa is not a mission field on this dial. It is a broadcaster.',
+    title: 'Africa Is Not a Mission Field on This Dial. It Is a Broadcaster.',
     dek: 'The direction of travel assumed by most Christian media is a century out of date.',
     image: 'africa-inspire-kiswahili',
     author: 'imani',
@@ -2539,7 +2626,7 @@ const HM_VOICES_4 = [
   {
     slug: 'what-yoruba-praise-does',
     kicker: 'Pentecostal fire',
-    title: 'What Yorùbá praise does that a translation cannot',
+    title: 'What Yorùbá Praise Does That a Translation Cannot',
     dek: 'In a tonal language the melody is not decoration on the words. It is part of them.',
     image: 'west-africa-inspire-yoruba',
     author: 'imani',
@@ -2566,7 +2653,7 @@ const HM_VOICES_4 = [
   {
     slug: 'amharic-worship-is-ancient',
     kicker: 'Pentecostal fire',
-    title: 'Amharic worship sounds ancient because it is',
+    title: 'Amharic Worship Sounds Ancient Because It Is',
     dek: 'Ethiopia was Christian before most of Europe, and the music never went through the West.',
     image: 'ethiopia-inspire-amharic',
     author: 'imani',
@@ -2594,7 +2681,7 @@ const HM_VOICES_4 = [
   {
     slug: 'praying-in-swahili-at-three',
     kicker: 'Pentecostal fire',
-    title: 'Praying in Swahili at three in the morning',
+    title: 'Praying in Swahili at Three in the Morning',
     dek: 'A continuous prayer frequency, and why the hour it is hardest to pray is the hour it is left running.',
     image: 'jubilee-prayers-swahili',
     author: 'imani',
@@ -2619,7 +2706,7 @@ const HM_VOICES_4 = [
   {
     slug: 'chill-is-still-pentecostal',
     kicker: 'Pentecostal fire',
-    title: 'Inspire Chill is still a Pentecostal station',
+    title: 'Inspire Chill Is Still a Pentecostal Station',
     dek: 'Quiet is not the absence of the Spirit. Sometimes it is the more honest report of it.',
     image: 'inspire-chill',
     author: 'imani',
@@ -2646,7 +2733,7 @@ const HM_VOICES_4 = [
   {
     slug: 'la-familia-is-a-doctrine',
     kicker: 'Latino heart',
-    title: 'La familia is a doctrine, not a demographic',
+    title: 'La Familia Is a Doctrine, Not a Demographic',
     dek: 'Marketing treats it as an audience segment. It is closer to an ecclesiology.',
     image: 'familia-inspire-espanol',
     author: 'santiago',
@@ -2674,7 +2761,7 @@ const HM_VOICES_4 = [
   {
     slug: 'a-latin-station-sung-in-english',
     kicker: 'Latino heart',
-    title: 'Why there is a Latin station sung in English',
+    title: 'Why There Is a Latin Station Sung in English',
     dek: 'It looks like a mistake on the schedule. It is the station for people who live between two languages.',
     image: 'latin-worship',
     author: 'santiago',
@@ -2699,7 +2786,7 @@ const HM_VOICES_4 = [
   {
     slug: 'portuguese-is-not-spanish',
     kicker: 'Latino heart',
-    title: 'Portuguese is not Spanish, and Brasil gets its own frequency',
+    title: 'Portuguese Is Not Spanish, and Brasil Gets Its Own Frequency',
     dek: 'A distinction constantly flattened by people who have never had to listen closely.',
     image: 'brasil-inspire-portugues',
     author: 'santiago',
@@ -2725,7 +2812,7 @@ const HM_VOICES_4 = [
   {
     slug: 'two-generations-one-kitchen',
     kicker: 'Latino heart',
-    title: 'Two generations, one kitchen, different languages',
+    title: 'Two Generations, One Kitchen, Different Languages',
     dek: 'The everyday negotiation of an immigrant household, and what a radio station can do about it.',
     image: 'jubilee-prayers-spanish',
     author: 'santiago',
@@ -2751,7 +2838,7 @@ const HM_VOICES_4 = [
   {
     slug: 'praying-out-loud-as-a-habit',
     kicker: 'Latino heart',
-    title: 'Praying out loud is a cultural habit worth keeping',
+    title: 'Praying Out Loud Is a Cultural Habit Worth Keeping',
     dek: 'Some traditions pray audibly in front of each other as a matter of course. That is not a small inheritance.',
     image: 'jubilee-prayers-portuguese',
     author: 'santiago',
@@ -2777,7 +2864,7 @@ const HM_VOICES_4 = [
   {
     slug: 'focus-is-a-discipline',
     kicker: 'Latino heart',
-    title: 'Focus is a spiritual discipline with a soundtrack',
+    title: 'Focus Is a Spiritual Discipline with a Soundtrack',
     dek: 'Attention is the raw material of prayer, work and love, and it is the thing most under attack.',
     image: 'inspire-focus',
     author: 'santiago',
@@ -2804,7 +2891,7 @@ const HM_VOICES_4 = [
   {
     slug: 'wellness-without-the-religion',
     kicker: 'Latino heart',
-    title: 'Wellness without the religion of wellness',
+    title: 'Wellness Without the Religion of Wellness',
     dek: 'Rest, food, sleep and the body are genuinely spiritual subjects. The industry around them is a competing faith.',
     image: 'inspire-wellness',
     author: 'santiago',
@@ -2834,7 +2921,7 @@ const HM_VOICES_5 = [
   {
     slug: 'arrived-in-the-wrong-hands',
     kicker: 'Native voice and healing',
-    title: 'The gospel arrived here in the wrong hands. It is still the gospel.',
+    title: 'The Gospel Arrived Here in the Wrong Hands. It Is Still the Gospel.',
     dek: 'Both halves of that sentence are true, and most people are only willing to say one of them.',
     image: 'island-hallelujah',
     author: 'tahoma',
@@ -2862,7 +2949,7 @@ const HM_VOICES_5 = [
   {
     slug: 'sobriety-is-a-daily-frequency',
     kicker: 'Native voice and healing',
-    title: 'Sobriety is a daily frequency, not a testimony',
+    title: 'Sobriety Is a Daily Frequency, Not a Testimony',
     dek: 'The story gets told once. The thing itself has to be done again tomorrow, and the day after.',
     image: 'freedom-steps',
     author: 'tahoma',
@@ -2886,7 +2973,7 @@ const HM_VOICES_5 = [
   {
     slug: 'men-with-nowhere-to-be-honest',
     kicker: 'Native voice and healing',
-    title: 'For men with nowhere to be honest',
+    title: 'For Men with Nowhere to Be Honest',
     dek: 'Not a shortage of friends. A shortage of rooms in which the true answer is sayable.',
     image: 'pure-heart-brothers',
     author: 'tahoma',
@@ -2913,7 +3000,7 @@ const HM_VOICES_5 = [
   {
     slug: 'anxious-no-more-is-a-command',
     kicker: 'Native voice and healing',
-    title: 'Anxious No More is a command, which is the problem with it',
+    title: 'Anxious No More Is a Command, Which Is the Problem with It',
     dek: 'Taking apart the name of one of our own stations, because the misreading is doing harm.',
     image: 'anxious-no-more',
     author: 'tahoma',
@@ -2941,7 +3028,7 @@ const HM_VOICES_5 = [
   {
     slug: 'be-still-is-the-hardest-instruction',
     kicker: 'Native voice and healing',
-    title: 'Be still is the hardest instruction in Scripture',
+    title: 'Be Still Is the Hardest Instruction in Scripture',
     dek: 'Harder than the ethical commands, because there is nothing to do in order to comply.',
     image: 'shalom-be-still',
     author: 'tahoma',
@@ -2968,7 +3055,7 @@ const HM_VOICES_5 = [
   {
     slug: 'the-rhythm-that-outlasted-the-hymnbook',
     kicker: 'Native voice and healing',
-    title: 'The rhythm that outlasted the hymnbook',
+    title: 'The Rhythm That Outlasted the Hymnbook',
     dek: 'What happened to island and Native worship after the missionaries stopped supervising it.',
     image: 'inspire-celebrations',
     author: 'tahoma',
@@ -2994,7 +3081,7 @@ const HM_VOICES_5 = [
   {
     slug: 'stories-keep-what-is-not-written',
     kicker: 'Native voice and healing',
-    title: 'Stories are how a people keep what cannot be written down',
+    title: 'Stories Are How a People Keep What Cannot Be Written Down',
     dek: 'Oral tradition is not a primitive stage before literacy. It is a different technology with different strengths.',
     image: 'inspire-stories',
     author: 'tahoma',
@@ -3024,7 +3111,7 @@ const HM_VOICES_5 = [
   {
     slug: 'the-church-already-there',
     kicker: 'South Asian soul',
-    title: 'The church that was already there when the missionaries arrived',
+    title: 'The Church That Was Already There When the Missionaries Arrived',
     dek: 'Christianity reached India and Central Asia long before it reached most of Europe.',
     image: 'ancient-paths',
     author: 'amir',
@@ -3051,7 +3138,7 @@ const HM_VOICES_5 = [
   {
     slug: 'ancient-paths-people-who-looked-like-me',
     kicker: 'South Asian soul',
-    title: 'The ancient paths were walked by people who looked like me',
+    title: 'The Ancient Paths Were Walked by People Who Looked Like Me',
     dek: 'Ask for the old paths, says Jeremiah. It is worth checking whose old paths we mean.',
     image: 'inspire-crown-arabic',
     author: 'amir',
@@ -3078,7 +3165,7 @@ const HM_VOICES_5 = [
   {
     slug: 'arabic-was-a-language-of-worship',
     kicker: 'South Asian soul',
-    title: 'Arabic was a language of worship long before it was anything else',
+    title: 'Arabic Was a Language of Worship Long Before It Was Anything Else',
     dek: 'There were Arabic-speaking Christians before there was anything else for the language to be famous for.',
     image: 'jubilee-prayers-arabic',
     author: 'amir',
@@ -3103,7 +3190,7 @@ const HM_VOICES_5 = [
   {
     slug: 'the-bengali-gap-was-indefensible',
     kicker: 'South Asian soul',
-    title: 'The Bengali station exists because the gap was indefensible',
+    title: 'The Bengali Station Exists Because the Gap Was Indefensible',
     dek: 'One of the most spoken languages on earth, and almost nothing on the air in it.',
     image: 'bengal-inspire-bangla',
     author: 'amir',
@@ -3129,7 +3216,7 @@ const HM_VOICES_5 = [
   {
     slug: 'hindi-worship-is-not-western-worship',
     kicker: 'South Asian soul',
-    title: 'Hindi worship is not Western worship with different words',
+    title: 'Hindi Worship Is Not Western Worship with Different Words',
     dek: 'A different scale system, a different relationship to repetition, and a different idea of what a song is for.',
     image: 'inspire-india-hindi',
     author: 'amir',
@@ -3156,7 +3243,7 @@ const HM_VOICES_5 = [
   {
     slug: 'praying-in-a-language-your-government',
     kicker: 'South Asian soul',
-    title: 'Praying in a language your government would rather you didn’t',
+    title: 'Praying in a Language Your Government Would Rather You Didn’t',
     dek: 'For listeners where this is not a hobby, and where the volume knob is a real decision.',
     image: 'jubilee-prayers-hindi',
     author: 'amir',
@@ -3183,7 +3270,7 @@ const HM_VOICES_5 = [
   {
     slug: 'what-the-five-fold-actually-is',
     kicker: 'South Asian soul',
-    title: 'What the five-fold actually is, and why it is not a hierarchy',
+    title: 'What the Five-Fold Actually Is, and Why It Is Not a Hierarchy',
     dek: 'A list of functions has been read for a century as an org chart, with predictable results.',
     image: 'apostolic-five-fold',
     author: 'amir',
@@ -3215,7 +3302,7 @@ const HM_VOICES_6 = [
   {
     slug: 'repentance-is-a-turn',
     kicker: 'Appalachian repentance',
-    title: 'Repentance is not an emotion. It is a turn.',
+    title: 'Repentance Is Not an Emotion. It Is a Turn.',
     dek: 'The word means to change direction. Feeling bad is optional and frequently a substitute.',
     image: 'deutschland-inspire-deutsch',
     author: 'elias',
@@ -3241,7 +3328,7 @@ const HM_VOICES_6 = [
   {
     slug: 'country-never-stopped-being-honest',
     kicker: 'Appalachian repentance',
-    title: 'Country music never stopped being honest about sin',
+    title: 'Country Music Never Stopped Being Honest About Sin',
     dek: 'It kept a vocabulary that most Christian music dropped, and it kept it in the first person.',
     image: 'country-gospel',
     author: 'elias',
@@ -3266,7 +3353,7 @@ const HM_VOICES_6 = [
   {
     slug: 'two-shortest-prayers',
     kicker: 'Appalachian repentance',
-    title: 'The two shortest prayers in Scripture',
+    title: 'The Two Shortest Prayers in Scripture',
     dek: 'Yes and amen. Both are agreements, and both are harder to mean than they look.',
     image: 'yes-and-amen',
     author: 'elias',
@@ -3292,7 +3379,7 @@ const HM_VOICES_6 = [
   {
     slug: 'raising-arrows-no-applause',
     kicker: 'Appalachian repentance',
-    title: 'Raising arrows is a long job with no applause',
+    title: 'Raising Arrows Is a Long Job with No Applause',
     dek: 'The metaphor is about release, and about a result you will not be present to see.',
     image: 'raising-arrows',
     author: 'elias',
@@ -3317,7 +3404,7 @@ const HM_VOICES_6 = [
   {
     slug: 'what-is-given-daily',
     kicker: 'Appalachian repentance',
-    title: 'What is given daily cannot be stockpiled',
+    title: 'What Is Given Daily Cannot Be Stockpiled',
     dek: 'The manna rotted overnight on purpose, and everybody has tried to store it anyway.',
     image: 'the-hidden-manna',
     author: 'elias',
@@ -3342,7 +3429,7 @@ const HM_VOICES_6 = [
   {
     slug: 'churches-that-sang-under-surveillance',
     kicker: 'Appalachian repentance',
-    title: 'The churches that sang under surveillance',
+    title: 'The Churches That Sang Under Surveillance',
     dek: 'Romanian praise carries a memory of what it cost, and the music is different because of it.',
     image: 'jubilee-praise-romana',
     author: 'elias',
@@ -3369,7 +3456,7 @@ const HM_VOICES_6 = [
   {
     slug: 'purpose-found-is-usually-assigned',
     kicker: 'Appalachian repentance',
-    title: 'Purpose found is usually purpose assigned',
+    title: 'Purpose Found Is Usually Purpose Assigned',
     dek: 'The search is conducted inward. Almost every case in the text runs the other way.',
     image: 'purpose-found',
     author: 'elias',
@@ -3397,7 +3484,7 @@ const HM_VOICES_6 = [
   {
     slug: 'strong-and-sober-are-different',
     kicker: 'Folk wisdom',
-    title: 'Strong and sober are two different achievements',
+    title: 'Strong and Sober Are Two Different Achievements',
     dek: 'Stopping is one job. Becoming someone who does not need to start is another, and it takes much longer.',
     image: 'strong-sober',
     author: 'eliana',
@@ -3423,7 +3510,7 @@ const HM_VOICES_6 = [
   {
     slug: 'grief-walked-not-solved',
     kicker: 'Folk wisdom',
-    title: 'Grief walked, not grief solved',
+    title: 'Grief Walked, Not Grief Solved',
     dek: 'The station name is the thesis. Nothing here is going to fix it, and that is the offer.',
     image: 'grief-walked',
     author: 'eliana',
@@ -3448,7 +3535,7 @@ const HM_VOICES_6 = [
   {
     slug: 'stillwater-is-not-background-music',
     kicker: 'Folk wisdom',
-    title: 'Stillwater is not background music',
+    title: 'Stillwater Is Not Background Music',
     dek: 'Quiet music that is doing something is not the same as quiet music that is filling a gap.',
     image: 'stillwater',
     author: 'eliana',
@@ -3474,7 +3561,7 @@ const HM_VOICES_6 = [
   {
     slug: 'friendship-is-a-means-of-grace',
     kicker: 'Folk wisdom',
-    title: 'Friendship is the least discussed means of grace',
+    title: 'Friendship Is the Least Discussed Means of Grace',
     dek: 'Prayer, Scripture, sacrament, and then a category the Church talks about almost never.',
     image: 'walking-together',
     author: 'eliana',
@@ -3501,7 +3588,7 @@ const HM_VOICES_6 = [
   {
     slug: 'japans-tiny-church-old-martyrs',
     kicker: 'Folk wisdom',
-    title: 'Japan’s church is tiny and its martyrs are four hundred years old',
+    title: 'Japan’s Church Is Tiny and Its Martyrs Are Four Hundred Years Old',
     dek: 'One of the smallest Christian populations in the developed world, and one of the most extraordinary histories.',
     image: 'japan-inspire-nihongo',
     author: 'eliana',
@@ -3528,7 +3615,7 @@ const HM_VOICES_6 = [
   {
     slug: 'tagalog-travels-with-those-who-leave',
     kicker: 'Folk wisdom',
-    title: 'Tagalog worship travels with the people who leave',
+    title: 'Tagalog Worship Travels with the People Who Leave',
     dek: 'A diaspora scattered across every time zone, mostly working, mostly alone on the significant days.',
     image: 'pilipinas-inspire-tagalog',
     author: 'eliana',
@@ -3554,7 +3641,7 @@ const HM_VOICES_6 = [
   {
     slug: 'before-anyone-is-listening',
     kicker: 'Folk wisdom',
-    title: 'What a station sounds like before anyone is listening',
+    title: 'What a Station Sounds Like Before Anyone Is Listening',
     dek: 'Every frequency on this band spent time playing to nobody, and how it behaved then is the whole test.',
     image: 'inspire-rising',
     author: 'eliana',

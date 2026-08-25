@@ -861,13 +861,16 @@
         el.play().catch(function () { /* skipped by the error handler */ });
     }
 
-    function playManifest(station) {
+    function playManifest(station, primed) {
         var url = station.manifest;
         var go = function (manifest) {
             queue = shuffle(flatten(manifest));
             qi = 0;
             if (!queue.length) { setSub('Nothing to play'); return Promise.reject(new Error('empty manifest')); }
-            var el = new Audio();
+            // The primed element, when start() hands one over, is the one the
+            // listener's tap touched — see start(). Reusing it is what lets a
+            // station that had to degrade still sound on iOS and Safari.
+            var el = primed || new Audio();
             el.volume = volume();
             audio = el;
             el.addEventListener('ended', function () { nextTrack(el); });
@@ -893,8 +896,8 @@
         });
     }
 
-    function playStream(station) {
-        var el = new Audio();
+    function playStream(station, primed) {
+        var el = primed || new Audio();
         el.volume = volume();
         audio = el;
         hookWaves(el);
@@ -919,13 +922,13 @@
      *
      *     Jubilee Kids Party                          what am I listening to
      *     Tiger Tango Jungle Swing (Tiger S Tango)    what is playing
-     *     HM 329.12 (Kids)                            where on the dial
+     *     HM 361.90 (Kids)                            where on the dial
      *
      * It used to be two, with the station folded into the second line beside
      * the frequency and the format:
      *
      *     Tiger Tango Jungle Swing (Tiger S Tango)
-     *     Jubilee Kids Party HM 329.12 (Kids)         <- the old shape
+     *     Jubilee Kids Party HM 361.90 (Kids)         <- the old shape
      *
      * That buried the station — the thing the listener actually chose — in the
      * smallest, dimmest text in the bar, and left line two carrying three
@@ -1012,9 +1015,15 @@
    Under the controls, never over them. The bar's three columns are given a
    stacking context of their own so the text stays crisp on top, and the canvas
    is held to a low opacity because a legible station name matters more than a
-   bright light show. */
+   bright light show.
+
+   .25, halved from .5: the columns now stand the full height of the bar rather
+   than a half-height pair meeting in the middle, so at the old opacity they
+   read as a wall of colour behind the station name instead of a wash under it.
+   Half the opacity for twice the height keeps the ink on the bar about where
+   it was. */
 '#kjPlayer .waves{position:absolute;inset:0;width:100%;height:100%;z-index:0;',
-'  opacity:.5;pointer-events:none}',
+'  opacity:.25;pointer-events:none}',
 '#kjPlayer .now,#kjPlayer .ctrls,#kjPlayer .right{position:relative;z-index:1}',
 '#kjPlayer .now{display:flex;align-items:center;gap:12px;min-width:0}',
 '#kjPlayer .cover{width:60px;height:60px;border-radius:6px;flex:none;overflow:hidden;position:relative;',
@@ -1261,8 +1270,24 @@
         // time: every column is a different hue and the whole spectrum walks.
         wavesHue = (wavesHue + 0.34) % 360;
 
-        var mid = h / 2;
-        var maxH = h * 0.44;
+        // THE COLUMNS STAND ON THE FLOOR OF THE BAR, THEY DO NOT HANG FROM ITS
+        // MIDDLE.
+        //
+        // This used to be mirrored about h/2: every column drew barH up AND barH
+        // down, and the silent state was a line floating across the centre of
+        // the footer with the two halves of the effect meeting at it. Only the
+        // upper half was ever carrying information — the lower half was its
+        // reflection — so the reflection is gone and the baseline has moved to
+        // the bottom edge. Silence is now a single line along the floor of the
+        // bar, and everything the analyser has to say happens above it.
+        //
+        // 0.88, not 0.44: the old pair of half-columns spanned 0.44h either side
+        // of the middle, so the effect covered 0.88h in total. Standing them on
+        // the floor with the old 0.44 would have halved the visual scale of the
+        // whole visualiser; 0.88 keeps a loud column reaching just as far up the
+        // bar as the mirrored pair used to reach across it.
+        var base = h;
+        var maxH = h * 0.88;
         var pad = (w - (n * (EQ_BAR + EQ_GAP) - EQ_GAP)) / 2;
 
         for (var i = 0; i < n; i++) {
@@ -1294,19 +1319,23 @@
                 : Math.max(eqLevels[i], eqPeaks[i] - EQ_PEAK_FALL);
 
             var x = pad + i * (EQ_BAR + EQ_GAP);
-            var barH = Math.max(1.5, eqLevels[i] * maxH);
+            // 2px rather than 1.5: at rest this is the whole graphic — one line
+            // along the bottom of the bar — and a 1.5px line lands on a half
+            // pixel at dpr 1 and renders as a grey smear rather than a line.
+            var barH = Math.max(2, eqLevels[i] * maxH);
             var hue = (wavesHue + (i / n) * 300) % 360;
 
             wavesCtx.fillStyle = 'hsla(' + hue + ',95%,58%,.85)';
-            wavesCtx.fillRect(x, mid - barH, EQ_BAR, barH * 2);
+            wavesCtx.fillRect(x, base - barH, EQ_BAR, barH);
 
             // The cap: a thin mark at the highest point this column has
-            // reached lately, falling on its own.
+            // reached lately, falling on its own. One cap now, not two — the
+            // lower one marked the bottom of a reflection that no longer
+            // exists.
             var peakY = eqPeaks[i] * maxH;
             if (peakY > barH + 1.5) {
                 wavesCtx.fillStyle = 'hsla(' + hue + ',100%,76%,.95)';
-                wavesCtx.fillRect(x, mid - peakY - 2, EQ_BAR, 2);
-                wavesCtx.fillRect(x, mid + peakY, EQ_BAR, 2);
+                wavesCtx.fillRect(x, base - peakY - 2, EQ_BAR, 2);
             }
         }
     }
@@ -1532,11 +1561,44 @@
         var primed = null;
         try { primed = new Audio(); primed.volume = volume(); primed.load(); } catch (e) { primed = null; }
 
-        // Day file first — it is how every live station is delivered. The other
-        // two are only reached by a station with no published programming.
-        var p = current.tenant ? playDay(current, primed)
-              : current.manifest ? playManifest(current)
-              : playStream(current);
+        // Day file first — it is how every live station is delivered.
+        //
+        // THE THREE SOURCES ARE A FALLBACK CHAIN, NOT AN EXCLUSIVE CHOICE.
+        //
+        // They used to be a single ternary, so a station carrying a tenant went
+        // to playDay and nowhere else. Every station on the dial carries one,
+        // and most of them also carry a manifest that would have played — but
+        // the moment the generator fell behind, playDay rejected with "no day
+        // file", start()'s catch treated that as a dead station, and the hero's
+        // "Listen now" became a button that visibly did nothing. The only
+        // report was one console.info the listener never sees.
+        //
+        // station-guidelines 2.5.4 item 4 asks for the opposite: a missing day
+        // is reported AND degraded past, and §11.2F gates the station on "the
+        // player degrades to it when a day file is missing". The manifest is
+        // that fallback loop; the stream is the one after it.
+        //
+        // ONLY A MISSING OR OFF-AIR DAY DEGRADES. 'tuned away' means the
+        // listener has since picked another station, and starting this one's
+        // fallback would play over the choice they just made. Both degradable
+        // errors are thrown before playDay assigns `audio`, so there is nothing
+        // to tear down first — and tearing down is not an option here anyway,
+        // destroy() clears wantPlaying and this is still a request for sound.
+        var p;
+        if (current.tenant) {
+            var asked = current;
+            p = playDay(current, primed).catch(function (err) {
+                var why = err && err.message;
+                if (why !== 'no day file' && why !== 'outside the broadcast day') throw err;
+                if (current !== asked) throw err;
+                if (asked.manifest) return playManifest(asked, primed);
+                if (asked.stream)   return playStream(asked, primed);
+                throw err;
+            });
+        } else {
+            p = current.manifest ? playManifest(current, primed)
+              : playStream(current, primed);
+        }
         p.then(function () { paintPlaying(true); armResume(false); })
          .catch(function (err) {
              if (primed && primed !== audio) { try { primed.src = ''; } catch (e) {} }

@@ -702,6 +702,97 @@
             </Grid>
             <!-- ========================== END STATIONS ========================== -->
 
+            <!-- ========================== ARTICLES ==============================
+                 The Heavenly Band pieces. Deliberately SIMPLER than the stations
+                 view: no tabs, because the pieces are one flat set rather than a
+                 dial partitioned by programming type, and the persona is fixed by
+                 the article's own byline rather than being an assignment anyone
+                 makes here. Everything else is the same furniture in the same
+                 order, so the two views are learned once. -->
+            <Grid x:Name="ViewArticles" Grid.Row="1" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" MinHeight="90" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="10,6,10,6">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="5" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button x:Name="BtnArticlesReload" Grid.Column="0" Content="Refresh" Height="28" Width="66"
+                            VerticalAlignment="Top" Click="BtnArticlesReload_Click" />
+                    <Button x:Name="BtnArticlesStop" Grid.Column="2" Content="Stop" Height="28" Width="56"
+                            VerticalAlignment="Top" Click="BtnStop_Click" IsEnabled="False"
+                            ToolTip="Halts after the image currently generating. Nothing in flight is lost." />
+                    <CheckBox x:Name="ChkShowAllArticles" Grid.Column="3"
+                              Foreground="#c9cede" FontSize="11" VerticalAlignment="Center" Margin="8,0,0,0"
+                              Checked="ChkShowAllArticles_Click" Unchecked="ChkShowAllArticles_Click">
+                        <TextBlock Text="Show articles with images" TextWrapping="Wrap" />
+                    </CheckBox>
+                </Grid>
+
+                <ListBox x:Name="LstArticles" Grid.Row="1" Margin="10,0,10,8"
+                         Style="{StaticResource JobList}"
+                         SelectionChanged="ArticleList_SelectionChanged" />
+
+                <Border Grid.Row="2" Margin="10,0,10,8" Background="#12141c"
+                        BorderBrush="#2c3040" BorderThickness="1" CornerRadius="4">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <Viewbox Grid.Row="0" Stretch="Uniform" StretchDirection="Both">
+                            <Grid Width="320" Height="180">
+                                <TextBlock x:Name="ArticlePreviewEmpty" Foreground="#4d566c" FontSize="11"
+                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                           TextAlignment="Center" TextWrapping="Wrap" Margin="16,0"
+                                           Text="Select an article to preview its image" />
+                                <Image x:Name="ArticlePreviewImage" Stretch="UniformToFill"
+                                       RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Grid>
+                        </Viewbox>
+
+                        <TextBlock x:Name="ArticlePreviewCaption" Grid.Row="1" Foreground="#9aa0ad" FontSize="10"
+                                   Margin="8,6,8,4" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                                   MaxHeight="46" Text="" />
+
+                        <!-- The scene, read-only. It is the one thing that decides
+                             what comes back, so it is worth seeing before pressing
+                             Generate; it is edited in article-image-prompts.json,
+                             which is why there is no text box here pretending it
+                             can be changed from the app. -->
+                        <TextBlock x:Name="ArticleSceneText" Grid.Row="2" Foreground="#7f879a" FontSize="10"
+                                   Margin="8,0,8,8" TextWrapping="Wrap" TextTrimming="CharacterEllipsis"
+                                   MaxHeight="72" Text="" />
+
+                        <TextBlock x:Name="ArticleRegenRow" Grid.Row="3" Margin="8,0,8,8" Visibility="Collapsed">
+                            <Hyperlink x:Name="ArticleRegenLink" Click="ArticleRegenerate_Click"
+                                       Foreground="#FFD24A" FontSize="11"
+                                       ToolTip="Delete this article's image and generate it again.">Regenerate this image</Hyperlink>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Row="3" Margin="0,0,0,12">
+                    <Button x:Name="BtnArticlesGenerate" Content="Generate Images"
+                            Style="{StaticResource GenerateButton}" Margin="10,0,10,0"
+                            Click="BtnArticlesGenerate_Click"
+                            ToolTip="Generates every article that has a scene written for it and no image yet." />
+                    <TextBlock x:Name="ArticleScopeNote" Foreground="#6f7684" FontSize="10"
+                               Margin="10,7,10,0" TextWrapping="Wrap" Text="" />
+                </StackPanel>
+            </Grid>
+            <!-- ========================== END ARTICLES ========================== -->
+
         </Grid>
 
         <!-- ============================== THE RAIL ==============================
@@ -716,6 +807,14 @@
                                  IsChecked="True" Content="&#xEB9F;" Checked="Rail_Checked"
                                  ToolTip="Station images. The worklist, the preview and the generate button." />
                     <TextBlock Style="{StaticResource RailCaption}" Text="Stations" />
+
+                    <!-- The Heavenly Band pieces. Same disc, same yellow when it
+                         is the live view: this is a second worklist, not a
+                         different kind of control. -->
+                    <RadioButton x:Name="RailArticles" GroupName="Rail" Style="{StaticResource RailButton}"
+                                 Content="&#xE8A5;" Checked="Rail_Checked"
+                                 ToolTip="Heavenly Band articles. One picture per piece, generated from the scene written for it." />
+                    <TextBlock Style="{StaticResource RailCaption}" Text="Articles" />
                 </StackPanel>
 
                 <StackPanel DockPanel.Dock="Bottom" Margin="0,0,0,12">

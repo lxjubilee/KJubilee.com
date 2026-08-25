@@ -37,16 +37,15 @@
    and its last rows sit under the address bar. */
 body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100dvh;display:flex}
 
-/* kj-footer-player.js puts padding-bottom on <body> so ordinary pages end above
-   the bar. This layout is two full-height columns, so that padding shrinks the
-   flex container instead and clips the bottom of the form — which, combined with
-   the overflow:hidden this rule used to carry, made the last field unreachable
-   by any amount of scrolling. The space is reserved INSIDE the scrolling column
-   instead (.auth-form-panel below). */
-body.kj-has-player{padding-bottom:0}
+/* NOT neutralising the player's body padding, on purpose. It injects its
+   stylesheet with document.head.appendChild AT RUNTIME, so its rule
+   `body.kj-has-player{padding-bottom:...}` lands AFTER this file with the same
+   specificity and wins the cascade. Trying to override it needs !important or a
+   specificity fight that the next change to that file quietly wins back.
+   The columns are sized to the space it leaves instead. */
 
 /* ── Layout ── */
-.auth-row{display:flex;width:100%;min-height:100dvh}
+.auth-row{display:flex;width:100%;min-height:calc(100dvh - var(--kj-player-h,0px))}
 /* The footer player is FIXED to the bottom of every page on the site, so the
    last thing in this column — which on the reset screen is the submit button —
    sits underneath it and cannot be clicked. kj-footer-player.js publishes its
@@ -56,7 +55,7 @@ body.kj-has-player{padding-bottom:0}
 /* height, not min-height: the column has to be exactly the viewport for its own
    overflow-y to produce a scrollbar. With min-height it grows to fit its content
    instead and never scrolls, so anything past the fold is simply unreachable. */
-.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem calc(2rem + var(--kj-player-h,0px));position:relative;z-index:2;overflow-y:auto;height:100dvh}
+.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem 2rem;position:relative;z-index:2;overflow-y:auto;height:calc(100dvh - var(--kj-player-h,0px))}
 /* The form is vertically centred, so the short email screen and the tall
    Jubilee ID screen both sit comfortably without the logo jumping.
    `safe center` rather than plain `center`: when the content is TALLER than
@@ -85,7 +84,7 @@ body.kj-has-player{padding-bottom:0}
 .bubbles li:nth-child(10){left:40%;width:45px;height:45px;animation-duration:21s;animation-delay:7s}
 @keyframes floatUp{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(-120vh) rotate(720deg);opacity:0}}
 
-.scripture-quote{position:absolute;bottom:calc(3rem + var(--kj-player-h,0px));left:50%;transform:translateX(-50%);z-index:2;text-align:center;max-width:80%;color:#fff;font-family:Georgia,serif;font-size:1.5rem;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.6}
+.scripture-quote{position:absolute;bottom:3rem;left:50%;transform:translateX(-50%);z-index:2;text-align:center;max-width:80%;color:#fff;font-family:Georgia,serif;font-size:1.5rem;font-style:italic;text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.6}
 .scripture-quote span,.scripture-quote cite{transition:opacity .5s ease}
 .scripture-quote cite{display:block;margin-top:0.75rem;font-size:1rem;font-style:normal;color:var(--kj-accent-hi);letter-spacing:1px}
 
@@ -224,7 +223,7 @@ body.kj-has-player{padding-bottom:0}
 @media(max-width:1024px){
   .auth-bg-panel{display:none}
   /* keep the player allowance — a shorthand here would drop it */
-  .auth-form-panel{width:100%;min-width:0;max-width:none;padding:2rem 1.5rem calc(2rem + var(--kj-player-h,0px))}
+  .auth-form-panel{width:100%;min-width:0;max-width:none;padding:2rem 1.5rem}
 }
 @media(max-width:480px){
   .auth-logo-text{font-size:1.6rem}

@@ -378,7 +378,7 @@ Use this catalog for:
 - **Spec:** radio.spec.js (default station tune)
 - **Preconditions:** Fresh session no ?station= param
 - **Steps:** 1) Open /radio.
-- **Expected:** #playerStationName reads Jubilee Praise. #playerStationHm reads HM 305.12. Dial indicator on Jubilee Praise bar. Sidebar Jubilee Praise card has .active.
+- **Expected:** #playerStationName reads Jubilee Praise. #playerStationHm reads HM 305.40. Dial indicator on Jubilee Praise bar. Sidebar Jubilee Praise card has .active.
 
 #### TC-DEFAULT-002 — Audio does not auto-start
 
@@ -402,7 +402,7 @@ Use this catalog for:
 - **Spec:** radio.spec.js (default station tune)
 - **Preconditions:** Default landing
 - **Steps:** 1) Open /radio. 2) Inspect featured banner eyebrow text and Play Now click target.
-- **Expected:** Eyebrow reads Featured · HM 305.12. Click Play Now plays jubilee-praise station.
+- **Expected:** Eyebrow reads Featured · HM 305.40. Click Play Now plays jubilee-praise station.
 
 ---
 
@@ -580,7 +580,7 @@ Use this catalog for:
 - **Spec:** Manual — Discover view interactions click-driven
 - **Preconditions:** Default landing
 - **Steps:** 1) Open /radio (Discover is default).
-- **Expected:** Featured banner with eyebrow Featured · HM 305.12 title Jubilee Praise artist line plays line and Heart and Play Now buttons.
+- **Expected:** Featured banner with eyebrow Featured · HM 305.40 title Jubilee Praise artist line plays line and Heart and Play Now buttons.
 
 #### TC-DISC-002 — Top Artists row has 6 cards
 
@@ -612,7 +612,7 @@ Use this catalog for:
 - **Spec:** Manual — Discover view interactions click-driven
 - **Preconditions:** Banner visible
 - **Steps:** 1) Click Play Now button.
-- **Expected:** Audio plays jubilee-praise station (HM 305.12). Footer updates accordingly.
+- **Expected:** Audio plays jubilee-praise station (HM 305.40). Footer updates accordingly.
 
 #### TC-DISC-006 — Featured heart toggles favorite
 
@@ -813,7 +813,7 @@ Use this catalog for:
 - **Spec:** Manual — dial interactions are SVG-click-driven
 - **Preconditions:** Fresh page load
 - **Steps:** 1) Open /radio. 2) Inspect #dialIndicator.
-- **Expected:** display attribute is empty (NOT 'none'). Bar #dialIndicatorBar x attribute corresponds to HM 305.12.
+- **Expected:** display attribute is empty (NOT 'none'). Bar #dialIndicatorBar x attribute corresponds to HM 305.40.
 
 #### TC-DIAL-003 — Previous button moves indicator down
 
@@ -883,7 +883,7 @@ Use this catalog for:
 - **Spec:** radio.spec.js
 - **Preconditions:** Browser DevTools console open; cleared
 - **Steps:** 1) Open /radio. 2) Wait 5s. 3) Inspect Console tab.
-- **Expected:** No errors in red. Init log lines [Init] Starting initialization through [Init] Default station applied: Jubilee Praise HM 305.12 are present.
+- **Expected:** No errors in red. Init log lines [Init] Starting initialization through [Init] Default station applied: Jubilee Praise HM 305.40 are present.
 
 #### TC-LAYOUT-002 — Three-column layout renders on desktop
 
@@ -1312,7 +1312,7 @@ Use this catalog for:
 - **Spec:** radio.spec.js (smoke)
 - **Preconditions:** Fresh page load
 - **Steps:** 1) Open /radio. 2) Inspect #playerStationName text content.
-- **Expected:** Text reads 'Jubilee Praise'. #playerStationHm reads 'HM 305.12'.
+- **Expected:** Text reads 'Jubilee Praise'. #playerStationHm reads 'HM 305.40'.
 
 #### TC-PLAYER-003 — Play button starts audio
 
@@ -1484,7 +1484,7 @@ Use this catalog for:
 - **Spec:** scanner.spec.js (test.fail) + radio.spec.js (regression)
 - **Preconditions:** Fresh page
 - **Steps:** 1) Open /radio. 2) Inspect Console for [Init] Default station applied. 3) Inspect footer player.
-- **Expected:** Console log present. Footer shows Jubilee Praise HM 305.12.
+- **Expected:** Console log present. Footer shows Jubilee Praise HM 305.40.
 
 #### TC-REG-003 — Locked dimensions persist after stale storage
 
@@ -1500,7 +1500,7 @@ Use this catalog for:
 - **Spec:** scanner.spec.js (test.fail) + radio.spec.js (regression)
 - **Preconditions:** Banner visible
 - **Steps:** 1) Click Play Now on featured banner.
-- **Expected:** Plays Jubilee Praise (HM 305.12) NOT 'adult' default.
+- **Expected:** Plays Jubilee Praise (HM 305.40) NOT 'adult' default.
 
 ---
 
@@ -3432,7 +3432,7 @@ Use this catalog for:
 - **Spec:** radio.spec.js
 - **Preconditions:** Default
 - **Steps:** 1) Open /radio.html. 2) Inspect player footer.
-- **Expected:** #playerStationName = Jubilee Praise. #playerStationHm = HM 305.12.
+- **Expected:** #playerStationName = Jubilee Praise. #playerStationHm = HM 305.40.
 
 #### TC-RADIO-SMOKE-003 — No JS errors on load
 

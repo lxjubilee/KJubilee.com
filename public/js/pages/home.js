@@ -682,7 +682,11 @@
         (live
           ? '<button type="button" class="kja-cta" data-kj-play="' + esc(st.slug) + '">' +
               '<span class="kja-cta-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>' +
-              '<span>' +
+              // The three lines need a box of their own to stack in. Unclassed,
+              // they were three inline spans in an inline wrapper and ran
+              // together as one line: "HEAR WHAT THIS IS ABOUTkJubilee RadioHM
+              // 308.70".
+              '<span class="kja-cta-text">' +
                 '<span class="kja-cta-label">Listen now</span>' +
                 '<span class="kja-cta-title">' + esc(st.name) + '</span>' +
                 '<span class="kja-cta-sub">' + esc(st.freq + ' · ' + st.listeners) + '</span>' +
@@ -739,7 +743,7 @@
       ['On air now', String(STATIONS.filter(function (s) { return s.prototype; }).length)],
       ['Languages', String(Object.keys(langs).length)],
       ['Dial', nums.length ? 'HM ' + nums[0].toFixed(2) + '–' + nums[nums.length - 1].toFixed(2) : '—'],
-      ['Listening', 'Free, no account']
+      ['Listening', 'Free to listen']
     ];
   }
 
@@ -814,7 +818,7 @@
                 '</div>'
               : '') +
             '<p class="kja-note">Every station on the Heavenly Modulation band is free to listen to, ' +
-              'with no advertising and no account required, and the dial is still being built out — ' +
+              'with no advertising, and the dial is still being built out — ' +
               'frequencies are assigned before their stations sign on.</p>' +
           '</div>' +
 
@@ -839,7 +843,11 @@
         (st && st.prototype
           ? '<button type="button" class="kja-cta" data-kj-play="' + esc(st.slug) + '">' +
               '<span class="kja-cta-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>' +
-              '<span>' +
+              // The three lines need a box of their own to stack in. Unclassed,
+              // they were three inline spans in an inline wrapper and ran
+              // together as one line: "HEAR WHAT THIS IS ABOUTkJubilee RadioHM
+              // 308.70".
+              '<span class="kja-cta-text">' +
                 '<span class="kja-cta-label">Hear what this is about</span>' +
                 '<span class="kja-cta-title">' + esc(st.name) + '</span>' +
                 '<span class="kja-cta-sub">' + esc(st.freq + ' · ' + st.listeners) + '</span>' +

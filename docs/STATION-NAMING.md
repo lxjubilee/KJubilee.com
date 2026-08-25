@@ -5,7 +5,7 @@ preview, on the map roster and on the first line of the player bar. It is also
 written into two data files. Before this was settled, two of those were
 independent and had already drifted:
 
-| Where | HM 377.70 read |
+| Where | HM 306.20 read |
 | ----- | -------------- |
 | every page on the site | `Hebraic Celebrations` |
 | its tenant record, and every day file it published | `Hebraic Celebrations (Messianic)` |
@@ -88,7 +88,7 @@ Three lines, each answering one question:
 ```
   Jubilee Kids Party                          what am I listening to
   Tiger Tango Jungle Swing (Tiger S Tango)    what is playing
-  HM 329.12 (Kids)                            where on the dial
+  HM 361.90 (Kids)                            where on the dial
 ```
 
 The station leads, in bold and two points larger than the track. It used to be
@@ -97,7 +97,7 @@ format:
 
 ```
   Tiger Tango Jungle Swing (Tiger S Tango)
-  Jubilee Kids Party HM 329.12 (Kids)         <- the old shape
+  Jubilee Kids Party HM 361.90 (Kids)         <- the old shape
 ```
 
 That made the station — the thing the listener actually chose — the smallest,
@@ -182,4 +182,4 @@ rather than silently dropping it.
 
 - `docs/MUSIC-REPOSITORY-SPEC.md` — SongIDs, the same one-primary-key discipline
   applied to tracks.
-- `setup/station-guidelines.md` §2.5 — how day files are published and revised.
+- `docs/setup/station-guidelines.md` §2.5 — how day files are published and revised.

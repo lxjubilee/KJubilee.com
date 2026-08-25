@@ -79,7 +79,7 @@ A station can be disabled by setting `enabled: false` in `_config/station-profil
 Each station declares `host_city` and an IANA `timezone` (e.g. `America/Los_Angeles`). All scheduling — day-part boundaries, "now playing" calculations, ID/jingle timing — runs in station-local time. DST handled by the IANA TZ database, not hardcoded offsets.
 
 ### BR-B2 — HM Frequency Designation
-Each station identified by an HM (Hertley Modulation) frequency string (e.g. `HM 088.70`, `HM 305.12`). Frequency space partitioned by band (`fivefold`, `multi`, `mainstream`, plus designated test band). No two stations share an HM number.
+Each station identified by an HM (Hertley Modulation) frequency string (e.g. `HM 088.70`, `HM 305.40`). Frequency space partitioned by band (`fivefold`, `multi`, `mainstream`, plus designated test band). No two stations share an HM number.
 
 ### BR-B3 — Cycle Codes (m / a / e / n)
 
