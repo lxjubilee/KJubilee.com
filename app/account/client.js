@@ -15,10 +15,11 @@ import { authToken, patchAuth, clearAuth } from '../_session-store';
  *
  * ── Three cards, in ascending order of consequence ──
  * A name is a typo away from wrong and is fixed by typing over it. A password
- * is a credential, so it asks for the current one and, for a Jubilee ID
- * account, says out loud that the change reaches every Jubilee site. Deleting
- * is irreversible, so it stays folded shut until asked for, wants the password
- * AND the word DELETE, and lists what will go with it.
+ * is set by typing the new one twice — the session already proved who is here,
+ * so it does not ask for the old one — and for a Jubilee ID account the card
+ * says out loud that the change reaches every Jubilee site. Deleting is
+ * irreversible, so it stays folded shut until asked for, wants the password AND
+ * the word DELETE, and lists what will go with it.
  *
  * ── What this screen may NOT do ──
  * Change the email. It is the join between this account and the Jubilee ID and
@@ -27,9 +28,9 @@ import { authToken, patchAuth, clearAuth } from '../_session-store';
  * does nothing.
  *
  * THE GATE HERE IS NOT THE SECURITY, exactly as on /admin: /api/account asks the
- * database who is calling before it answers, and the two destructive routes ask
- * for the password on top of that. Everything below is about showing a human the
- * right thing — a signed-out visitor gets a way in rather than a dead form.
+ * database who is calling before it answers, and the delete route asks for the
+ * password on top of that. Everything below is about showing a human the right
+ * thing — a signed-out visitor gets a way in rather than a dead form.
  */
 
 async function api(path, { method = 'GET', body, token } = {}) {
@@ -153,7 +154,6 @@ export default function AccountClient() {
     const [nameBusy, setNameBusy] = useState(false);
     const [nameNote, setNameNote] = useState(null);
 
-    const [currentPw, setCurrentPw] = useState('');
     const [newPw, setNewPw] = useState('');
     const [confirmPw, setConfirmPw] = useState('');
     const [pwBusy, setPwBusy] = useState(false);
@@ -226,7 +226,7 @@ export default function AccountClient() {
         const r = await api('/api/account/password', {
             method: 'POST',
             token: authToken(),
-            body: { currentPassword: currentPw, newPassword: newPw },
+            body: { newPassword: newPw },
         });
         setPwBusy(false);
 
@@ -235,7 +235,7 @@ export default function AccountClient() {
             return;
         }
 
-        setCurrentPw(''); setNewPw(''); setConfirmPw('');
+        setNewPw(''); setConfirmPw('');
 
         // The change revoked every session, this tab's included. The server sent
         // back a replacement; storing it is what keeps this page signed in.
@@ -361,18 +361,14 @@ export default function AccountClient() {
                             : 'Changing your password signs you out on every other device.'}
                     >
                         <form className="acct-form" onSubmit={savePassword}>
-                            <PasswordField
-                                id="acct-current"
-                                label={account.password_kind === 'jubilee-id' ? 'Current Jubilee ID password' : 'Current password'}
-                                value={currentPw}
-                                onChange={setCurrentPw}
-                                autoComplete="current-password"
-                            >
-                                <p className="acct-hint">
-                                    Don&rsquo;t remember it? <a href="/forgot-password">Get a reset link by email.</a>
-                                </p>
-                            </PasswordField>
-
+                            {/*
+                              * No "current password" field. This screen is behind
+                              * a live session, and asking someone to re-prove the
+                              * sign-in they are standing in is a wall in front of
+                              * the people least able to climb it — the ones who
+                              * signed in weeks ago. /forgot-password exists for
+                              * anyone who has actually lost it.
+                              */}
                             <div className="acct-pair">
                                 <PasswordField
                                     id="acct-new"

@@ -267,25 +267,29 @@ const liveSessions = (userId) => SESSIONS.filter((s) => s.user_id === userId && 
         eq('nothing was written', findUser(2).first_name, 'Vera');
     }
 
-    console.log('\nA password change proves it is you first');
+    console.log('\nA password change takes the session as proof, not the old password');
     {
         resetTables();
         ssoPasswordSets = [];
-        const wrong = await account.changePassword(1, { currentPassword: 'not-it', newPassword: 'a-brand-new-one' });
-        eq('a wrong current password fails', wrong.success, false);
-        eq('with 401', wrong.status, 401);
+        const signedOut = await account.changePassword(999, { newPassword: 'a-brand-new-one' });
+        eq('no account, no change', signedOut.success, false);
+        eq('with 401', signedOut.status, 401);
         eq('and nothing was set at the authority', ssoPasswordSets.length, 0);
 
-        const wrongLocal = await account.changePassword(2, { currentPassword: 'not-it', newPassword: 'a-brand-new-one' });
-        eq('the same for a local account', wrongLocal.status, 401);
+        const short = await account.changePassword(2, { newPassword: 'short' });
+        eq('a password under 8 characters is refused', short.status, 400);
         eq('and its hash is untouched', findUser(2).password_hash, hashPassword('old-password', veraSalt));
 
-        const short = await account.changePassword(2, { currentPassword: 'old-password', newPassword: 'short' });
-        eq('a password under 8 characters is refused', short.status, 400);
-
-        const same = await account.changePassword(2, { currentPassword: 'old-password', newPassword: 'old-password' });
+        const same = await account.changePassword(2, { newPassword: 'old-password' });
         eq('and so is the one already in use', same.status, 400);
         ok('with a message that says why', /different/i.test(same.error || ''));
+
+        // The old password is not asked for, so it is not a way in either: a
+        // caller that still sends one is simply changing the password.
+        const stillWorks = await account.changePassword(2, {
+            currentPassword: 'not-it', newPassword: 'a-brand-new-one',
+        });
+        eq('a stale currentPassword is ignored, not honoured as a gate', stillWorks.success, true);
     }
 
     console.log('\nAnd then writes it where the credential actually lives');
@@ -294,9 +298,7 @@ const liveSessions = (userId) => SESSIONS.filter((s) => s.user_id === userId && 
         ssoPasswordSets = [];
         ssoPasswords['ada@example.com'] = 'authority-password';
 
-        const r = await account.changePassword(1, {
-            currentPassword: 'authority-password', newPassword: 'a-far-better-password',
-        });
+        const r = await account.changePassword(1, { newPassword: 'a-far-better-password' });
         eq('a Jubilee ID account succeeds', r.success, true);
         eq('the authority was given the new password', ssoPasswordSets.length, 1);
         eq('for the right address', ssoPasswordSets[0].email, 'ada@example.com');
@@ -304,9 +306,7 @@ const liveSessions = (userId) => SESSIONS.filter((s) => s.user_id === userId && 
         eq('the screen is told how far the change reaches', r.scope, 'jubilee-id');
 
         ssoPasswordSets = [];
-        const local = await account.changePassword(2, {
-            currentPassword: 'old-password', newPassword: 'a-far-better-password',
-        });
+        const local = await account.changePassword(2, { newPassword: 'a-far-better-password' });
         eq('a legacy account succeeds too', local.success, true);
         eq('the authority was NOT involved', ssoPasswordSets.length, 0);
         eq('and the local hash changed', findUser(2).password_hash,
@@ -322,9 +322,7 @@ const liveSessions = (userId) => SESSIONS.filter((s) => s.user_id === userId && 
         await sessions.createSession({ id: 2, email: 'vera@example.com' }, { rememberMe: true });
         eq('two devices are signed in', liveSessions(2), 2);
 
-        const r = await account.changePassword(2, {
-            currentPassword: 'old-password', newPassword: 'a-far-better-password',
-        });
+        const r = await account.changePassword(2, { newPassword: 'a-far-better-password' });
         eq('the change succeeds', r.success, true);
         eq('exactly one session survives', liveSessions(2), 1);
         ok('and it is the new one, handed back to this browser',

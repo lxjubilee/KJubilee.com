@@ -5,12 +5,16 @@ export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 /*
- * POST /api/account/password  { currentPassword, newPassword, rememberMe? }
+ * POST /api/account/password  { newPassword, rememberMe? }
  *
- * Rate-limited on the same budget as the sign-in door. The current password is
- * checked here, so without the limiter this endpoint is a password oracle that
- * happens to require a fifteen-minute token — a worse door than the front one,
- * because nobody is watching it.
+ * No current password: the session IS the proof. requireAccount asks the
+ * database who is calling before anything else happens, and someone holding a
+ * live session can already read and change everything else on this screen.
+ *
+ * Still rate-limited on the same budget as the sign-in door. It no longer
+ * answers "is this the password?", so it is not an oracle — but it is a
+ * take-over-the-account button behind a fifteen-minute token, and a limiter is
+ * cheap next to what an unthrottled one costs.
  *
  * The reply carries a NEW session. Changing a password revokes every session on
  * the account, this browser's included; handing back a fresh pair is what keeps
@@ -25,7 +29,6 @@ export async function POST(request) {
 
     const body = await readJson(request);
     const result = await changePassword(gate.user.id, {
-        currentPassword: body.currentPassword || '',
         newPassword: body.newPassword || '',
         // Absent means yes: someone changing a password in a tab they are
         // already signed into has not asked to be signed out of it.
