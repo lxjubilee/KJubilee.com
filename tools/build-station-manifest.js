@@ -89,6 +89,10 @@ const INSPIRE_FAMILY = {
 // so a family-only station cannot silently absorb 1,749 Torah Sings tracks.
 const CATALOGUES = {
     'torah-sings': 'Torah Sings',
+    // Marcus Reed's own property. A catalogue rather than a family member for
+    // the usual reason: the flagship names four voices and must not pick up
+    // eighty-three rap tracks by a DJ none of them is credited as.
+    'marcus-reed': 'Marcus Reed',
     // The trio - Jubilee, Melody and Zariah singing together. A body of work
     // rather than a persona, so it belongs here and not in INSPIRE_FAMILY: the
     // flagship selects four named voices and must not pick up 224 concert
@@ -270,6 +274,27 @@ const STATIONS = {
                 'MDIM1012EN',
             ],
         },
+    },
+    // HM 315.20 CORNER CIPHER — Christian rap, Atlanta.
+    //
+    // In The Crossing because it is domestic English gospel-forward music,
+    // which is what the block is for — the genre is new to the dial, the
+    // function is not. Its own manifest splits the catalogue into three
+    // lanes (trap, lyrical, soul-gospel) and the station takes all three:
+    // they are one artist's range, not three audiences.
+    'HM315.20-EN': {
+        slug: 'corner-cipher',
+        name: 'Corner Cipher',
+        hm: '315.20',
+        mount: 'corner-cipher',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        mode: 'CCI',
+        hostCity: 'Atlanta',
+        timezone: 'America/New_York',
+        pool: 'catalogues',
+        select: { artists: ['marcus-reed'] },
     },
     'HM326.20-RO': {
         slug: 'jubilee-praise-romana',

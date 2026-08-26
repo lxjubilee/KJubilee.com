@@ -1870,6 +1870,42 @@ public partial class MainWindow : Window
 
     private static readonly Dictionary<string, Bespoke> BespokeStations = new(StringComparer.OrdinalIgnoreCase)
     {
+        // HM 315.20 Corner Cipher — Marcus Reed, and NOBODY HAS EVER
+        // PHOTOGRAPHED HIM.
+        //
+        // Every other host on the dial has a portrait attached to the turn as a
+        // likeness reference, which is what keeps one face consistent across a
+        // hundred images. Marcus has none, so NoPortrait is set and the WORDS
+        // have to do that job instead: the Subject below is deliberately
+        // specific — age, build, hair, beard — because a vague description
+        // regenerates as a different man every time, and a station host who
+        // changes face between renders is not a host.
+        //
+        // Replace this with a real portrait the moment one exists; description
+        // is the fallback, not the intent.
+        //
+        // The scene is his own material rather than a rap-video set. His albums
+        // are about a grandmother’s front room, the part of the story he skips,
+        // rent being due either way. So: a real street at the end of a real day,
+        // not a stage.
+        ["corner-cipher"] = new(
+            "a residential Atlanta street corner at golden hour — red-brick shopfronts, a barbershop window, a low " +
+            "stoop with worn steps, power lines crossing overhead and the downtown towers small and hazy in the " +
+            "distance behind",
+            "standing at the bottom of the stoop mid-verse with one hand open in front of him, weight on his back " +
+            "foot, chin slightly up — talking to someone just off camera rather than performing to a crowd, the low " +
+            "sun raking across one side of his face",
+            "MARCUS IS THE ONLY PERSON IN THE PICTURE. Anyone else on the street is far away, small and blurred, " +
+            "and nobody else wears headphones. There is no stage, no crowd, no chains, no cash, no car — this is a " +
+            "man on his own street, not a rap video.",
+            "a single figure, Marcus, a Black man in his early thirties, alone and filling the frame — close-cropped " +
+            "hair with a neat fade, a short well-kept beard, warm steady eyes and broad shoulders",
+            "Marcus",
+            null,
+            NoPortrait: true,
+            Wardrobe: "a plain dark hooded sweatshirt under an open canvas work jacket, straight dark jeans and " +
+            "clean trainers — modest, ordinary, nothing branded and nothing flashy"),
+
         // HM 376.20 Melody’s Sparkle — the sparkle is the LIGHT, not sequins.
         //
         // This is the one station on the dial aimed at someone who is not in

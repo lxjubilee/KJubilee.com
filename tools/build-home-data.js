@@ -71,7 +71,15 @@ const MEMBERS = [
   { id: 'tiny-tiggles',  name: 'Tiny Tiggles',  short: 'Tiny Tiggles', focus: 'Little ones, big songs',   gradient: ['#2E6F8E', '#63B4D1'],
     image: '/images/members/TinyTiggles-Circle-200.png' },
   { id: 'party-giggles', name: 'Party Giggles', short: 'Party Giggles', focus: 'Kids party praise',        gradient: ['#B8474F', '#E8888C'],
-    image: '/images/members/PartyGiggles-Circle-200.png' }
+    image: '/images/members/PartyGiggles-Circle-200.png' },
+  // Not an Inspire Family persona and not a group act — a DJ, from his own
+  // property (CornerCipher.com, Atlanta). Listed here because the dial needs a
+  // host for HM 315.20 and the host is a real person with a name, not a
+  // catalogue. NO PORTRAIT EXISTS YET: image is deliberately null rather than
+  // borrowed from someone else, and the image studio renders him from
+  // description alone until one is shot.
+  { id: 'marcus-reed',   name: 'Marcus Reed',   short: 'Marcus',       focus: 'Christian rap, straight talk', gradient: ['#1F3A5F', '#4C7FA8'],
+    image: null }
 ];
 const AVATAR = {
   nova: 'Nova', jubilee: 'Inspire', melody: 'Melody', zariah: 'Zariah', caleb: 'Caleb',
@@ -114,6 +122,7 @@ const STATION_GENRE = {
     'inspire-kids':         'Kids',
     'inspire-cafe':         'Coffeehouse',
     'inspire-active':       'Pre-Evangelistic Pop',
+    'corner-cipher':        'Christian Rap',
     'inspire-focus':        'Focus & Study',
     'inspire-drive':        'Drive Time',
     'inspire-celebrations': 'Celebration',
@@ -237,6 +246,7 @@ const HOST_OVERRIDE = {
     'hebraic-celebrations': 'zev',    // Zev Inspire — HM306.20-EN
     'jubilee-ccm': 'jubilee',         // Celebrate Yeshua! — HM304.80, fronted by Jubilee
     // The two children's catalogues front their own stations.
+    'corner-cipher': 'marcus-reed',        // HM315.20 — his own show, his own catalogue
     'gods-little-lambs': 'tiny-tiggles',    // HM360.30 — plays the Tiny Tiggles catalogue
     'jubilee-kids-party': 'party-giggles',  // HM361.90 — plays the Party Giggles catalogue
     // Pinned to the host it already had: the two entries above take two slots

@@ -370,8 +370,25 @@ console.log('live: '+S.length+' stations, '+S.filter(s=>s.prototype).length+' on
 ```
 
 **Then press play in a browser.** CORS and autoplay are enforced only in the browser
-— a passing Node test says nothing about either. Open the site, press play on a
-station whose catalogue changed, and confirm a *new* track appears in the bar.
+— a passing Node test says nothing about either.
+
+```bash
+node tools/play-check.js <station-slug>          # against production
+node tools/play-check.js <station-slug> http://localhost:3000
+```
+
+Drives a real headless Chrome, tunes the station through `window.kjPlayer.play()`
+with a user gesture, and exits non-zero unless sound is actually coming out. It
+reports the track the bar lands on, the analyser's peak bin (`0` is silence even
+when the player claims to be playing), and any CORS or network failure.
+
+Two things it does deliberately: it leaves the autoplay policy at its default,
+because relaxing it would hide the failure the check exists to catch; and it reads
+the player's state rather than a DOM `<audio>` element, because there isn't one —
+the player builds its element with `new Audio()`.
+
+Still open the site yourself afterwards and confirm a *new* track appears in the
+bar. The check proves sound; only you can say it is the right sound.
 
 ---
 
@@ -506,7 +523,14 @@ deletion.
 
 1. Add its block to `STATIONS` in `tools/build-station-manifest.js` — tenant id,
    slug, `hm`, `mount`, language, mode, pool, `select`.
-2. Add its tenant record under `tenants/<TENANT-ID>.json`.
+2. Add its tenant record under `tenants/<TENANT-ID>.json`. **Its `timezone` is
+   `America/Los_Angeles` — always, for every station on the dial including the
+   Romanian one.** That field is the *broadcast day*, not where the host lives: the
+   whole network turns over on one clock so a listener switching stations never
+   crosses a day boundary mid-song. The host's real zone goes in the `STATIONS`
+   entry as `hostCity`/`timezone`, which the manifest carries as metadata and the
+   day file ignores. Getting this wrong publishes a day of the right length at the
+   wrong offset, and `tests/tenant-radio.test.js` is what catches it.
 3. Confirm its frequency sits in the right five-fold block — see
    [`hm-bands.md`](hm-bands.md).
 4. Run Phase 2 with `--station <ID> --dry-run` and read the track count. **Under
@@ -535,6 +559,7 @@ Each of these has actually happened. All of them look like success.
 | A frequency 404s after renumbering | Tenant id embeds the frequency; the CDN tree did not follow | Rebuild manifests and republish before retiring old addresses |
 | Duplicate SongIDs in the ledger | Two ingest runs in parallel | Never parallel. Restore the ledger and re-run sequentially |
 | A track plays under two names | Byte-identical albums both airing | `exclude` the duplicate; verify by hash first |
+| One station's day starts at the wrong hour | Tenant `timezone` set to the host's city instead of `America/Los_Angeles` | Correct the tenant record, republish that station |
 
 ### The ordering rule
 

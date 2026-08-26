@@ -35,7 +35,13 @@ SRC_ROOT = r"J:\jubilujah.com\music\inspire"
 # album - correctly refusing to write a sidecar it could not source, and
 # correctly refusing to null the descriptions, but leaving the catalogue with no
 # sidecars at all.
-SRC_ROOTS = [SRC_ROOT, r"J:\singitdone.com\music", r"J:\jubilujah.com\music\children"]
+# Every authoring tree kJubilee ingests from. A property is registered here
+# ONCE and then found forever; the --src-root flag is for a one-off, not for
+# a catalogue that will keep growing.
+SRC_ROOTS = [SRC_ROOT,
+             r"J:\singitdone.com\music",
+             r"J:\jubilujah.com\music\children",
+             r"J:\cornercipher.com\music"]      # Marcus Reed / Corner Cipher
 DEST_ROOT = r"J:\kjubilee.com\music"
 CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalog-config.json")
 SIDECAR = "album.json"

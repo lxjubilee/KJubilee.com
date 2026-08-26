@@ -657,6 +657,15 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
+                slug: "corner-cipher", hm: "315.20", frequency: "HM 315.20", name: "Corner Cipher",
+                band: "fivefold", primary: "music",
+                mode: "Both", phase: 2, bestseller: 80, reach: "95M",
+                image: "/images/jubilee-profile.png",
+                description: "Christian rap out of Atlanta — Marcus Reed on the mic, trap and lyrical and soul-gospel, talking about the block he actually came from.",
+                listeners: "Christian Rap · Atlanta",
+                currentShow: { name: "The Corner", host: "Marcus Reed", time: "24/7 Live" },
+            },
+            {
                 slug: "radiant-stones-radio", hm: "301.90", frequency: "HM 301.90", name: "Radiant Stones Concerts",
                 band: "fivefold", primary: "music",
                 mode: "Both", phase: 2, bestseller: 84, reach: "120M",

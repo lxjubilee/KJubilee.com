@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM315.20-EN",
+  "slug": "corner-cipher",
+  "name": "Corner Cipher",
+  "hm": "315.20",
+  "band": "fivefold",
+  "mount": "corner-cipher",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Atlanta",
+    "timezone": "America/New_York"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "marcus-reed"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM315.20-EN/delivery",
+    "file": "HM315.20EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM315.20-EN/delivery/HM315.20EN-20260821.json"
+  },
+  "format": "Christian Rap",
+  "timezone": "America/Los_Angeles"
+}

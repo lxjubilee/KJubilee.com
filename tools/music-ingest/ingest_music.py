@@ -41,6 +41,19 @@ for _stream in (sys.stdout, sys.stderr):
             pass
 
 SRC_ROOT = r"J:\jubilujah.com\music\inspire"
+
+# WHICH TREE AN ARTIST LIVES IN.
+#
+# Most personas are under the default root, so --src-root was only ever
+# needed for the odd one out — and "the odd one out" is a thing you have to
+# REMEMBER, which is the same as a thing you forget. An artist listed here
+# resolves to its own tree automatically; --src-root still overrides, for a
+# genuine one-off.
+ARTIST_ROOTS = {
+    "marcus-reed":   r"J:\cornercipher.com\music",     # Corner Cipher
+    "party-giggles": r"J:\jubilujah.com\music\children",
+    "tiny-tiggles":  r"J:\jubilujah.com\music\children",
+}
 DEST_ROOT = r"J:\kjubilee.com\music"
 CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalog-config.json")
 
@@ -280,11 +293,47 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
     # tool cannot see is not. Prefer tracks/ when it exists, fall back to the
     # album folder, so both layouts ingest and neither has to be special-cased
     # per album.
+    # WHERE THE AUDIO IS, IN THE THREE PLACES IT HAS ACTUALLY BEEN FOUND.
+    #
+    #   <album>/tracks/     the convention, and almost always right
+    #   <album>/            Radiant Stones' Romanian record keeps them loose
+    #   <album>/<anything>/ Corner Cipher's "cut not bought" keeps them in a
+    #                       folder called "New folder", because someone made one
+    #                       and never renamed it
+    #
+    # The last case is why this searches rather than guesses. The source tree
+    # belongs to whoever produced the music and is never modified from here, so
+    # a tool that only understands one layout silently drops an album — twelve
+    # tracks, no warning, because "no tracks/ dir" and "album not recorded yet"
+    # looked identical. Any single subfolder holding mp3s is accepted; more than
+    # one is ambiguous and says so rather than picking.
+    def _mp3s_in(d):
+        try:
+            return sorted(f for f in os.listdir(d)
+                          if f.lower().endswith(".mp3") and os.path.isfile(os.path.join(d, f)))
+        except OSError:
+            return []
+
     tracks_dir = os.path.join(album_dir, "tracks")
-    if not os.path.isdir(tracks_dir):
+    sources = _mp3s_in(tracks_dir)
+    if not sources:
         tracks_dir = album_dir
-    sources = [f for f in os.listdir(tracks_dir)
-               if f.lower().endswith(".mp3") and os.path.isfile(os.path.join(tracks_dir, f))]
+        sources = _mp3s_in(tracks_dir)
+    if not sources:
+        candidates = []
+        for sub in sorted(os.listdir(album_dir)):
+            full = os.path.join(album_dir, sub)
+            if os.path.isdir(full) and _mp3s_in(full):
+                candidates.append(full)
+        if len(candidates) > 1:
+            print("  AMBIGUOUS: %s has mp3s in %d subfolders (%s) — none ingested"
+                  % (folder, len(candidates), ", ".join(os.path.basename(c) for c in candidates)))
+            return 0
+        if candidates:
+            tracks_dir = candidates[0]
+            sources = _mp3s_in(tracks_dir)
+            print("  note: audio found in %s/ rather than tracks/"
+                  % os.path.basename(tracks_dir))
     if not sources:
         return 0
     # Order by track number, then prefer the canonical name over a " (1)" copy so the
@@ -485,9 +534,14 @@ def main():
                     help="two-letter language for album folders that carry no language "
                          "suffix (e.g. --lang EN for TTX301-penguino-s-palooza). Folders "
                          "that DO carry one always keep it; this never overrides.")
-    ap.add_argument("--src-root", default=SRC_ROOT)
+    ap.add_argument("--src-root", default=None,
+                    help="authoring tree; defaults to the artist's registered root")
     ap.add_argument("--dest-root", default=DEST_ROOT)
     opts = ap.parse_args()
+    if not opts.src_root:
+        opts.src_root = ARTIST_ROOTS.get(opts.artist, SRC_ROOT)
+        if opts.src_root != SRC_ROOT:
+            print("source: %s (registered for %s)" % (opts.src_root, opts.artist))
 
     with io.open(CONFIG, encoding="utf-8") as fh:
         cfg = json.load(fh)
