@@ -89,6 +89,11 @@ const INSPIRE_FAMILY = {
 // so a family-only station cannot silently absorb 1,749 Torah Sings tracks.
 const CATALOGUES = {
     'torah-sings': 'Torah Sings',
+    // The trio - Jubilee, Melody and Zariah singing together. A body of work
+    // rather than a persona, so it belongs here and not in INSPIRE_FAMILY: the
+    // flagship selects four named voices and must not pick up 224 concert
+    // tracks by a group none of those four is credited as.
+    'radiant-stones': 'Radiant Stones',
     // The children's party act, its own brand with its own site. In here for
     // the same reason Torah Sings is: a station that selects "the Inspire
     // Family" must not quietly pick up 338 kids' party tracks.
@@ -195,6 +200,77 @@ const STATIONS = {
             exclude: { albums: ['CAIM1027EN'] },
         },
     },
+    // A CONCERT RECORD, WHICH IS WHY IT IS ITS OWN FREQUENCY.
+    //
+    // Radiant Stones is the trio - Jubilee, Melody and Zariah - and its albums
+    // are built as concerts: an opener, a coronation, a climax, an encore. That
+    // shape is the station. It sits in The Crossing because it is domestic
+    // English gospel-forward music, one number below the flagship.
+    //
+    // pool 'catalogues' + select.artists is the same shape Torah Sings uses: the
+    // pool admits the four non-persona bodies of work, and the select narrows to
+    // this one. Every track credited to the trio belongs here, and a future
+    // Radiant Stones record joins on the next build with no edit. The Romanian album (JMZM1012RO) is excluded by
+    // the language filter alone, not by a rule - it will air on HM 326.20 with
+    // every other Romanian track, which is the point of one-language-per-
+    // frequency.
+    'HM301.90-EN': {
+        slug: 'radiant-stones-radio',
+        name: 'Radiant Stones Concerts',
+        hm: '301.90',
+        mount: 'radiant-stones',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        mode: 'CCI',
+        hostCity: 'Nashville',
+        timezone: 'America/Chicago',
+        pool: 'catalogues',
+        select: { artists: ['radiant-stones'] },
+    },
+    // THE STATION FOR SOMEONE WHO IS NOT IN CHURCH YET.
+    //
+    // Melody carries a standing secular_universal / pre-evangelistic exemption:
+    // her own blueprints describe these records as "kingdom-shaped without
+    // explicit naming", and they self-rate 32-50% faith-focus against a roster
+    // that is otherwise 80%+. Gratitude, family, ordinary wonder — clean enough
+    // for any room and never preachy.
+    //
+    // `albums` rather than `artists`, and that is the whole point: Melody ALSO
+    // records vertical worship sung directly to Jesus by name, and a station
+    // built on her NAME would mix the two and lose the one thing that makes this
+    // frequency useful. The twelve codes below are exactly her twelve
+    // audio-bearing secular_universal records. A thirteenth joins by being added
+    // here, deliberately, after someone has read its blueprint — not by default.
+    'HM376.20-EN': {
+        slug: 'inspire-active',
+        name: 'Melody’s Sparkle',
+        hm: '376.20',
+        mount: 'melodys-sparkle',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        mode: 'CCI',
+        hostCity: 'Nashville',
+        timezone: 'America/Chicago',
+        pool: 'inspire-family',
+        select: {
+            albums: [
+                'MDIM1001EN',
+                'MDIM1002EN',
+                'MDIM1003EN',
+                'MDIM1004EN',
+                'MDIM1005EN',
+                'MDIM1006EN',
+                'MDIM1007EN',
+                'MDIM1008EN',
+                'MDIM1009EN',
+                'MDIM1010EN',
+                'MDIM1011EN',
+                'MDIM1012EN',
+            ],
+        },
+    },
     'HM326.20-RO': {
         slug: 'jubilee-praise-romana',
         name: 'Jubilee Praise (Română)',
@@ -212,7 +288,14 @@ const STATIONS = {
         mode: 'OHI',
         hostCity: 'București',
         timezone: 'Europe/Bucharest',
-        pool: 'inspire-family',
+        // `all`, not `inspire-family`. The rule above says every Romanian track
+        // in the repository, and an inspire-family pool quietly broke that the
+        // moment a non-persona act recorded in Romanian: Radiant Stones' twelve
+        // Romanian tracks were in the ledger, on no station, and nothing
+        // reported it. The family pool is right for a station that means "these
+        // voices"; this station means "this language", and those are different
+        // rules that happened to agree until they did not.
+        pool: 'all',
     },
     // A format station rather than a language edition. The two others take
     // everything a pool records; this one takes only what is actually country,
@@ -932,6 +1015,12 @@ function buildStation(stationId, urlLayout) {
     const POOLS = {
         'inspire-family': INSPIRE_FAMILY,
         'catalogues': CATALOGUES,
+        // Everything that records, personas and catalogues alike. For the one
+        // station whose rule is genuinely "every track in this language" — see
+        // HM326.20-RO. Not a default: a station that names `all` is saying the
+        // language IS the whole selection, which is only true where the
+        // language is scarce enough that leaving tracks out strands them.
+        'all': Object.assign({}, INSPIRE_FAMILY, CATALOGUES),
     };
     const pool = POOLS[station.pool];
     if (!pool) {

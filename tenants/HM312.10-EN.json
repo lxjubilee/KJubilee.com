@@ -26,9 +26,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM399.18-EN/delivery",
-    "file": "HM399.18EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM399.18-EN/delivery/HM399.18EN-20260821.json"
+    "dir": "radio/HM312.10-EN/delivery",
+    "file": "HM312.10EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM312.10-EN/delivery/HM312.10EN-20260821.json"
   },
   "format": "Hawaiian Praise",
   "timezone": "America/Los_Angeles"

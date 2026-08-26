@@ -94,7 +94,7 @@
          Christian Music, beneath stations it is the flagship of. Which
          station that is comes from window.KJ_DEFAULT — the same value the
          player opens on and the hero leads with — never from the frequency,
-         which is why moving 388.70 to 308.70 did not touch this rule. */
+         which is why renumbering the dial did not touch this rule. */
       if (a.slug === FLAGSHIP) return -1;
       if (b.slug === FLAGSHIP) return 1;
       if (!!a.prototype !== !!b.prototype) return a.prototype ? -1 : 1;

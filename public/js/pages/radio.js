@@ -59,9 +59,9 @@ document.addEventListener('error', function (e) {
                 //
                 // THE FREQUENCY IS NOT LIKE THE SLUG. The tenant record and the
                 // published CDN tree are keyed to the HM number (HM308.70-EN),
-                // so moving 388.70 -> 308.70 on 2026-08-25 moved both: the
-                // delivery tree was copied to the new id before the catalogue
-                // changed, because build-home-data.js reads ON AIR off the
+                // so the 2026-08-25 renumber moved both: the delivery tree
+                // was copied to the new id before the catalogue changed,
+                // because build-home-data.js reads ON AIR off the
                 // presence of delivery/music.json under the id the frequency
                 // implies. Change the frequency again and that tree moves again.
                 formatLabel: "Jubilee Praise",
@@ -126,8 +126,8 @@ document.addEventListener('error', function (e) {
                 // from a hot-swap playlist pair generated off the same verified
                 // manifest the site carries, so the broadcast and the catalogue
                 // cannot drift. Rebuild the playlist with:
-                //   node tools/build-station-manifest.js --station HM305.12-EN
-                //   node tools/build-station-playlist.js --station HM305.12-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM305.40-EN
+                //   node tools/build-station-playlist.js --station HM305.40-EN --out-dir <dir>
                 // then copy to /opt/jubilee-radio/storage/playlists on the radio
                 // host and run `torah-sings.swap` over the Liquidsoap telnet port.
                 streamUrl: null,
@@ -244,7 +244,6 @@ document.addEventListener('error', function (e) {
                 // stopped using. Both figures are kept; only the framing moves.
                 description: "Biblical Music — Scripture-rooted songs in the contemporary style that has grown 60% over five years to become the #2 genre globally.",
                 listeners: "Biblical Music · Mainstream Christian",
-                streamUrl: STREAM_ADULT,
                 currentShow: { name: "Celebrate Yeshua! Live", host: "Jubilee Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Morning CCM" },
@@ -266,8 +265,8 @@ document.addEventListener('error', function (e) {
                 description: "The SingItDone declaration albums — all twelve of the Inspire Family, one record each, singing who they already are before Yahuah. Every promise of Elohim is Yes and Amen in Him.",
                 listeners: "Covenant Worship · Inspire Family · 191 tracks",
                 // Client-side rotation straight off the repository. Rebuild with:
-                //   node tools/build-station-manifest.js --station HM314.88-EN
-                //   node tools/build-station-playlist.js --station HM314.88-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM303.10-EN
+                //   node tools/build-station-playlist.js --station HM303.10-EN --out-dir <dir>
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM314.88-EN/delivery/music.json",
                 currentShow: { name: "Yes and Amen Live", host: "Elias Inspire", time: "24/7 Live" },
@@ -483,7 +482,7 @@ document.addEventListener('error', function (e) {
                 // Elias and Eliana whole, plus two country albums filed under
                 // other personas' codes and 26 individual country cuts.
                 // Rebuild with:
-                //   node tools/build-station-manifest.js --station HM335.16-EN --url-layout source
+                //   node tools/build-station-manifest.js --station HM309.30-EN --url-layout source
                 // (production serves /cdn/music/* by proxy to cdn.jubileeverse.com,
                 //  which holds the source tree — use canonical only for local dev.)
                 streamUrl: null,
@@ -534,7 +533,7 @@ document.addEventListener('error', function (e) {
                 // (PCGC — Pentecostal/Charismatic Praise × Gospel Choir /
                 // Afro-Gospel) is itself the format, so no album picking needed.
                 // Rebuild with:
-                //   node tools/build-station-manifest.js --station HM339.18-EN --url-layout source
+                //   node tools/build-station-manifest.js --station HM302.50-EN --url-layout source
                 // (production serves /cdn/music/* by proxy to cdn.jubileeverse.com,
                 //  which holds the source tree — use canonical only for local dev.)
                 streamUrl: null,
@@ -598,8 +597,8 @@ document.addEventListener('error', function (e) {
                 description: "Afro-Caribbean fusion worship — Zariah Inspire's reggae, dancehall, soca and Afrobeats catalogue married to teaching hymnody and gospel-soul.",
                 listeners: "Afro-Caribbean · Zariah & Santiago Inspire · 251 tracks",
                 // A live Icecast mount. Rebuild its playlist with:
-                //   node tools/build-station-manifest.js --station HM347.14-EN
-                //   node tools/build-station-playlist.js --station HM347.14-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM311.50-EN
+                //   node tools/build-station-playlist.js --station HM311.50-EN --out-dir <dir>
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM347.14-EN/delivery/music.json",
                 currentShow: { name: "Riddim and Rhyme Live", host: "Zariah Inspire", time: "24/7 Live" },
@@ -620,7 +619,7 @@ document.addEventListener('error', function (e) {
                 listeners: "Middle Eastern · Amir Inspire · 92 tracks",
                 // Client-side: the browser reads this manifest and streams each
                 // track straight from cdn.kjubilee.com. No Icecast mount.
-                //   node tools/build-station-manifest.js --station HM345.24-EN
+                //   node tools/build-station-manifest.js --station HM313.80-EN
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM345.24-EN/delivery/music.json",
                 currentShow: { name: "The Ancient Paths Live", host: "Amir Inspire", time: "24/7 Live" },
@@ -658,13 +657,12 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "radiant-stones-radio", hm: "301.90", frequency: "HM 301.90", name: "Radiant Stones Radio",
+                slug: "radiant-stones-radio", hm: "301.90", frequency: "HM 301.90", name: "Radiant Stones Concerts",
                 band: "fivefold", primary: "music",
                 mode: "Both", phase: 2, bestseller: 84, reach: "120M",
                 image: "/images/jubilee-profile.png",
                 description: "Female trio celebration — Sandi Patty / Avalon era, modernized. Female 25–55 audience.",
                 listeners: "Female Trio Worship · Modern",
-                streamUrl: STREAM_ADULT,
                 currentShow: { name: "Radiant Stones Live", host: "Radiant Stones", time: "24/7 Live" },
                 schedule: [
                     { time: "10:00", show: "Radiant Morning" },
@@ -809,8 +807,8 @@ document.addEventListener('error', function (e) {
                 description: "Celtic and European ambient worship — Nova Inspire's contemplative cinematic and ambient-healing catalogue, for the long night, the overnight watch and the ones still awake.",
                 listeners: "Ambient Worship · Nova Inspire · 100 tracks",
                 // A live Icecast mount. Rebuild its playlist with:
-                //   node tools/build-station-manifest.js --station HM379.14-EN
-                //   node tools/build-station-playlist.js --station HM379.14-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM314.40-EN
+                //   node tools/build-station-playlist.js --station HM314.40-EN --out-dir <dir>
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM379.14-EN/delivery/music.json",
                 currentShow: { name: "Midnight Praise Live", host: "Nova Inspire", time: "24/7 Live" },
@@ -915,8 +913,8 @@ document.addEventListener('error', function (e) {
                 description: "Pacific Island worship — Tahoma Inspire's slack-key, 'ukulele and island-reggae catalogue, Christ lifted up in the language of the islands.",
                 listeners: "Hawaiian Praise · Tahoma Inspire · 599 tracks",
                 // A live Icecast mount. Rebuild its playlist with:
-                //   node tools/build-station-manifest.js --station HM399.18-EN
-                //   node tools/build-station-playlist.js --station HM399.18-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM312.10-EN
+                //   node tools/build-station-playlist.js --station HM312.10-EN --out-dir <dir>
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM399.18-EN/delivery/music.json",
                 currentShow: { name: "Island Hallelujah Live", host: "Tahoma Inspire", time: "24/7 Live" },
@@ -1400,14 +1398,13 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "inspire-active", hm: "376.20", frequency: "HM 376.20", name: "Inspire Active",
+                slug: "inspire-active", hm: "376.20", frequency: "HM 376.20", name: "Melody’s Sparkle",
                 band: "mainstream", primary: "mainstream",
                 mode: "Family-Safe", phase: 5, bestseller: 90, reach: "1200M",
                 image: "/images/jubilee-profile.png",
-                description: "Fitness and workout station — high-BPM clean energy tracks tuned for gyms and home workouts; B2B fitness-facility distribution.",
-                listeners: "Family-Safe · Fitness BPM",
-                streamUrl: STREAM_ADULT,
-                currentShow: { name: "Inspire Active Live", host: "Inspire Family", time: "24/7 Live" },
+                description: "Melody’s pre-evangelistic catalogue — gratitude, family and everyday wonder, written to be playable to someone who is not in church yet. Clean, warm and never preachy.",
+                listeners: "Family-Safe · Pre-Evangelistic",
+                currentShow: { name: "Melody’s Sparkle", host: "Melody Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Morning Workout" },
                     { time: "18:00", show: "Evening Pump" }
@@ -1566,8 +1563,8 @@ document.addEventListener('error', function (e) {
                 listeners: "Latin Worship · Santiago Inspire · 470 tracks",
                 // A live Icecast mount like the rest of the dial. Rebuild its
                 // playlist with:
-                //   node tools/build-station-manifest.js --station HM376.15-EN
-                //   node tools/build-station-playlist.js --station HM376.15-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM310.90-EN
+                //   node tools/build-station-playlist.js --station HM310.90-EN --out-dir <dir>
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM376.15-EN/delivery/music.json",
                 currentShow: { name: "Latin Worship Live", host: "Santiago Inspire", time: "24/7 Live" },
@@ -1587,8 +1584,8 @@ document.addEventListener('error', function (e) {
                 description: "Messianic and Hebraic worship — Zev Inspire's feast-day celebration catalogue, Hebraic chant and modern fusion for the Hebrew-Roots family.",
                 listeners: "Messianic · Zev Inspire · 283 tracks",
                 // A live Icecast mount. Rebuild its playlist with:
-                //   node tools/build-station-manifest.js --station HM377.70-EN
-                //   node tools/build-station-playlist.js --station HM377.70-EN --out-dir <dir>
+                //   node tools/build-station-manifest.js --station HM306.20-EN
+                //   node tools/build-station-playlist.js --station HM306.20-EN --out-dir <dir>
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM377.70-EN/delivery/music.json",
                 currentShow: { name: "Hebraic Celebrations Live", host: "Zev Inspire", time: "24/7 Live" },

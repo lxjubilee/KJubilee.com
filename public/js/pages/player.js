@@ -211,7 +211,77 @@
   // If something is playing, the dial opens on it. Landing on the flagship
   // while a different station is audible would be the page contradicting the
   // room.
+  /* ── ?hm=308.70 ─────────────────────────────────────────────────────────
+     Where kjubilee.com/hm308.70 lands, via the redirect in middleware.js.
+
+     Resolved against ALL rather than LIVE, because the two answers a visitor
+     can get are different in kind and only one of them is an error. A
+     frequency that is assigned but still in build is not a broken link — it
+     is a real station that has not signed on — and sending that person to the
+     flagship with no explanation would read as the site losing their click.
+     So it is named, and the dial parks on the nearest frequency that can
+     actually play, which leaves next and prev meaningful from there.       */
+  function requestedHm() {
+    try {
+      var q = new URLSearchParams(location.search).get('hm');
+      if (!q) return null;
+      var n = parseFloat(q);
+      return isNaN(n) ? null : n;
+    } catch (e) { return null; }
+  }
+
+  function nearestLiveTo(hz) {
+    var best = 0, gap = Infinity;
+    for (var i = 0; i < LIVE.length; i++) {
+      var d = Math.abs(parseFloat(LIVE[i].hm) - hz);
+      if (d < gap) { gap = d; best = i; }
+    }
+    return best;
+  }
+
+  /* Said once, under the readout, and only when the frequency asked for is
+     not the one now under the needle. */
+  function sayNotOnAir(station) {
+    var note = document.createElement('p');
+    note.className = 'dial-note';
+    note.innerHTML =
+      '<strong>HM ' + station.hm + ' ' + station.name.replace(/</g, '&lt;') + '</strong> ' +
+      'is assigned but not on air yet. ' +
+      '<a href="/#station/' + encodeURIComponent(station.slug) + '">Read about it</a> — ' +
+      'the dial below is on the nearest frequency that is playing.';
+    if (subEl && subEl.parentNode) subEl.parentNode.insertBefore(note, subEl.nextSibling);
+  }
+
   (function start() {
+    var hz = requestedHm();
+    var asked = null;
+    if (hz !== null) {
+      for (var k = 0; k < ALL.length; k++) {
+        if (Math.abs(parseFloat(ALL[k].hm) - hz) < 0.005) { asked = ALL[k]; break; }
+      }
+    }
+
+    // A frequency that can play wins outright — including over whatever the
+    // footer bar happens to be sounding, because the visitor just asked for
+    // this one by name and the URL is the more recent instruction.
+    if (asked) {
+      var live = indexOfSlug(asked.slug);
+      if (live >= 0) {
+        index = live;
+        paint(false);
+        if (window.kjPlayer) window.kjPlayer.play(asked.slug);
+        setTimeout(paintTransport, 400);
+        setTimeout(paintTransport, 1500);
+        return;
+      }
+      index = nearestLiveTo(parseFloat(asked.hm));
+      paint(false);
+      sayNotOnAir(asked);
+      setTimeout(paintTransport, 400);
+      setTimeout(paintTransport, 1500);
+      return;
+    }
+
     var st = (window.kjPlayer && window.kjPlayer.state) ? window.kjPlayer.state() : null;
     var i = st && st.slug ? indexOfSlug(st.slug) : -1;
     if (i < 0) {

@@ -639,7 +639,7 @@ app.post('/api/radio/request-day', async (req, res) => {
     const { tenant, date } = req.body || {};
     if (!tenant || !date) return res.status(400).json({ success: false, error: 'tenant and date are required' });
 
-    // Tenant ids look like HM332.16-RO; dates like 20260822. Anything else is
+    // Tenant ids look like HM326.20-RO; dates like 20260822. Anything else is
     // not from our player and must never reach a filesystem path.
     if (!/^HM[0-9]{3}\.[0-9]{2}-[A-Z]{2}$/.test(String(tenant))) {
         return res.status(400).json({ success: false, error: 'invalid tenant id' });

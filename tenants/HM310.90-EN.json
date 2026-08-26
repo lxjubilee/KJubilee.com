@@ -39,9 +39,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM376.15-EN/delivery",
-    "file": "HM376.15EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM376.15-EN/delivery/HM376.15EN-20260821.json"
+    "dir": "radio/HM310.90-EN/delivery",
+    "file": "HM310.90EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM310.90-EN/delivery/HM310.90EN-20260821.json"
   },
   "format": "Latin Worship",
   "timezone": "America/Los_Angeles"

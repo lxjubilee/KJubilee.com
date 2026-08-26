@@ -9,7 +9,7 @@
  *   node scripts/r2-publish-schedules.js                    # dry run (default)
  *   node scripts/r2-publish-schedules.js --apply            # build + upload
  *   node scripts/r2-publish-schedules.js --apply --days 3
- *   node scripts/r2-publish-schedules.js --apply --station HM339.18-EN
+ *   node scripts/r2-publish-schedules.js --apply --station HM302.50-EN
  *   node scripts/r2-publish-schedules.js --apply --rebuild-pools
  *
  * DRY RUN IS THE DEFAULT, matching r2-sync-music.js. Publishing a schedule is

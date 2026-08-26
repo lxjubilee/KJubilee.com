@@ -94,7 +94,7 @@ that isn't in the manifest (BR-G2).
 
 | Station | HM | Rotation |
 |---|---|---|
-| Jubilee Radio | 088.70 | the Inspire Family catalog |
+| Jubilee Radio | 308.70 | the Inspire Family catalog |
 | Jubilee Praise (Română) | 326.20 | every Romanian track by one of the twelve Inspire Family members |
 | Country Gospel | 309.30 | 420 country tracks — Elias & Eliana whole, plus selected albums and cuts |
 | Jubilee Gospel Fire | 302.50 | 188 tracks — Imani Inspire's whole English catalog |
@@ -124,11 +124,11 @@ airs. `source` is legacy — absolute URLs into `cdn.jubileeverse.com` — and s
 to read manifests built before this repository existed:
 
 ```bash
-node tools/build-station-manifest.js --station HM332.16-RO --url-layout source \
+node tools/build-station-manifest.js --station HM326.20-RO --url-layout source \
   --out /tmp/music.json
 
 # Legacy, read-only. Do not build airing stations with this.
-node tools/build-station-manifest.js --station HM332.16-RO --url-layout source
+node tools/build-station-manifest.js --station HM326.20-RO --url-layout source
 ```
 
 Building with the wrong layout is the failure mode to watch for: the station still shows

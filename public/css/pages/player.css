@@ -245,3 +245,18 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   .tbtn{width:48px;height:48px}
   .tbtn.play{width:72px;height:72px}
 }
+
+/* The line shown when a frequency URL names a station that is assigned but has
+   not signed on — /hm374.40 is a real address, it just has nothing playing on
+   it yet. Amber rather than red: this is not an error, and the visitor did not
+   do anything wrong. It sits directly under the readout so it is read before
+   the eye reaches the dial, which is by then showing a different frequency. */
+.dial-note{
+  max-width:52ch;margin:10px auto 0;padding:9px 14px;
+  border:1px solid rgba(230,172,0,.32);border-left:3px solid #e6ac00;border-radius:8px;
+  background:rgba(230,172,0,.07);
+  font-size:13px;line-height:1.55;color:var(--ink-dim);text-align:left;
+}
+.dial-note strong{color:#e6ac00;font-weight:700}
+.dial-note a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
+.dial-note a:hover{color:#e6ac00}

@@ -37,9 +37,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM347.14-EN/delivery",
-    "file": "HM347.14EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM347.14-EN/delivery/HM347.14EN-20260821.json"
+    "dir": "radio/HM311.50-EN/delivery",
+    "file": "HM311.50EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM311.50-EN/delivery/HM311.50EN-20260821.json"
   },
   "format": "Afro-Caribbean",
   "timezone": "America/Los_Angeles"

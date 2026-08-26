@@ -45,9 +45,9 @@ function dayUrl(id, yyyymmdd) {
     // The BROADCAST date, which is what the player asks for.
     const today = zone.localDate(Date.now());
     ok('player URL matches the publisher key',
-       dayUrl('HM332.16-RO', today.replace(/-/g, '')) ===
-       tenants.deliveryUrl('HM332.16-RO', today),
-       dayUrl('HM332.16-RO', today.replace(/-/g, '')));
+       dayUrl('HM326.20-RO', today.replace(/-/g, '')) ===
+       tenants.deliveryUrl('HM326.20-RO', today),
+       dayUrl('HM326.20-RO', today.replace(/-/g, '')));
 
     const roster = tenants.ids();
     ok('tenant roster is readable', roster.length > 0, roster.length + ' tenants');
@@ -108,7 +108,7 @@ function dayUrl(id, yyyymmdd) {
     ok('every tenant checked', checked === roster.length, checked + '/' + roster.length);
 
     // A missing day must be detectable, since that is what triggers the request.
-    const missing = await fetch(dayUrl('HM332.16-RO', '19990101'));
+    const missing = await fetch(dayUrl('HM326.20-RO', '19990101'));
     ok('an unpublished day 404s so the player can request it', missing.status === 404,
        'got ' + missing.status);
 

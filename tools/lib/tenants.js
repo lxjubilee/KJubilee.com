@@ -6,8 +6,8 @@
  * plays, and where its daily programming is published. One file per tenant under
  * /tenants, named for its id:
  *
- *     tenants/HM332.16-RO.json
- *     tenants/HM388.70-EN.json
+ *     tenants/HM326.20-RO.json
+ *     tenants/HM308.70-EN.json
  *
  * WHY A FOLDER OF FILES rather than the object literal this replaced. The
  * station table lived inside build-station-manifest.js, which meant every tool
@@ -20,13 +20,13 @@
  * Each tenant publishes one file per day carrying that day's minute-by-minute
  * programming:
  *
- *     https://cdn.kjubilee.com/radio/HM332.16-RO/delivery/HM332.16RO-20260821.json
+ *     https://cdn.kjubilee.com/radio/HM326.20-RO/delivery/HM326.20RO-20260821.json
  *                                    └── id ──┘             └id─┘ └date┘
  *
  * The directory keeps the hyphen, the filename drops it. That is not a slip: the
  * directory is addressed by tenant id and the filename has to be unique and
- * sortable on its own once downloaded, where `HM332.16RO-20260821.json` reads as
- * one token and `HM332.16-RO-20260821.json` reads as three.
+ * sortable on its own once downloaded, where `HM326.20RO-20260821.json` reads as
+ * one token and `HM326.20-RO-20260821.json` reads as three.
  */
 
 const fs = require('fs');
@@ -46,8 +46,8 @@ function compactDate(dateISO) {
 /**
  * The object key for one tenant's programming on a given day.
  *
- *   deliveryKey('HM332.16-RO', '2026-08-21')
- *     -> 'radio/HM332.16-RO/delivery/HM332.16RO-20260821.json'
+ *   deliveryKey('HM326.20-RO', '2026-08-21')
+ *     -> 'radio/HM326.20-RO/delivery/HM326.20RO-20260821.json'
  *
  * Kept in ONE place because it is the contract between three things that never
  * see each other: the generator that writes the file, the uploader that names

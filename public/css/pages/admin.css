@@ -1,0 +1,92 @@
+/* ==========================================================================
+   /admin — the administrator's shelf.
+
+   A utility page, not a destination: no top bar, no shelves, no hero. It gets
+   the site's palette so it does not feel like a different product, and then
+   stays out of the way of the document it is holding.
+   ========================================================================== */
+:root{
+  --bg:#000;
+  --surface:#14151d;
+  --surface-2:#16171f;
+  --text:#f3f2ee;
+  --text-dim:#c9cad4;
+  --text-muted:#8c8d9c;
+  --accent:#3DA5FF;
+  --border:hsla(0,0%,100%,.08);
+  --border-strong:hsla(0,0%,100%,.14);
+  --stop:#E8896F;
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  /* kj-footer-player.js publishes its own height when the bar mounts; the
+     fallback keeps the last row clear of it before that happens. */
+  --kj-player-h:80px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:var(--kj-player-h,0px);
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.adm{max-width:1180px;margin:0 auto;padding:32px 20px 40px}
+
+/* ---------- header ---------- */
+.adm-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.adm-eyebrow{
+  margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.adm-title{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.adm-back{font-size:13.5px;white-space:nowrap}
+
+/* ---------- document tabs ----------
+   A list rather than a strip: each entry carries a blurb, because "HM Band
+   Reallocation" alone does not tell anyone whether it is the document they
+   want. Built to hold more than one without changing shape. */
+.adm-tabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin:20px 0 24px}
+.adm-tab{
+  text-align:left;padding:14px 16px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  transition:border-color .15s ease,background .15s ease;
+}
+.adm-tab:hover{border-color:var(--border-strong);background:var(--surface-2)}
+.adm-tab.is-open{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
+.adm-tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.adm-tab-name{display:block;font-weight:700;font-size:15px;margin-bottom:2px}
+.adm-tab-blurb{display:block;font-size:12.5px;color:var(--text-muted);line-height:1.4}
+
+/* ---------- states ---------- */
+.adm-note{
+  margin:0;padding:18px 20px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-dim);font-size:14.5px;
+}
+.adm-note strong{display:block;color:var(--text);font-size:15.5px;margin-bottom:4px}
+.adm-note p{margin:0}
+.adm-note--stop{border-color:color-mix(in srgb,var(--stop) 45%,var(--border))}
+.adm-note--stop strong{color:var(--stop)}
+
+/* ---------- the document ----------
+   An iframe because the document is a whole page with its own <style>; inlined
+   into this DOM its :root tokens and body rules would repaint the site around
+   it. Tall by default because these are reading documents, and the iframe has
+   no way to size itself to its content across the sandbox boundary. */
+.adm-doc{
+  width:100%;height:calc(100vh - 260px);min-height:520px;
+  border:1px solid var(--border);border-radius:8px;background:#fff;
+  display:block;
+}
+
+@media (max-width:640px){
+  .adm{padding:22px 14px 30px}
+  .adm-title{font-size:23px}
+  .adm-doc{height:calc(100vh - 300px);min-height:420px}
+}

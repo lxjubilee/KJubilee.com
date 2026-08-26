@@ -6,7 +6,7 @@
  * the publisher and the player all resolve a channel through /tenants, so a
  * station that is marked ON AIR in the site catalogue but has no tenant record
  * is a station the listener can see, click, and never hear. That is exactly how
- * HM376.15 and HM377.70 shipped — visible on the dial, absent from the roster.
+ * two stations shipped — visible on the dial, absent from the roster.
  *
  * Nothing here invents a tenant. A record is composed from two sources that
  * already exist, and the script fails rather than guessing when either is
@@ -54,7 +54,7 @@ function recordFor(id, st, cat) {
         slug: st.slug,
         // THE NAME COMES FROM THE CATALOGUE, not from the station table.
         //
-        // Both carried one and they had already drifted: HM377.70 read
+        // Both carried one and they had already drifted: one station read
         // "Hebraic Celebrations" on every page and "Hebraic Celebrations
         // (Messianic)" in its tenant record, and so in every day file it
         // published. The catalogue is what every surface displays, so it wins
@@ -105,7 +105,7 @@ function main(argv) {
             problems.push(s.hm + '  ' + s.name + ' — ON AIR but no STATIONS entry; cannot build a tenant');
             return;
         }
-        // A station may legitimately have no `select` — HM332.16-RO deliberately
+        // A station may legitimately have no `select` — HM326.20-RO deliberately
         // takes every Romanian track. What makes a tenant dangerous is a missing
         // LANGUAGE, not a missing select: language null plus no select is what
         // put eight languages on the English flagship on 2026-08-21. So the

@@ -28,18 +28,18 @@ const poolPath = process.argv.includes('--pool')
     : path.join(__dirname, 'fixtures', 'pool.json');
 if (!fs.existsSync(poolPath)) {
     console.error('pool manifest not found: ' + poolPath);
-    console.error('build one:  node tools/build-station-manifest.js --station HM339.18-EN ' +
+    console.error('build one:  node tools/build-station-manifest.js --station HM302.50-EN ' +
                   '--url-layout canonical --out ' + poolPath);
     process.exit(1);
 }
 
-const STATION = 'HM339.18-EN';
+const STATION = 'HM302.50-EN';
 const DATE = '2026-08-22';
 const out = fs.mkdtempSync(path.join(os.tmpdir(), 'kjsched-'));
 // The station is not optional: poolFrom checks the pool it was handed against
 // the station it is being scheduled for, which is what stops a day file being
 // stamped for one station and filled with another's music. This test builds
-// HM339.18-EN days, so it says so.
+// HM302.50-EN days, so it says so.
 const pool = poolFrom(poolPath, STATION);
 
 console.log('\nschedule-manifest — pool ' + pool.length + ' tracks\n');
@@ -78,7 +78,7 @@ const otherDay = buildDay(pool, STATION, '2026-08-23');
 ok('a different day gets a different running order',
    JSON.stringify(otherDay) !== JSON.stringify(entries));
 
-const otherStation = buildDay(pool, 'HM332.16-RO', DATE);
+const otherStation = buildDay(pool, 'HM326.20-RO', DATE);
 ok('a different station gets a different running order',
    JSON.stringify(otherStation) !== JSON.stringify(entries));
 

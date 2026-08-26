@@ -46,7 +46,7 @@ function ok(name, cond, detail) {
 
 // ── the schedule under test ─────────────────────────────────────────────────
 const DATE = '2026-08-23';
-const STATION = 'HM339.18-EN';
+const STATION = 'HM302.50-EN';
 const pool = poolFrom(path.join(__dirname, 'fixtures', 'pool.json'), STATION);
 const DAY_SECONDS = 86400;
 const DOC = {

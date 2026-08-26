@@ -26,9 +26,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM377.70-EN/delivery",
-    "file": "HM377.70EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM377.70-EN/delivery/HM377.70EN-20260821.json"
+    "dir": "radio/HM306.20-EN/delivery",
+    "file": "HM306.20EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM306.20-EN/delivery/HM306.20EN-20260821.json"
   },
   "format": "Messianic Worship",
   "timezone": "America/Los_Angeles"

@@ -15,8 +15,8 @@
  * only correct origin: never point a playlist at another project's CDN.
  *
  * Usage:
- *   node tools/build-station-playlist.js --station HM305.12-EN --out-dir ./out
- *   node tools/build-station-playlist.js --station HM305.12-EN --stdout-a
+ *   node tools/build-station-playlist.js --station HM305.40-EN --out-dir ./out
+ *   node tools/build-station-playlist.js --station HM305.40-EN --stdout-a
  *
  * The manifest is read from <CDN_LOCAL_ROOT>/radio/<STATION_ID>/delivery/music.json.
  */

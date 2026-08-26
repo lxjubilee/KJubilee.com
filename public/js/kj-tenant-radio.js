@@ -7,13 +7,13 @@
  * shuffled playlist cannot give and an Icecast mount charges 192 kbps per
  * listener for.
  *
- *   KJRadio.tune('HM332.16-RO')            // resolve now, start playing
+ *   KJRadio.tune('HM326.20-RO')            // resolve now, start playing
  *   KJRadio.stop()
  *   KJRadio.nowPlaying()                   // { title, artist, offset, duration, next }
  *   KJRadio.on('track', fn)                // fires on every change of track
  *
  * ── the day file ────────────────────────────────────────────────────────────
- *   https://cdn.kjubilee.com/radio/HM332.16-RO/delivery/HM332.16RO-20260822.json
+ *   https://cdn.kjubilee.com/radio/HM326.20-RO/delivery/HM326.20RO-20260822.json
  *
  * One file per tenant per BROADCAST day — midnight to midnight Pacific, not
  * UTC. ~80 KB, ~350 entries of `{t,d,u,ti,ar,al}`: seconds from the start of the
@@ -50,7 +50,7 @@
 
     var clockOffset = 0;        // serverNow - clientNow, in ms
     var clockSynced = false;
-    var days = {};              // 'HM332.16-RO|20260822' -> day document
+    var days = {};              // 'HM326.20-RO|20260822' -> day document
     var pending = {};           // in-flight fetches, so ten calls make one request
 
     var tenantId = null;

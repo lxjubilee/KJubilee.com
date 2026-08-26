@@ -29,9 +29,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM313.12-EN/delivery",
-    "file": "HM313.12EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM313.12-EN/delivery/HM313.12EN-20260821.json"
+    "dir": "radio/HM304.80-EN/delivery",
+    "file": "HM304.80EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM304.80-EN/delivery/HM304.80EN-20260821.json"
   },
   "format": "Biblical Music",
   "timezone": "America/Los_Angeles"

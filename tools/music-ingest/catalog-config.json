@@ -283,6 +283,7 @@
     "santiago-inspire": "LATL",
     "tahoma-inspire": "INCL",
     "torah-sings": "COMH",
+    "radiant-stones": "JPPW",
     "party-giggles": "KDPY",
     "tiny-tiggles": "KDPY"
   },
@@ -305,7 +306,8 @@
     "tahoma-inspire": "CCI",
     "torah-sings": "OHI",
     "party-giggles": "CCI",
-    "tiny-tiggles": "CCI"
+    "tiny-tiggles": "CCI",
+    "radiant-stones": "CCI"
   },
   "artist_slug_source": {
     "_note": "Which source names a song for this catalogue. Default is the album metadata; 'filename' says the files on disk carry the authored slugs and the metadata does not match the audio. Hand-authored song_slug_overrides still win either way.",

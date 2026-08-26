@@ -270,10 +270,21 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
         return 0
     album_slug = slugify(m.group("slug"), lang)
 
+    # AUDIO LIVES IN <album>/tracks/, EXCEPT WHERE IT DOES NOT.
+    #
+    # Almost every album folder keeps its files in a tracks/ subfolder, and this
+    # used to look only there. Radiant Stones' Romanian record keeps its twelve
+    # files directly in the album folder, so they were skipped - with no warning,
+    # because "no tracks/ dir" and "an album with no audio yet" were the same
+    # `return 0`. A staged album with no audio is normal here; twelve files the
+    # tool cannot see is not. Prefer tracks/ when it exists, fall back to the
+    # album folder, so both layouts ingest and neither has to be special-cased
+    # per album.
     tracks_dir = os.path.join(album_dir, "tracks")
     if not os.path.isdir(tracks_dir):
-        return 0
-    sources = [f for f in os.listdir(tracks_dir) if f.lower().endswith(".mp3")]
+        tracks_dir = album_dir
+    sources = [f for f in os.listdir(tracks_dir)
+               if f.lower().endswith(".mp3") and os.path.isfile(os.path.join(tracks_dir, f))]
     if not sources:
         return 0
     # Order by track number, then prefer the canonical name over a " (1)" copy so the

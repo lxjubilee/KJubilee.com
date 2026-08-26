@@ -26,9 +26,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM329.12-EN/delivery",
-    "file": "HM329.12EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM329.12-EN/delivery/HM329.12EN-20260821.json"
+    "dir": "radio/HM361.90-EN/delivery",
+    "file": "HM361.90EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM361.90-EN/delivery/HM361.90EN-20260821.json"
   },
   "format": "Kids Praise",
   "timezone": "America/Los_Angeles"

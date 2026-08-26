@@ -27,7 +27,7 @@ export async function POST(request) {
     const { tenant, date } = await readJson(request);
     if (!tenant || !date) return json({ success: false, error: 'tenant and date are required' }, 400);
 
-    // Tenant ids look like HM332.16-RO; dates like 20260822. Anything else is
+    // Tenant ids look like HM326.20-RO; dates like 20260822. Anything else is
     // not from our player and must never reach a filesystem path.
     if (!/^HM[0-9]{3}\.[0-9]{2}-[A-Z]{2}$/.test(String(tenant))) {
         return json({ success: false, error: 'invalid tenant id' }, 400);

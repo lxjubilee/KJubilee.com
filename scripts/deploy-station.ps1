@@ -1,6 +1,6 @@
 # deploy-station.ps1 — ship a new or changed station to production.
 #
-#   powershell -ExecutionPolicy Bypass -File scripts\deploy-station.ps1 -Station HM314.88-EN
+#   powershell -ExecutionPolicy Bypass -File scripts\deploy-station.ps1 -Station HM303.10-EN
 #
 # The R2 half — the audio and the dated day files — is published from THIS
 # workstation, because it is the only host that can see the J: music share:

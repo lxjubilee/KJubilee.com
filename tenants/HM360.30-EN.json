@@ -26,9 +26,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM325.18-EN/delivery",
-    "file": "HM325.18EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM325.18-EN/delivery/HM325.18EN-20260821.json"
+    "dir": "radio/HM360.30-EN/delivery",
+    "file": "HM360.30EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM360.30-EN/delivery/HM360.30EN-20260821.json"
   },
   "format": "Kids",
   "timezone": "America/Los_Angeles"

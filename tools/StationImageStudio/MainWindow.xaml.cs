@@ -866,10 +866,20 @@ public partial class MainWindow : Window
             // a likeness reference, exactly as it does for a station cover.
             who + " is clearly recognisable and is PART of what is happening rather than posed in front of it" +
             (wardrobe.Length > 0 ? ", wearing " + wardrobe : "") + ". " +
-            // The one constant across every kJubilee picture, station or article.
-            "EVERY PERSON WEARING HEADPHONES IN THIS PICTURE WEARS WHITE OVER-EAR HEADPHONES — clean matte white, plain " +
-            "and modern, with no branding, lettering, numbers or logos on them of any kind, worn over the ears and clearly " +
-            "visible. " +
+            // THE PERSONA WEARS THEM. NOT "whoever happens to be wearing some".
+            //
+            // This clause used to read "every person WEARING headphones wears WHITE
+            // ones", which is a rule about COLOUR and not about presence: a picture
+            // with no headphones in it at all satisfied it perfectly, and several
+            // came back that way. StationPrompt never had the bug because it says
+            // plainly that the host IS wearing them. Say the same thing here, first,
+            // and only then constrain everyone else.
+            who + " IS WEARING WHITE OVER-EAR HEADPHONES — this is REQUIRED and not optional: " +
+            "clean matte white, plain and modern, with no branding, lettering, numbers or logos on them of any " +
+            "kind, worn over both ears, fully visible, and not pushed down around {P} neck, not held in {P} hand " +
+            "and not hanging from anything. If the framing would hide them, change the framing. " +
+            "Anyone else in the picture who is wearing headphones is wearing the same white ones; nobody wears " +
+            "black, coloured, branded or in-ear headphones anywhere in the image. " +
             // The argument the whole series exists to make.
             "The white headphones are completely unremarkable to everyone in the picture: nobody poses with them, points at " +
             "them, adjusts them or looks at them, and they are simply what people wear while they get on with the day, the " +
@@ -1453,11 +1463,11 @@ public partial class MainWindow : Window
     /// <summary>
     /// A station's place on the dial, as a number.
     ///
-    /// Hm is a display string ("088.70", "399.18"), so the strings cannot be
-    /// compared directly — "88.70" would sort after "399.18" the moment a
-    /// frequency loses its leading zero. Parsed invariantly, because the
+    /// Hm is a display string ("308.70", "312.10"), so the strings cannot be
+    /// compared directly — "88.70" would sort after "312.10" the moment a
+    /// frequency loses its leading digit. Parsed invariantly, because the
     /// catalog writes a dot and a machine set to a comma locale would read
-    /// 399.18 as 39918 and throw the whole list out of order.
+    /// 312.10 as 31210 and throw the whole list out of order.
     ///
     /// Anything unparseable sorts last rather than to zero: a malformed
     /// frequency at the END of the list looks like the anomaly it is, where at
@@ -1860,6 +1870,29 @@ public partial class MainWindow : Window
 
     private static readonly Dictionary<string, Bespoke> BespokeStations = new(StringComparer.OrdinalIgnoreCase)
     {
+        // HM 376.20 Melody’s Sparkle — the sparkle is the LIGHT, not sequins.
+        //
+        // This is the one station on the dial aimed at someone who is not in
+        // church yet: Melody’s secular_universal catalogue, gratitude and
+        // ordinary wonder, 32-50% faith-focus where the roster is otherwise 80%+.
+        // So the picture must not read as church. No sanctuary, no stage, no
+        // raised hands — a kitchen doorway at the end of an ordinary afternoon,
+        // which is exactly what the songs are about.
+        //
+        // "Sparkle" is done with light rather than costume: late sun through a
+        // window, dust turned gold in the beam, glints off ordinary things. A
+        // dress covered in sequins would have made it a gala, and the whole
+        // point of this frequency is that nothing special is happening.
+        ["inspire-active"] = new(
+            "an ordinary sunlit kitchen doorway at the end of a long afternoon, late low sun coming " +
+            "hard through a window behind her and throwing a wide warm beam across the room, dust " +
+            "hanging and turned to gold in it, a jar of wildflowers and a stack of mismatched mugs " +
+            "catching small bright glints, a screen door standing open onto a green yard beyond",
+            "caught mid-laugh with {P} head tipped slightly back and one hand resting on the door " +
+            "frame, entirely unposed, as though someone she loves has just said something funny from " +
+            "off camera — the light catching {P} hair and the edge of {P} shawl so {S} is rimmed in it",
+            null),
+
         // HM 309.30 Gospel Country — Elias, and he is a cowboy, not a man near a horse.
         ["country-gospel"] = new(
             "wide open Western range at golden hour, a split-rail fence running out to distant mesas, " +

@@ -48,7 +48,49 @@ function rateLimit(request) {
     };
 }
 
+// ─────────────────────────────────────────────────────────────────────────
+// FREQUENCY URLS — kjubilee.com/hm308.70 tunes the dial to HM 308.70.
+//
+// The whole conceit of this site is that a station has a frequency rather
+// than a slug, so the frequency has to be a thing you can type, print, or say
+// out loud on air. /hm308.70 is that address.
+//
+// Deliberately liberal about the shape: case is ignored (HM308.70, hm308.70),
+// the separator may be a dot or a dash, and a single decimal is accepted and
+// padded — somebody reading "HM 308.7" off a card should not land on a 404
+// because the catalogue writes it 308.70.
+//
+// It does NOT validate the frequency against the catalogue. That list lives in
+// stations-data.js, which is a browser script this Edge runtime cannot load,
+// and duplicating 105 numbers here would guarantee the two drift. The dial
+// resolves it instead, against the same data every other page reads, and says
+// so plainly when a frequency is assigned but not yet on air.
+// ─────────────────────────────────────────────────────────────────────────
+const FREQ_URL = /^\/hm[\s._-]?(\d{3})(?:[.,](\d{1,2}))?\/?$/i;
+
+function frequencyRedirect(request) {
+    const m = FREQ_URL.exec(request.nextUrl.pathname);
+    if (!m) return null;
+    // Pad a single decimal so 308.7 and 308.70 are the same address, and keep
+    // the two-decimal form the catalogue itself uses.
+    const hm = m[1] + '.' + (m[2] ? m[2].padEnd(2, '0') : '00');
+    const url = request.nextUrl.clone();
+    url.pathname = '/player';
+    url.search = '';
+    url.searchParams.set('hm', hm);
+    // 307, not 308: these are shared by hand and read by people, and a
+    // permanent redirect cached in a browser would outlive any change to
+    // where the dial lives.
+    return NextResponse.redirect(url, 307);
+}
+
 export function middleware(request) {
+    // Before the rate limiter: a frequency link is a person arriving, not an
+    // API call, and it should not spend anybody's budget to be pointed at the
+    // page it was always going to reach.
+    const freq = frequencyRedirect(request);
+    if (freq) return freq;
+
     const cors = corsHeaders(request);
 
     // Preflight — answered here rather than reaching a route handler.

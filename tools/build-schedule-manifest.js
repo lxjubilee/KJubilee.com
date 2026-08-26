@@ -4,8 +4,8 @@
  * BROADCAST SCHEDULE: exactly which song is playing at every second of a UTC
  * day, published as a small JSON file the player resolves against its own clock.
  *
- *   node tools/build-schedule-manifest.js --station HM339.18-EN --date 2026-08-22
- *   node tools/build-schedule-manifest.js --station HM339.18-EN --days 2
+ *   node tools/build-schedule-manifest.js --station HM302.50-EN --date 2026-08-22
+ *   node tools/build-schedule-manifest.js --station HM302.50-EN --days 2
  *
  * WHY THIS EXISTS
  *
@@ -179,9 +179,9 @@ function buildDay(pool, stationId, dateISO, daySeconds) {
 // with a station identity, and until 2026-08-23 nothing checked that the two
 // referred to the same station: pointing --pool at the wrong manifest produced
 // a correctly-labelled day file full of another station's music. That is not
-// hypothetical — the 2026-08-21 files for HM388.70-EN and HM335.16-EN were
-// built that way and published, putting 188 off-roster tracks in 8 languages
-// on an English-only flagship. See MUSIC-REPOSITORY-SPEC §8.
+// hypothetical — the 2026-08-21 files for two stations were built that way
+// and published, putting 188 off-roster tracks in 8 languages on an
+// English-only flagship. See MUSIC-REPOSITORY-SPEC §8.
 function poolFrom(manifestPath, expectStation) {
     const m = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     if (!m.station_id) {

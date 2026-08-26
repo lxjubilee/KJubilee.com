@@ -113,7 +113,7 @@ const STATION_GENRE = {
     'inspire-family-pop':   'Family Pop',
     'inspire-kids':         'Kids',
     'inspire-cafe':         'Coffeehouse',
-    'inspire-active':       'Workout',
+    'inspire-active':       'Pre-Evangelistic Pop',
     'inspire-focus':        'Focus & Study',
     'inspire-drive':        'Drive Time',
     'inspire-celebrations': 'Celebration',
@@ -243,6 +243,9 @@ const HOST_OVERRIDE = {
     // out of the `children` rota, which re-dealt this one. Its cover is
     // already rendered with Caleb in it.
     'bedtime-blessings': 'caleb',
+    // Melody's Sparkle is Melody's own catalogue — the rota had dealt this slot
+    // to Nova, which would have put the wrong persona in the station's artwork.
+    'inspire-active': 'melody',          // HM 376.20 — Melody's Sparkle
     // Pinned to the host they already had. The two entries above take two slots
     // out of the `music` rota, which would otherwise re-deal the avatar on these
     // six unrelated stations. Nothing significant about these pairings — they

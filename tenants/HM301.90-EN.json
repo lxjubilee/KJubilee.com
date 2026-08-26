@@ -1,0 +1,35 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM301.90-EN",
+  "slug": "radiant-stones-radio",
+  "name": "Radiant Stones Concerts",
+  "hm": "301.90",
+  "band": "fivefold",
+  "mount": "radiant-stones",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Nashville",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "radiant-stones"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM301.90-EN/delivery",
+    "file": "HM301.90EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM301.90-EN/delivery/HM301.90EN-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

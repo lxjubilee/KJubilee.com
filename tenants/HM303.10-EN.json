@@ -24,9 +24,9 @@
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",
-    "dir": "radio/HM314.88-EN/delivery",
-    "file": "HM314.88EN-{YYYYMMDD}.json",
-    "example": "https://cdn.kjubilee.com/radio/HM314.88-EN/delivery/HM314.88EN-20260821.json"
+    "dir": "radio/HM303.10-EN/delivery",
+    "file": "HM303.10EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM303.10-EN/delivery/HM303.10EN-20260821.json"
   },
   "format": "Covenant Worship",
   "timezone": "America/Los_Angeles"

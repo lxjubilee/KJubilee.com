@@ -5,9 +5,9 @@
  * which is what cdn.kjubilee.com serves.
  *
  * Usage:
- *   node .claude/r2-sync-music.js              # diff-only (default, safe)
- *   node .claude/r2-sync-music.js --apply      # actually upload missing/changed files
- *   node .claude/r2-sync-music.js --apply --concurrency=8
+ *   node scripts/r2-sync-music.js              # diff-only (default, safe)
+ *   node scripts/r2-sync-music.js --apply      # actually upload missing/changed files
+ *   node scripts/r2-sync-music.js --apply --concurrency=8
  *
  * Filter mirrors .claude/r2-upload.filter:
  *   include: albums/**, videos/**, catalog*.json, catalog*.html, index*.html

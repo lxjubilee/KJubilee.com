@@ -604,10 +604,10 @@ what is on air, so debugging there is a dead end.
 
 ```bash
 # 1. Manifest (canonical layout — never `source`).
-node tools/build-station-manifest.js --station HM305.12-EN
+node tools/build-station-manifest.js --station HM305.40-EN
 
 # 2. Playlist pair, absolute cdn.kjubilee.com URLs with real durations.
-node tools/build-station-playlist.js --station HM305.12-EN --out-dir ./out
+node tools/build-station-playlist.js --station HM305.40-EN --out-dir ./out
 
 # 3. Copy playlists, the .liq, and a silent fallback to the radio host, then
 #    add `%include "stations/<slug>.liq"` to main.liq and restart Liquidsoap.

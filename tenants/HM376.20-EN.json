@@ -1,0 +1,46 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM376.20-EN",
+  "slug": "inspire-active",
+  "name": "Melody’s Sparkle",
+  "hm": "376.20",
+  "band": "mainstream",
+  "mount": "melodys-sparkle",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Nashville",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "inspire-family",
+    "select": {
+      "albums": [
+        "MDIM1001EN",
+        "MDIM1002EN",
+        "MDIM1003EN",
+        "MDIM1004EN",
+        "MDIM1005EN",
+        "MDIM1006EN",
+        "MDIM1007EN",
+        "MDIM1008EN",
+        "MDIM1009EN",
+        "MDIM1010EN",
+        "MDIM1011EN",
+        "MDIM1012EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM376.20-EN/delivery",
+    "file": "HM376.20EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM376.20-EN/delivery/HM376.20EN-20260821.json"
+  },
+  "format": "Pre-Evangelistic Pop",
+  "timezone": "America/Los_Angeles"
+}

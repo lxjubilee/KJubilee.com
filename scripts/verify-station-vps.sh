@@ -1,7 +1,7 @@
 #!/bin/sh
 # verify-station-vps.sh — run ON THE VPS after deploying a station.
 #
-#   sh scripts/verify-station-vps.sh HM314.88-EN
+#   sh scripts/verify-station-vps.sh HM303.10-EN
 #
 # Lives as a file rather than as an inline `ssh node -e '...'` because the
 # quoting does not survive the PowerShell -> ssh -> sh journey: the escaped

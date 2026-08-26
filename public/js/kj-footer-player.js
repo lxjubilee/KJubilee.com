@@ -49,7 +49,12 @@
     var KEY = {
         slug:    'kjubilee.player.slug',
         playing: 'kjubilee.player.playing',
-        volume:  'kjubilee.player.volume',
+        // NOT .volume — that key held a raw linear amplitude under the old
+        // control, and the same number means something much louder under the
+        // curve below. Migrating it would need the inverse of that curve for a
+        // value most listeners set once by accident; a new key just hands
+        // everybody the new default once and forgets the old number.
+        volume:  'kjubilee.player.vol2',
     };
 
     function read(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
@@ -536,7 +541,7 @@
             if (!at) { setSub('Off air'); throw new Error('outside the broadcast day'); }
 
             if (!el) el = new Audio();
-            el.volume = volume();
+            el.volume = elGain(volume());
             audio = el;
             dayIndex = at.index;
             dayDate = doc.date;
@@ -871,7 +876,7 @@
             // listener's tap touched — see start(). Reusing it is what lets a
             // station that had to degrade still sound on iOS and Safari.
             var el = primed || new Audio();
-            el.volume = volume();
+            el.volume = elGain(volume());
             audio = el;
             el.addEventListener('ended', function () { nextTrack(el); });
             el.addEventListener('error', function () { nextTrack(el); });
@@ -898,7 +903,7 @@
 
     function playStream(station, primed) {
         var el = primed || new Audio();
-        el.volume = volume();
+        el.volume = elGain(volume());
         audio = el;
         hookWaves(el);
         setSub(subFor(station));
@@ -912,9 +917,54 @@
         try { window.dispatchEvent(new CustomEvent('jv-media-start', { detail: { source: 'radio' } })); } catch (e) {}
     }
 
+    /* ── HOW LOUD THE SLIDER ACTUALLY IS ────────────────────────────────────
+     *
+     * `audio.volume` is LINEAR AMPLITUDE, not loudness. Wiring a 0..1 slider
+     * straight to it — which is what this used to do — puts the whole useful
+     * range in the top third of the travel:
+     *
+     *     0.30 -> -10.5 dB     0.70 -> -3.1 dB
+     *     0.50 ->  -6.0 dB     0.90 -> -0.9 dB
+     *
+     * so a listener has to reach 0.9 before anything sounds loud, and the
+     * bottom two thirds of the control do almost nothing they can hear. The
+     * catalogue is not the problem: measured across six stations the tracks
+     * run -12.5 to -14.5 LUFS, which is already streaming-standard loudness
+     * (Spotify targets -14) and consistent within 2 LU.
+     *
+     * So the slider is split at a KNEE. Below it, `audio.volume` ramps up to
+     * unity on a perceptual curve; at 0.30 it reaches unity — full file level,
+     * which is what the old control only gave you at 0.9. Above the knee the
+     * element is already flat out, so the extra comes from a GainNode above
+     * unity, backed by a limiter (see tapAudio).
+     *
+     * Splitting it this way is what keeps the audio safe. Web Audio can be
+     * unavailable, suspended or refused on a cross-origin source, and in every
+     * one of those cases the element path alone still delivers everything up
+     * to unity — the listener loses the last few dB of headroom, never the
+     * radio. MAX_BOOST is deliberately modest: these masters already peak at
+     * or near 0 dBTP, so anything more leans on the limiter hard enough to
+     * hear it flattening the music.                                          */
+    var KNEE = 0.30;          // slider position at which the element hits unity
+    var MAX_BOOST = 2.0;      // +6 dB, and only above the knee
+
     function volume() {
-        var v = parseFloat(read(KEY.volume, '0.7'));
-        return isNaN(v) ? 0.7 : Math.max(0, Math.min(1, v));
+        var v = parseFloat(read(KEY.volume, '0.45'));
+        return isNaN(v) ? 0.45 : Math.max(0, Math.min(1, v));
+    }
+
+    /** What `audio.volume` gets: 0 -> unity across the bottom of the travel. */
+    function elGain(pos) {
+        if (pos >= KNEE) return 1;
+        // ^0.6 rather than linear so the quiet end still has usable steps
+        // instead of collapsing to silence over the first few pixels.
+        return Math.pow(Math.max(0, pos) / KNEE, 0.6);
+    }
+
+    /** What the GainNode gets: 1 -> MAX_BOOST across the top of the travel. */
+    function boostFor(pos) {
+        if (pos <= KNEE) return 1;
+        return 1 + ((pos - KNEE) / (1 - KNEE)) * (MAX_BOOST - 1);
     }
 
     /**
@@ -944,7 +994,7 @@
      * are written from the catalogue and never read back for display.
      *
      * That is not a style preference. The two were independent and had already
-     * drifted: HM377.70 read "Hebraic Celebrations" on every page and "Hebraic
+     * drifted: one station read "Hebraic Celebrations" on every page and "Hebraic
      * Celebrations (Messianic)" in its own day files. One source means renaming
      * a station renames it everywhere. See docs/STATION-NAMING.md.
      */
@@ -1123,6 +1173,22 @@
      * ────────────────────────────────────────────────────────────────────── */
     var wavesCanvas = null, wavesCtx = null, wavesRAF = null, wavesHue = 0;
     var audioCtx = null, analyser = null, freqData = null;
+    var boostNode = null, limiter = null;
+
+    /* Push the slider's above-unity half at the gain node, if there is one.
+       Ramped rather than set: a step change on a live gain is an audible click,
+       and this runs on every drag of the slider. Safe to call at any time —
+       before the node exists it simply does nothing, and tapAudio calls it once
+       more as soon as the chain is built. */
+    function applyBoost() {
+        if (!boostNode || !audioCtx) return;
+        var target = boostFor(volume());
+        try {
+            boostNode.gain.setTargetAtTime(target, audioCtx.currentTime, 0.02);
+        } catch (e) {
+            boostNode.gain.value = target;   // older implementations
+        }
+    }
     var tapCount = 0;
     var tapped = (typeof WeakSet === 'function') ? new WeakSet() : null;
     var tappedFallback = [];
@@ -1159,9 +1225,31 @@
                 analyser.fftSize = 512;          // 256 bins - enough columns to read as a spectrum
                 analyser.smoothingTimeConstant = 0.8;
                 freqData = new Uint8Array(analyser.frequencyBinCount);
+
+                /* src -> gain -> limiter -> analyser -> speakers.
+                   The gain is the only thing on this band that can exceed the
+                   file's own level, so the limiter sits directly after it and
+                   is never optional. Ratio 20 above -1.5 dB with a fast attack
+                   is a safety catch, not an effect: at the default slider
+                   position it does nothing at all, and it only starts working
+                   when somebody pushes the top of the travel into masters that
+                   already peak near 0 dBTP.
+                   The analyser is LAST so the waveform draws what is actually
+                   heard, limiter included, rather than the signal that went in. */
+                boostNode = audioCtx.createGain();
+                limiter = audioCtx.createDynamicsCompressor();
+                limiter.threshold.value = -1.5;
+                limiter.knee.value = 0;
+                limiter.ratio.value = 20;
+                limiter.attack.value = 0.003;
+                limiter.release.value = 0.25;
+
+                boostNode.connect(limiter);
+                limiter.connect(analyser);
                 analyser.connect(audioCtx.destination);
+                applyBoost();
             }
-            src.connect(analyser);
+            src.connect(boostNode);
             tapCount++;
             markTapped(el);
         } catch (e) {
@@ -1453,7 +1541,11 @@
         document.getElementById('kjpVol').addEventListener('input', function () {
             var v = parseFloat(this.value);
             write(KEY.volume, v);
-            if (audio) { audio.volume = v; audio.muted = false; }
+            // Both halves, every time: below the knee only the element moves,
+            // above it only the gain does, and the slider does not know or
+            // care which side of the knee it is on.
+            if (audio) { audio.volume = elGain(v); audio.muted = false; }
+            applyBoost();
             paintVolume();
         });
     }
@@ -1591,11 +1683,24 @@
                 var why = err && err.message;
                 if (why !== 'no day file' && why !== 'outside the broadcast day') throw err;
                 if (current !== asked) throw err;
+                // MANIFEST ONLY. NEVER THE STREAM.
+                //
+                // Both the day file and the manifest are fetched by the browser
+                // straight from the CDN; a stream is an Icecast mount on our own
+                // host re-encoding files the CDN already holds, and every
+                // listener on it costs us bandwidth for audio they could have
+                // fetched themselves. station-guidelines 2.5.6 says to retire
+                // those mounts, not to fall back onto them. A station whose day
+                // file is missing goes quiet and says so — which is a bug to
+                // fix, not a cost to absorb silently.
                 if (asked.manifest) return playManifest(asked, primed);
-                if (asked.stream)   return playStream(asked, primed);
                 throw err;
             });
         } else {
+            // No tenant: a manifest is still client-side and preferred. A stream
+            // is reached only by a station that has neither — which by 2.5.6
+            // should mean a genuinely live source (a live show, a call-in),
+            // never scheduled music.
             p = current.manifest ? playManifest(current, primed)
               : playStream(current, primed);
         }

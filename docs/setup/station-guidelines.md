@@ -133,7 +133,7 @@ That is the structural problem with server-side streaming: the server is in the 
 One file per station per broadcast day, published in advance:
 
 ```
-https://cdn.kjubilee.com/radio/HM332.16-RO/delivery/HM332.16RO-20260822.json
+https://cdn.kjubilee.com/radio/HM326.20-RO/delivery/HM326.20RO-20260822.json
 ```
 
 It contains the day's programming as a list of entries — seconds from the start of the day, duration, CDN path, title, artist, album. The player reads the clock, finds the entry that covers this second, seeks into it, and plays. The audio itself is fetched from the CDN, never from the origin.
