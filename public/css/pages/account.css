@@ -228,3 +228,44 @@ a:hover{text-decoration:underline}
   .acct-facts{gap:16px}
   .acct-id{padding:16px}
 }
+
+/* ---------- autofill ----------
+   A browser that fills a field in repaints it in its own colours, and the
+   result on a dark card is a white block with dark text in it — the one input
+   on the page that does not look like an input.
+
+   Chromium and Safari will not take a `background-color` on an autofilled
+   field at all: the paint is theirs and an author rule is ignored. They DO
+   animate it, though, and an animation that takes two hours to start never
+   arrives — so the field keeps its own translucent fill, which is the whole
+   point. The border and shadow transitions have to be restated in the same
+   declaration or focus stops animating on exactly these fields.
+
+   -webkit-text-fill-color wins over `color` on an autofilled field, so the
+   text colour has to be set that way round too, and the password fields keep
+   the accent colour they have when typed by hand. */
+.acct .input-group input:-webkit-autofill,
+.acct .input-group input:-webkit-autofill:hover,
+.acct .input-group input:-webkit-autofill:focus,
+.acct .input-group input:-webkit-autofill:active{
+  -webkit-text-fill-color:var(--text);
+  caret-color:var(--text);
+  transition:background-color 8000s ease-in-out 0s,border-color .2s,box-shadow .2s;
+}
+.acct .input-group input[type="password"]:-webkit-autofill{-webkit-text-fill-color:var(--accent)}
+
+/* The floating label reads `:not(:placeholder-shown)`, which an autofilled
+   field does not satisfy in every engine — this keeps the label up out of the
+   filled text rather than sitting on top of it. */
+.acct .input-group input:-webkit-autofill+label{top:7px;font-size:.72rem;color:var(--accent)}
+
+/* Firefox and the standard selector, kept in their own block on purpose: a
+   browser that does not recognise one selector in a list discards the entire
+   list, so pairing :autofill with :-webkit-autofill would lose both. */
+.acct .input-group input:autofill{
+  background-color:transparent;
+  -webkit-text-fill-color:var(--text);
+  caret-color:var(--text);
+  transition:background-color 8000s ease-in-out 0s,border-color .2s,box-shadow .2s;
+}
+.acct .input-group input:autofill+label{top:7px;font-size:.72rem;color:var(--accent)}

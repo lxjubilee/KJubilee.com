@@ -338,16 +338,12 @@ const liveSessions = (userId) => SESSIONS.filter((s) => s.user_id === userId && 
         ssoPasswords['ada@example.com'] = 'authority-password';
         ssoPasswordSets = [];
 
-        const noPassword = await account.deleteAccount(1, { password: '' });
-        eq('no password means no deletion', noPassword.success, false);
-        ok('and the account is still there', Boolean(findUser(1)));
+        const signedOut = await account.deleteAccount(999);
+        eq('no account, no deletion', signedOut.status, 401);
+        ok('and the real account is still there', Boolean(findUser(1)));
 
-        const wrong = await account.deleteAccount(1, { password: 'not-it' });
-        eq('nor does a wrong one', wrong.status, 401);
-        ok('the account survives that too', Boolean(findUser(1)));
-
-        const r = await account.deleteAccount(1, { password: 'authority-password' });
-        eq('the right password deletes it', r.success, true);
+        const r = await account.deleteAccount(1);
+        eq('a signed-in owner deletes it', r.success, true);
         eq('the row is gone', findUser(1), null);
         eq('and every session with it', liveSessions(1), 0);
 
@@ -356,7 +352,7 @@ const liveSessions = (userId) => SESSIONS.filter((s) => s.user_id === userId && 
         eq('the Jubilee ID was left alone', ssoPasswords['ada@example.com'], 'authority-password');
         eq('and the caller is told so, to put on the screen', r.kept_jubilee_id, true);
 
-        const again = await account.deleteAccount(1, { password: 'authority-password' });
+        const again = await account.deleteAccount(1);
         eq('deleting twice is a 401, not a crash', again.status, 401);
     }
 

@@ -18,8 +18,8 @@ import { authToken, patchAuth, clearAuth } from '../_session-store';
  * is set by typing the new one twice — the session already proved who is here,
  * so it does not ask for the old one — and for a Jubilee ID account the card
  * says out loud that the change reaches every Jubilee site. Deleting is
- * irreversible, so it stays folded shut until asked for, wants the password AND
- * the word DELETE, and lists what will go with it.
+ * irreversible, so it stays folded shut until asked for, lists what will go
+ * with it, and will not arm the button until DELETE has been typed out.
  *
  * ── What this screen may NOT do ──
  * Change the email. It is the join between this account and the Jubilee ID and
@@ -27,10 +27,10 @@ import { authToken, patchAuth, clearAuth } from '../_session-store';
  * identity, not here. The card says so rather than showing a field that quietly
  * does nothing.
  *
- * THE GATE HERE IS NOT THE SECURITY, exactly as on /admin: /api/account asks the
- * database who is calling before it answers, and the delete route asks for the
- * password on top of that. Everything below is about showing a human the right
- * thing — a signed-out visitor gets a way in rather than a dead form.
+ * THE GATE HERE IS NOT THE SECURITY, exactly as on /admin: every route under
+ * /api/account asks the database who is calling before it answers. Everything
+ * below is about showing a human the right thing — a signed-out visitor gets a
+ * way in rather than a dead form.
  */
 
 async function api(path, { method = 'GET', body, token } = {}) {
@@ -160,7 +160,6 @@ export default function AccountClient() {
     const [pwNote, setPwNote] = useState(null);
 
     const [dangerOpen, setDangerOpen] = useState(false);
-    const [delPw, setDelPw] = useState('');
     const [delWord, setDelWord] = useState('');
     const [delBusy, setDelBusy] = useState(false);
     const [delNote, setDelNote] = useState(null);
@@ -263,7 +262,7 @@ export default function AccountClient() {
         const r = await api('/api/account/delete', {
             method: 'POST',
             token: authToken(),
-            body: { password: delPw, confirm: delWord },
+            body: { confirm: delWord },
         });
         setDelBusy(false);
 
@@ -423,13 +422,13 @@ export default function AccountClient() {
 
                         {dangerOpen && (
                             <form className="acct-form" onSubmit={deleteAccount}>
-                                <PasswordField
-                                    id="acct-del-password"
-                                    label={account.password_kind === 'jubilee-id' ? 'Your Jubilee ID password' : 'Your password'}
-                                    value={delPw}
-                                    onChange={setDelPw}
-                                    autoComplete="current-password"
-                                />
+                                {/*
+                                  * The typed word is the only lock, and it is the
+                                  * right one. A password here re-asked what the
+                                  * session had already proved, and caught the
+                                  * forgetful owner rather than the wrong person.
+                                  * DELETE cannot be typed by accident.
+                                  */}
                                 <Field
                                     id="acct-del-confirm"
                                     label="Type DELETE to confirm"
@@ -444,14 +443,14 @@ export default function AccountClient() {
                                         busy={delBusy}
                                         busyLabel="Deleting…"
                                         tone="stop"
-                                        disabled={delWord.trim().toUpperCase() !== 'DELETE' || !delPw}
+                                        disabled={delWord.trim().toUpperCase() !== 'DELETE'}
                                     >
                                         Delete my account permanently
                                     </Submit>
                                     <button
                                         type="button"
                                         className="acct-btn acct-btn--quiet"
-                                        onClick={() => { setDangerOpen(false); setDelPw(''); setDelWord(''); setDelNote(null); }}
+                                        onClick={() => { setDangerOpen(false); setDelWord(''); setDelNote(null); }}
                                     >
                                         Keep my account
                                     </button>

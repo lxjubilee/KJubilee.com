@@ -256,3 +256,36 @@ body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;
 .password-match{font-size:.72rem;margin-top:6px}
 .password-match.is-match{color:#4ade80}
 .password-match.is-mismatch{color:#f87171}
+
+/* ── Autofill ──
+   The same fix as public/css/pages/account.css, and it matters more here: this
+   is the screen a saved email and password actually get filled into, and until
+   now the browser repainted both fields white on a dark door.
+
+   Chromium and Safari own the paint on an autofilled field and ignore any
+   background-color an author sets. They animate it, though — so a transition
+   that takes two hours to begin never begins, and the field keeps the fill it
+   was given. border-color and box-shadow are restated because a transition
+   declaration replaces the one on the base rule outright, and without them the
+   focus ring stops animating on precisely the fields a browser filled in. */
+.input-group input:-webkit-autofill,
+.input-group input:-webkit-autofill:hover,
+.input-group input:-webkit-autofill:focus,
+.input-group input:-webkit-autofill:active{
+  -webkit-text-fill-color:#fff;
+  caret-color:#fff;
+  transition:background-color 8000s ease-in-out 0s,border-color .2s,box-shadow .2s;
+}
+.input-group input[type="password"]:-webkit-autofill{-webkit-text-fill-color:var(--kj-accent)}
+.input-group input:-webkit-autofill+label{top:8px;font-size:0.75rem;color:var(--kj-accent)}
+
+/* Its own block, not folded into the list above: a browser that does not know
+   one selector in a comma list throws the whole list away, and losing the
+   -webkit- rule to gain this one would be a straight downgrade. */
+.input-group input:autofill{
+  background-color:transparent;
+  -webkit-text-fill-color:#fff;
+  caret-color:#fff;
+  transition:background-color 8000s ease-in-out 0s,border-color .2s,box-shadow .2s;
+}
+.input-group input:autofill+label{top:8px;font-size:0.75rem;color:var(--kj-accent)}
