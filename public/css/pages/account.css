@@ -31,7 +31,30 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
+
+/* ── Why this restates display, height and overflow ──
+   The site is ONE document. app/layout.js mounts SiteChrome once and the pages
+   swap beneath it, and React keeps every <link precedence="kj-page"> it has
+   ever hoisted — it does not remove a stylesheet when its page unmounts. So
+   every page visited earlier in the session is STILL styling this one.
+
+   That is not hypothetical here. The way in is /signin -> sign in -> Profile
+   settings, and /signin loads jubilee-id.css, which carries
+
+       body{min-height:100dvh;display:flex}
+
+   for its two-column auth layout. Inherit that and <main class="acct"> becomes
+   a flex item stretched to the viewport instead of a block that grows, and the
+   page stops scrolling — the delete card is simply unreachable. map.css's
+   `html,body{height:100%}` produces the same symptom by a different route.
+
+   A page in a shared document cannot assume a clean body. It has to say what
+   it needs, which is the plainest possible one. */
+html{height:auto}
 body{
+  display:block;
+  height:auto;
+  min-height:100dvh;
   background:var(--bg);color:var(--text);
   font-family:var(--font-sans);font-size:15px;line-height:1.55;
   -webkit-font-smoothing:antialiased;
