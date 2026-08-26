@@ -1,0 +1,207 @@
+/* ==========================================================================
+   /account — profile settings.
+
+   A utility page, like /admin: no top bar, no shelves, no hero. It borrows the
+   site's palette so it does not feel like a different product, and then gets
+   out of the way of the four decisions on it.
+
+   The input styling at the bottom is the door's, scoped under .acct. The screen
+   reuses app/_password-field.js — the eye toggle, the strength meter and the
+   match line are one component, not three copies — and that component brings
+   the door's class names with it. Loading public/css/jubilee-id.css to get them
+   would also bring its `body{display:flex}`, which is the auth screen's
+   two-column layout and would fold this page in half.
+   ========================================================================== */
+:root{
+  --bg:#000;
+  --surface:#14151d;
+  --surface-2:#16171f;
+  --text:#f3f2ee;
+  --text-dim:#c9cad4;
+  --text-muted:#8c8d9c;
+  --accent:#3DA5FF;
+  --border:hsla(0,0%,100%,.08);
+  --border-strong:hsla(0,0%,100%,.14);
+  --stop:#E8896F;
+  --ok:#4ade80;
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  /* kj-footer-player.js publishes its own height when the bar mounts; the
+     fallback keeps the delete card clear of it before that happens. */
+  --kj-player-h:80px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:var(--kj-player-h,0px);
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.acct{max-width:760px;margin:0 auto;padding:32px 20px 40px}
+
+/* ---------- header ---------- */
+.acct-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--border);
+}
+.acct-eyebrow{
+  margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.acct-title{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.acct-back{font-size:13.5px;white-space:nowrap}
+
+/* ---------- who this is ----------
+   The same initial-in-a-circle the header shows, at the size a page can afford.
+   The address sits here rather than in a field because it is precisely the one
+   thing on this screen that cannot be typed over. */
+.acct-id{
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  margin:22px 0 20px;padding:18px 20px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+}
+.acct-avatar{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:52px;height:52px;border-radius:50%;
+  background:var(--accent);color:#06182b;font-size:22px;font-weight:800;
+}
+.acct-who{flex:1 1 200px;min-width:0}
+.acct-who-name{margin:0;font-size:19px;font-weight:700;letter-spacing:-.01em}
+.acct-who-email{
+  margin:2px 0 0;color:var(--text-dim);font-size:13.5px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.acct-badge{
+  display:inline-block;margin-top:6px;padding:2px 8px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent) 18%,transparent);
+  color:var(--accent);font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+}
+.acct-facts{display:flex;gap:22px;flex-wrap:wrap;margin:0}
+.acct-fact dt{font-size:10.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted)}
+.acct-fact dd{margin:2px 0 0;font-size:13px;color:var(--text-dim);white-space:nowrap}
+
+/* ---------- cards ---------- */
+.acct-card{
+  margin:0 0 16px;padding:20px;border-radius:10px;
+  background:var(--surface);border:1px solid var(--border);
+}
+.acct-card--stop{border-color:color-mix(in srgb,var(--stop) 40%,var(--border))}
+.acct-card-title{margin:0 0 6px;font-size:16.5px;font-weight:700}
+.acct-card--stop .acct-card-title{color:var(--stop)}
+.acct-card-blurb{margin:0 0 14px;color:var(--text-dim);font-size:13.5px;line-height:1.5}
+.acct-card-blurb strong{color:var(--text)}
+.acct-readonly{
+  margin:0;padding:12px 14px;border-radius:8px;
+  background:rgba(255,255,255,.04);border:1px solid var(--border);
+  color:var(--text-dim);font-size:14.5px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ---------- forms ---------- */
+.acct-form{margin:0}
+/* Two fields side by side on a wide screen, stacked on a narrow one — first and
+   last name, and the new password beside its confirmation. */
+.acct-pair{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
+.acct-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.acct-hint{margin:6px 0 0;font-size:12px;color:var(--text-muted)}
+
+.acct-btn{
+  padding:10px 18px;border-radius:8px;
+  background:var(--accent);color:#06182b;font-size:14px;font-weight:700;
+  transition:filter .15s ease,opacity .15s ease;
+}
+.acct-btn:hover:not(:disabled){filter:brightness(1.08);text-decoration:none}
+.acct-btn:disabled{opacity:.45;cursor:not-allowed}
+.acct-btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.acct-btn--stop{background:var(--stop);color:#2a0d05}
+.acct-btn--stop:focus-visible{outline-color:var(--stop)}
+.acct-btn--quiet{
+  background:none;color:var(--text-dim);
+  border:1px solid var(--border-strong);font-weight:600;
+}
+.acct-btn--quiet:hover{color:var(--text)}
+
+.acct-note{margin:0;font-size:13px}
+.acct-note--ok{color:var(--ok)}
+.acct-note--stop{color:var(--stop)}
+
+/* ---------- states ---------- */
+.acct-status{
+  margin:22px 0 0;padding:18px 20px;border-radius:8px;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text-dim);font-size:14.5px;
+}
+.acct-status strong{display:block;color:var(--text);font-size:15.5px;margin-bottom:4px}
+.acct-status p{margin:0}
+.acct-status--stop{border-color:color-mix(in srgb,var(--stop) 45%,var(--border))}
+.acct-status--stop strong{color:var(--stop)}
+
+/* The last thing a former member sees. Deliberately a whole screen rather than
+   a toast: an account ending deserves more than a line that fades. */
+.acct-farewell{
+  margin:60px 0;padding:28px;border-radius:10px;text-align:center;
+  background:var(--surface);border:1px solid var(--border);
+}
+.acct-farewell h1{margin:0 0 10px;font-size:22px;font-weight:700}
+.acct-farewell p{margin:0 0 10px;color:var(--text-dim);font-size:14.5px;line-height:1.6}
+.acct-farewell p:last-child{margin:0}
+
+/* ---------- the door's inputs, scoped ----------
+   Same shape and behaviour as public/css/jubilee-id.css: a floating label that
+   rises out of the field on focus or content, which is why every input carries
+   placeholder=" " and why the label follows its input in the markup. */
+.acct .input-group{position:relative;margin-bottom:1.1rem}
+.acct .input-group input{
+  width:100%;height:56px;padding:22px 16px 8px;
+  background:rgba(255,255,255,.06);border:2px solid transparent;border-radius:8px;
+  color:#fff;font-size:1rem;font-family:inherit;outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.acct .input-group input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 25%,transparent);
+}
+.acct .input-group label{
+  position:absolute;left:16px;top:17px;font-size:.95rem;color:var(--text-muted);
+  pointer-events:none;transition:all .2s ease;
+}
+.acct .input-group input:not(:placeholder-shown)+label,
+.acct .input-group input:focus+label{top:7px;font-size:.72rem;color:var(--accent)}
+.acct .input-group input[type="password"]{color:var(--accent);letter-spacing:3px}
+.acct .input-group input[type="password"]::placeholder{color:var(--text-muted);letter-spacing:0}
+
+.acct .password-wrapper{position:relative}
+.acct .password-wrapper input{padding-right:46px}
+.acct .password-toggle{
+  position:absolute;right:14px;top:28px;transform:translateY(-50%);
+  color:var(--text-muted);padding:4px;display:flex;align-items:center;
+}
+.acct .password-toggle:hover{color:var(--accent)}
+.acct .password-toggle svg{width:20px;height:20px}
+
+.acct .password-hint{font-size:.75rem;color:var(--text-muted);margin-top:6px}
+.acct .password-strength{margin-top:8px}
+.acct .strength-bar{height:4px;background:#3a3b45;border-radius:2px;overflow:hidden;margin-bottom:4px}
+.acct .strength-fill{height:100%;border-radius:2px;transition:width .2s ease,background-color .2s ease}
+.acct .strength-fill.weak{width:33%;background:#f87171}
+.acct .strength-fill.fair{width:66%;background:#fbbf24}
+.acct .strength-fill.strong{width:100%;background:var(--ok)}
+.acct .strength-text{font-size:.7rem}
+.acct .strength-text.weak{color:#f87171}
+.acct .strength-text.fair{color:#fbbf24}
+.acct .strength-text.strong{color:var(--ok)}
+.acct .password-match{font-size:.72rem;margin-top:6px}
+.acct .password-match.is-match{color:var(--ok)}
+.acct .password-match.is-mismatch{color:#f87171}
+
+@media (max-width:640px){
+  .acct{padding:22px 14px 30px}
+  .acct-title{font-size:23px}
+  .acct-pair{grid-template-columns:1fr}
+  .acct-facts{gap:16px}
+  .acct-id{padding:16px}
+}

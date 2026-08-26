@@ -38,8 +38,8 @@ const localStorage = {
     removeItem: (k) => { delete store[k]; },
 };
 const mod = { exports: {} };
-new Function('module', 'localStorage', helpers + '\nmodule.exports = { readSession, clearSession, shortName };')(mod, localStorage);
-const { readSession, clearSession, shortName } = mod.exports;
+new Function('module', 'localStorage', helpers + '\nmodule.exports = { readSession, clearSession, shortName, fullName };')(mod, localStorage);
+const { readSession, clearSession, shortName, fullName } = mod.exports;
 
 const reset = () => { for (const k of Object.keys(store)) delete store[k]; };
 const hour = 3600_000;
@@ -102,6 +102,25 @@ console.log('\nThere is always a name to show');
     eq('blank first_name does not win', shortName({ first_name: '   ', name: 'Vera Rubin', email: 'v@x.com' }), 'Vera');
     eq('extra spaces in name do not produce an empty word', shortName({ name: '  Mira   Bell ', email: 'm@x.com' }), 'Mira');
     ok('and the initial is always a letter', /^[A-Z0-9]$/.test(shortName({ email: 'zed@x.com' }).charAt(0).toUpperCase()));
+}
+
+console.log('\nThe menu shows the whole name, above the address');
+{
+    eq('both parts, joined', fullName({ first_name: 'Ezra', last_name: 'Kade', email: 'e@x.com' }), 'Ezra Kade');
+    eq('a first name alone is the whole name', fullName({ first_name: 'Ezra', email: 'e@x.com' }), 'Ezra');
+
+    // `name` is a mirror of the two parts (lib/local-account.js writes them into
+    // it), so where they disagree the parts are the fresher copy — a rename
+    // writes them first.
+    eq('the parts beat a stale mirror', fullName({ first_name: 'Ada', last_name: 'King', name: 'Ada Lovelace', email: 'a@x.com' }), 'Ada King');
+    eq('and the mirror is used when there are no parts', fullName({ name: 'Ada Lovelace', email: 'a@x.com' }), 'Ada Lovelace');
+    eq('blank parts do not produce a stray space', fullName({ first_name: 'Vera', last_name: '   ', email: 'v@x.com' }), 'Vera');
+    eq('nor does a doubled space in the mirror', fullName({ name: '  Mira   Bell ', email: 'm@x.com' }), 'Mira Bell');
+
+    // An account with neither still has a menu to draw, and the address is
+    // already on the line below — so this falls back to the button's own name
+    // rather than printing the address twice.
+    eq('an account with no name at all still shows something', fullName({ email: 'jaigkv@gmail.com' }), 'jaigkv');
 }
 
 console.log('\nSigning out clears both keys');

@@ -62,12 +62,27 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, .45);
 }
 
-/* The address confirms WHICH account is signed in — the first name alone does
-   not, and that is the thing worth being sure of before signing out. */
-.kj-account-menu .kj-account-email {
-  padding: 7px 10px 9px;
+/* The name says WHO is signed in; the address says WHICH ACCOUNT. The button
+   outside has room for one word and shows the first name, so the panel is where
+   the whole name goes — and the address underneath is the thing worth being
+   sure of before changing a password or signing out. */
+.kj-account-who {
+  padding: 8px 10px 10px;
   margin-bottom: 4px;
   border-bottom: 1px solid var(--border-strong, hsla(0, 0%, 100%, .1));
+}
+
+.kj-account-menu .kj-account-fullname {
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kj-account-menu .kj-account-email {
+  margin-top: 1px;
   color: var(--text-dim, #c9cad4);
   font-size: 11.5px;
   overflow: hidden;
@@ -75,7 +90,11 @@
   white-space: nowrap;
 }
 
-.kj-account-menu button {
+/* One rule for both, because "Profile settings" is an anchor (it navigates) and
+   "Sign out" is a button (it acts) — the difference is what they do, not how
+   they look in a menu. */
+.kj-account-menu button,
+.kj-account-menu .kj-account-item {
   display: block;
   width: 100%;
   padding: 8px 10px;
@@ -86,11 +105,14 @@
   font: inherit;
   font-size: 13px;
   text-align: left;
+  text-decoration: none;
   cursor: pointer;
 }
 
-.kj-account-menu button:hover { background: #2d2d2d; color: #fff; }
-.kj-account-menu button:focus-visible { outline: 2px solid var(--accent, #3DA5FF); outline-offset: -2px; }
+.kj-account-menu button:hover,
+.kj-account-menu .kj-account-item:hover { background: #2d2d2d; color: #fff; text-decoration: none; }
+.kj-account-menu button:focus-visible,
+.kj-account-menu .kj-account-item:focus-visible { outline: 2px solid var(--accent, #3DA5FF); outline-offset: -2px; }
 
 @media (max-width: 600px) {
   .kj-account-name { display: none; }   /* the initial carries it */

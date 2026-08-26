@@ -23,6 +23,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect, useRef } from 'react';
+import { AUTH_EVENT } from './_session-store';
 
 function readSession() {
     try {
@@ -59,6 +60,24 @@ function shortName(user) {
     return (user.email || '').split('@')[0];
 }
 
+// The whole name, for the menu. The button has room for one word; the panel
+// under it has room for the person's actual name, and that is the thing worth
+// showing before "Profile settings" and "Sign out".
+//
+// Built from the parts first: `name` is a mirror of them (lib/local-account.js
+// writes first + last into it), so an account whose parts are set and whose
+// mirror is stale should be read from the parts. Never falls through to the
+// address — the address is already on the line beneath, and printing it twice
+// says nothing.
+function fullName(user) {
+    const joined = [user.first_name, user.last_name]
+        .map((p) => (p || '').trim()).filter(Boolean).join(' ');
+    if (joined) return joined;
+    const name = (user.name || '').trim();
+    if (name) return name.replace(/\s+/g, ' ');
+    return shortName(user);
+}
+
 export default function AccountButton() {
     const [user, setUser] = useState(null);
     const [open, setOpen] = useState(false);
@@ -71,8 +90,16 @@ export default function AccountButton() {
         const onStorage = (e) => {
             if (!e.key || e.key === 'jv_auth' || e.key === 'jubileeVerseAuth') setUser(readSession());
         };
+        // `storage` fires in every tab EXCEPT the one that wrote, so a name
+        // changed on /account would update the header everywhere but the window
+        // the person is looking at. This is that window's notification.
+        const onLocal = () => setUser(readSession());
         window.addEventListener('storage', onStorage);
-        return () => window.removeEventListener('storage', onStorage);
+        window.addEventListener(AUTH_EVENT, onLocal);
+        return () => {
+            window.removeEventListener('storage', onStorage);
+            window.removeEventListener(AUTH_EVENT, onLocal);
+        };
     }, []);
 
     useEffect(() => {
@@ -145,7 +172,14 @@ export default function AccountButton() {
 
             {open && (
                 <div className="kj-account-menu" role="menu">
-                    <div className="kj-account-email" title={user.email}>{user.email}</div>
+                    {/* The name says WHO, the address says WHICH ACCOUNT — two
+                        different questions, and someone with a work address and
+                        a home one needs the second answered before they act. */}
+                    <div className="kj-account-who">
+                        <div className="kj-account-fullname">{fullName(user)}</div>
+                        <div className="kj-account-email" title={user.email}>{user.email}</div>
+                    </div>
+                    <a className="kj-account-item" role="menuitem" href="/account">Profile settings</a>
                     <button type="button" role="menuitem" onClick={signOut}>Sign out</button>
                 </div>
             )}
