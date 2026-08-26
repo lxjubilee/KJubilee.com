@@ -243,9 +243,21 @@ const STATIONS = {
     // `albums` rather than `artists`, and that is the whole point: Melody ALSO
     // records vertical worship sung directly to Jesus by name, and a station
     // built on her NAME would mix the two and lose the one thing that makes this
-    // frequency useful. The twelve codes below are exactly her twelve
-    // audio-bearing secular_universal records. A thirteenth joins by being added
-    // here, deliberately, after someone has read its blueprint — not by default.
+    // frequency useful. The codes below are exactly her audio-bearing
+    // secular_universal records. Another joins by being added here,
+    // deliberately, after someone has read its blueprint — not by default.
+    //
+    // 2026-08-26: ten more, MDIM1013EN through MDIM1022EN. They were absent for
+    // one reason only — no audio when this station was built — and the import
+    // refresh that ingested them left all 120 tracks orphaned, on no station at
+    // all, which is how they were noticed. Each one's album.meta.json was read
+    // before it was added here, and each declares secular_universal, the same
+    // posture as the original twelve: the stoop, where the money goes, coffee
+    // confessions, half the rent. Melody has ~90 English records written and
+    // most are still awaiting audio, so expect this list to keep growing — and
+    // expect to read a blueprint each time. That cost is the safeguard, not an
+    // oversight: an albumPattern would sweep her vertical worship onto the one
+    // frequency built for someone who is not in church yet.
     'HM376.20-EN': {
         slug: 'inspire-active',
         name: 'Melody’s Sparkle',
@@ -272,6 +284,16 @@ const STATIONS = {
                 'MDIM1010EN',
                 'MDIM1011EN',
                 'MDIM1012EN',
+                'MDIM1013EN',   // the stoop
+                'MDIM1014EN',   // where the money goes
+                'MDIM1015EN',   // coffee confessions
+                'MDIM1016EN',   // side effects of love
+                'MDIM1017EN',   // small brave moments
+                'MDIM1018EN',   // solo saturdays
+                'MDIM1019EN',   // the apartment
+                'MDIM1020EN',   // half the rent
+                'MDIM1021EN',   // no word for it yet
+                'MDIM1022EN',   // three a.m. saints
             ],
         },
     },

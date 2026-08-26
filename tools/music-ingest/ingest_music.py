@@ -49,6 +49,23 @@ SRC_ROOT = r"J:\jubilujah.com\music\inspire"
 # REMEMBER, which is the same as a thing you forget. An artist listed here
 # resolves to its own tree automatically; --src-root still overrides, for a
 # genuine one-off.
+# WHICH LANGUAGE AN ARTIST'S FOLDERS DO NOT DECLARE.
+#
+# Album folders normally end in a language code — MDIM1091HI, ZHIM1030RO — and
+# that is where `lang` comes from. Tiny Tiggles predates the convention: its
+# folders are TTX301-penguino-s-palooza, with no code at all, so every one of its
+# thirty albums is skipped with "no language in the folder name, and no --lang
+# given" unless the flag is passed. All 357 of its tracks are already in the
+# ledger, so nothing looked wrong — a plain `--artist tiny-tiggles` reported
+# "Albums with audio: 0" and exited successfully, and NEW Tiny Tiggles music
+# would have gone in exactly the same way: silently nowhere.
+#
+# Registered here for the same reason as ARTIST_ROOTS below: a flag you have to
+# remember is a flag you forget. --lang still overrides.
+ARTIST_LANG = {
+    "tiny-tiggles": "EN",
+}
+
 ARTIST_ROOTS = {
     "marcus-reed":   r"J:\cornercipher.com\music",     # Corner Cipher
     "party-giggles": r"J:\jubilujah.com\music\children",
@@ -281,18 +298,37 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
     if not lang:
         print("  SKIP (no language in the folder name, and no --lang given): %s" % folder)
         return 0
-    album_slug = slugify(m.group("slug"), lang)
-
-    # AUDIO LIVES IN <album>/tracks/, EXCEPT WHERE IT DOES NOT.
+    # ALBUM SLUG. An override first, then transliteration of the folder name.
     #
-    # Almost every album folder keeps its files in a tracks/ subfolder, and this
-    # used to look only there. Radiant Stones' Romanian record keeps its twelve
-    # files directly in the album folder, so they were skipped - with no warning,
-    # because "no tracks/ dir" and "an album with no audio yet" were the same
-    # `return 0`. A staged album with no audio is normal here; twelve files the
-    # tool cannot see is not. Prefer tracks/ when it exists, fall back to the
-    # album folder, so both layouts ingest and neither has to be special-cased
-    # per album.
+    # AN EMPTY ALBUM SLUG IS FATAL, NOT COSMETIC — refuse rather than continue.
+    #
+    # Melody's MDIM1091HI is foldered `MDIM1091HI-शहर-जाग-गया`. Devanagari has no
+    # entry in the transliteration table, so the slug came out EMPTY, and an
+    # empty slug writes a filename with a hole in it:
+    #
+    #     HMX2026HI01-9EF2I5XNN85D-MELO-MPSS__sau-sau-rang.mp3
+    #                                            ▲▲ album slug missing
+    #
+    # HMX_RE requires `[^_]+` there, so that filename does not match its own
+    # naming pattern. Two things read the repository through that pattern, and
+    # both went blind: the SongID re-use index, which is what stops a re-ingest
+    # re-rolling an ID that is already published; and the stale-filename sweep,
+    # which is what stops one track existing twice under two names.
+    #
+    # The result was a duplicate generator. Every run minted twelve fresh
+    # SongIDs for the same twelve tracks and left the previous twelve files in
+    # place, and every run reported success. The SongID is the permanent primary
+    # key the rotation and the play logs both hinge on, so this is the most
+    # expensive silent failure in the tool.
+    #
+    # An album that cannot produce a slug now stops, and says which key to add.
+    album_slug = (cfg.get("album_slug_overrides") or {}).get(album_code)         or slugify(m.group("slug"), lang)
+    if not album_slug:
+        print("  SKIP (album slug transliterates to nothing): %s" % folder)
+        print("       add an album_slug_overrides entry for %s in catalog-config.json"
+              % album_code)
+        return 0
+
     # WHERE THE AUDIO IS, IN THE THREE PLACES IT HAS ACTUALLY BEEN FOUND.
     #
     #   <album>/tracks/     the convention, and almost always right
@@ -305,8 +341,33 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
     # belongs to whoever produced the music and is never modified from here, so
     # a tool that only understands one layout silently drops an album — twelve
     # tracks, no warning, because "no tracks/ dir" and "album not recorded yet"
-    # looked identical. Any single subfolder holding mp3s is accepted; more than
-    # one is ambiguous and says so rather than picking.
+    # looked identical.
+    #
+    # BUT SEARCHING HAS ITS OWN FAILURE, AND IT IS WORSE.
+    #
+    # Zariah's ZHIM1030RO has its tracks folder renamed to
+    # `_tracks_WRONG_AUDIO_HOLD_dup_ELIM1028RO`. The name is the producer
+    # saying, in the only place the tool can read: this audio is wrong, it is a
+    # duplicate of Eliana's album, do not use it. Renaming the folder WAS the
+    # quarantine — it worked precisely because the old tool only looked in
+    # `tracks/`. The first version of this search undid that and ingested twelve
+    # known-bad tracks under Zariah SongIDs, which is a far more expensive
+    # mistake than skipping an album: a skipped album is noticed and re-run, a
+    # wrongly-ingested one is a permanent primary key pointing at the wrong
+    # audio.
+    #
+    # So the search is deliberately narrow. A folder is a candidate only if its
+    # name carries no hold marker: a leading underscore (the convention here for
+    # "not part of the set" — `_catalog` is the other one), or any of the words
+    # people actually use when setting something aside. Held folders are
+    # REPORTED rather than passed over in silence, because an album whose audio
+    # is on hold is a thing the operator should know about.
+    HOLD_RE = re.compile(r"wrong|hold|dup|duplicate|bad|old|backup|"
+                         r"unused|reject|ignore|do.?not.?use|delete", re.I)
+
+    def _held(name):
+        return name.startswith("_") or bool(HOLD_RE.search(name))
+
     def _mp3s_in(d):
         try:
             return sorted(f for f in os.listdir(d)
@@ -320,11 +381,15 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
         tracks_dir = album_dir
         sources = _mp3s_in(tracks_dir)
     if not sources:
-        candidates = []
+        candidates, held = [], []
         for sub in sorted(os.listdir(album_dir)):
             full = os.path.join(album_dir, sub)
-            if os.path.isdir(full) and _mp3s_in(full):
-                candidates.append(full)
+            if not os.path.isdir(full) or not _mp3s_in(full):
+                continue
+            (held if _held(sub) else candidates).append(full)
+        for h in held:
+            print("  HELD: %s has audio in %s/ — the folder name marks it as "
+                  "withheld, so it is NOT ingested" % (folder, os.path.basename(h)))
         if len(candidates) > 1:
             print("  AMBIGUOUS: %s has mp3s in %d subfolders (%s) — none ingested"
                   % (folder, len(candidates), ", ".join(os.path.basename(c) for c in candidates)))
@@ -538,6 +603,11 @@ def main():
                     help="authoring tree; defaults to the artist's registered root")
     ap.add_argument("--dest-root", default=DEST_ROOT)
     opts = ap.parse_args()
+    if not opts.lang and opts.artist in ARTIST_LANG:
+        opts.lang = ARTIST_LANG[opts.artist]
+        print("language: %s (registered for %s; its folders do not carry one)"
+              % (opts.lang, opts.artist))
+
     if not opts.src_root:
         opts.src_root = ARTIST_ROOTS.get(opts.artist, SRC_ROOT)
         if opts.src_root != SRC_ROOT:

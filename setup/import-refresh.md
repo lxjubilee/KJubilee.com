@@ -115,14 +115,28 @@ HMX2026EN01-7XJ29ZW8X70P-JUBI-CCJP_sky-splits-open_sky-splits-open.mp3
 └─ batch ─┘ └─ SongID ─┘ └art┘ └gen┘ └─ album ──┘ └─ song slug ──┘
 ```
 
-### The four source trees
+### The five source trees
 
 | Source | Tool | Contents |
 |---|---|---|
 | `J:\jubilujah.com\music\inspire` | `ingest_music.py` | The twelve Inspire Family personas |
 | `J:\jubilujah.com\music\children` | `ingest_music.py` | Party Giggles, Tiny Tiggles |
-| `J:\torahsings.com` | `ingest_torahsings.py` | Torah Sings — organised by book of the Bible, not by album, which is why it has its own ingester |
-| `J:\singitdone.com\music` | `ingest_music.py --src-root` | The 2001–2003 declaration series, any persona prefix |
+| `J:	orahsings.com` | `ingest_torahsings.py` | Torah Sings — organised by book of the Bible, not by album, which is why it has its own ingester |
+| `J:\singitdone.com\music` | `ingest_music.py --src-root` | The 2001–2003 declaration series, one folder per persona |
+| `J:\cornercipher.com\music` | `ingest_music.py` | Marcus Reed / Corner Cipher |
+
+`singitdone` is the one tree that still needs `--src-root`, because its twelve
+folders are the SAME personas whose default root is `inspire`, and an artist can
+only have one registered root. Everything else resolves on its own:
+
+- **`ARTIST_ROOTS`** in `ingest_music.py` maps an artist to its tree, so Corner
+  Cipher and the children’s catalogues need no flag.
+- **`ARTIST_LANG`** does the same for a language the folder names do not carry.
+  Tiny Tiggles’ folders are `TTX301-penguino-s-palooza`, with no language code, so
+  without it every one of its thirty-one albums is skipped — and skipped SILENTLY,
+  reporting "Albums with audio: 0" and exiting successfully.
+
+Register a new property in both, once, rather than remembering a flag forever.
 
 Destination is always `J:\kjubilee.com\music`, laid out one folder per artist slug.
 

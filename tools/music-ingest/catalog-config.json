@@ -140,8 +140,18 @@
     "ZHIM2001": "OHI",
     "ZHIM2002": "OHI"
   },
+  "album_slug_overrides": {
+    "_note": "Album slugs for folder names no deterministic transliteration can produce, keyed by album code. An album whose slug derives empty is REFUSED by the ingester rather than written with a hole in the filename — see the note above album_slug in ingest_music.py.",
+    "MDIM1091HI": "shahar-jaag-gaya"
+  },
+
   "song_slug_overrides": {
     "_note": "Hand-authored slugs for titles no deterministic transliteration can produce. Keyed by '<ALBUM_CODE>/<track number>'. Arabic and Hebrew are fully vowelled in the source and romanized accordingly; Chinese is Hanyu Pinyin without tones; Japanese is Hepburn; Thai is RTGS. Reviewed by no native speaker - see docs/MUSIC-REPOSITORY-SPEC.md open items.",
+    "MDIM1091HI/06": "aaj-nahin",
+    "MDIM1091HI/07": "mera-naam",
+    "MDIM1091HI/08": "bas-aise-hi",
+    "MDIM1091HI/12": "subah-tak",
+
     "AMIM1011AR/01": "al-qalbu-kulluhu-laka",
     "AMIM1011AR/02": "al-maliku-al-jarih",
     "AMIM1011AR/03": "fi-al-huduw",
