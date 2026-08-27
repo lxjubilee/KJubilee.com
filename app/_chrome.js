@@ -22,6 +22,23 @@ function isRadio(pathname) {
     return p === '/radio' || p === '/radio/';
 }
 
+function isAdmin(pathname) {
+    const p = (pathname || '').toLowerCase();
+    return p === '/admin' || p.startsWith('/admin/');
+}
+
+/*
+ * Where the footer bar does not belong.
+ *
+ * /radio runs its own full player and the two would fight over one <audio>.
+ * /admin is a console, not a page of the site: it owns the whole viewport in a
+ * sticky-rail grid, and a bar pinned across the bottom both covers the last row
+ * of a table and puts a listener's now-playing on an operator's screen.
+ */
+function hidesFooterPlayer(pathname) {
+    return isRadio(pathname) || isAdmin(pathname);
+}
+
 /*
  * WHY THIS EXISTS. Next's router only intercepts <Link>. Every anchor on this
  * site is a plain <a href> — including the ones the page scripts build with
@@ -73,18 +90,58 @@ function useInternalLinkRouting() {
 }
 
 /*
+ * Hiding the bar is a CSS class, not a call to remove the element.
+ *
+ * THE BAR MUST NOT BE TORN DOWN. Its <audio> is the reason SiteChrome is
+ * mounted in the root layout at all — streaming-services.md §9.8, "audio must
+ * continue playing while the listener navigates the site". Removing the bar on
+ * the way into /admin would stop whatever was playing; a class keeps the
+ * element, and the sound, exactly where they were.
+ *
+ * A RULE RATHER THAN AN INLINE STYLE, because the bar may not exist yet. The
+ * player script is loaded once per session and builds #kjPlayer when it runs,
+ * which can land after this effect on a fast navigation. A stylesheet applies
+ * to an element that appears later; setting .style.display on a null cannot.
+ */
+const NO_PLAYER_CLASS = 'kj-no-player';
+const NO_PLAYER_STYLE_ID = 'kj-no-player-css';
+
+function ensureNoPlayerRule() {
+    if (document.getElementById(NO_PLAYER_STYLE_ID)) return;
+    const el = document.createElement('style');
+    el.id = NO_PLAYER_STYLE_ID;
+    // The padding is the other half: body.kj-has-player reserves 80px for a bar
+    // that is no longer on screen, which on /admin is 80px of dead space under
+    // a full-viewport grid.
+    el.textContent =
+        'body.' + NO_PLAYER_CLASS + ' #kjPlayer{display:none!important}' +
+        'body.' + NO_PLAYER_CLASS + '{padding-bottom:0!important;--kj-player-h:0px}';
+    document.head.appendChild(el);
+}
+
+/*
  * The footer bar, mounted once for the session so its <audio> is never torn
- * down. Not loaded on /radio, which runs its own full player.
+ * down. Not loaded where hidesFooterPlayer() says it does not belong — and
+ * hidden there too, because "do not load it" only helps when that page is the
+ * first one opened. Arriving from anywhere else, the bar is already built.
  */
 function useFooterPlayer() {
     const pathname = usePathname();
 
     useEffect(() => {
-        if (isRadio(pathname)) return;
+        const hide = hidesFooterPlayer(pathname);
+        ensureNoPlayerRule();
+        document.body.classList.toggle(NO_PLAYER_CLASS, hide);
+
+        if (hide) return;
         // The player reads window.KJ_STATIONS at load time, so the catalogue
         // has to be in place before it runs.
         ensureCatalogue().then(() => loadOnce('/js/kj-footer-player.js'));
     }, [pathname]);
+
+    // Leaving the site entirely should not strand the class on <body> for a
+    // back-navigation that restores the same document.
+    useEffect(() => () => document.body.classList.remove(NO_PLAYER_CLASS), []);
 }
 
 export default function SiteChrome() {

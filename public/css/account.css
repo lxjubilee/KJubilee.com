@@ -114,6 +114,20 @@
 .kj-account-menu button:focus-visible,
 .kj-account-menu .kj-account-item:focus-visible { outline: 2px solid var(--accent, #3DA5FF); outline-offset: -2px; }
 
+/* The admin link. Tinted rather than shouted: it sits between "Profile
+   settings" and "Sign out" and is not the thing most visits came for, but it
+   goes somewhere the other two do not — a different area of the site, not a
+   different page of this one. The rule is scoped to the item so the separator
+   does not appear when the link is absent, which is most of the time. */
+.kj-account-menu .kj-account-item--admin {
+  color: var(--accent, #3DA5FF);
+  margin-top: 4px;
+  padding-top: 10px;
+  border-top: 1px solid #333;
+  border-radius: 0 0 4px 4px;
+}
+.kj-account-menu .kj-account-item--admin:hover { background: #2d2d2d; color: #7ac1ff; }
+
 @media (max-width: 600px) {
   .kj-account-name { display: none; }   /* the initial carries it */
   .kj-account-trigger { padding-left: 8px; padding-right: 8px; }

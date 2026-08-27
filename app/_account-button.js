@@ -23,7 +23,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect, useRef } from 'react';
-import { AUTH_EVENT } from './_session-store';
+import { AUTH_EVENT, authToken } from './_session-store';
 
 function readSession() {
     try {
@@ -81,6 +81,8 @@ function fullName(user) {
 export default function AccountButton() {
     const [user, setUser] = useState(null);
     const [open, setOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const inFlight = useRef(false);
     const boxRef = useRef(null);
 
     useEffect(() => {
@@ -113,6 +115,69 @@ export default function AccountButton() {
             document.removeEventListener('keydown', onKey);
         };
     }, [open]);
+
+    /*
+     * Is this person an administrator? Asked when the menu is OPENED, not when
+     * the header mounts.
+     *
+     * The header is on every page, and almost nobody is an admin — checking on
+     * mount would put a database round trip on every page load for every signed
+     * in visitor to decide one menu item that is nearly always absent. Opening
+     * this menu is rare and already a deliberate act, so the cost lands where
+     * somebody is actually looking.
+     *
+     * NOT read from the stored session. /api/auth/login writes {id, email, name}
+     * with no role at all, so a password sign-in has nothing to read; and a role
+     * copied into localStorage keeps claiming admin after the role is revoked.
+     * The server is asked instead, and it answers from the database.
+     *
+     * ASKED EVERY TIME THE MENU OPENS, NOT ONCE PER ACCOUNT. This used to cache
+     * the answer against the signed-in email and skip the request on every
+     * subsequent open. That made a role change invisible until the page was
+     * reloaded: whoever was told "not an admin" the first time they opened the
+     * menu kept being told it for the rest of the session, which is precisely
+     * the staleness the server-side lookup exists to avoid.
+     *
+     * Re-asking costs one indexed query, and only when somebody has opened the
+     * menu and is looking at it. The saving from caching was never worth the
+     * class of bug it bought.
+     *
+     * NOT read from the stored session. /api/auth/login writes {id, email, name}
+     * with no role at all, so a password sign-in has nothing to read; and a role
+     * copied into localStorage keeps claiming admin after the role is revoked.
+     * The server is asked instead, and it answers from the database.
+     */
+    useEffect(() => {
+        if (!user) { setIsAdmin(false); return; }
+        if (!open) return;
+        // A second open while the first request is still out would be a wasted
+        // round trip, not a wrong answer — the guard is thrift, not correctness.
+        if (inFlight.current) return;
+
+        let cancelled = false;
+        inFlight.current = true;
+        (async () => {
+            try {
+                const token = authToken();
+                if (!token) { if (!cancelled) setIsAdmin(false); return; }
+                const res = await fetch('/api/auth/me', {
+                    headers: { Authorization: 'Bearer ' + token },
+                    cache: 'no-store',
+                });
+                if (cancelled) return;
+                if (!res.ok) { setIsAdmin(false); return; }
+                const body = await res.json();
+                if (!cancelled) setIsAdmin(String(body?.user?.role || '').toLowerCase() === 'admin');
+            } catch {
+                // Offline, or the token expired. No link is the safe answer —
+                // it costs an admin one more open and tells a stranger nothing.
+                if (!cancelled) setIsAdmin(false);
+            } finally {
+                inFlight.current = false;
+            }
+        })();
+        return () => { cancelled = true; };
+    }, [open, user]);
 
     async function signOut() {
         // Clearing localStorage only ever removed the copy in front of us; the
@@ -180,6 +245,16 @@ export default function AccountButton() {
                         <div className="kj-account-email" title={user.email}>{user.email}</div>
                     </div>
                     <a className="kj-account-item" role="menuitem" href="/account">Profile settings</a>
+
+                    {/* Only for administrators, and only because the server said
+                        so a moment ago. /admin is not linked anywhere else on the
+                        site — it is noindex and was URL-only until this. */}
+                    {isAdmin && (
+                        <a className="kj-account-item kj-account-item--admin" role="menuitem" href="/admin">
+                            Admin panel
+                        </a>
+                    )}
+
                     <button type="button" role="menuitem" onClick={signOut}>Sign out</button>
                 </div>
             )}

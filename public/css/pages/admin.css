@@ -1,92 +1,549 @@
 /* ==========================================================================
-   /admin — the administrator's shelf.
+   /admin — the administrator's console.
 
-   A utility page, not a destination: no top bar, no shelves, no hero. It gets
-   the site's palette so it does not feel like a different product, and then
-   stays out of the way of the document it is holding.
+   Built to match JubileeInspire's admin area (W:\JubileeInspire.com,
+   src/app/admin/admin.module.css + _components/{shared,ui}.module.css): a
+   248px sticky sidebar beside a scrolling main column, the same --adm-*
+   palette, the same stat cards with an accent rail, panels, badges and data
+   tables. JubileeInspire scopes those tokens with CSS Modules; kJubilee serves
+   plain CSS, so the same tokens are declared on .adm-shell and every rule is
+   namespaced `adm-` by hand.
+
+   Dark is the console. JubileeInspire re-points its tokens when the app's
+   appearance bootstrap writes data-theme on <html>; kJubilee has no such
+   bootstrap yet, so the light palette below is dormant until something sets
+   that attribute — deliberately, rather than switching on the OS preference
+   and handing an operator a light console they never asked for.
    ========================================================================== */
-:root{
-  --bg:#000;
-  --surface:#14151d;
-  --surface-2:#16171f;
-  --text:#f3f2ee;
-  --text-dim:#c9cad4;
-  --text-muted:#8c8d9c;
-  --accent:#3DA5FF;
-  --border:hsla(0,0%,100%,.08);
-  --border-strong:hsla(0,0%,100%,.14);
-  --stop:#E8896F;
-  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
-  /* kj-footer-player.js publishes its own height when the bar mounts; the
-     fallback keeps the last row clear of it before that happens. */
-  --kj-player-h:80px;
-}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0}
-body{
-  background:var(--bg);color:var(--text);
-  font-family:var(--font-sans);font-size:15px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;
-  padding-bottom:var(--kj-player-h,0px);
-}
-button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
 
-.adm{max-width:1180px;margin:0 auto;padding:32px 20px 40px}
+.adm-shell {
+  --adm-bg: #0d1117;
+  --adm-surface: #161b22;
+  --adm-surface-2: #1c2230;
+  --adm-border: #2a3038;
+  --adm-text: #e6edf3;
+  --adm-text-dim: #8b949e;
+  --adm-accent: #6366f1;
+  --adm-accent-soft: rgba(99, 102, 241, 0.14);
+  --adm-accent-text: #c7d2fe;
+  --adm-green: #3fb950;
+  --adm-amber: #d29922;
+  --adm-red: #f85149;
+  --adm-row-hover: rgba(255, 255, 255, 0.02);
+  --adm-radius: 12px;
+  --adm-sidebar-w: 248px;
 
-/* ---------- header ---------- */
-.adm-head{
-  display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
-  flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--border);
-}
-.adm-eyebrow{
-  margin:0 0 4px;font-size:11px;font-weight:700;letter-spacing:.16em;
-  text-transform:uppercase;color:var(--text-muted);
-}
-.adm-title{margin:0;font-size:28px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
-.adm-back{font-size:13.5px;white-space:nowrap}
-
-/* ---------- document tabs ----------
-   A list rather than a strip: each entry carries a blurb, because "HM Band
-   Reallocation" alone does not tell anyone whether it is the document they
-   want. Built to hold more than one without changing shape. */
-.adm-tabs{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;margin:20px 0 24px}
-.adm-tab{
-  text-align:left;padding:14px 16px;border-radius:8px;
-  background:var(--surface);border:1px solid var(--border);
-  transition:border-color .15s ease,background .15s ease;
-}
-.adm-tab:hover{border-color:var(--border-strong);background:var(--surface-2)}
-.adm-tab.is-open{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,var(--surface))}
-.adm-tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.adm-tab-name{display:block;font-weight:700;font-size:15px;margin-bottom:2px}
-.adm-tab-blurb{display:block;font-size:12.5px;color:var(--text-muted);line-height:1.4}
-
-/* ---------- states ---------- */
-.adm-note{
-  margin:0;padding:18px 20px;border-radius:8px;
-  background:var(--surface);border:1px solid var(--border);
-  color:var(--text-dim);font-size:14.5px;
-}
-.adm-note strong{display:block;color:var(--text);font-size:15.5px;margin-bottom:4px}
-.adm-note p{margin:0}
-.adm-note--stop{border-color:color-mix(in srgb,var(--stop) 45%,var(--border))}
-.adm-note--stop strong{color:var(--stop)}
-
-/* ---------- the document ----------
-   An iframe because the document is a whole page with its own <style>; inlined
-   into this DOM its :root tokens and body rules would repaint the site around
-   it. Tall by default because these are reading documents, and the iframe has
-   no way to size itself to its content across the sandbox boundary. */
-.adm-doc{
-  width:100%;height:calc(100vh - 260px);min-height:520px;
-  border:1px solid var(--border);border-radius:8px;background:#fff;
-  display:block;
+  display: grid;
+  grid-template-columns: var(--adm-sidebar-w) 1fr;
+  min-height: 100vh;
+  background: var(--adm-bg);
+  color: var(--adm-text);
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-@media (max-width:640px){
-  .adm{padding:22px 14px 30px}
-  .adm-title{font-size:23px}
-  .adm-doc{height:calc(100vh - 300px);min-height:420px}
+/* Before the gate answers there is no rail, so the grid collapses to the one
+   column the message occupies — otherwise a 248px void sits where a sidebar
+   the visitor may never be allowed to see would have gone. */
+.adm-shell--bare { grid-template-columns: 1fr; }
+.adm-shell--bare .adm-content { max-width: 640px; }
+
+[data-theme="light"] .adm-shell {
+  --adm-bg: #f6f8fa;
+  --adm-surface: #ffffff;
+  --adm-surface-2: #eef1f5;
+  --adm-border: #d8dee4;
+  --adm-text: #1f2328;
+  --adm-text-dim: #59636e;
+  --adm-accent: #6366f1;
+  --adm-accent-soft: rgba(99, 102, 241, 0.12);
+  --adm-accent-text: #4338ca;
+  --adm-green: #1a7f37;
+  --adm-amber: #9a6700;
+  --adm-red: #cf222e;
+  --adm-row-hover: rgba(0, 0, 0, 0.03);
+}
+
+/* ── Undoing the previous page's body ─────────────────────────────────────
+   WHY THE CONSOLE WOULD NOT SCROLL UNTIL YOU RELOADED.
+
+   React hoists every `precedence` stylesheet into <head> and does NOT remove it
+   when the page that asked for it unmounts. Arriving at /admin from the home
+   page therefore leaves home.css applying, and home.css:49 sets
+
+       body{height:100dvh; display:flex; overflow:hidden}
+
+   because that page is a fixed-height shell with its own scroll container. On
+   a full reload home.css is gone and the console scrolls; on a client-side
+   navigation it is still there and the console is trapped in a viewport-tall
+   body with overflow hidden. account.css:74 hit this first and says the same
+   thing: nothing puts body back when the router leaves.
+
+   The fix is scoped with :has() rather than account.css's unscoped
+   `html{...!important}`, so it applies only while the console is actually in
+   the document and does not follow the reader to the next page. The real fix
+   is for those pages to stop styling `body` for layout that belongs to their
+   own containers; until they do, this is the console defending itself. */
+html:has(.adm-shell),
+body:has(.adm-shell) {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  display: block !important;
+  padding-bottom: 0 !important;
+}
+body:has(.adm-shell) { margin: 0; min-height: 100%; background: #0d1117; }
+[data-theme="light"] body:has(.adm-shell) { background: #f6f8fa; }
+
+.adm-shell *, .adm-shell *::before, .adm-shell *::after { box-sizing: border-box; }
+.adm-shell button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.adm-shell a { color: var(--adm-accent-text); text-decoration: none; }
+.adm-shell a:hover { text-decoration: underline; }
+.adm-shell code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.92em;
+  background: var(--adm-surface-2);
+  border: 1px solid var(--adm-border);
+  padding: 1px 5px;
+  border-radius: 5px;
+  color: var(--adm-text-dim);
+}
+
+/* ── Sidebar ──────────────────────────────────────────────────────────────
+   Sticky and exactly one viewport tall, so the nav never leaves while a
+   thousand-row table scrolls past it. `overflow-y:auto` on the aside itself
+   is what keeps a short laptop screen from clipping the footer off the
+   bottom of the rail. */
+.adm-sidebar {
+  position: sticky;
+  top: 0;
+  align-self: start;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  background: var(--adm-surface);
+  border-right: 1px solid var(--adm-border);
+  padding: 18px 14px;
+}
+
+.adm-brand { padding: 4px 6px 16px; border-bottom: 1px solid var(--adm-border); margin-bottom: 12px; }
+.adm-brand-link { display: flex; align-items: center; gap: 12px; color: inherit; }
+.adm-brand-link:hover { text-decoration: none; }
+.adm-brand-mark {
+  width: 38px; height: 38px; border-radius: 10px; object-fit: cover;
+  flex-shrink: 0; background: var(--adm-surface-2);
+}
+.adm-brand-text { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.adm-brand-title { font-weight: 700; font-size: 15px; }
+.adm-brand-sub {
+  font-size: 11px; color: var(--adm-text-dim);
+  text-transform: uppercase; letter-spacing: 0.8px;
+}
+
+.adm-nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.adm-nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 10px;
+  color: var(--adm-text-dim);
+  font-size: 14px; font-weight: 500; text-align: left; width: 100%;
+  transition: background 0.15s, color 0.15s;
+}
+.adm-nav-item:hover { background: var(--adm-surface-2); color: var(--adm-text); }
+.adm-nav-item.is-active,
+.adm-nav-item.is-active:hover {
+  background: var(--adm-accent-soft);
+  color: var(--adm-accent-text);
+  box-shadow: inset 2px 0 0 var(--adm-accent);
+}
+.adm-nav-item:focus-visible { outline: 2px solid var(--adm-accent); outline-offset: -2px; }
+.adm-nav-icon { width: 20px; height: 20px; flex-shrink: 0; }
+/* A count that rides along with a section name — the inbox's unread-ish
+   figure. Pushed to the far edge so the labels stay left-aligned. */
+.adm-nav-count {
+  margin-left: auto;
+  font-size: 11px; font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 1px 7px; border-radius: 999px;
+  background: var(--adm-surface-2); color: var(--adm-text-dim);
+  border: 1px solid var(--adm-border);
+}
+.adm-nav-item.is-active .adm-nav-count { background: var(--adm-accent); color: #fff; border-color: transparent; }
+
+.adm-sidebar-foot {
+  border-top: 1px solid var(--adm-border);
+  padding-top: 12px; margin-top: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.adm-user-card { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.adm-user-avatar {
+  display: grid; place-items: center;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--adm-surface-2); border: 1px solid var(--adm-border);
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.adm-user-meta { display: flex; flex-direction: column; min-width: 0; }
+.adm-user-name {
+  font-size: 13px; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;
+}
+.adm-user-role { font-size: 11px; color: var(--adm-text-dim); }
+.adm-back-link { font-size: 12px; color: var(--adm-text-dim); padding: 6px 4px; }
+.adm-back-link:hover { color: var(--adm-text); text-decoration: none; }
+
+/* ── Main column ─────────────────────────────────────────────────────────
+   min-width:0 is load-bearing: without it a wide table forces the grid track
+   wider than the viewport and the whole page scrolls sideways instead of the
+   table scrolling inside its own box. */
+.adm-main { min-width: 0; display: flex; flex-direction: column; }
+
+.adm-page-header {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap;
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid var(--adm-border);
+}
+.adm-page-title { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: -0.3px; }
+.adm-page-subtitle { margin: 4px 0 0; font-size: 13px; color: var(--adm-text-dim); }
+.adm-page-actions { display: flex; gap: 10px; align-items: center; }
+
+.adm-content {
+  padding: 24px 32px 48px;
+  display: flex; flex-direction: column; gap: 20px;
+  min-width: 0;
+}
+
+.adm-h2 {
+  margin: 4px 0 0; font-size: 12px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--adm-text-dim);
+}
+.adm-h3 { margin: 0 0 14px; font-size: 15px; font-weight: 600; }
+.adm-fine { margin: 0; font-size: 12.5px; color: var(--adm-text-dim); line-height: 1.55; }
+
+/* ── Stat cards ──────────────────────────────────────────────────────────
+   The rail down the left edge is the card's tone. A number with no
+   provenance is one people stop trusting, so the hint line under it names
+   where the figure came from. */
+.adm-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; }
+.adm-stat-card {
+  position: relative;
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 18px;
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  overflow: hidden;
+}
+.adm-stat-card::before {
+  content: ""; position: absolute; inset: 0 auto 0 0;
+  width: 3px; background: var(--adm-accent); opacity: 0.85;
+}
+.adm-stat-card--green::before { background: var(--adm-green); }
+.adm-stat-card--amber::before { background: var(--adm-amber); }
+.adm-stat-card--red::before   { background: var(--adm-red); }
+
+.adm-stat-label {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.6px;
+  color: var(--adm-text-dim); font-weight: 600;
+}
+.adm-stat-value { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.1; }
+.adm-stat-card--green .adm-stat-value { color: var(--adm-green); }
+.adm-stat-card--amber .adm-stat-value { color: var(--adm-amber); }
+.adm-stat-card--red   .adm-stat-value { color: var(--adm-red); }
+.adm-stat-hint { font-size: 12px; color: var(--adm-text-dim); min-height: 16px; }
+
+/* ── Panels ──────────────────────────────────────────────────────────────── */
+.adm-panel {
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  padding: 18px;
+  min-width: 0;
+}
+.adm-panel-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 14px;
+}
+.adm-panel-title { margin: 0; font-size: 15px; font-weight: 600; }
+.adm-cols2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 980px) { .adm-cols2 { grid-template-columns: 1fr; } }
+
+/* ── Proportion bars ─────────────────────────────────────────────────────── */
+.adm-bars { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+/* min-width:0 so a long band name shrinks its column instead of pushing the
+   grid track wider than the panel holding it. */
+.adm-bar { min-width: 0; }
+.adm-bar-head { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 6px; font-size: 13px; }
+.adm-bar-label { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.adm-bar-meta { color: var(--adm-text-dim); font-size: 12px; white-space: nowrap; }
+.adm-bar-track { height: 6px; border-radius: 3px; background: var(--adm-surface-2); overflow: hidden; }
+.adm-bar-fill {
+  height: 100%; border-radius: 3px;
+  background: linear-gradient(90deg, var(--adm-accent), #8b5cf6);
+  transition: width 0.3s ease;
+}
+
+/* ── Chips ───────────────────────────────────────────────────────────────── */
+.adm-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.adm-chip {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 5px 11px; border-radius: 999px; font-size: 12.5px;
+  background: var(--adm-surface); border: 1px solid var(--adm-border); color: var(--adm-text-dim);
+}
+.adm-chip b { color: var(--adm-text); font-weight: 700; }
+.adm-chip.is-live { border-color: var(--adm-accent); color: var(--adm-text); }
+.adm-chip.is-live b { color: var(--adm-accent-text); }
+
+/* ── Badges ──────────────────────────────────────────────────────────────── */
+.adm-badge {
+  display: inline-flex; align-items: center;
+  padding: 2px 9px; border-radius: 999px;
+  font-size: 11px; font-weight: 600; text-transform: capitalize;
+  border: 1px solid transparent; white-space: nowrap;
+}
+.adm-tone-neutral { background: var(--adm-surface-2); color: var(--adm-text-dim); border-color: var(--adm-border); }
+.adm-tone-green   { background: rgba(63, 185, 80, 0.14);  color: var(--adm-green); }
+.adm-tone-amber   { background: rgba(210, 153, 34, 0.14); color: var(--adm-amber); }
+.adm-tone-red     { background: rgba(248, 81, 73, 0.14);  color: var(--adm-red); }
+.adm-tone-indigo  { background: var(--adm-accent-soft);   color: var(--adm-accent-text); }
+/* Voicemail's own hue, matching the violet rail on its inbox card so the badge
+   and the card edge read as the same category rather than two. */
+.adm-tone-violet  { background: rgba(139, 92, 246, 0.16); color: #c4b5fd; }
+[data-theme="light"] .adm-tone-violet { color: #6d28d9; }
+
+/* ── Toolbar ─────────────────────────────────────────────────────────────── */
+.adm-toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.adm-search {
+  flex: 1; min-width: 200px;
+  background: var(--adm-surface-2); border: 1px solid var(--adm-border);
+  border-radius: 9px; padding: 9px 12px;
+  color: var(--adm-text); font: inherit; font-size: 14px;
+}
+.adm-search:focus { outline: none; border-color: var(--adm-accent); }
+.adm-search::placeholder { color: var(--adm-text-dim); }
+
+/* The same control without the toolbar's flex-grow — form fields size to their
+   grid cell, and a text input that stretched to fill the row would make every
+   two-word field as wide as the description box. */
+.adm-input {
+  width: 100%;
+  background: var(--adm-surface-2); border: 1px solid var(--adm-border);
+  border-radius: 9px; padding: 9px 12px;
+  color: var(--adm-text); font: inherit; font-size: 14px;
+}
+.adm-input:focus { outline: none; border-color: var(--adm-accent); }
+.adm-input::placeholder { color: var(--adm-text-dim); }
+
+/* The native arrow sits flush against the edge, so it is dropped and redrawn
+   with room to breathe — right padding keeps the label off the chevron. */
+.adm-select {
+  appearance: none; -webkit-appearance: none; -moz-appearance: none;
+  background-color: var(--adm-surface-2);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center;
+  border: 1px solid var(--adm-border); border-radius: 9px;
+  padding: 9px 34px 9px 12px;
+  color: var(--adm-text); font: inherit; font-size: 14px; cursor: pointer;
+}
+.adm-select:focus { outline: none; border-color: var(--adm-accent); }
+[data-theme="light"] .adm-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2359636e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
+.adm-check { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; color: var(--adm-text-dim); white-space: nowrap; cursor: pointer; }
+.adm-check input { accent-color: var(--adm-accent); cursor: pointer; }
+.adm-count { font-size: 13px; color: var(--adm-text-dim); white-space: nowrap; margin-left: auto; font-variant-numeric: tabular-nums; }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+.adm-btn {
+  padding: 9px 16px; border-radius: 9px;
+  font-size: 13.5px; font-weight: 500; white-space: nowrap;
+  border: 1px solid var(--adm-border);
+  background: var(--adm-surface-2); color: var(--adm-text);
+  transition: border-color 0.15s, filter 0.15s;
+}
+.adm-btn:hover:not(:disabled) { border-color: var(--adm-accent); }
+.adm-btn:focus-visible { outline: 2px solid var(--adm-accent); outline-offset: 2px; }
+.adm-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.adm-btn--primary { background: var(--adm-accent); border-color: var(--adm-accent); color: #fff; }
+.adm-btn--primary:hover:not(:disabled) { filter: brightness(1.08); }
+.adm-btn--danger { background: var(--adm-red); border-color: var(--adm-red); color: #fff; }
+.adm-btn--danger:hover:not(:disabled) { filter: brightness(1.08); }
+.adm-btn--quiet { background: none; border-color: transparent; color: var(--adm-text-dim); }
+.adm-btn--quiet:hover:not(:disabled) { background: var(--adm-row-hover); color: var(--adm-text); }
+.adm-btn--sm { padding: 6px 12px; font-size: 12.5px; border-radius: 8px; }
+
+/* ── Data tables ─────────────────────────────────────────────────────────
+   THE WRAPPER IS THE SCROLLBAR. A table this wide cannot narrow to fit a
+   laptop, and letting the page scroll sideways instead drags the sidebar and
+   the header out of view with it. The box scrolls; the page never does. */
+.adm-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  background: var(--adm-surface);
+  min-width: 0;
+}
+/* A long list gets a ceiling and its own vertical scrollbar, with the header
+   row pinned so column meanings survive the scroll. */
+.adm-table-wrap--tall { max-height: 62vh; overflow-y: auto; }
+.adm-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 720px; }
+.adm-table thead th {
+  position: sticky; top: 0; z-index: 1;
+  text-align: left; padding: 12px 14px;
+  background: var(--adm-surface-2); color: var(--adm-text-dim);
+  font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;
+  white-space: nowrap; border-bottom: 1px solid var(--adm-border);
+}
+.adm-table tbody td { padding: 12px 14px; border-bottom: 1px solid var(--adm-border); vertical-align: middle; }
+.adm-table tbody tr:last-child td { border-bottom: none; }
+.adm-table tbody tr:hover > td { background: var(--adm-row-hover); }
+.adm-table tr.is-open > td { background: var(--adm-accent-soft); }
+.adm-table .adm-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.adm-table th.adm-num { text-align: right; }
+.adm-empty { padding: 40px 14px; text-align: center; color: var(--adm-text-dim); }
+.adm-actions { white-space: nowrap; display: flex; gap: 6px; justify-content: flex-end; }
+.adm-row-open > td { background: var(--adm-bg); padding: 16px 14px 20px; }
+.adm-row-open:hover > td { background: var(--adm-bg); }
+
+.adm-cell-primary { display: block; font-weight: 600; color: var(--adm-text); line-height: 1.35; }
+.adm-cell-dim { display: block; font-size: 12px; color: var(--adm-text-dim); line-height: 1.45; }
+.adm-cell-dim--faint { opacity: 0.75; }
+
+.adm-tally { display: inline-flex; gap: 8px; font-size: 12px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.adm-tally .is-a { color: var(--adm-green); }
+.adm-tally .is-b { color: var(--adm-amber); }
+
+/* ── The A/B/C picker ────────────────────────────────────────────────────
+   Buttons rather than a select: this screen exists to move down a list
+   promoting things, and a select costs two clicks and a popup per song. */
+.adm-rate { display: inline-flex; border: 1px solid var(--adm-border); border-radius: 8px; overflow: hidden; }
+.adm-rate-btn {
+  padding: 4px 11px; font-size: 12px; font-weight: 700;
+  color: var(--adm-text-dim); border-right: 1px solid var(--adm-border);
+  transition: background 0.12s, color 0.12s;
+}
+.adm-rate-btn:last-child { border-right: 0; }
+.adm-rate-btn:hover:not(:disabled) { background: var(--adm-surface-2); color: var(--adm-text); }
+.adm-rate-btn:focus-visible { outline: 2px solid var(--adm-accent); outline-offset: -2px; }
+.adm-rate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.adm-rate-btn.is-on--A { background: var(--adm-green); color: #04180a; }
+.adm-rate-btn.is-on--B { background: var(--adm-amber); color: #1d1503; }
+.adm-rate-btn.is-on--C { background: var(--adm-surface-2); color: var(--adm-text); }
+
+/* An unsaved change has to be visible on the row itself — a count in the
+   toolbar does not say WHICH song is about to be written. */
+.adm-table tr.is-dirty > td { background: var(--adm-accent-soft); }
+.adm-table tr.is-dirty > td:first-child { box-shadow: inset 2px 0 0 var(--adm-accent); }
+
+.adm-tracks { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.adm-table--tracks { font-size: 12.5px; min-width: 620px; }
+.adm-table--tracks tbody td { padding: 8px 14px; }
+
+/* ── Forms ───────────────────────────────────────────────────────────────── */
+.adm-form {
+  background: var(--adm-surface); border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius); padding: 18px 20px 20px;
+}
+.adm-form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-bottom: 14px; }
+.adm-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.adm-field-label { font-size: 11.5px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: var(--adm-text-dim); }
+.adm-field-hint { font-size: 11.5px; color: var(--adm-text-dim); line-height: 1.45; }
+.adm-textarea { width: 100%; resize: vertical; line-height: 1.5; font: inherit; font-size: 14px; }
+.adm-form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+
+.adm-danger {
+  border: 1px solid var(--adm-red); border-radius: var(--adm-radius);
+  background: rgba(248, 81, 73, 0.08); padding: 16px 18px;
+}
+.adm-danger strong { display: block; color: var(--adm-red); font-size: 15px; margin-bottom: 4px; }
+.adm-danger p { margin: 0 0 12px; font-size: 13.5px; color: var(--adm-text-dim); }
+
+/* ── Notices & states ────────────────────────────────────────────────────── */
+.adm-notice {
+  padding: 12px 16px; border-radius: 10px; font-size: 14px;
+  background: var(--adm-surface); border: 1px solid var(--adm-border);
+  color: var(--adm-text-dim); word-break: break-word;
+}
+.adm-notice strong { display: block; color: var(--adm-text); font-size: 15px; margin-bottom: 4px; }
+.adm-notice p { margin: 0; }
+.adm-notice--stop { background: rgba(248, 81, 73, 0.08); border-color: var(--adm-red); }
+.adm-notice--stop strong { color: var(--adm-red); }
+
+.adm-state {
+  display: flex; align-items: center; justify-content: center; gap: 12px;
+  padding: 48px 20px; color: var(--adm-text-dim); font-size: 14px;
+}
+.adm-spinner {
+  width: 18px; height: 18px; flex-shrink: 0;
+  border: 2px solid var(--adm-border); border-top-color: var(--adm-accent);
+  border-radius: 50%; animation: adm-spin 0.7s linear infinite;
+}
+@keyframes adm-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .adm-spinner { animation-duration: 2.4s; } }
+
+/* ── The inbox ───────────────────────────────────────────────────────────── */
+.adm-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.adm-item {
+  padding: 14px 16px; border-radius: var(--adm-radius);
+  background: var(--adm-surface); border: 1px solid var(--adm-border);
+  border-left-width: 3px;
+}
+.adm-item--feedback { border-left-color: var(--adm-accent); }
+.adm-item--voicemail { border-left-color: #8b5cf6; }
+.adm-item--request { border-left-color: var(--adm-red); }
+.adm-item-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.adm-item-station { font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+.adm-item-when { margin-left: auto; font-size: 12px; color: var(--adm-text-dim); white-space: nowrap; }
+.adm-item-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.adm-quote {
+  margin: 0 0 2px; padding: 10px 14px; border-radius: 8px;
+  background: var(--adm-surface-2); border-left: 2px solid var(--adm-border);
+  font-size: 13.5px; color: var(--adm-text); line-height: 1.5;
+}
+
+/* ── Document cards ──────────────────────────────────────────────────────── */
+.adm-docs { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.adm-doc-card {
+  text-align: left; padding: 16px; border-radius: var(--adm-radius);
+  background: var(--adm-surface); border: 1px solid var(--adm-border);
+  transition: border-color 0.15s, background 0.15s;
+}
+.adm-doc-card:hover { border-color: var(--adm-accent); background: var(--adm-surface-2); }
+.adm-doc-card.is-open { border-color: var(--adm-accent); background: var(--adm-accent-soft); }
+.adm-doc-card:focus-visible { outline: 2px solid var(--adm-accent); outline-offset: 2px; }
+.adm-doc-name { display: block; font-weight: 600; font-size: 15px; margin-bottom: 3px; }
+.adm-doc-blurb { display: block; font-size: 12.5px; color: var(--adm-text-dim); line-height: 1.45; }
+
+/* Tall by default because these are reading documents, and the iframe cannot
+   size itself to its content across the sandbox boundary. */
+.adm-doc {
+  width: 100%; height: calc(100vh - 300px); min-height: 520px;
+  border: 1px solid var(--adm-border); border-radius: var(--adm-radius);
+  background: #fff; display: block;
+}
+
+/* Visible only to a screen reader — for a column of buttons whose header
+   would otherwise be an empty <th>. */
+.adm-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* ── Responsive: the rail becomes a top bar ─────────────────────────────── */
+@media (max-width: 860px) {
+  .adm-shell { grid-template-columns: 1fr; }
+  .adm-sidebar {
+    position: static; height: auto; overflow: visible;
+    border-right: 0; border-bottom: 1px solid var(--adm-border);
+  }
+  .adm-nav { flex-direction: row; flex-wrap: wrap; gap: 6px; }
+  .adm-nav-item { width: auto; padding: 8px 12px; }
+  .adm-sidebar-foot { flex-direction: row; align-items: center; justify-content: space-between; }
+  .adm-page-header { padding: 20px 18px 16px; }
+  .adm-content { padding: 18px 18px 40px; }
+  .adm-stat-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .adm-stat-value { font-size: 23px; }
+  .adm-form-grid { grid-template-columns: 1fr; }
+  .adm-count { margin-left: 0; }
+  .adm-item-when { margin-left: 0; }
+  .adm-doc { height: calc(100vh - 260px); min-height: 420px; }
 }
