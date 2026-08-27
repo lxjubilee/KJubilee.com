@@ -68,6 +68,13 @@ ARTIST_LANG = {
 
 ARTIST_ROOTS = {
     "marcus-reed":   r"J:\cornercipher.com\music",     # Corner Cipher
+    # The folder is spelled `timo-dobra`; the persona is Timotei "Timo" DOBRE,
+    # and that property's own README flags the folder as a probable typo. It is
+    # NOT corrected here: the misspelling is load-bearing in ten album.meta.json
+    # files and in one of their own tools, so it is theirs to change. The slug
+    # is a key into their tree; the NAME a listener sees comes from album.json,
+    # where artist_name already reads "Timo Dobre".
+    "timo-dobra":    r"J:\backrowfaith.com\music",     # The Back Row
     "party-giggles": r"J:\jubilujah.com\music\children",
     "tiny-tiggles":  r"J:\jubilujah.com\music\children",
 }
@@ -196,6 +203,31 @@ def is_ascii_slug(s):
 # SongID generation
 # --------------------------------------------------------------------------
 
+# A SongID IS A PUBLIC URL, FOREVER.
+#
+# It goes into the filename, the filename goes onto the CDN, and the CDN address
+# is what a listener's browser fetches and what appears in a share link. It is
+# also a permanent primary key, so an unfortunate one cannot be quietly swapped
+# out later without breaking the ledger.
+#
+# Twelve random characters from a 36-character alphabet will eventually spell
+# something. Timo Dobre's "Asa Am Apucat" drew SEX4RQ7NNBXW on a dry run, which
+# is how this was noticed - on a station about a young man staying in his
+# father's church. Rejecting a candidate costs one more draw from urandom and
+# nothing else, so the cheap thing is to draw again.
+#
+# Deliberately a SHORT list of substrings that read unambiguously badly in an
+# address. It is not a profanity filter and should not grow into one: every
+# entry here removes IDs from a finite space, and the point is to avoid an
+# embarrassment on a ministry URL, not to police an alphabet.
+ID_BLOCKLIST = ("SEX", "FUK", "FUC", "SHIT", "CUNT", "RAPE", "NAZI", "KKK",
+                "DAMN", "HELL", "666")
+
+
+def _id_is_clean(candidate):
+    return not any(bad in candidate for bad in ID_BLOCKLIST)
+
+
 def generate_song_id(used):
     """Rejection-sampled uniform 12-char ID, retried until globally unique."""
     while True:
@@ -204,7 +236,7 @@ def generate_song_id(used):
         if len(chars) < ID_LENGTH:
             continue
         candidate = "".join(chars)
-        if candidate not in used:
+        if candidate not in used and _id_is_clean(candidate):
             used.add(candidate)
             return candidate
 
@@ -362,8 +394,16 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
     # people actually use when setting something aside. Held folders are
     # REPORTED rather than passed over in silence, because an album whose audio
     # is on hold is a thing the operator should know about.
-    HOLD_RE = re.compile(r"wrong|hold|dup|duplicate|bad|old|backup|"
-                         r"unused|reject|ignore|do.?not.?use|delete", re.I)
+    # The words are matched between NON-LETTERS rather than on \b word
+    # boundaries, because a folder name is not prose. Python counts "_" as a
+    # word character, so \bdup\b does not match "tracks_dup" and \bold\b does
+    # not match "old_tracks" - the two shapes most likely to actually appear.
+    # Letters either side still block the false positives that make a guard
+    # like this untrustworthy: "goldfinger" is not old, "badmix" is not bad.
+    HOLD_WORDS = ["wrong", "hold", "dup", "duplicate", "bad", "old", "backup",
+                  "unused", "reject", "ignore", "delete", "do.?not.?use"]
+    HOLD_RE = re.compile("|".join(
+        "(?:^|[^A-Za-z])" + w + "(?:[^A-Za-z]|$)" for w in HOLD_WORDS), re.I)
 
     def _held(name):
         return name.startswith("_") or bool(HOLD_RE.search(name))

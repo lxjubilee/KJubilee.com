@@ -41,7 +41,8 @@ SRC_ROOT = r"J:\jubilujah.com\music\inspire"
 SRC_ROOTS = [SRC_ROOT,
              r"J:\singitdone.com\music",
              r"J:\jubilujah.com\music\children",
-             r"J:\cornercipher.com\music"]      # Marcus Reed / Corner Cipher
+             r"J:\cornercipher.com\music",     # Marcus Reed / Corner Cipher
+             r"J:\backrowfaith.com\music"]     # Timo Dobre / The Back Row
 DEST_ROOT = r"J:\kjubilee.com\music"
 CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalog-config.json")
 SIDECAR = "album.json"

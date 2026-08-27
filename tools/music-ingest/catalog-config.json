@@ -20,7 +20,8 @@
     "torah-sings": "TORA",
     "party-giggles": "PGIG",
     "tiny-tiggles": "TTIG",
-    "marcus-reed": "MRCS"
+    "marcus-reed": "MRCS",
+    "timo-dobra": "TIMO"
   },
   "genre_codes": {
     "_note": "Two-letter codes. Primary and secondary are concatenated into the 4-char genre field. Sourced from J:\\jubilujah.com\\music\\inspire\\persona-music-styles.md (the canonical persona genre authority) and from fused_genre in album.meta.json where present.",
@@ -57,7 +58,9 @@
     "AS": "Angel Songs",
     "CV": "Covenant Worship",
     "HH": "Hip-Hop / Christian Rap",
-    "TR": "Trap"
+    "TR": "Trap",
+    "RF": "Romanian Folk / Horă & Sârbă",
+    "PB": "Posaunenchor Brass Chorale"
   },
   "album_genre_overrides": {
     "_note": "Keyed by album PREFIX+NUMBER (language-independent) so every language edition inherits the same genre, while staying distinct across artists. Beats artist_genres.",
@@ -298,6 +301,7 @@
     "torah-sings": "COMH",
     "radiant-stones": "JPPW",
     "marcus-reed": "HHTR",
+    "timo-dobra": "RFPB",
     "party-giggles": "KDPY",
     "tiny-tiggles": "KDPY"
   },
@@ -322,10 +326,12 @@
     "party-giggles": "CCI",
     "tiny-tiggles": "CCI",
     "radiant-stones": "CCI",
-    "marcus-reed": "CCI"
+    "marcus-reed": "CCI",
+    "timo-dobra": "CCI"
   },
   "artist_slug_source": {
     "_note": "Which source names a song for this catalogue. Default is the album metadata; 'filename' says the files on disk carry the authored slugs and the metadata does not match the audio. Hand-authored song_slug_overrides still win either way.",
-    "tiny-tiggles": "filename"
+    "tiny-tiggles": "filename",
+    "timo-dobra": "filename"
   }
 }

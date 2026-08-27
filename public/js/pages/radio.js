@@ -131,7 +131,7 @@ document.addEventListener('error', function (e) {
                 // then copy to /opt/jubilee-radio/storage/playlists on the radio
                 // host and run `torah-sings.swap` over the Liquidsoap telnet port.
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM305.12-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM305.40-EN/delivery/music.json",
                 currentShow: { name: "Torah Sings Live", host: "Zev Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Sunrise Praise" },
@@ -268,7 +268,7 @@ document.addEventListener('error', function (e) {
                 //   node tools/build-station-manifest.js --station HM303.10-EN
                 //   node tools/build-station-playlist.js --station HM303.10-EN --out-dir <dir>
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM314.88-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM303.10-EN/delivery/music.json",
                 currentShow: { name: "Yes and Amen Live", host: "Elias Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Morning Declaration" },
@@ -372,7 +372,7 @@ document.addEventListener('error', function (e) {
                 // station's whole rotation, which is why the stream URL is now
                 // null: the day file is the programme and the source.
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM325.18-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM360.30-EN/delivery/music.json",
                 currentShow: { name: "God's Little Lambs Live", host: "My Tiny Tiggles", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Lamb Songs Morning" },
@@ -419,7 +419,7 @@ document.addEventListener('error', function (e) {
                 description: "Family-celebratory programming — multiplies through parent-driven discovery and household co-listening.",
                 listeners: "Kids 6–8 · Family Party",
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM329.12-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM361.90-EN/delivery/music.json",
                 currentShow: { name: "Jubilee Kids Party Live", host: "Jubilee Kids", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Party Morning" },
@@ -486,7 +486,7 @@ document.addEventListener('error', function (e) {
                 // (production serves /cdn/music/* by proxy to cdn.jubileeverse.com,
                 //  which holds the source tree — use canonical only for local dev.)
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM335.16-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM309.30-EN/delivery/music.json",
                 currentShow: { name: "Gospel Country Live", host: "Elias Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "Country Gospel Morning" },
@@ -537,7 +537,7 @@ document.addEventListener('error', function (e) {
                 // (production serves /cdn/music/* by proxy to cdn.jubileeverse.com,
                 //  which holds the source tree — use canonical only for local dev.)
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM339.18-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM302.50-EN/delivery/music.json",
                 currentShow: { name: "Pentecostal Shout Live", host: "Imani Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Sunday Morning Gospel" },
@@ -600,7 +600,7 @@ document.addEventListener('error', function (e) {
                 //   node tools/build-station-manifest.js --station HM311.50-EN
                 //   node tools/build-station-playlist.js --station HM311.50-EN --out-dir <dir>
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM347.14-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM311.50-EN/delivery/music.json",
                 currentShow: { name: "Riddim and Rhyme Live", host: "Zariah Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "10:00", show: "Morning Riddim" },
@@ -621,7 +621,7 @@ document.addEventListener('error', function (e) {
                 // track straight from cdn.kjubilee.com. No Icecast mount.
                 //   node tools/build-station-manifest.js --station HM313.80-EN
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM345.24-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM313.80-EN/delivery/music.json",
                 currentShow: { name: "The Ancient Paths Live", host: "Amir Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Fajr Light" },
@@ -655,6 +655,15 @@ document.addEventListener('error', function (e) {
                     { time: "10:00", show: "Comeback Stories" },
                     { time: "22:00", show: "Late-Night Return" }
                 ]
+            },
+            {
+                slug: "backrow-faith", hm: "316.60", frequency: "HM 316.60", name: "Backrow Faith",
+                band: "fivefold", primary: "music",
+                mode: "Both", phase: 2, bestseller: 78, reach: "40M",
+                image: "/images/jubilee-profile.png",
+                description: "For the second-generation Romanian American — English is how they think, Romanian is how they pray, and leaving was never really on offer. Staying, and being different.",
+                listeners: "Romanian-American Gospel · Sacramento",
+                currentShow: { name: "The Back Row", host: "Timo Dobre", time: "24/7 Live" },
             },
             {
                 slug: "corner-cipher", hm: "315.20", frequency: "HM 315.20", name: "Corner Cipher",
@@ -819,7 +828,7 @@ document.addEventListener('error', function (e) {
                 //   node tools/build-station-manifest.js --station HM314.40-EN
                 //   node tools/build-station-playlist.js --station HM314.40-EN --out-dir <dir>
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM379.14-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM314.40-EN/delivery/music.json",
                 currentShow: { name: "Midnight Praise Live", host: "Nova Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "22:00", show: "The Long Night" },
@@ -925,7 +934,7 @@ document.addEventListener('error', function (e) {
                 //   node tools/build-station-manifest.js --station HM312.10-EN
                 //   node tools/build-station-playlist.js --station HM312.10-EN --out-dir <dir>
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM399.18-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM312.10-EN/delivery/music.json",
                 currentShow: { name: "Island Hallelujah Live", host: "Tahoma Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "Sunrise on the Water" },
@@ -943,7 +952,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Spanish-language Christian flagship — Praise, Worship, and CCM curated for the global Spanish-speaking family across Latin America, Spain, and the U.S. diaspora.",
                 listeners: "Familia · Spanish-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM320.30-ES/delivery/music.json",
                 currentShow: { name: "Familia Inspire Live", host: "Santiago Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Mañana Familia" },
@@ -957,7 +969,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Spanish-language prayer and intercession — Padre Nuestro, Salmos, and pastoral oraciones for the global Spanish-speaking family.",
                 listeners: "Oración · Spanish-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Spanish Live", host: "Santiago Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Oración de la Mañana" },
@@ -971,7 +985,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Brazilian Portuguese Christian flagship — sertanejo gospel, MPB worship, and contemporary Brazilian praise for the largest Christian nation in Latin America.",
                 listeners: "Brasil · Portuguese-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM321.90-BR/delivery/music.json",
                 currentShow: { name: "Brasil Inspire Live", host: "Santiago Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Manhã Brasil" },
@@ -985,7 +1002,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Mandarin Chinese Christian flagship — house-church-friendly worship and teaching for Mainland, Taiwan, Hong Kong, and the global Chinese diaspora.",
                 listeners: "Asia · Mandarin-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM334.40-ZH/delivery/music.json",
                 currentShow: { name: "Asia Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "晨曦敬拜" },
@@ -999,7 +1019,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Mandarin-language prayer — Lord's Prayer, Psalms, and pastoral intercession for Chinese believers worldwide and the global diaspora.",
                 listeners: "祷告 · Mandarin-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Mandarin Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "晨祷" },
@@ -1013,7 +1035,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Hindi/Tamil-mix Christian flagship for the Indian subcontinent — indigenous instrumentation with global praise vocabulary.",
                 listeners: "India · Hindi-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM332.10-HI/delivery/music.json",
                 currentShow: { name: "Inspire India Live", host: "Subcontinent Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "Subah Aaradhana" },
@@ -1027,7 +1052,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Hindi-language prayer and intercession — Pita Hamare, Bhajans, and pastoral prayers for the Indian subcontinent and the global Hindi diaspora.",
                 listeners: "Prarthana · Hindi-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Hindi Live", host: "Subcontinent Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Subah Prarthana" },
@@ -1041,7 +1068,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Arabic-language Christian flagship — Coptic, Maronite, and Levantine Christian musical traditions woven with global CCM for the Arabic-speaking world.",
                 listeners: "Crown · Arabic-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM328.70-AR/delivery/music.json",
                 currentShow: { name: "Inspire Crown Live", host: "Amir Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Tasbeha Sabah" },
@@ -1055,7 +1085,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Arabic-language prayer and intercession — Abana Alladhi, Mazameer, and pastoral oraciones for the Arabic-speaking Christian world.",
                 listeners: "Salat · Arabic-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Arabic Live", host: "Amir Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "05:00", show: "Salat al-Sabah" },
@@ -1069,7 +1101,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "French-language Christian flagship — Hexagonal, African Francophone, and Caribbean Christian music for France, Belgium, Quebec, and the wider Francophonie.",
                 listeners: "France · French-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM322.50-FR/delivery/music.json",
                 currentShow: { name: "France Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Matin Inspire" },
@@ -1087,7 +1122,7 @@ document.addEventListener('error', function (e) {
                 // listener hears the same track at the same moment. The mount
                 // plays the same verified catalogue the manifest describes.
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM332.16-RO/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM326.20-RO/delivery/music.json",
                 currentShow: { name: "Jubilee Praise Live (RO)", host: "Jubilee Inspire (RO)", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "Lăudați pe Yahuah" },
@@ -1101,7 +1136,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Portuguese-language prayer — Pai Nosso, Salmos, and pastoral intercessões for Brazil, Portugal, and the global Lusophone Christian family.",
                 listeners: "Oração · Portuguese-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Portuguese Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Oração da Manhã" },
@@ -1115,7 +1152,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Korean-language Christian flagship — Seoul-megachurch worship traditions blended with global CCM for South Korea, the diaspora, and the underground church.",
                 listeners: "Korea · Korean-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Korea Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "05:00", show: "새벽 기도 찬양" },
@@ -1129,7 +1168,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "German-language Christian flagship — Lutheran chorale heritage and modern Lobpreis curated for Germany, Austria, Switzerland, and the global Germanophone family.",
                 listeners: "Deutschland · German-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM323.10-DE/delivery/music.json",
                 currentShow: { name: "Deutschland Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Morgenlob" },
@@ -1143,7 +1185,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous French-language prayer and intercession — Notre Père, Psaumes, and pastoral prières for the worldwide Francophone Christian family.",
                 listeners: "Prière · French-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in French Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Prière du Matin" },
@@ -1157,7 +1201,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Russian-language Christian flagship — Orthodox choral heritage, Baptist hymnody, and modern Russian worship for Russia, Ukraine, Belarus, and the diaspora.",
                 listeners: "Russia · Russian-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM327.60-RU/delivery/music.json",
                 currentShow: { name: "Russia Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "Утренняя Хвала" },
@@ -1171,7 +1218,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Italian-language Christian flagship — Catholic, Pentecostal, and Evangelical Italian worship traditions woven into one continuous stream for Italy and the diaspora.",
                 listeners: "Italia · Italian-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM324.80-IT/delivery/music.json",
                 currentShow: { name: "Italia Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Lode del Mattino" },
@@ -1185,7 +1235,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Russian-language prayer — Otche Nash, Psalmy, and pastoral intercessions for the Russian-speaking Christian world.",
                 listeners: "Молитва · Russian-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Russian Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Утренняя Молитва" },
@@ -1199,7 +1251,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Filipino-language Christian flagship — Tagalog praise, OPM gospel, and Spirit-filled Filipino worship for the Philippines and the global OFW family.",
                 listeners: "Pilipinas · Tagalog-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM339.90-TL/delivery/music.json",
                 currentShow: { name: "Pilipinas Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Umagang Papuri" },
@@ -1213,7 +1268,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Vietnamese-language Christian flagship — Catholic, Hmong, and Evangelical Vietnamese worship for Vietnam and the global Vietnamese Christian diaspora.",
                 listeners: "Vietnam · Vietnamese-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM337.70-VI/delivery/music.json",
                 currentShow: { name: "Vietnam Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Ca Ngợi Buổi Sáng" },
@@ -1227,7 +1285,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Korean-language prayer — early-morning saebyeok kido, Psalms, and pastoral intercession for the Korean Christian world.",
                 listeners: "기도 · Korean-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Korean Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "05:00", show: "새벽 기도" },
@@ -1241,7 +1301,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Pan-African Christian P&W flagship — Afrobeat-inflected praise blending continental worship traditions with global CCM, anchored in Kiswahili.",
                 listeners: "Africa · Kiswahili-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Africa Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Asubuhi ya Sifa" },
@@ -1255,7 +1317,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Yorùbá-language Christian flagship — Nigerian gospel, Pentecostal fire, and West African worship traditions for the Yorùbá-speaking Christian family.",
                 listeners: "West Africa · Yorùbá-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "West Africa Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Ìyìn Òwúrọ̀" },
@@ -1269,7 +1333,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Kiswahili prayer — Baba Yetu, Zaburi, and pastoral maombi for East Africa and the wider Kiswahili-speaking Christian world.",
                 listeners: "Maombi · Swahili-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Swahili Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Maombi ya Asubuhi" },
@@ -1283,7 +1349,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Amharic-language Christian flagship — Ethiopian Orthodox heritage and modern Pentecostal Ethiopian worship for Ethiopia and the global diaspora.",
                 listeners: "Ethiopia · Amharic-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Ethiopia Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "የጠዋት ምስጋና" },
@@ -1297,7 +1365,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Polish-language Christian flagship — Catholic devotional heritage and modern Polish worship for Poland and the worldwide Polish diaspora.",
                 listeners: "Polska · Polish-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM325.40-PL/delivery/music.json",
                 currentShow: { name: "Polska Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "Poranna Chwała" },
@@ -1311,11 +1382,174 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Bahasa Indonesia Christian flagship — Indonesian and Bataknese worship traditions for the largest Muslim-majority nation's Christian minority and the diaspora.",
                 listeners: "Indonesia · Bahasa-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Indonesia Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "Pujian Pagi" },
                     { time: "20:00", show: "Penyembahan Malam" }
+                ]
+            },
+            /* ── Ten new language editions, 2026-08-26 ─────────────────────
+               Opened after a scan of the repository: every language holding
+               at least twelve songs gets its own frequency, so a catalogue
+               that exists has somewhere to play and a language still being
+               written has a placeholder to grow into.
+
+               streamUrl is null on all ten. These stations play from their
+               own published manifest and schedule, and pointing them at the
+               shared adult mount would put English worship under a Turkish
+               station ident — which is what a placeholder stream actually
+               sounds like to the listener who tuned in for Turkish. */
+            {
+                slug: "portugal-inspire-portugues", hm: "321.50", frequency: "HM 321.50", name: "Portugal Inspire (Português)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 5, bestseller: 84, reach: "10M",
+                image: "/images/jubilee-profile.png",
+                description: "European Portuguese worship — the Lisbon and Porto congregational tradition, held apart from Brasil Inspire because the two carry different repertoires rather than one accent.",
+                listeners: "Portugal · Portuguese-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM321.50-PT/delivery/music.json",
+                currentShow: { name: "Portugal Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Louvor da Manhã" },
+                    { time: "20:00", show: "Adoração da Noite" }
+                ]
+            },
+            {
+                slug: "nederland-inspire-nederlands", hm: "323.60", frequency: "HM 323.60", name: "Nederland Inspire (Nederlands)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 5, bestseller: 82, reach: "16M",
+                image: "/images/jubilee-profile.png",
+                description: "Dutch-language worship for the Netherlands and Flanders — psalm-singing heritage and the modern Dutch worship movement on one frequency.",
+                listeners: "Nederland · Dutch-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM323.60-NL/delivery/music.json",
+                currentShow: { name: "Nederland Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Ochtendlof" },
+                    { time: "20:00", show: "Avondaanbidding" }
+                ]
+            },
+            {
+                slug: "danmark-inspire-dansk", hm: "324.20", frequency: "HM 324.20", name: "Danmark Inspire (Dansk)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 5, bestseller: 80, reach: "6M",
+                image: "/images/jubilee-profile.png",
+                description: "Danish worship — the Grundtvig hymn inheritance and contemporary Nordic praise, for Denmark and the Danish diaspora.",
+                listeners: "Danmark · Danish-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM324.20-DA/delivery/music.json",
+                currentShow: { name: "Danmark Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Morgenlovsang" },
+                    { time: "20:00", show: "Aftentilbedelse" }
+                ]
+            },
+            {
+                slug: "sverige-inspire-svenska", hm: "324.40", frequency: "HM 324.40", name: "Sverige Inspire (Svenska)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 5, bestseller: 81, reach: "10M",
+                image: "/images/jubilee-profile.png",
+                description: "Swedish worship — the free-church song tradition that sent hymns around the world, alongside modern Swedish praise.",
+                listeners: "Sverige · Swedish-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM324.40-SV/delivery/music.json",
+                currentShow: { name: "Sverige Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Morgonlovsång" },
+                    { time: "20:00", show: "Kvällstillbedjan" }
+                ]
+            },
+            {
+                slug: "cesko-inspire-cestina", hm: "325.80", frequency: "HM 325.80", name: "Česko Inspire (Čeština)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 4, bestseller: 79, reach: "10M",
+                image: "/images/jubilee-profile.png",
+                description: "Czech-language worship — a church that kept singing through decades when it was not allowed to, for Czechia and the Czech diaspora.",
+                listeners: "Česko · Czech-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM325.80-CS/delivery/music.json",
+                currentShow: { name: "Česko Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Ranní Chvály" },
+                    { time: "20:00", show: "Večerní Uctívání" }
+                ]
+            },
+            {
+                slug: "magyar-inspire-magyar", hm: "326.80", frequency: "HM 326.80", name: "Magyar Inspire (Magyar)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 4, bestseller: 79, reach: "13M",
+                image: "/images/jubilee-profile.png",
+                description: "Hungarian worship — Reformed psalter roots and contemporary Magyar praise, for Hungary and the Hungarian communities across the Carpathian basin.",
+                listeners: "Magyarország · Hungarian-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM326.80-HU/delivery/music.json",
+                currentShow: { name: "Magyar Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Reggeli Dicséret" },
+                    { time: "20:00", show: "Esti Imádat" }
+                ]
+            },
+            {
+                slug: "bulgaria-inspire-balgarski", hm: "327.20", frequency: "HM 327.20", name: "Bulgaria Inspire (Български)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 3, bestseller: 76, reach: "8M",
+                image: "/images/jubilee-profile.png",
+                description: "Bulgarian worship — the newest and smallest catalogue on this band, opened at the twelve-song threshold so the language has a frequency to grow into.",
+                listeners: "България · Bulgarian-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM327.20-BG/delivery/music.json",
+                currentShow: { name: "Bulgaria Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Утринна Хвала" },
+                    { time: "20:00", show: "Вечерно Поклонение" }
+                ]
+            },
+            {
+                slug: "turkiye-inspire-turkce", hm: "328.20", frequency: "HM 328.20", name: "Türkiye Inspire (Türkçe)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 3, bestseller: 78, reach: "85M",
+                image: "/images/jubilee-profile.png",
+                description: "Turkish-language worship for a church that is very small and very old — Anatolia is where a great deal of the New Testament was addressed.",
+                listeners: "Türkiye · Turkish-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM328.20-TR/delivery/music.json",
+                currentShow: { name: "Türkiye Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "Sabah Övgüsü" },
+                    { time: "20:00", show: "Akşam Tapınması" }
+                ]
+            },
+            {
+                slug: "israel-inspire-ivrit", hm: "329.00", frequency: "HM 329.00", name: "Israel Inspire (עברית)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "OHI", phase: 4, bestseller: 85, reach: "9M",
+                image: "/images/jubilee-profile.png",
+                description: "Hebrew-language worship, sung in the names the Scriptures use — Messianic praise for Israel and Hebrew-speaking believers everywhere.",
+                listeners: "ישראל · Hebrew-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM329.00-HE/delivery/music.json",
+                currentShow: { name: "Israel Inspire Live", host: "Zev Inspire", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "שיר של שחר" },
+                    { time: "20:00", show: "תהילת ערב" }
+                ]
+            },
+            {
+                slug: "thailand-inspire-thai", hm: "337.20", frequency: "HM 337.20", name: "Thailand Inspire (ไทย)",
+                band: "multi", primary: "multilanguage", parentColor: "blue",
+                mode: "Both", phase: 3, bestseller: 77, reach: "70M",
+                image: "/images/jubilee-profile.png",
+                description: "Thai-language worship — a church of well under one percent, singing in a tonal language where the melody has to agree with the words.",
+                listeners: "ประเทศไทย · Thai-Language",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM337.20-TH/delivery/music.json",
+                currentShow: { name: "Thailand Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
+                schedule: [
+                    { time: "07:00", show: "สรรเสริญยามเช้า" },
+                    { time: "20:00", show: "นมัสการยามเย็น" }
                 ]
             },
             {
@@ -1325,7 +1559,10 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Japanese-language Christian flagship — gentle worship and contemplative teaching for Japan's small but devoted Christian community and the global diaspora.",
                 listeners: "Japan · Japanese-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM336.60-JA/delivery/music.json",
                 currentShow: { name: "Japan Inspire Live", host: "Continental Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "07:00", show: "朝の賛美" },
@@ -1339,7 +1576,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Continuous Tagalog-language prayer — Ama Namin, Mga Awit, and pastoral panalangin for the Filipino Christian family worldwide.",
                 listeners: "Panalangin · Tagalog-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Jubilee Prayers in Tagalog Live", host: "Continental Prayer Team", time: "24/7 Live" },
                 schedule: [
                     { time: "05:00", show: "Panalangin sa Umaga" },
@@ -1353,7 +1592,9 @@ document.addEventListener('error', function (e) {
                 image: "/images/jubilee-profile.png",
                 description: "Bengali-language Christian flagship — Bangladeshi and West Bengali Christian worship traditions for the Bengali-speaking Christian family across the subcontinent.",
                 listeners: "Bengal · Bengali-Language",
-                streamUrl: STREAM_ADULT,
+                // Was STREAM_ADULT — the shared English mount. A station named in
+                // another language must never fall back to English audio.
+                streamUrl: null,
                 currentShow: { name: "Bengal Inspire Live", host: "Subcontinent Worship Team", time: "24/7 Live" },
                 schedule: [
                     { time: "06:00", show: "সকালের প্রশংসা" },
@@ -1560,7 +1801,7 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "latin-worship", hm: "310.90", frequency: "HM 310.90", name: "Latin Worship (Sung in English)",
+                slug: "latin-worship", hm: "310.90", frequency: "HM 310.90", name: "Latin Worship (English-Spanish)",
                 band: "fivefold", primary: "music",
                 // Carries its own format name rather than the shared
                 // "Praise & Worship" label — the whole point of this frequency is
@@ -1575,7 +1816,7 @@ document.addEventListener('error', function (e) {
                 //   node tools/build-station-manifest.js --station HM310.90-EN
                 //   node tools/build-station-playlist.js --station HM310.90-EN --out-dir <dir>
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM376.15-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM310.90-EN/delivery/music.json",
                 currentShow: { name: "Latin Worship Live", host: "Santiago Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "08:00", show: "Manana de Alabanza" },
@@ -1596,7 +1837,7 @@ document.addEventListener('error', function (e) {
                 //   node tools/build-station-manifest.js --station HM306.20-EN
                 //   node tools/build-station-playlist.js --station HM306.20-EN --out-dir <dir>
                 streamUrl: null,
-                musicManifestUrl: "/cdn/radio/HM377.70-EN/delivery/music.json",
+                musicManifestUrl: "/cdn/radio/HM306.20-EN/delivery/music.json",
                 currentShow: { name: "Hebraic Celebrations Live", host: "Zev Inspire", time: "24/7 Live" },
                 schedule: [
                     { time: "09:00", show: "Morning Shema" },
