@@ -504,7 +504,12 @@ th.adm-perm-col { text-align: center; }
 .adm-rate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .adm-rate-btn.is-on--A { background: var(--adm-green); color: #04180a; }
 .adm-rate-btn.is-on--B { background: var(--adm-amber); color: #1d1503; }
-.adm-rate-btn.is-on--C { background: var(--adm-surface-2); color: var(--adm-text); }
+/* C was --adm-surface-2 (#1c2230), within a shade of the panel behind it, so a
+   song set to C looked like a song set to nothing — which is the one pair this
+   control has to keep apart. A solid mid-grey fill reads as chosen at a glance.
+   Deliberately NOT a third colour: C means "not promoted", so it should sit
+   quietly beside A and B rather than compete with them for the eye. */
+.adm-rate-btn.is-on--C { background: var(--adm-text-dim); color: var(--adm-bg); }
 
 /* A rating writes on click, so the row's only transient state is "in flight".
    Marked on the row rather than in the toolbar because the toolbar cannot say

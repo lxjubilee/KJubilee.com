@@ -192,7 +192,6 @@ export default function Users() {
                     <thead>
                         <tr>
                             <th scope="col">Account</th>
-                            <th scope="col">Jubilee ID</th>
                             <th scope="col">Role</th>
                             <th scope="col">Status</th>
                             <th scope="col">Joined</th>
@@ -228,7 +227,6 @@ export default function Users() {
                                             <span className="adm-who-email" title={u.email}>{u.email}</span>
                                         </span>
                                     </td>
-                                    <td><span className="adm-cell-dim">{u.jubilee_id ? <code>{u.jubilee_id}</code> : '—'}</span></td>
                                     <td>
                                         <span className={'adm-badge adm-tone-' + (ROLE_TONE[role] || 'neutral')}>
                                             {ROLE_LABEL[role] || role}
@@ -261,7 +259,7 @@ export default function Users() {
                                 </tr>,
                                 confirming?.user?.id === u.id && (
                                     <tr key={u.id + '-confirm'} className="adm-row-open">
-                                        <td colSpan={7}>
+                                        <td colSpan={6}>
                                             <ConfirmRole
                                                 user={confirming.user}
                                                 to={confirming.to}
@@ -274,7 +272,7 @@ export default function Users() {
                             ];
                         })}
                         {!users.length && state === 'ready' && (
-                            <tr><td colSpan={7} className="adm-empty">
+                            <tr><td colSpan={6} className="adm-empty">
                                 {query || role ? 'No account matches that search.' : 'No accounts yet.'}
                             </td></tr>
                         )}
