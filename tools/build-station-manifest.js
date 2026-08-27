@@ -295,6 +295,95 @@ const STATIONS = {
                 'MDIM1021EN',   // no word for it yet
                 'MDIM1022EN',   // three a.m. saints
             ],
+
+            // WRITTEN, NOT YET RECORDED.
+            //
+            // Melody has ~90 English records written and only 22 recorded. These
+            // 62 have no audio in the source tree, so they contribute nothing to
+            // the manifest today — the builder selects from the LEDGER, and an
+            // album with no tracks in it selects no tracks. They are named so that
+            // each joins the moment its audio is ingested, without anyone having to
+            // remember on that day that this file exists.
+            //
+            // Every one was checked against its album.meta.json first and declares
+            // secular_universal, the same posture as the twenty-two above. Six
+            // other Melody albums carry no such marker — MDIM1046EN, 1055EN,
+            // 1064EN, 1067EN, 1086EN and the Hindi MDIM1002HI — and are
+            // deliberately absent: unmarked is not the same as cleared.
+            //
+            // WHAT THIS TRADES AWAY. A blueprint describes what was WRITTEN, not
+            // what will be recorded against it, and those can differ — Zariah's
+            // ZHIM1030RO holds an entirely different album's audio under its own
+            // name. Pre-registering therefore spends a reading now to avoid one
+            // later, and the cost is that new audio can reach the one frequency
+            // built for someone not in church yet without being heard first.
+            // The builder prints GRADUATED when a pending album gains audio, and
+            // the import report shows HM 376.20 gaining tracks. Those two lines
+            // are the whole safety net. Listen when they appear.
+            pending: [
+                'MDIM1023EN',   // show up tuesday
+                'MDIM1024EN',   // brand new heartbeat
+                'MDIM1025EN',   // crush like its summer
+                'MDIM1026EN',   // show up for me
+                'MDIM1027EN',   // mirror says stay
+                'MDIM1028EN',   // loudest yes in the room
+                'MDIM1029EN',   // tough like tuesday
+                'MDIM1030EN',   // big loud plans
+                'MDIM1031EN',   // confetti on the floor
+                'MDIM1032EN',   // move til morning
+                'MDIM1033EN',   // alive on purpose
+                'MDIM1034EN',   // sunscreen symphony
+                'MDIM1035EN',   // goodbye looks good
+                'MDIM1036EN',   // backyard polaroid
+                'MDIM1037EN',   // same old street
+                'MDIM1038EN',   // keys to my own car
+                'MDIM1039EN',   // window seat forever
+                'MDIM1040EN',   // tomorrow counts
+                'MDIM1041EN',   // love me loud
+                'MDIM1042EN',   // main character energy
+                'MDIM1043EN',   // chase it
+                'MDIM1044EN',   // right now looks like this
+                'MDIM1045EN',   // day one crew
+                'MDIM1047EN',   // bounce back
+                'MDIM1048EN',   // soft place to land
+                'MDIM1049EN',   // its okay today
+                'MDIM1050EN',   // one of one
+                'MDIM1051EN',   // growing wings
+                'MDIM1052EN',   // dance floor diary
+                'MDIM1053EN',   // brighter from here
+                'MDIM1054EN',   // hometown heartbeat
+                'MDIM1056EN',   // wings wide open
+                'MDIM1057EN',   // we move together
+                'MDIM1058EN',   // tiny magic
+                'MDIM1059EN',   // grind and glow
+                'MDIM1060EN',   // miles between us
+                'MDIM1061EN',   // taillights out of town
+                'MDIM1062EN',   // all odds all in
+                'MDIM1063EN',   // same sky different clocks
+                'MDIM1065EN',   // the hands that raised me
+                'MDIM1066EN',   // my first almost
+                'MDIM1068EN',   // second first day
+                'MDIM1069EN',   // weird on purpose
+                'MDIM1070EN',   // countdown to your face
+                'MDIM1071EN',   // one loud summer
+                'MDIM1072EN',   // lighter than the grudge
+                'MDIM1073EN',   // ive got the heavy end
+                'MDIM1074EN',   // still chasing fireflies
+                'MDIM1075EN',   // seasons dont ask first
+                'MDIM1076EN',   // home is a person
+                'MDIM1077EN',   // 2 am blueprints
+                'MDIM1078EN',   // we did the thing
+                'MDIM1079EN',   // down is not done
+                'MDIM1080EN',   // knew me first
+                'MDIM1081EN',   // do not disturb
+                'MDIM1082EN',   // you wrote my bio
+                'MDIM1083EN',   // plus one forever
+                'MDIM1084EN',   // out of office
+                'MDIM1085EN',   // twenty questions
+                'MDIM1088EN',   // filter off
+                'MDIM1089EN',   // never left on read
+                'MDIM1090EN',   // confetti at midnight
+            ],
         },
     },
     // HM 315.20 CORNER CIPHER — Christian rap, Atlanta.
@@ -1100,6 +1189,24 @@ function buildStation(stationId, urlLayout) {
     // a station can say "this artist, minus these albums" without listing the
     // other forty albums by hand — which is how a roster silently loses tracks
     // when new albums are ingested.
+    // `pending` is the third state an album can be in.
+    //
+    // `albums` means "this exists and belongs here"; an entry that matches
+    // nothing is a typo and is an ERROR, because it silently shrinks a station.
+    // But an album can also be WRITTEN AND NOT YET RECORDED, which is the normal
+    // condition for most of a persona's catalogue, and naming one is neither a
+    // typo nor a mistake — it is how a curated station says "when this is
+    // recorded, it belongs here" without anyone having to remember this file
+    // exists on the day the audio lands.
+    //
+    // Kept SEPARATE from `albums` rather than folded in, because collapsing the
+    // two would cost the typo guard: if any unmatched entry were acceptable,
+    // a mistyped code would never be reported again. Here an unmatched `albums`
+    // entry is still an error, an unmatched `pending` entry is expected, and a
+    // pending album that HAS appeared is reported as having graduated — which is
+    // also the cue to listen to what actually arrived.
+    const selPending = new Set(sel && sel.pending || []);
+
     const exc = sel && sel.exclude || null;
     const excArtists = new Set(exc && exc.artists || []);
     const excAlbums  = new Set(exc && exc.albums  || []);
@@ -1110,7 +1217,7 @@ function buildStation(stationId, urlLayout) {
         if (!pool[r.artist]) return false;
         if (!sel) return true;
         const included = selArtists.has(r.artist) || selAlbums.has(r.albumCode) ||
-                         selSongs.has(r.songId) ||
+                         selPending.has(r.albumCode) || selSongs.has(r.songId) ||
                          (selAlbumRe !== null && selAlbumRe.test(r.albumCode));
         if (!included) return false;
         return !(excArtists.has(r.artist) || excAlbums.has(r.albumCode) ||
@@ -1120,12 +1227,17 @@ function buildStation(stationId, urlLayout) {
     // A named album or SongID that matches nothing is a typo or a track that
     // left the ledger, and it silently shrinks the station. Surface it.
     const unmatched = [];
+    const awaiting = [];      // named in `pending`, no audio yet — expected
+    const graduated = [];     // named in `pending` and now IN the ledger
     if (sel) {
         const gotAlbum = new Set(selected.map(function (r) { return r.albumCode; }));
         const gotSong  = new Set(selected.map(function (r) { return r.songId; }));
         const gotArtist = new Set(selected.map(function (r) { return r.artist; }));
         selArtists.forEach(function (a) { if (!gotArtist.has(a)) unmatched.push('artist ' + a); });
         selAlbums.forEach(function (a) { if (!gotAlbum.has(a)) unmatched.push('album ' + a); });
+        selPending.forEach(function (a) {
+            (gotAlbum.has(a) ? graduated : awaiting).push(a);
+        });
         selSongs.forEach(function (s) { if (!gotSong.has(s)) unmatched.push('song ' + s); });
         if (selAlbumRe !== null && !selected.some(function (r) { return selAlbumRe.test(r.albumCode); })) {
             unmatched.push('albumPattern ' + sel.albumPattern);
@@ -1317,7 +1429,8 @@ function buildStation(stationId, urlLayout) {
     };
 
     return { manifest: manifest, missing: missing, unreadable: unreadable,
-             eligible: selected.length, unmatched: unmatched };
+             eligible: selected.length, unmatched: unmatched,
+             awaiting: awaiting, graduated: graduated };
 }
 
 // ── Verify ───────────────────────────────────────────────────────────────
@@ -1518,6 +1631,15 @@ async function main(argv) {
             console.log('  ERROR: ' + built.unmatched.length + ' selection entr(ies) matched ' +
                         'nothing in the ledger — the station is smaller than intended:');
             for (const u of built.unmatched) console.log('    ' + u);
+        }
+        if (built.graduated && built.graduated.length) {
+            console.log('  GRADUATED: ' + built.graduated.length + ' album(s) named as pending now have ' +
+                        'audio and are ON THIS STATION — listen before they have been on air long:');
+            for (const g of built.graduated) console.log('    ' + g);
+        }
+        if (built.awaiting && built.awaiting.length) {
+            console.log('  note: ' + built.awaiting.length + ' album(s) are named as pending and have no audio ' +
+                        'yet — each joins this station automatically once ingested.');
         }
         const silent = manifest.selection.explicit ? 0
             : manifest.selection.artists_eligible.length - t.artists;

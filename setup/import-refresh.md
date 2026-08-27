@@ -517,14 +517,15 @@ for reading.
 | `HM360.30-EN` | God's Little Lambs | CCI | EN | artist `tiny-tiggles` (ages 3–5) |
 | `HM361.90-EN` | Jubilee Kids Party | CCI | EN | artist `party-giggles` (ages 6–8) |
 
-### The five selection shapes
+### The six selection shapes
 
 | Shape | Meaning | Use when |
 |---|---|---|
 | *(none)* | Pool + language only | The language is the whole identity — every track in it belongs |
 | `artists: [...]` | A persona roster | The station is "these voices" |
 | `albums: [...]` | Explicit album codes | A curated set that no rule can express |
-| `albumPattern: '…'` | Regex on the album code | A numbered series, open-ended by design |
+| `pending: [...]` | Albums written but not yet recorded | The same curated set, declared ahead of its audio |
+| `albumPattern: …` | Regex on the album code | A numbered series, open-ended by design |
 | `exclude: { albums: [...] }` | Subtraction from any of the above | A specific record must not air — duplicates, licensing, tone |
 
 `exclude` composes with the others. `CAIM1027EN` is excluded from the flagship
@@ -532,6 +533,32 @@ because all twelve of its tracks are **byte-identical** to `CAIM1026EN` under
 different titles; airing both played the same twelve recordings under twenty-four
 names. The files stay in the repository — exclusion is an airing decision, not a
 deletion.
+
+#### `albums` vs `pending` — and why they are not one list
+
+An album named in `albums` that matches nothing in the ledger is an **ERROR**: it
+is a typo or a track that left the ledger, and either way the station is quietly
+smaller than intended. That guard is the reason a curated station can be trusted.
+
+But "written and not yet recorded" is the normal condition for most of a
+persona’s catalogue — Melody has ~90 English records written and 22 recorded — and
+naming one is neither a typo nor a mistake. `pending` says "when this is recorded,
+it belongs here", so the album joins on the day its audio is ingested without
+anyone having to remember that the station file exists.
+
+Keeping them separate is what preserves the guard. If any unmatched entry were
+acceptable, a mistyped code would never be reported again.
+
+The builder prints one of two lines for `pending`:
+
+- `note: N album(s) are named as pending and have no audio yet` — the steady state.
+- `GRADUATED: ...` — an album named as pending now HAS audio and is on the station.
+
+**`GRADUATED` is a cue to listen.** A blueprint describes what was written, not
+what was recorded against it, and the two can differ: Zariah’s `ZHIM1030RO` holds
+an entirely different album’s audio under its own name. Pre-registering spends a
+reading now to save one later, and that line plus the import report’s track-count
+change are the only things standing between new audio and the air.
 
 ### Adding a station to the pipeline
 
