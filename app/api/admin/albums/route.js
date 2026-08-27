@@ -1,6 +1,6 @@
 import { pool as pgPool } from '@/lib/db';
 import { json, readJson, NO_STORE } from '@/lib/api';
-import { requireAdmin } from '@/lib/admin';
+import { requireSection } from '@/lib/access';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -66,7 +66,7 @@ const COLUMNS = `id, title, slug, persona_slug, theme_slug, category_id,
  * now; the panel needs an unfiltered list to render at all.
  */
 export async function GET(request) {
-    if (!await requireAdmin(request)) return json({ error: 'Forbidden' }, 403, NO_STORE);
+    if (!await requireSection(request, 'albums')) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const q = new URL(request.url).searchParams;
     const where = [];
@@ -126,7 +126,7 @@ export async function GET(request) {
 
 /** POST — create one album. `title` and `slug` are the only required fields. */
 export async function POST(request) {
-    if (!await requireAdmin(request)) return json({ error: 'Forbidden' }, 403, NO_STORE);
+    if (!await requireSection(request, 'albums')) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const body = await readJson(request);
     const title = text(body.title, 300);
@@ -172,7 +172,7 @@ export async function POST(request) {
  * the other five.
  */
 export async function PATCH(request) {
-    if (!await requireAdmin(request)) return json({ error: 'Forbidden' }, 403, NO_STORE);
+    if (!await requireSection(request, 'albums')) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const body = await readJson(request);
     const id = parseInt(body.id, 10);
@@ -235,7 +235,7 @@ export async function PATCH(request) {
  * wrong by one digit — and kj_album_follows rows point at these ids.
  */
 export async function DELETE(request) {
-    if (!await requireAdmin(request)) return json({ error: 'Forbidden' }, 403, NO_STORE);
+    if (!await requireSection(request, 'albums')) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const q = new URL(request.url).searchParams;
     const id = parseInt(q.get('id'), 10);

@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fsp from 'node:fs/promises';
 import { json, NO_STORE, CDN_LOCAL_ROOT } from '@/lib/api';
-import { requireAdmin } from '@/lib/admin';
+import { getAccess } from '@/lib/access';
 import { pool as pgPool } from '@/lib/db';
 
 export const runtime = 'nodejs';
@@ -11,10 +11,21 @@ export const dynamic = 'force-dynamic';
 // /api/admin/overview — the numbers on the front of the shelf.
 //
 // THIS ROUTE IS ALSO THE PANEL'S GATE. Every section of /admin needs the same
-// yes/no answer before it renders anything, and asking four routes for it
-// would mean four role lookups and four ways to disagree. The shell probes
+// yes/no answer before it renders anything, and asking five routes for it
+// would mean five role lookups and five ways to disagree. The shell probes
 // this one: 403 is the whole panel's "no", 200 is its "yes" and its first
 // screenful of data in the same round trip.
+//
+// THE GATE IS "MAY OPEN THE CONSOLE AT ALL", NOT "IS AN ADMIN". With a third
+// role the two stopped being the same question: an executive granted any
+// section must get through here, or the console cannot render for them. The
+// response carries `sections` — the list this caller may actually open — and
+// the rail is built from it, so the server decides what the navigation says
+// rather than the browser guessing and a route disagreeing later.
+//
+// The dashboard's own figures are not gated per section. Whoever may open the
+// console may see the counts; the sections are what decide who may open the
+// screens behind them.
 //
 // NOTHING HERE IS COMPUTED. Every figure already exists — build-analytics-index
 // wrote the network block, the ratings route wrote the promotions, the feedback
@@ -88,8 +99,9 @@ async function countRecent(dir, days, onRecord) {
 }
 
 export async function GET(request) {
-    const admin = await requireAdmin(request);
-    // One answer for every failure — no token, unknown user, wrong role.
+    const admin = await getAccess(request);
+    // One answer for every failure — no token, unknown user, a plain member, or
+    // a role with nothing granted.
     if (!admin) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     // The station index and the ratings store are the two files the whole panel
@@ -209,8 +221,15 @@ export async function GET(request) {
             // the only thing that distinguishes a down database from an empty one.
             db: (catalog || audience) ? 'ok' : 'unreachable',
         },
-        // Who is looking. The panel prints it so a shared screen is never
-        // ambiguous about whose promotions are about to be recorded.
-        admin: { email: admin.email || null, name: admin.name || null },
+        // Who is looking, and what they may open. The panel prints the name so
+        // a shared screen is never ambiguous about whose promotions are being
+        // recorded, and builds its rail from `sections`.
+        admin: {
+            id: admin.id,
+            email: admin.email || null,
+            name: admin.name || null,
+            role: admin.role,
+            sections: admin.sections,
+        },
     }, 200, NO_STORE);
 }

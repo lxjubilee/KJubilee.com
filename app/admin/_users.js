@@ -20,8 +20,21 @@ import { api, num, when, ago, ApiError } from './_api';
 const ROLE_FILTERS = [
     { id: '', label: 'All accounts' },
     { id: 'admin', label: 'Administrators' },
+    { id: 'executive', label: 'Executives' },
     { id: 'user', label: 'Members' },
 ];
+
+const ROLES = ['user', 'executive', 'admin'];
+const ROLE_LABEL = { user: 'Member', executive: 'Executive', admin: 'Administrator' };
+const ROLE_TONE = { user: 'neutral', executive: 'amber', admin: 'indigo' };
+
+/* What each role means, said once at the bottom of the table rather than in a
+   tooltip nobody opens. */
+const ROLE_NOTE = {
+    user: 'No console access.',
+    executive: 'Opens only the console sections granted in Roles & permissions.',
+    admin: 'The whole console, always — including who may open it.',
+};
 
 /** Whatever we can call this person, preferring the parts over the mirror. */
 function displayName(u) {
@@ -52,14 +65,15 @@ function statusOf(u) {
 /**
  * The confirm step for a role change.
  *
- * A grant and a revocation are not the same act, so they do not get the same
- * sentence. Promoting says what the person will be able to reach; demoting says
- * what they will lose.
+ * Three roles means there is no single "the other one", so the sentence is
+ * built from where the account is going rather than from a promote/demote
+ * pair. What each one says is what that role can actually reach — an operator
+ * confirming a change should not have to remember the matrix.
  */
 function ConfirmRole({ user, to, onCancel, onDone }) {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState(null);
-    const promoting = to === 'admin';
+    const from = String(user.role || 'user').toLowerCase();
 
     async function go() {
         setBusy(true);
@@ -73,30 +87,35 @@ function ConfirmRole({ user, to, onCancel, onDone }) {
         }
     }
 
+    const consequence = {
+        admin: <>
+            <code>{user.email}</code> will be able to open this console and everything in it —
+            including <strong>Users &amp; roles</strong>, so they will be able to set anyone&rsquo;s
+            role, and <strong>Roles &amp; permissions</strong>. This is the role that cannot be
+            limited.
+        </>,
+        executive: <>
+            <code>{user.email}</code> will be able to open this console, but only the sections the
+            Executive role has been granted in <strong>Roles &amp; permissions</strong>. Change what
+            that includes there, not here — it applies to every Executive at once.
+        </>,
+        user: <>
+            <code>{user.email}</code> keeps their account and loses this console entirely. Anything
+            they already promoted stays promoted, with their name still on it.
+        </>,
+    }[to];
+
     return (
         <div className="adm-danger">
             <strong>
-                {promoting
-                    ? 'Make ' + displayName(user) + ' an administrator?'
-                    : 'Remove administrator rights from ' + displayName(user) + '?'}
+                Change {displayName(user)} from {ROLE_LABEL[from] || from} to {ROLE_LABEL[to] || to}?
             </strong>
-            <p>
-                {promoting
-                    ? <>
-                        <code>{user.email}</code> will be able to open this console and everything in it —
-                        the dial and its ratings, the album catalogue, and the listener inbox. The change
-                        takes effect on their next request; they do not need to sign in again.
-                      </>
-                    : <>
-                        <code>{user.email}</code> keeps their account and loses this console. Anything they
-                        already promoted stays promoted, with their name still on it.
-                      </>}
-            </p>
+            <p>{consequence}</p>
             <div className="adm-form-actions">
                 <button type="button"
-                        className={'adm-btn ' + (promoting ? 'adm-btn--primary' : 'adm-btn--danger')}
+                        className={'adm-btn ' + (to === 'user' ? 'adm-btn--danger' : 'adm-btn--primary')}
                         disabled={busy} onClick={go}>
-                    {busy ? 'Saving…' : promoting ? 'Make administrator' : 'Remove rights'}
+                    {busy ? 'Saving…' : 'Make ' + (ROLE_LABEL[to] || to)}
                 </button>
                 <button type="button" className="adm-btn" onClick={onCancel} disabled={busy}>Cancel</button>
             </div>
@@ -183,7 +202,8 @@ export default function Users() {
                     </thead>
                     <tbody>
                         {users.map(u => {
-                            const isAdmin = String(u.role || 'user').toLowerCase() === 'admin';
+                            const role = String(u.role || 'user').toLowerCase();
+                            const isAdmin = role === 'admin';
                             const isMe = u.id === meId;
                             // The two rules the server will enforce anyway, shown
                             // here so the reason is on screen before the click.
@@ -210,23 +230,33 @@ export default function Users() {
                                     </td>
                                     <td><span className="adm-cell-dim">{u.jubilee_id ? <code>{u.jubilee_id}</code> : '—'}</span></td>
                                     <td>
-                                        <span className={'adm-badge ' + (isAdmin ? 'adm-tone-indigo' : 'adm-tone-neutral')}>
-                                            {isAdmin ? 'administrator' : 'member'}
+                                        <span className={'adm-badge adm-tone-' + (ROLE_TONE[role] || 'neutral')}>
+                                            {ROLE_LABEL[role] || role}
                                         </span>
                                     </td>
                                     <td><span className={'adm-badge adm-tone-' + status.tone}>{status.label}</span></td>
                                     <td><span className="adm-cell-dim">{when(u.created_at)}</span></td>
                                     <td><span className="adm-cell-dim">{u.last_login_at ? ago(u.last_login_at) : 'never'}</span></td>
                                     <td className="adm-actions">
-                                        <button
-                                            type="button"
-                                            className={'adm-btn adm-btn--sm' + (isAdmin ? '' : ' adm-btn--primary')}
+                                        {/* A dropdown rather than a toggle: with
+                                            three roles there is no single "other"
+                                            to flip to. Choosing does not save —
+                                            it opens the confirm row beneath. */}
+                                        <select
+                                            className="adm-select adm-select--sm"
+                                            value={role}
                                             disabled={Boolean(why)}
                                             title={why || undefined}
-                                            onClick={() => setConfirming({ user: u, to: isAdmin ? 'user' : 'admin' })}
+                                            onChange={e => {
+                                                const to = e.target.value;
+                                                if (to !== role) setConfirming({ user: u, to });
+                                            }}
+                                            aria-label={'Role for ' + displayName(u)}
                                         >
-                                            {isAdmin ? 'Remove admin' : 'Make admin'}
-                                        </button>
+                                            {ROLES.map(r => (
+                                                <option key={r} value={r}>{ROLE_LABEL[r]}</option>
+                                            ))}
+                                        </select>
                                     </td>
                                 </tr>,
                                 confirming?.user?.id === u.id && (
@@ -252,10 +282,19 @@ export default function Users() {
                 </table>
             </div>
 
+            <div className="adm-cols2">
+                {ROLES.map(r => (
+                    <p key={r} className="adm-fine">
+                        <strong>{ROLE_LABEL[r]}</strong> — {ROLE_NOTE[r]}
+                    </p>
+                ))}
+            </div>
+
             <p className="adm-fine">
                 Accounts are created by signing up, not from here — this console changes what an existing
                 account may reach. A role change is read from the database on every request, so it takes
-                effect immediately and does not wait for the person to sign in again.
+                effect immediately and does not wait for the person to sign in again. What an Executive
+                can actually open is set in <strong>Roles &amp; permissions</strong>.
             </p>
         </div>
     );

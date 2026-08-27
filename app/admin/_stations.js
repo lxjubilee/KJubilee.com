@@ -19,8 +19,8 @@ import { api, num, hours, ago, ApiError } from './_api';
  *
  * C IS THE ABSENCE OF AN ENTRY, NOT A STORED VALUE — the store's own rule
  * (app/api/radio/ratings/route.js). Setting a song back to C here sends "C",
- * and the server deletes the row rather than writing one. That is why the
- * pending count below can go DOWN as well as up.
+ * and the server deletes the row rather than writing one — which is why
+ * demoting takes the same single click as promoting and needs no other call.
  */
 
 const INDEX_URL = '/data/analytics-stations.json';
@@ -52,14 +52,16 @@ function RatingPicker({ value, onChange, disabled }) {
     );
 }
 
-/** The songs of one station, with their current and pending ratings. */
+/** The songs of one station, each rating written the moment it is clicked. */
 function StationTracks({ station, saved, onSaved }) {
     const [manifest, setManifest] = useState(null);
     const [state, setState] = useState('loading');   // loading | ready | error
     const [filter, setFilter] = useState('');
     const [promotedOnly, setPromotedOnly] = useState(false);
-    const [pending, setPending] = useState({});      // SongID -> 'A' | 'B' | 'C'
-    const [saving, setSaving] = useState(false);
+    // SongID -> true while that one song's write is in flight. Per song, not
+    // per table: promoting a rack of tracks should not lock the whole list
+    // behind whichever request happens to be slowest.
+    const [busy, setBusy] = useState({});
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -98,7 +100,7 @@ function StationTracks({ station, saved, onSaved }) {
         return out;
     }, [manifest]);
 
-    const ratingOf = id => pending[id] ?? (saved[id]?.r ?? 'C');
+    const ratingOf = id => saved[id]?.r ?? 'C';
 
     const shown = useMemo(() => {
         const q = filter.trim().toLowerCase();
@@ -110,45 +112,48 @@ function StationTracks({ station, saved, onSaved }) {
                 || (t.artist || '').toLowerCase().includes(q)
                 || (t.id || '').toLowerCase().includes(q);
         });
-    }, [tracks, filter, promotedOnly, pending, saved]);
+    }, [tracks, filter, promotedOnly, saved]);
 
-    // A change back to what is already stored is not a change. Without this,
-    // clicking A then B then A again would leave a "1 unsaved" that no button
-    // press could clear.
-    function setRating(id, r) {
-        setPending(prev => {
-            const next = { ...prev };
-            const current = saved[id]?.r ?? 'C';
-            if (r === current) delete next[id];
-            else next[id] = r;
-            return next;
-        });
-    }
+    /*
+     * ONE CLICK IS THE WHOLE ACTION. There used to be a pending map and a Save
+     * button, which meant a promotion could be typed and then lost by closing
+     * the station — and the count in the toolbar never said WHICH song was
+     * unsaved. Each click now writes on its own.
+     *
+     * The store already expected this shape: the route takes a map so a rack of
+     * promotions can go in one request, and a map of one is a perfectly good
+     * map. Setting C still deletes the entry rather than storing a C, so
+     * demoting needs no separate call.
+     */
+    async function setRating(id, r) {
+        if (busy[id]) return;
+        // Clicking the rating a song already has is not a change, and a write
+        // that changes nothing is still a write somebody waits for.
+        if (r === (saved[id]?.r ?? 'C')) return;
 
-    const pendingCount = Object.keys(pending).length;
-
-    async function save() {
-        if (!pendingCount || saving) return;
-        setSaving(true);
+        setBusy(prev => ({ ...prev, [id]: true }));
         setError(null);
         try {
             const result = await api('/api/radio/ratings', {
                 method: 'POST',
-                body: { station: station.id, ratings: pending },
+                body: { station: station.id, ratings: { [id]: r } },
             });
             // The response carries the station's whole map after the write, so
             // the parent is handed the server's truth rather than this
-            // component's optimistic guess at it.
+            // component's guess at it. Nothing is painted before the server
+            // agrees: a rating that silently failed would be worse than one
+            // that took a moment to appear.
             onSaved(station.id, result.station || {});
-            setPending({});
         } catch (e) {
             setError(e instanceof ApiError && e.status === 403
-                ? 'Your account no longer has administrator rights.'
-                : (e.message || 'Could not save.'));
+                ? 'Your role no longer includes Stations & ratings.'
+                : (e.message || 'That rating could not be saved.'));
         } finally {
-            setSaving(false);
+            setBusy(prev => { const next = { ...prev }; delete next[id]; return next; });
         }
     }
+
+    const savingCount = Object.keys(busy).length;
 
     if (state === 'loading') {
         return <div className="adm-state"><span className="adm-spinner" />Loading this station&rsquo;s music…</div>;
@@ -186,10 +191,13 @@ function StationTracks({ station, saved, onSaved }) {
                         ? num(tracks.length) + ' songs'
                         : num(shown.length) + ' of ' + num(tracks.length)}
                 </span>
-                <button type="button" className="adm-btn adm-btn--primary adm-btn--sm"
-                        disabled={!pendingCount || saving} onClick={save}>
-                    {saving ? 'Saving…' : pendingCount ? 'Save ' + pendingCount + ' change' + (pendingCount === 1 ? '' : 's') : 'No changes'}
-                </button>
+                {/* No Save button, because there is nothing to save. This only
+                    reports whether a click is still in the air. */}
+                <span className="adm-savestate">
+                    {savingCount
+                        ? <><span className="adm-spinner adm-spinner--sm" />Saving…</>
+                        : 'Ratings save as you click'}
+                </span>
             </div>
 
             {error && <div className="adm-notice adm-notice--stop"><strong>{error}</strong></div>}
@@ -216,10 +224,10 @@ function StationTracks({ station, saved, onSaved }) {
                     <tbody>
                         {shown.slice(0, TRACK_CAP).map(t => {
                             const r = ratingOf(t.id);
-                            const dirty = pending[t.id] !== undefined;
+                            const inFlight = Boolean(busy[t.id]);
                             const by = saved[t.id]?.by;
                             return (
-                                <tr key={t.id} className={dirty ? 'is-dirty' : undefined}>
+                                <tr key={t.id} className={inFlight ? 'is-saving' : undefined}>
                                     <td>
                                         <span className="adm-cell-primary">{t.title}</span>
                                         <span className="adm-cell-dim">{t.artist} · <code>{t.id}</code></span>
@@ -239,7 +247,7 @@ function StationTracks({ station, saved, onSaved }) {
                                             : '—'}
                                     </td>
                                     <td>
-                                        <RatingPicker value={r} disabled={saving}
+                                        <RatingPicker value={r} disabled={inFlight}
                                                       onChange={v => setRating(t.id, v)} />
                                     </td>
                                 </tr>
@@ -294,13 +302,18 @@ export default function Stations() {
 
     const shown = useMemo(() => {
         const q = query.trim().toLowerCase();
-        return stations.filter(s => {
+        const matched = stations.filter(s => {
             if (onAirOnly && !s.onAir) return false;
             if (band !== 'all' && s.band !== band) return false;
             if (!q) return true;
             return [s.id, s.name, s.freq, s.format, s.lang, s.hostCity]
                 .some(v => String(v || '').toLowerCase().includes(q));
         });
+        /* ON AIR FIRST. The index is ordered by frequency, which scattered the
+           41 stations somebody can actually act on among the 75 that are only
+           planned. Within each group the index's own order is kept — sort is
+           stable, so this reorders by one key and disturbs nothing else. */
+        return matched.sort((a, b) => (b.onAir ? 1 : 0) - (a.onAir ? 1 : 0));
     }, [stations, query, band, onAirOnly]);
 
     /** Count the promotions the store holds for one station. */

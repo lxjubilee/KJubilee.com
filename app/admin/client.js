@@ -7,6 +7,7 @@ import Stations from './_stations';
 import Albums from './_albums';
 import Feedback from './_feedback';
 import Users from './_users';
+import Roles from './_roles';
 
 /*
  * /admin — the administrator's console.
@@ -32,7 +33,7 @@ import Users from './_users';
  */
 
 /* 20px stroke icons, sized by .adm-nav-icon. Inline rather than a sprite —
-   five glyphs are smaller than the request that would fetch them. */
+   six glyphs are smaller than the request that would fetch them. */
 const Icon = ({ d, circle }) => (
     <svg className="adm-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -77,7 +78,17 @@ const SECTIONS = [
         subtitle: 'Who has an account, and who may open this console.',
         icon: <Icon circle={[9, 7, 4]} d={['M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2', 'M17 11h4', 'M19 9v4']} />,
     },
+    {
+        id: 'roles',
+        label: 'Roles & permissions',
+        title: 'Roles & permissions',
+        subtitle: 'Which sections of this console each role may open.',
+        icon: <Icon d={['M12 3 4 6v6c0 4.4 3.4 8.5 8 9.5 4.6-1 8-5.1 8-9.5V6z', 'm9 12 2 2 4-4']} />,
+    },
 ];
+
+/** What the rail calls each role under the person's name. */
+const ROLE_LABEL = { admin: 'Administrator', executive: 'Executive', user: 'Member' };
 
 /** The first letter of whatever we can call this person, for the rail avatar. */
 function initial(admin) {
@@ -154,7 +165,15 @@ export default function AdminClient() {
         );
     }
 
-    const open = SECTIONS.find(s => s.id === section) || SECTIONS[0];
+    /* THE RAIL IS BUILT FROM WHAT THE SERVER SAID, not from SECTIONS. An
+       executive sees only the sections their role was granted, and the list
+       arrives with the gate's own answer so the navigation and the routes
+       cannot disagree. An admin's list is every section. */
+    const allowed = overview?.admin?.sections || [];
+    const visible = SECTIONS.filter(s => allowed.includes(s.id));
+    // Whatever is open must be something this person may open — the default
+    // is the first section they have, not necessarily the dashboard.
+    const open = visible.find(s => s.id === section) || visible[0] || null;
     const inbox = overview?.inbox;
     // One number for the rail: everything sitting in the inbox that a person
     // has not dealt with. Absent rather than zero when the tree cannot be read.
@@ -178,7 +197,7 @@ export default function AdminClient() {
                 </div>
 
                 <nav className="adm-nav" aria-label="Sections">
-                    {SECTIONS.map(s => (
+                    {visible.map(s => (
                         <button
                             key={s.id}
                             type="button"
@@ -203,9 +222,11 @@ export default function AdminClient() {
                         <span className="adm-user-avatar" aria-hidden="true">{initial(overview?.admin)}</span>
                         <span className="adm-user-meta">
                             <span className="adm-user-name" title={overview?.admin?.email || ''}>
-                                {overview?.admin?.name || overview?.admin?.email || 'Administrator'}
+                                {overview?.admin?.name || overview?.admin?.email || 'Signed in'}
                             </span>
-                            <span className="adm-user-role">Administrator</span>
+                            {/* The role, as the server reports it — an executive
+                                should not be told they are an administrator. */}
+                            <span className="adm-user-role">{ROLE_LABEL[overview?.admin?.role] || 'Signed in'}</span>
                         </span>
                     </div>
                     <a className="adm-back-link" href="/">← Back to the dial</a>
@@ -215,8 +236,8 @@ export default function AdminClient() {
             <main className="adm-main">
                 <header className="adm-page-header">
                     <div>
-                        <h1 className="adm-page-title">{open.title}</h1>
-                        <p className="adm-page-subtitle">{open.subtitle}</p>
+                        <h1 className="adm-page-title">{open?.title || 'Administration'}</h1>
+                        <p className="adm-page-subtitle">{open?.subtitle || ''}</p>
                     </div>
                     <div className="adm-page-actions">
                         <button type="button" className="adm-btn" onClick={check}>Refresh</button>
@@ -226,11 +247,12 @@ export default function AdminClient() {
                 {/* Each section is unmounted when it is not open, so leaving the
                     stations tab drops its station manifest rather than holding
                     megabytes of JSON for a tab nobody is looking at. */}
-                {section === 'dashboard' && <Dashboard data={overview} />}
-                {section === 'stations' && <Stations />}
-                {section === 'albums' && <Albums />}
-                {section === 'feedback' && <Feedback />}
-            {section === 'users' && <Users />}
+                {open?.id === 'dashboard' && <Dashboard data={overview} />}
+                {open?.id === 'stations' && <Stations />}
+                {open?.id === 'albums' && <Albums />}
+                {open?.id === 'feedback' && <Feedback />}
+                {open?.id === 'users' && <Users />}
+                {open?.id === 'roles' && <Roles />}
             </main>
         </div>
     );

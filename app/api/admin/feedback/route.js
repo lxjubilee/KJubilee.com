@@ -1,7 +1,7 @@
 import path from 'node:path';
 import fsp from 'node:fs/promises';
 import { json, NO_STORE, CDN_LOCAL_ROOT } from '@/lib/api';
-import { requireAdmin } from '@/lib/admin';
+import { requireSection } from '@/lib/access';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -62,7 +62,7 @@ async function readJsonl(file) {
 }
 
 export async function GET(request) {
-    const admin = await requireAdmin(request);
+    const admin = await requireSection(request, 'feedback');
     if (!admin) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const q = new URL(request.url).searchParams;

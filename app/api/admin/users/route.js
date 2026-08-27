@@ -1,20 +1,22 @@
 import { pool as pgPool } from '@/lib/db';
 import { json, readJson, NO_STORE } from '@/lib/api';
-import { requireAdmin } from '@/lib/admin';
+import { requireSection, ROLES } from '@/lib/access';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
 // ─────────────────────────────────────────────────────────────────────────
-// /api/admin/users — who has an account, and who is an administrator.
+// /api/admin/users — who has an account, and which role they hold.
 //
-// THIS IS THE ONLY ROUTE ON THE SITE THAT GRANTS PRIVILEGE. Everything else
-// under /api/admin/ reads or edits content; this hands somebody the ability to
-// reach all of it. It is therefore the one place where the guards matter more
-// than the feature, and there are three:
+// THIS IS THE ROUTE THAT GRANTS PRIVILEGE. Everything else under /api/admin/
+// reads or edits content; this decides who may reach any of it. It is therefore
+// the place where the guards matter more than the feature, and there are three:
 //
-//   1. requireAdmin, like every sibling — but re-read below, because the role
-//      is looked up per request and the caller's own row is what decides.
+//   1. requireSection(request, 'users') — the caller must hold a role that has
+//      been granted this section. Admin always has it; an executive has it only
+//      if an admin ticked it in Roles & permissions, and an admin who does tick
+//      it is handing that executive the ability to make themselves an admin.
+//      That is the documented intent, not an oversight.
 //   2. YOU CANNOT CHANGE YOUR OWN ROLE. A console whose operator can demote
 //      themselves is a console that can be locked with one misplaced click,
 //      and the recovery is a psql session on the production box.
@@ -29,7 +31,6 @@ export const dynamic = 'force-dynamic';
 // never reads them cannot leak them through a log line or an error body.
 // ─────────────────────────────────────────────────────────────────────────
 
-const ROLES = new Set(['user', 'admin']);
 const MAX_LIMIT = 500;
 
 const COLUMNS = `id, email, name, first_name, last_name, role,
@@ -38,7 +39,7 @@ const COLUMNS = `id, email, name, first_name, last_name, role,
 
 /** GET — the account list, filtered. */
 export async function GET(request) {
-    const admin = await requireAdmin(request);
+    const admin = await requireSection(request, 'users');
     if (!admin) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const q = new URL(request.url).searchParams;
@@ -47,7 +48,7 @@ export async function GET(request) {
 
     const role = String(q.get('role') || '').trim().toLowerCase();
     if (role) {
-        if (!ROLES.has(role)) return json({ error: 'unknown role' }, 400, NO_STORE);
+        if (!ROLES.includes(role)) return json({ error: 'unknown role' }, 400, NO_STORE);
         params.push(role);
         where.push(`LOWER(COALESCE(role, 'user')) = $${params.length}`);
     }
@@ -70,7 +71,9 @@ export async function GET(request) {
             pgPool.query(
                 `SELECT ${COLUMNS} FROM kj_users
                  ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
-                 ORDER BY (LOWER(COALESCE(role,'user')) = 'admin') DESC, created_at DESC
+                 ORDER BY CASE LOWER(COALESCE(role,'user'))
+                            WHEN 'admin' THEN 0 WHEN 'executive' THEN 1 ELSE 2 END,
+                          created_at DESC
                  LIMIT ${limit}`, params),
             pgPool.query(
                 `SELECT LOWER(COALESCE(role,'user')) AS role, COUNT(*)::int AS n
@@ -107,7 +110,7 @@ export async function GET(request) {
  * none — the exact outcome guard 3 exists to prevent.
  */
 export async function PATCH(request) {
-    const admin = await requireAdmin(request);
+    const admin = await requireSection(request, 'users');
     if (!admin) return json({ error: 'Forbidden' }, 403, NO_STORE);
 
     const body = await readJson(request);
@@ -115,7 +118,9 @@ export async function PATCH(request) {
     if (!Number.isFinite(id)) return json({ error: 'id is required' }, 400, NO_STORE);
 
     const role = String(body.role || '').trim().toLowerCase();
-    if (!ROLES.has(role)) return json({ error: "role must be 'user' or 'admin'" }, 400, NO_STORE);
+    if (!ROLES.includes(role)) {
+        return json({ error: 'role must be one of: ' + ROLES.join(', ') }, 400, NO_STORE);
+    }
 
     // Guard 2. Checked before the database is touched because it needs nothing
     // from it — and because the clearest error is the one that names the rule.

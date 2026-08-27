@@ -407,6 +407,55 @@ body:has(.adm-shell) { margin: 0; min-height: 100%; background: #0d1117; }
 .adm-row-open > td { background: var(--adm-bg); padding: 16px 14px 20px; }
 .adm-row-open:hover > td { background: var(--adm-bg); }
 
+/* ── The permissions matrix (Roles & permissions) ─────────────────────────
+   Sections down, roles across. The fixed columns are shown rather than hidden:
+   a matrix that omits two thirds of the rule is not a picture of the rule, so
+   Member and Administrator appear ticked-and-locked beside the one column that
+   can actually be edited. */
+.adm-table--perms tbody td { vertical-align: top; }
+.adm-perm-col { text-align: center; width: 130px; }
+th.adm-perm-col { text-align: center; }
+.adm-perm-note {
+  display: block; margin-top: 2px;
+  font-size: 10px; font-weight: 500; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--adm-text-dim); opacity: .8;
+}
+
+/* The tick. A real checkbox underneath so the keyboard and a screen reader get
+   a checkbox; the square is drawn from its state. */
+.adm-perm { display: inline-flex; cursor: pointer; }
+.adm-perm input { position: absolute; opacity: 0; width: 0; height: 0; }
+.adm-perm-mark {
+  display: grid; place-items: center;
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 1px solid var(--adm-border); background: var(--adm-surface-2);
+  transition: background .15s, border-color .15s;
+}
+.adm-perm-mark::after {
+  content: ""; width: 10px; height: 6px;
+  border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+  transform: rotate(-45deg) translateY(-1px) scale(.6);
+  opacity: 0; transition: opacity .12s, transform .12s;
+}
+.adm-perm input:checked + .adm-perm-mark {
+  background: var(--adm-accent); border-color: var(--adm-accent);
+}
+.adm-perm input:checked + .adm-perm-mark::after { opacity: 1; transform: rotate(-45deg) translateY(-1px) scale(1); }
+.adm-perm input:focus-visible + .adm-perm-mark { outline: 2px solid var(--adm-accent); outline-offset: 2px; }
+.adm-perm:hover input:not(:disabled) + .adm-perm-mark { border-color: var(--adm-accent); }
+/* Fixed columns still read as their answer — just not as something to press. */
+.adm-perm.is-fixed { cursor: not-allowed; }
+.adm-perm input:disabled + .adm-perm-mark { opacity: .5; }
+
+/* The two ticks that hand over the console itself. Said on the row, because
+   the place to warn somebody is where they are about to act. */
+.adm-perm-warn {
+  display: block; margin-top: 6px;
+  font-size: 11.5px; line-height: 1.45; color: var(--adm-amber);
+}
+
+.adm-select--sm { padding: 5px 30px 5px 10px; font-size: 12.5px; border-radius: 8px; }
+
 /* ── One line per account (Users & roles) ─────────────────────────────────
    Name over address made every row two lines tall, so a handful of accounts
    filled the screen and the role column — the reason to open this section —
@@ -457,10 +506,20 @@ body:has(.adm-shell) { margin: 0; min-height: 100%; background: #0d1117; }
 .adm-rate-btn.is-on--B { background: var(--adm-amber); color: #1d1503; }
 .adm-rate-btn.is-on--C { background: var(--adm-surface-2); color: var(--adm-text); }
 
-/* An unsaved change has to be visible on the row itself — a count in the
-   toolbar does not say WHICH song is about to be written. */
-.adm-table tr.is-dirty > td { background: var(--adm-accent-soft); }
-.adm-table tr.is-dirty > td:first-child { box-shadow: inset 2px 0 0 var(--adm-accent); }
+/* A rating writes on click, so the row's only transient state is "in flight".
+   Marked on the row rather than in the toolbar because the toolbar cannot say
+   WHICH song is still being written. */
+.adm-table tr.is-saving > td { background: var(--adm-accent-soft); }
+.adm-table tr.is-saving > td:first-child { box-shadow: inset 2px 0 0 var(--adm-accent); }
+.adm-table tr.is-saving .adm-rate { opacity: .6; }
+
+/* Where the Save button used to be. It says what the screen does rather than
+   offering an action, so nobody goes looking for a button that is not coming. */
+.adm-savestate {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: var(--adm-text-dim); white-space: nowrap;
+}
+.adm-spinner--sm { width: 13px; height: 13px; border-width: 2px; }
 
 .adm-tracks { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 .adm-table--tracks { font-size: 12.5px; min-width: 620px; }

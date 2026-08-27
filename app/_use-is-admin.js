@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { authToken } from './_session-store';
 
 /*
- * Is the person in this browser an administrator?
+ * May the person in this browser open the admin console?
  *
  * ASKED ON MOUNT, NOT WHEN A MENU OPENS. The earlier version of this lived
  * inside the account menu and only ran when somebody opened it, which was free
@@ -27,8 +27,9 @@ import { authToken } from './_session-store';
  * person signing in again.
  *
  * THIS IS NOT A PERMISSION. It decides whether a link is painted. Every
- * /api/admin/* route asks the database for itself (lib/admin.js), so a browser
- * that lies to itself about this gains a link and a 403.
+ * /api/admin/* route asks the database for itself (lib/access.js), so a browser
+ * that lies to itself about this gains a link and a 403 — and an executive who
+ * follows the link still only sees the sections their role was granted.
  */
 export default function useIsAdmin() {
     const [isAdmin, setIsAdmin] = useState(false);
@@ -47,7 +48,11 @@ export default function useIsAdmin() {
                 if (cancelled) return;
                 if (!res.ok) { setIsAdmin(false); return; }
                 const body = await res.json();
-                if (!cancelled) setIsAdmin(String(body?.user?.role || '').toLowerCase() === 'admin');
+                // Executives reach the console too — the link is "may open it",
+                // not "is an admin". Which sections they actually get is the
+                // console's own question, answered by /api/admin/overview.
+                const role = String(body?.user?.role || '').toLowerCase();
+                if (!cancelled) setIsAdmin(role === 'admin' || role === 'executive');
             } catch {
                 // Offline, or the token expired. No link is the safe answer — it
                 // costs an admin one reload and tells a stranger nothing.

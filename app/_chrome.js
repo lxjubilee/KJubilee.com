@@ -27,6 +27,11 @@ function isAdmin(pathname) {
     return p === '/admin' || p.startsWith('/admin/');
 }
 
+function isAccount(pathname) {
+    const p = (pathname || '').toLowerCase();
+    return p === '/account' || p.startsWith('/account/');
+}
+
 /*
  * Where the footer bar does not belong.
  *
@@ -34,9 +39,11 @@ function isAdmin(pathname) {
  * /admin is a console, not a page of the site: it owns the whole viewport in a
  * sticky-rail grid, and a bar pinned across the bottom both covers the last row
  * of a table and puts a listener's now-playing on an operator's screen.
+ * /account is Profile settings — a form about who you are, not a place to
+ * listen from, and the bar sat over the bottom of it.
  */
 function hidesFooterPlayer(pathname) {
-    return isRadio(pathname) || isAdmin(pathname);
+    return isRadio(pathname) || isAdmin(pathname) || isAccount(pathname);
 }
 
 /*
