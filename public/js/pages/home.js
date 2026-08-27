@@ -177,16 +177,24 @@
      typo degrades to the gradient alone instead of to a broken picture. */
   function hmCoverHTML(a) {
     var st = bySlug[a.image];
-    // Same three layers as a shelf tile, in the same order: gradient at the
-    // back as the fallback, the cover over it, a scrim on top so a light
-    // photograph cannot swallow the card's rounded top edge. `.ident` is
-    // absolutely positioned, so it is a child of the frame rather than the
-    // frame itself.
+    /* THE ARTICLE'S OWN PICTURE, where it has one. `a.img` is stamped by
+       build-home-data from public/images/articles — one image per article
+       slug — and only articles on this page carry it, so nothing else on the
+       site changes artwork. Where a slug has no image yet the field is absent
+       and the card falls back to the cover of the station the piece is about,
+       which is what every card wore before.
+
+       Same three layers either way: gradient at the back as the last resort,
+       the picture over it, a scrim on top so a light image cannot swallow the
+       card's rounded top edge. `.ident` is absolutely positioned, so it is a
+       child of the frame rather than the frame itself. */
+    var src = a.img
+      ? a.img + '?v=' + COVER_V
+      : (st ? '/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V : '');
     return '<div class="hm-card-image">' +
       (st ? '<div class="ident" style="' + gradVars(st) + '"></div>' : '') +
-      (st
-        ? '<img class="cover-art" alt="" loading="lazy" decoding="async"' +
-          ' src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">'
+      (src
+        ? '<img class="cover-art" alt="" loading="lazy" decoding="async" src="' + src + '">'
         : '') +
       '<div class="cover-scrim"></div>' +
     '</div>';
@@ -370,7 +378,7 @@
         '<button type="button" class="btn-accent" data-kj-toggle="' + esc(st.slug) + '"></button>' +
         (host
           ? '<div class="hero-by">' +
-              '<img class="hero-face" src="' + esc(host.image) + '" alt="" width="34" height="34">' +
+              (host.image ? '<img class="hero-face" src="' + esc(host.image) + '" alt="" width="34" height="34">' : '') +
               '<span class="hero-by-name">' + esc(host.short) + '</span>' +
               '<span class="hero-by-focus">' + esc(host.focus) + '</span>' +
             '</div>'
@@ -408,7 +416,7 @@
     return '<div class="members">' + MEMBERS.map(function (m) {
       var n = STATIONS.filter(function (s) { return s.host === m.id; }).length;
       return '<button class="member' + (m.id === 'nova' ? ' is-lead' : '') + '" data-member="' + m.id + '">' +
-        '<img src="' + esc(m.image) + '" alt="" loading="lazy" width="76" height="76">' +
+        (m.image ? '<img src="' + esc(m.image) + '" alt="" loading="lazy" width="76" height="76">' : '') +
         '<div class="member-name">' + esc(m.short) + '</div>' +
         '<div class="member-focus">' + esc(m.focus) + '</div>' +
         '<div class="member-count">' + n + ' station' + (n === 1 ? '' : 's') + '</div>' +
@@ -419,6 +427,31 @@
   /* -------------------------------------------------------------------- */
   /* Section rendering                                                     */
   /* -------------------------------------------------------------------- */
+  /* The block a category belongs to, stated on the page.
+
+     Five of the six categories ARE one of the five-fold blocks, and the dial
+     only teaches a listener where things live if the pages admit that. So each
+     one opens by naming its block, the office it answers to, the stretch of
+     frequency it occupies and what is programmed there.
+
+     The colour comes from the section data rather than a stylesheet lookup,
+     because setup/hm-bands.md is the authority for it and there is no reason
+     for a second copy here to drift from the first. `dark` is the same hue
+     lifted for a dark ground; which one applies is decided in CSS, so both are
+     handed over as custom properties and neither is chosen in script.
+
+     Home has no block — it draws from all five — so it passes nothing and this
+     renders nothing. */
+  function bandHTML(b) {
+    if (!b) return '';
+    return '<div class="band-strip" style="--band:' + esc(b.colour) + ';--band-dark:' + esc(b.dark) + '">' +
+             '<span class="band-name">' + esc(b.name) + '</span>' +
+             '<span class="band-office">' + esc(b.office) + '</span>' +
+             '<span class="band-range">HM ' + esc(b.range) + '</span>' +
+             '<span class="band-prog">' + esc(b.programming) + '</span>' +
+           '</div>';
+  }
+
   function renderSection(id) {
     var sec = SECTIONS.filter(function (s) { return s.id === id; })[0] || SECTIONS[0];
     stopHero();
@@ -429,7 +462,8 @@
     } else if (sec.intro !== false) {
       // A section can opt out of the heading + blurb entirely; the active nav
       // item already names the category, so a pure card grid needs nothing else.
-      html += '<div class="section-intro"><h1>' + esc(sec.label) + '</h1><p>' + esc(sec.blurb) + '</p></div>';
+      html += '<div class="section-intro">' + bandHTML(sec.band) +
+              '<h1>' + esc(sec.label) + '</h1><p>' + esc(sec.blurb) + '</p></div>';
     }
     if (sec.members) html += membersHTML();
     if (sec.articles) html += articlesHTML(sec.articles);
@@ -633,7 +667,7 @@
               : '') +
             (host
               ? '<div class="kja-byline">' +
-                  '<img src="' + esc(host.image) + '" alt="" width="46" height="46">' +
+                  (host.image ? '<img src="' + esc(host.image) + '" alt="" width="46" height="46">' : '') +
                   '<div>' +
                     '<div class="kja-byline-credit">Hosted by</div>' +
                     '<div class="kja-byline-name">' + esc(host.name) + '</div>' +
@@ -752,6 +786,9 @@
     if (!a) { go('hm'); return; }
     var by = byMember[a.author];
     var st = bySlug[a.image];
+    var heroSrc = a.img
+      ? a.img + '?v=' + COVER_V
+      : (st ? '/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V : '');
 
     var body = '<p class="kja-lead">' + esc(a.dek) + '</p>' +
       a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
@@ -772,10 +809,11 @@
     view.innerHTML = '' +
       '<article class="kja">' +
         '<section class="kja-hero">' +
+          // The piece's own picture in its own hero, same resolution the cards
+          // use — its image where it has one, the station cover behind it if not.
           '<div class="kja-hero-art ident"' + (st ? ' style="' + gradVars(st) + '"' : '') + ' aria-hidden="true">' +
-            (st
-              ? '<img class="cover-art kja-hero-photo" alt="" decoding="async"' +
-                ' src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">'
+            (heroSrc
+              ? '<img class="cover-art kja-hero-photo" alt="" decoding="async" src="' + heroSrc + '">'
               : '') +
             '<span class="kja-hero-sheen"></span>' +
             '<span class="ident-freq"><span class="ident-freq-hm">HM</span></span>' +
@@ -809,7 +847,7 @@
               : '') +
             (by
               ? '<div class="kja-byline">' +
-                  '<img src="' + esc(by.image) + '" alt="" width="46" height="46">' +
+                  (by.image ? '<img src="' + esc(by.image) + '" alt="" width="46" height="46">' : '') +
                   '<div>' +
                     '<div class="kja-byline-credit">Written by</div>' +
                     '<div class="kja-byline-name">' + esc(by.name) + '</div>' +
@@ -1421,15 +1459,36 @@
      No feedback loop: the hero is INSIDE #scroll, so its height changes what
      #scroll can scroll through, never how tall #scroll itself is. */
   var scrollEl = document.getElementById('scroll');
+  var innerEl = scrollEl.querySelector('.scroll-inner');
   var heroH = 0;
+  var heroBleed = -1;
 
   function sizeHero() {
     /* Rounded up: half a pixel short is a visible hairline of page background
        above the player, half a pixel long is half a pixel of scroll. */
     var h = Math.ceil(scrollEl.getBoundingClientRect().height);
-    if (!h || h === heroH) return;
-    heroH = h;
-    document.documentElement.style.setProperty('--hero-h', h + 'px');
+    if (h && h !== heroH) {
+      heroH = h;
+      document.documentElement.style.setProperty('--hero-h', h + 'px');
+    }
+
+    /* THE SIDE PADDING THE PAGE ACTUALLY GOT, so the hero can pull back exactly
+       that much and run edge to edge. .scroll-inner centres the page by padding
+       — max(--pad-x, (100% - --site-max)/2 + --pad-x) — which is 186px a side at
+       1920, and the stylesheet cannot cancel it from inside .hero: the same
+       percentage means different things in the two boxes. Measured here instead,
+       for the same reason the height is. See .hero in home.css.
+
+       Width and height change independently: a window that gets wider without
+       getting shorter moves this and not --hero-h, so it is deliberately not
+       behind the height's early-out. */
+    if (innerEl) {
+      var pad = Math.round(parseFloat(getComputedStyle(innerEl).paddingLeft) || 0);
+      if (pad !== heroBleed) {
+        heroBleed = pad;
+        document.documentElement.style.setProperty('--hero-bleed', pad + 'px');
+      }
+    }
   }
 
   sizeHero();

@@ -88,7 +88,13 @@ const AVATAR = {
 };
 MEMBERS.forEach(function (m) {
   // A member with its own artwork keeps it; the twelve derive theirs from AVATAR.
-  if (!m.image) m.image = '/images/members/Jubilee' + AVATAR[m.id] + '-Circle-200.png';
+  //
+  // Only the twelve. Deriving for anyone else built the name out of an undefined
+  // lookup — Marcus, whose image is null on purpose above, came out as
+  // /images/members/Jubileeundefined-Circle-200.png and 404'd on every page that
+  // renders a host. A member with no portrait keeps image: null, and the callers
+  // draw no <img> at all rather than a broken one.
+  if (!m.image && AVATAR[m.id]) m.image = '/images/members/Jubilee' + AVATAR[m.id] + '-Circle-200.png';
 });
 
 // --- 3. presentation lookups ---------------------------------------------
@@ -213,7 +219,19 @@ const INTL = {
   'polska-inspire-polski':        ['Polish',     'pl', 'europe',   'zev'],
   'indonesia-inspire-bahasa':     ['Indonesian', 'id', 'asia',     'eliana'],
   'japan-inspire-nihongo':        ['Japanese',   'jp', 'asia',     'eliana'],
-  'bengal-inspire-bangla':        ['Bengali',    'bd', 'south',    'amir']
+  'bengal-inspire-bangla':        ['Bengali',    'bd', 'south',    'amir'],
+  // --- opened 2026-08-26, one frequency per language holding 12+ songs ---
+  'portugal-inspire-portugues':   ['Portuguese', 'pt', 'europe',   'santiago'],
+  'nederland-inspire-nederlands': ['Dutch',      'nl', 'europe',   'elias'],
+  'danmark-inspire-dansk':        ['Danish',     'dk', 'europe',   'elias'],
+  'sverige-inspire-svenska':      ['Swedish',    'se', 'europe',   'elias'],
+  'cesko-inspire-cestina':        ['Czech',      'cz', 'europe',   'zev'],
+  'magyar-inspire-magyar':        ['Hungarian',  'hu', 'europe',   'elias'],
+  'bulgaria-inspire-balgarski':   ['Bulgarian',  'bg', 'europe',   'zev'],
+  'turkiye-inspire-turkce':       ['Turkish',    'tr', 'middle',   'amir'],
+  // Zev keeps the Hebrew roots and the feasts, so the Hebrew edition is his.
+  'israel-inspire-ivrit':         ['Hebrew',     'il', 'middle',   'zev'],
+  'thailand-inspire-thai':        ['Thai',       'th', 'asia',     'eliana']
 };
 
 // Domestic stations: a host rota per programming type, so a station always
@@ -478,6 +496,65 @@ const hostedBy = function (ids, limit) {
 // exactly when a station has a manifest to play, so this ordering follows the
 // catalog automatically as more stations come on air. Within each group the
 // order is by rank, the same measure the other shelves sort on.
+/* THE FIVE-FOLD BLOCKS ARE THE CATEGORIES.
+   Authoritative source: setup/hm-bands.md. Ranges, offices and colours are
+   copied from it and must not drift; if they disagree, that file wins.
+
+   Every category below except Home is ONE BLOCK, selected by frequency and
+   nothing else. That is a deliberate change from selecting on `primary`, and
+   it is the whole point of having a banded dial: a station's number already
+   says what it is, so the page it belongs on is not a second judgement that
+   can disagree with the first. A new station lands on the right page by being
+   given a number in the right block, with no edit here.
+
+   It also reproduces the old shelves exactly, which is how the mapping was
+   checked before it was adopted:
+
+     Crossing    300.00-319.99  ->  Christian Music        (was: primary music)
+     Nations     320.00-339.99  ->  International Stations (was: multilanguage,
+                                    minus the ten prayer lines that move below)
+     Upper Room  340.00-359.99  ->  Prayer Rooms           (NEW: the two English
+                                    rooms that sat under teaching, plus those ten)
+     Living Room 360.00-379.99  ->  Family Friendly        (identical set, 26)
+     Table       380.00-399.99  ->  Bible Teachings        (was 34, now 32: the
+                                    two prayer rooms left for their own block) */
+const BLOCKS = {
+  crossing: { key: 'crossing', name: 'The Crossing',    office: 'Evangelist', low: 300, high: 320,
+              light: '#1F6FB8', dark: '#5CB0FF',
+              programming: 'Domestic, English, gospel-forward music' },
+  nations:  { key: 'nations',  name: 'The Nations',     office: 'Apostle',    low: 320, high: 340,
+              light: '#6A44A6', dark: '#B69CFF',
+              programming: 'International music, languages and nations' },
+  upper:    { key: 'upper',    name: 'The Upper Room',  office: 'Prophet',    low: 340, high: 360,
+              light: '#8E2A3A', dark: '#F08795',
+              programming: 'Prayer and intercession' },
+  living:   { key: 'living',   name: 'The Living Room', office: 'Shepherd',   low: 360, high: 380,
+              light: '#3E7B4B', dark: '#79CE92',
+              programming: 'Family-friendly programming' },
+  table:    { key: 'table',    name: 'The Table',       office: 'Teacher',    low: 380, high: 400,
+              light: '#94690E', dark: '#EFC44F',
+              programming: 'Talk shows and teaching' },
+};
+
+// Everything sitting in one block, in the order the flat pages present it.
+// A station whose `hm` will not parse is a bug, not a station to skip quietly.
+const inBlock = function (block) {
+  return flatOrder(where(function (st) {
+    const n = parseFloat(st.hm);
+    if (isNaN(n)) throw new Error('station ' + st.slug + ' has an unparseable hm: ' + st.hm);
+    return n >= block.low && n < block.high;
+  }));
+};
+
+// Carried onto each section so a page can say which block it is and what that
+// block is FOR. The dial only teaches you where things live if the pages admit
+// the structure exists.
+const bandOf = function (block, count) {
+  return { name: block.name, office: block.office, colour: block.light, dark: block.dark,
+           range: block.low.toFixed(2) + ' – ' + (block.high - 0.01).toFixed(2),
+           programming: block.programming, count: count };
+};
+
 const FLAGSHIP = 'jubilee-radio';
 
 // Order any set of stations the way the flat pages present them: whatever is
@@ -492,107 +569,51 @@ const flatOrder = function (slugs) {
     return B.rank - A.rank;
   });
 };
-// Stations that belong on the home dial despite not being music by `primary`,
-// each pinned directly after a station already on the shelf.
-//
-// Jubilee Kids Party is programming for children, so the filter below keeps it
-// out — but it is ON AIR with a full catalogue, and a home page that lists the
-// stations you can actually listen to should not omit one of them. It is placed
-// explicitly rather than left to rank: it ties with Gospel Country on 90, and a
-// tie would drop it into the middle of the live block instead of the end.
-const HOME_PINNED = [
-  { slug: 'jubilee-kids-party', after: 'jubilee-gospel-fire' },   // HM361.90 after HM302.50
-  /* God's Little Lambs is primary 'children', so it lands on Family Friendly on
-     its own and would never reach Home — but it is Bible songs, which is
-     Christian music by any reading, and a parent looking for it arrives at the
-     front door like everyone else. Anchored to the other kids station rather
-     than dropped among the adult worship formats, so the two sit together.
-     It keeps its Family Friendly place as well; the shelves overlap by design. */
-  { slug: 'gods-little-lambs',  after: 'jubilee-kids-party' },    // HM360.30 after HM361.90
+/* HOME IS THE ONLY PAGE THAT IS NOT A RULE.
+
+   It used to be "every English Christian music station", which was a fine
+   definition right up until Christian Music became its own category — at which
+   point Home would have been a near-duplicate of the page next to it, computed
+   a slightly different way. Two pages showing the same stations is worse than
+   one, because the reader has to work out what the difference is meant to be.
+
+   So Home is now what it was always drifting towards: a hand-made shelf of what
+   is being emphasised, drawn from ANY block. The list below is exactly the
+   eighteen cards Home carried before this change, in exactly the order it
+   carried them — the old rule’s output, frozen. Nothing moved on the day the
+   categories changed; what changed is that moving something now means editing
+   this list, which is the point.
+
+   Sixteen are from The Crossing and two from The Living Room, which is the
+   shape an emphasis shelf should have: whatever is worth putting in the window,
+   regardless of where it sits on the dial.
+
+   RULES OF THE LIST. Order is the order on the page — rank is not consulted, and
+   ON AIR does not sort to the front. Both of those are deliberate: the whole
+   value of an editorial shelf is that it does not rearrange itself. Two of the
+   eighteen are not on air yet (Inspire Hymns & Heritage, Inspire A Cappella)
+   and they stay, because emphasis is allowed to point at something before it
+   opens. A slug that is not a station fails the build rather than vanishing. */
+const HOME_EMPHASIS = [
+  'jubilee-radio',            // HM 308.70  the flagship
+  'jubilee-praise',           // HM 305.40  Torah Sings
+  'jubilee-gospel-fire',      // HM 302.50  Pentecostal Shout
+  'latin-worship',            // HM 310.90  Latin Worship (Sung in English)
+  'riddim-and-rhyme',         // HM 311.50
+  'island-hallelujah',        // HM 312.10
+  'jubilee-kids-party',       // HM 361.90  The Living Room
+  'ancient-paths',            // HM 313.80
+  'midnight-praise',          // HM 314.40
+  'hebraic-celebrations',     // HM 306.20
+  'inspire-hymns-heritage',   // HM 300.30  not on air yet — kept on purpose
+  'country-gospel',           // HM 309.30  Gospel Country
+  'yes-and-amen',             // HM 303.10  the SingItDone declarations
+  'jubilee-ccm',              // HM 304.80  Celebrate Yeshua!
+  'radiant-stones-radio',     // HM 301.90  Radiant Stones Concerts
+  'corner-cipher',            // HM 315.20  Christian rap
+  'inspire-acapella',         // HM 307.60  not on air yet — kept on purpose
+  'gods-little-lambs',        // HM 360.30  The Living Room, closes the shelf
 ];
-
-// The opening twelve cards, in the order they are meant to be read. Rank
-// decides the rest of the shelf, but the top of Home is a shop window and its
-// order is an editorial call that no score can express — Gospel Country and
-// Jubilee Kids Party tie on 90, and Torah Sings outranks stations that should
-// not lead. Anything listed here must already qualify for the shelf (or be
-// pinned onto it above); the build fails rather than silently drop one.
-const HOME_LEAD = [
-  'jubilee-radio',            // KJubilee
-  'jubilee-praise',           // Torah Sings
-  'jubilee-gospel-fire',      // Pentecostal Shout
-  'latin-worship',            // Latin Worship (Sung in English)
-  'riddim-and-rhyme',         // Riddim and Rhyme
-  'island-hallelujah',        // Island Hallelujah, format 'Hawaiian Praise' (was Many Waters)
-  'jubilee-kids-party',       // Jubilee Kids Party
-  'ancient-paths',            // The Ancient Paths
-  'midnight-praise',          // Midnight Praise
-  'hebraic-celebrations',     // Hebraic Celebrations
-  'inspire-hymns-heritage',   // Inspire Hymns & Heritage
-  'country-gospel',           // Gospel Country
-  'yes-and-amen',             // Yes and Amen — HM 303.10, the SingItDone declarations
-];
-
-// The closing card(s), in order. God's Little Lambs is pinned onto Home above
-// (it is primary 'children', so it never qualifies on its own) and rank then
-// drops it into the middle of the shelf; this puts it at the end where it was
-// asked for. Same strictness as HOME_LEAD — a bad slug fails the build.
-const HOME_TAIL = [
-  'gods-little-lambs',        // HM 360.30 — last card on Home
-];
-
-const englishMusic = function () {
-  // MAINSTREAM IS NOT ON HOME. The nineteen Inspire mainstream formats — Cafe,
-  // Drive, Chill, Jazz and the rest — are general-audience music rather than
-  // Christian music, and Home is the Christian music page. They live on Family
-  // Friendly instead; see the 'kids' section below, which now claims the whole
-  // band rather than hand-picking six of them.
-  const MUSIC_PRIMARIES = ['music'];
-  const list = where(function (s) {
-    return MUSIC_PRIMARIES.indexOf(s.primary) >= 0 && s.lang === 'English';
-  }).sort(function (a, b) {
-    const A = bySlug.get(a), B = bySlug.get(b);
-    if (!!A.prototype !== !!B.prototype) return A.prototype ? -1 : 1;
-    // The flagship leads the live block. Its rank is 50 ("Featured") rather
-    // than a real score, so ranking alone would bury it behind the others.
-    if (a === FLAGSHIP) return -1;
-    if (b === FLAGSHIP) return 1;
-    return B.rank - A.rank;
-  });
-
-  HOME_PINNED.forEach(function (pin) {
-    if (!bySlug.has(pin.slug)) throw new Error('HOME_PINNED: no such station ' + pin.slug);
-    if (list.indexOf(pin.slug) >= 0) return;          // already qualifies on its own
-    const at = list.indexOf(pin.after);
-    if (at < 0) throw new Error('HOME_PINNED: anchor ' + pin.after + ' is not on the home shelf');
-    list.splice(at + 1, 0, pin.slug);
-  });
-
-  // Lift the hand-ordered opening out of wherever rank put it, then let the
-  // remainder follow in its automatic order.
-  const lead = [];
-  HOME_LEAD.forEach(function (slug) {
-    if (!bySlug.has(slug)) throw new Error('HOME_LEAD: no such station ' + slug);
-    const at = list.indexOf(slug);
-    if (at < 0) throw new Error('HOME_LEAD: ' + slug + ' is not on the home shelf');
-    list.splice(at, 1);
-    lead.push(slug);
-  });
-
-  // ...and the hand-ordered closing out of the other end. Same idea as
-  // HOME_LEAD, opposite end of the shelf: rank decides the middle, the first
-  // and last cards are editorial.
-  const tail = [];
-  HOME_TAIL.forEach(function (slug) {
-    if (!bySlug.has(slug)) throw new Error('HOME_TAIL: no such station ' + slug);
-    const at = list.indexOf(slug);
-    if (at < 0) throw new Error('HOME_TAIL: ' + slug + ' is not on the home shelf');
-    list.splice(at, 1);
-    tail.push(slug);
-  });
-
-  return lead.concat(list, tail);
-};
 
 // --- 5a. Heavenly Modulation editorial ------------------------------------
 // The HM tab is articles, not a shelf of stations. Every number in the copy is
@@ -3825,65 +3846,125 @@ const HM_ARTICLES = (function () {
   return HM_ORDER.map(function (s) { return pool[s]; });
 })();
 
+/* EVERY ARTICLE CARD WEARS ITS OWN PICTURE.
+   The Heavenly Band articles have images generated for them one per slug
+   (tools/StationImageStudio, Articles view) in public/images/articles. They are
+   resolved HERE rather than guessed in the browser, so a slug with no image
+   yet falls back to the station cover the piece is about instead of firing a
+   404 and leaving a hole on the page.
+
+   This touches the HM articles ONLY. Station covers, and every other shelf on
+   the site, keep the artwork they already had. */
+const ARTICLE_IMG_DIR = path.join(ROOT, 'public', 'images', 'articles');
+const ARTICLE_IMGS = (function () {
+  try {
+    return new Set(fs.readdirSync(ARTICLE_IMG_DIR)
+      .filter((f) => /\.(webp|png|jpe?g)$/i.test(f))
+      .map((f) => f.replace(/\.[a-z]+$/i, '')));
+  } catch (e) { return new Set(); }
+})();
+
+let articleImgHits = 0, articleImgMisses = [];
+function withArticleImage(a) {
+  if (ARTICLE_IMGS.has(a.slug)) {
+    articleImgHits++;
+    return Object.assign({}, a, { img: '/images/articles/' + a.slug + '.webp' });
+  }
+  articleImgMisses.push(a.slug);
+  return a;               // the renderer falls back to a.image, the station cover
+}
+
 const SECTIONS = [
   {
     id: 'home', nav: 'Home', label: 'Home',
     // `catalog` is what this section is called when it is LISTED as a category
-    // rather than navigated to — the stations.html table prints it as a heading,
-    // where "Home" would name a destination instead of a kind of station. The
-    // other three are already content names and carry over unchanged.
-    catalog: 'Christian Music', note: 'Praise, worship and the AI music formats',
+    // rather than navigated to — stations.html prints it as a heading, where
+    // "Home" would name a destination instead of a kind of station. It used to
+    // read "Christian Music"; that name now belongs to a real category, so this
+    // one says what the shelf actually is.
+    catalog: 'Featured', note: 'What the dial is emphasising right now',
     blurb: 'Every frequency on the Heavenly Modulation dial, in one place.',
     shelves: [
-      // One continuous grid, no shelf headings: every English Christian music
-      // station — the music band plus the AI music formats — with the stations
-      // that actually play first. `flat` tells the renderer to drop the shelf
-      // header so the page reads as a single list rather than sections.
-      { title: '', flat: true, stations: englishMusic() }
+      // One continuous grid, no shelf headings: the emphasis shelf, in its
+      // hand-written order. `flat` drops the shelf header so the page reads as
+      // a single list rather than sections.
+      { title: '', flat: true, stations: pick.apply(null, HOME_EMPHASIS) }
     ]
   },
   {
-    id: 'teaching', nav: 'Bible Studies & Prayers', label: 'Bible Studies & Prayers',
-    catalog: 'Bible Studies & Prayers', note: 'Teaching, devotionals, prayer and talk',
-    // Like Home: one continuous grid. `intro:false` drops the page heading and
-    // blurb too, so nothing but cards sits between the nav and the catalog —
-    // the active nav item already says which category you are looking at.
-    intro: false,
+    id: 'music', nav: 'Christian Music', label: 'Christian Music',
+    catalog: 'Christian Music', note: 'The Crossing — domestic, English, gospel-forward music',
+    band: bandOf(BLOCKS.crossing, inBlock(BLOCKS.crossing).length),
+    blurb: 'The evangelist’s block: worship, praise and gospel in English, on the ' +
+           'stretch of dial a listener is most likely to arrive on first.',
     shelves: [
-      { title: '', flat: true, stations: flatOrder(where(function (s) {
-          return ['bible_studies', 'devotionals', 'prayer', 'online_church',
-                  'hebrew_roots', 'talk_podcasts'].indexOf(s.primary) >= 0;
-        })) }
-    ]
-  },
-  {
-    id: 'kids', nav: 'Family Friendly', label: 'Family Friendly',
-    catalog: 'Family Friendly', note: 'Kids, sleep & rest, mainstream and family-safe formats',
-    intro: false,
-    shelves: [
-      // The whole mainstream band now lands here, so the six that used to be
-      // hand-picked out of it are covered by the primary test and the explicit
-      // list is gone. The Set stays: children/sleep_rest/radio_theater still
-      // overlap each other, and in one flat grid a station appearing twice
-      // would read as a bug.
-      { title: '', flat: true, stations: flatOrder([...new Set(
-          where(function (s) {
-            return ['children', 'sleep_rest', 'radio_theater', 'mainstream'].indexOf(s.primary) >= 0;
-          })
-        )]) }
+      { title: '', flat: true, stations: inBlock(BLOCKS.crossing) }
     ]
   },
   {
     id: 'intl', nav: 'International Stations', label: 'International Stations',
-    catalog: 'International Stations', note: 'Language editions across the multi band',
-    blurb: 'Thirty stations in the listener’s own language — not translated, but hosted.',
+    catalog: 'International Stations', note: 'The Nations — one frequency per language',
+    band: bandOf(BLOCKS.nations, inBlock(BLOCKS.nations).length),
+    blurb: 'The apostle’s block. Not translated — hosted: each language has its own ' +
+           'frequency, its own catalogue and its own voice from the Inspire Family.',
     shelves: [
       { title: 'Americas',                 stations: intlOf('americas') },
       { title: 'Europe',                   stations: intlOf('europe') },
       { title: 'Africa',                   stations: intlOf('africa') },
       { title: 'Middle East & South Asia', stations: intlOf('middle').concat(intlOf('south')) },
-      { title: 'East & Southeast Asia',    stations: intlOf('asia') },
-      { title: 'Jubilee Prayers',          stations: where(function (s) { return s.prayerLine; }) }
+      { title: 'East & Southeast Asia',    stations: intlOf('asia') }
+      // The Jubilee Prayers language lines used to close this page. They are
+      // prayer before they are language, they sit at 350-359 in The Upper Room,
+      // and they now open Prayer Rooms instead.
+    ]
+  },
+  {
+    id: 'prayer', nav: 'Prayer Rooms', label: 'Prayer Rooms',
+    catalog: 'Prayer Rooms', note: 'The Upper Room — prayer and intercession',
+    band: bandOf(BLOCKS.upper, inBlock(BLOCKS.upper).length),
+    // SAYS PLAINLY THAT NOTHING HERE IS OPEN YET.
+    //
+    // Every one of these twelve is planned and none is on air. The cards render
+    // as placeholders like any other unopened frequency, but a page that is
+    // entirely placeholders needs to admit it in words — otherwise it reads as
+    // a page that is broken rather than a block that is being built.
+    blurb: 'The prophet’s block, and the one still being built. Twelve rooms are ' +
+           'numbered and none has opened — two in English, ten carrying the Jubilee ' +
+           'Prayers in a language of their own.',
+    shelves: [
+      // The two English rooms first: they are the block's own programming, and
+      // they sat under Bible Teachings until now for want of anywhere better.
+      { title: 'The Rooms',       stations: where(function (st) {
+          const n = parseFloat(st.hm);
+          return n >= BLOCKS.upper.low && n < BLOCKS.upper.high && !st.prayerLine;
+        }) },
+      { title: 'Jubilee Prayers', stations: where(function (st) { return st.prayerLine; }) }
+    ]
+  },
+  {
+    id: 'kids', nav: 'Family Friendly', label: 'Family Friendly',
+    catalog: 'Family Friendly', note: 'The Living Room — family-friendly programming',
+    band: bandOf(BLOCKS.living, inBlock(BLOCKS.living).length),
+    // Christian and not-necessarily-Christian sit together here on purpose:
+    // the block is defined by who can be in the room, not by how explicit the
+    // lyric is. Kids' praise, sleep and rest, the radio theatre and the whole
+    // mainstream band are all family-safe, which is the only test that matters
+    // on this page.
+    blurb: 'The shepherd’s block: music and programming you can leave on with the ' +
+           'children in the room — kids’ praise, sleep and rest, radio theatre, and ' +
+           'the everyday formats that are simply clean.',
+    shelves: [
+      { title: '', flat: true, stations: inBlock(BLOCKS.living) }
+    ]
+  },
+  {
+    id: 'teaching', nav: 'Bible Teachings', label: 'Bible Teachings',
+    catalog: 'Bible Teachings', note: 'The Table — talk shows and teaching',
+    band: bandOf(BLOCKS.table, inBlock(BLOCKS.table).length),
+    blurb: 'The teacher’s block: Bible studies, devotionals, Hebrew roots, online ' +
+           'church and talk — the frequencies you sit down with rather than put on.',
+    shelves: [
+      { title: '', flat: true, stations: inBlock(BLOCKS.table) }
     ]
   },
   // Right-hand side of the category bar. This one is editorial rather than a
@@ -3894,8 +3975,10 @@ const SECTIONS = [
     id: 'hm', nav: 'The Heavenly Band', navShort: 'HM',
     label: 'The Heavenly Band',
     align: 'right',
-    blurb: 'A whole radio band given back to the Kingdom — what HM is, and what it changes.',
-    articles: HM_ARTICLES
+    // No heading block. The nav item already names the page, and a title plus a
+    // standfirst above a grid of titled cards said the same thing three times.
+    intro: false,
+    articles: HM_ARTICLES.map(withArticleImage)
   }
 ];
 
@@ -3923,7 +4006,10 @@ const SECTIONS = [
 const HERO_PINNED = ['jubilee-kids-party', 'yes-and-amen', 'gods-little-lambs'];
 
 const FEATURED = (function () {
-  const live = englishMusic().filter(function (slug) { return bySlug.get(slug).prototype; });
+  // Drawn from the emphasis shelf rather than from a rule, so the hero and the
+  // page under it headline the same thing — filtered to what is actually on air,
+  // because the hero must never headline a station that cannot play.
+  const live = HOME_EMPHASIS.filter(function (slug) { return bySlug.get(slug).prototype; });
   if (!live.length) return [FLAGSHIP];
 
   // The pinned ones are held back first, so a station that would ALSO have made
@@ -3963,6 +4049,11 @@ console.log(stations.length + ' stations, ' + MEMBERS.length + ' members');
 SECTIONS.forEach(function (sec) {
   // A section carries either shelves of stations or editorial articles.
   const shelves = sec.shelves || [];
+  if (sec.id === 'hm' && sec.articles) {
+    console.log('  ' + 'article art'.padEnd(9) + String(articleImgHits).padStart(4) +
+                ' of ' + sec.articles.length + ' have their own image' +
+                (articleImgMisses.length ? ' (falling back to a station cover: ' + articleImgMisses.join(', ') + ')' : ''));
+  }
   if (!shelves.length && sec.articles) {
     console.log('  ' + sec.id.padEnd(9) + String(sec.articles.length).padStart(4) + ' articles');
     return;

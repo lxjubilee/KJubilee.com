@@ -62,64 +62,21 @@ img{display:block;max-width:100%}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 
 /* ---------- top bar ------------------------------------------------------ */
-.topbar{flex:none;background:#1b1b1b;border-bottom:1px solid var(--border-strong);z-index:30}
-.topbar-row1,.topbar-row2{
-  display:flex;align-items:center;flex-wrap:nowrap;gap:12px;
-  padding:0 max(10px,calc((100% - var(--site-max)) / 2 + 10px));
-}
-.topbar-row1{height:var(--topbar-row1-h);background:#242424}
-.topbar-row2{height:var(--topbar-row2-h);background:#1b1b1b;border-top:1px solid var(--border-strong)}
-.logo{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
-.logo-img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
-.logo-name{font-family:var(--font-logo);font-weight:600;font-size:24px;line-height:1;letter-spacing:.01em;white-space:nowrap}
-.logo-accent{color:var(--accent)}
 /* The leading "k" sits 2pt below the rest of the wordmark. calc with an
    absolute pt, not an em ratio, so the reduction stays exactly 2pt at the
    24px desktop size and the 17px narrow-screen size alike. */
-.logo-k{font-size:calc(1em - 2pt)}
-.spacer{flex:1 1 auto;min-width:0}
-.nav-textlink{
-  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
-  font-size:12px;font-weight:500;color:#c4c4c4;white-space:nowrap;transition:color .2s ease;
-}
-.nav-textlink:hover{color:#fff}
-.searchbar{
-  display:flex;align-items:center;gap:8px;flex:0 50 auto;min-width:0;
-  padding:5px 12px;background:hsla(0,0%,100%,.06);
-  border:1px solid hsla(0,0%,100%,.12);border-radius:4px;transition:border-color .15s ease;
-}
-.searchbar:focus-within{border-color:hsla(0,0%,100%,.2)}
-.search-icon{color:#8a8a8a;flex:none}
-.searchbar input{flex:1 1;min-width:0;width:130px;background:none;border:0;color:#fff;font-size:12px;outline:none}
-.searchbar input::placeholder{color:#8a8a8a}
-.search-btn{flex:none;padding:3px 10px;border-radius:3px;background:var(--accent);color:#0A1B2B;font-size:11px;font-weight:700;transition:filter .15s ease}
-.search-btn:hover{filter:brightness(1.06)}
 .btn-outline{
   padding:8px 12px;border-radius:4px;border:1px solid var(--border-strong);
   color:#c4c4c4;font-size:12px;font-weight:500;white-space:nowrap;
   transition:border-color .2s ease,color .2s ease,background .2s ease;
 }
 .btn-outline:hover{color:#fff;background:#2d2d2d}
-.primary-nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
-.primary-nav::-webkit-scrollbar{display:none}
-.nav-link{
-  display:inline-flex;align-items:center;padding:8px 12px;border:1px solid transparent;border-radius:4px;
-  font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.02em;color:#fff;white-space:nowrap;
-  transition:color .2s ease,border-color .2s ease,background .2s ease;
-}
-.nav-link:hover{background:#2d2d2d}
-.nav-link.is-active{color:var(--accent);border-color:var(--accent);background:transparent}
 /* The right-hand nav must not shrink away when the left one has more items
    than fit — the left side scrolls, this side stays put. */
-.nav-right{flex:0 0 auto;overflow:visible}
-.nav-short{display:none}
 /* Below this width the left-hand categories have to scroll, so the pinned
    right-hand item gives up its long name to leave them as much room as it can. */
 @media (max-width:900px){
-  .nav-long{display:none}
-  .nav-short{display:inline}
 }
-
 
 /* ---------- The Heavenly Band explainer ---------------------------------- */
 /* The Backstage grid from JubiLujah, to the same numbers: five columns, one
@@ -195,10 +152,6 @@ img{display:block;max-width:100%}
 }
 /* Sits after the nav, which scrolls horizontally on narrow screens — the
    solid ground keeps nav items from sliding visibly underneath it. */
-.lang-flag{flex:0 0 auto;padding:4px 4px 4px 10px;background:#1b1b1b;display:inline-flex;transition:box-shadow .2s ease,transform .2s ease}
-.lang-flag img{border-radius:50%}
-.lang-flag:hover{transform:scale(1.1);box-shadow:0 0 0 2px var(--accent)}
-.lang-flag img{width:26px;height:26px;border-radius:50%;object-fit:cover}
 
 /* ---------- scroll region ------------------------------------------------ */
 .scroll{flex:1 1;overflow-y:auto;overflow-x:hidden;display:flex;flex-direction:column}
@@ -254,7 +207,24 @@ img{display:block;max-width:100%}
   min-height:calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px));
   min-height:var(--hero-h, calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px)));
   display:flex;align-items:flex-end;padding:38px;
-  margin:calc(-1 * var(--pad-top)) calc(-1 * var(--site-pad)) var(--shelf-gap);
+  /* FULL BLEED, AND THE WIDTH IS MEASURED FOR THE SAME REASON THE HEIGHT IS.
+
+     .scroll-inner does not cap itself with max-width; it centres the page by
+     PADDING — max(--pad-x, (100% - --site-max)/2 + --pad-x). At 1920 that is
+     186px a side, and pulling back --site-pad (10px) escaped ten of them. The
+     other 176 stayed as black bars down both edges of the picture, which is
+     exactly what a wide screen showed.
+
+     The padding cannot be cancelled in CSS from in here: its 100% resolves
+     against .scroll, while a percentage in this rule resolves against
+     .scroll-inner's content box — the same expression means two different
+     numbers in the two places. 100vw would overshoot instead, by the width of
+     .scroll's own scrollbar.
+
+     So sizeHero() reads the padding that was actually applied and publishes it
+     as --hero-bleed, alongside --hero-h. The fallback keeps the old 10px
+     behaviour if the script never runs. */
+  margin:calc(-1 * var(--pad-top)) calc(-1 * var(--hero-bleed, var(--site-pad))) var(--shelf-gap);
 }
 .hero-shot{position:absolute;inset:0;opacity:0;transition:opacity .7s ease}
 .hero-shot.is-live{opacity:1}
@@ -285,19 +255,22 @@ img{display:block;max-width:100%}
 /* FULL WIDTH. The lines run the whole way across the image rather than wrapping
    inside a 600px column, so the hero reads as one wide band of type over the
    artwork instead of a paragraph pasted into its corner. */
-.hero-content{position:relative;z-index:3;width:100%;max-width:var(--site-max);margin:0 auto;animation:heroIn .5s ease both}
+/* The 16px inner gutter is InspireManna's .hero-content: with the frame now
+   running edge to edge, the words still line up on the site measure rather than
+   starting at the picture's own edge. */
+.hero-content{position:relative;z-index:3;width:100%;max-width:var(--site-max);padding:0 16px;margin:0 auto;animation:heroIn .5s ease both}
 @keyframes heroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 /* ONE ROW OF CHROME, NOT THREE STACKED LINES.
    "Featured · <format>", the frequency and the host each used to own a line of
    their own above and below the title, so five things were stacked before the
    buttons were reached. They are all labels, so they read as a single row. */
-.hero-meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;min-height:22px}
+.hero-meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;min-height:22px}
 .hero-eyebrow{display:inline-block;padding:4px 10px;border-radius:4px;background:var(--accent);color:#04121f;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .hero-format{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:hsla(0,0%,100%,.72)}
 .hero-freq{font-family:var(--font-logo);font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--accent)}
 /* ONE LINE, CLIPPED. A station name is short; the nowrap is what guarantees the
    title stays a single sweep across the picture even when one is not. */
-.hero-title{font-weight:800;font-size:46px;line-height:1.08;letter-spacing:-.02em;margin:0 0 10px;color:#fff;max-width:100%}
+.hero-title{font-weight:700;font-size:40px;line-height:1.18;margin:0 0 10px;color:#fff;max-width:100%}
 .hero-title,.hero-title button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-title button{display:block;text-align:left;font:inherit;letter-spacing:inherit;width:100%;max-width:100%}
 .hero-title button:hover{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
@@ -313,7 +286,7 @@ img{display:block;max-width:100%}
    the description is a taste of the station, and the station page carries the
    rest. Restored to normal wrapping on narrow screens, where one line would be
    two words and an ellipsis. */
-.hero-blurb{font-size:17px;line-height:1.55;color:hsla(0,0%,100%,.85);margin:0 0 18px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-blurb{font-size:17px;line-height:1.55;color:hsla(0,0%,100%,.85);margin:0 0 15px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-actions{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
 .btn-accent{
   display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#0a1b12;
@@ -726,7 +699,6 @@ img{display:block;max-width:100%}
      make the transition in. */
   .hero-scrim{background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.85) 58%,rgba(0,0,0,.96))}
   .hero-blurb{font-size:15.5px}
-  .nav-textlink{display:none}
 }
 @media (max-width:760px){
   .card-cover{height:auto;aspect-ratio:16/9}
@@ -740,9 +712,6 @@ img{display:block;max-width:100%}
   .hero-shot .ident-freq{right:20px;top:18px}
   .hero-by-focus{display:none}
   .hero-arrow{display:none}
-  .search-btn{display:none}
-  .searchbar input{width:70px}
-  .logo-name{font-size:17px}
   .section-intro h1{font-size:23px}
 }
 /* THE PHONE. One column, and the only place the five is given up.
@@ -761,3 +730,51 @@ img{display:block;max-width:100%}
   .card-blurb{display:block}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+
+/* ---------- the five-fold band strip ------------------------------------- */
+/* Five of the six categories ARE one of the blocks on setup/hm-bands.md, and
+   this is where a page says so: block, office, frequency range, programming.
+
+   The colour arrives as two custom properties set inline by bandHTML() — the
+   canonical hue and the same hue lifted for a dark ground. This sheet is a dark
+   UI throughout (see .member-name, hardcoded #fff), so --band-dark is what
+   renders; --band is carried for a light ground rather than dropped, so the
+   markup does not have to change if one ever arrives. The light block below is
+   dormant today and correct the moment it is not.
+
+   Home sets no band and bandHTML returns nothing, so there is no empty strip to
+   suppress — the element simply is not there. */
+.band-strip{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;
+  margin:0 0 14px;padding:0 0 0 12px;
+  border-left:3px solid var(--band-dark);
+  font-size:12.5px;line-height:1.5;
+}
+.band-name{
+  font-weight:800;letter-spacing:.02em;color:var(--band-dark);
+  text-transform:uppercase;font-size:12px;
+}
+/* Office and range are the coordinates, so they read as data rather than prose:
+   dimmer than the name, and the range in tabular figures so 300.00 and 319.99
+   line up with every other frequency on the site. */
+.band-office{color:var(--text-muted)}
+.band-office::before{content:"·";margin-right:14px;color:var(--border-strong)}
+.band-range{color:var(--text-muted);font-variant-numeric:tabular-nums}
+.band-range::before{content:"·";margin-right:14px;color:var(--border-strong)}
+/* The programming line is the one full sentence, so it breaks to its own row
+   before it squeezes the coordinates. */
+.band-prog{flex:1 1 100%;color:var(--text-muted)}
+
+@media (prefers-color-scheme:light){
+  .band-strip{border-left-color:var(--band)}
+  .band-name{color:var(--band)}
+}
+
+@media (max-width:700px){
+  /* On a phone the office and the range each take their own line rather than
+     wrapping mid-pair, which is what the leading dots would otherwise do. */
+  .band-strip{gap:2px 12px}
+  .band-office::before,.band-range::before{display:none}
+  .band-office,.band-range{flex:1 1 100%}
+}
