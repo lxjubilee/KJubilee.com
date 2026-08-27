@@ -22,7 +22,7 @@ export default function RadioPage() {
                 <header className="header">
                     <div className="header-inner">
                         <a href="/" className="logo">
-                            <img src="/images/members/JubileeNova-Circle-200.png" alt="Nova" className="logo-icon" />
+                            <img src="/images/members/JubileeInspire-Circle-200.png" alt="Jubilee" className="logo-icon" />
                             <div className="logo-text">Jubilee<span className="logo-verse">Verse</span><span className="logo-dotcom">.com</span></div>
                         </a>
                         {/* Radio Stations brand mark — moved out of the sidebar so the

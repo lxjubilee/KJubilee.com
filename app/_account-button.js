@@ -6,12 +6,19 @@
    The header used to be a hardcoded "Sign In" anchor, so it said Sign In
    whether or not you already were — the door worked, the page just never
    admitted it. This reads the session the door stores and shows the person's
-   name instead, with a way back out.
+   initial instead, with a way back out.
+
+   The name that used to sit beside the initial is gone from the bar: it was
+   the widest thing in a crowded row and carried nothing the hover title and
+   the menu beneath do not already say. The initial stays because a coloured
+   disc is what makes the control findable at a glance; the full name is still
+   in the accessible name of the button, so a screen reader is not left with
+   one letter.
 
    ── Why it renders "Sign In" first, every time ──
    localStorage does not exist on the server, so the markup React sends and the
    markup it first builds in the browser have to agree on something. They agree
-   on the signed-out state, and the name appears in an effect immediately after.
+   on the signed-out state, and the initial appears in an effect immediately after.
    Reading storage during render instead would be a hydration mismatch, and
    React would throw away the whole tree and re-render it — a visible flash on
    every page, to save one frame here.
@@ -23,7 +30,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect, useRef } from 'react';
-import { AUTH_EVENT, authToken } from './_session-store';
+import { AUTH_EVENT } from './_session-store';
 
 function readSession() {
     try {
@@ -81,8 +88,6 @@ function fullName(user) {
 export default function AccountButton() {
     const [user, setUser] = useState(null);
     const [open, setOpen] = useState(false);
-    const [isAdmin, setIsAdmin] = useState(false);
-    const inFlight = useRef(false);
     const boxRef = useRef(null);
 
     useEffect(() => {
@@ -116,68 +121,6 @@ export default function AccountButton() {
         };
     }, [open]);
 
-    /*
-     * Is this person an administrator? Asked when the menu is OPENED, not when
-     * the header mounts.
-     *
-     * The header is on every page, and almost nobody is an admin — checking on
-     * mount would put a database round trip on every page load for every signed
-     * in visitor to decide one menu item that is nearly always absent. Opening
-     * this menu is rare and already a deliberate act, so the cost lands where
-     * somebody is actually looking.
-     *
-     * NOT read from the stored session. /api/auth/login writes {id, email, name}
-     * with no role at all, so a password sign-in has nothing to read; and a role
-     * copied into localStorage keeps claiming admin after the role is revoked.
-     * The server is asked instead, and it answers from the database.
-     *
-     * ASKED EVERY TIME THE MENU OPENS, NOT ONCE PER ACCOUNT. This used to cache
-     * the answer against the signed-in email and skip the request on every
-     * subsequent open. That made a role change invisible until the page was
-     * reloaded: whoever was told "not an admin" the first time they opened the
-     * menu kept being told it for the rest of the session, which is precisely
-     * the staleness the server-side lookup exists to avoid.
-     *
-     * Re-asking costs one indexed query, and only when somebody has opened the
-     * menu and is looking at it. The saving from caching was never worth the
-     * class of bug it bought.
-     *
-     * NOT read from the stored session. /api/auth/login writes {id, email, name}
-     * with no role at all, so a password sign-in has nothing to read; and a role
-     * copied into localStorage keeps claiming admin after the role is revoked.
-     * The server is asked instead, and it answers from the database.
-     */
-    useEffect(() => {
-        if (!user) { setIsAdmin(false); return; }
-        if (!open) return;
-        // A second open while the first request is still out would be a wasted
-        // round trip, not a wrong answer — the guard is thrift, not correctness.
-        if (inFlight.current) return;
-
-        let cancelled = false;
-        inFlight.current = true;
-        (async () => {
-            try {
-                const token = authToken();
-                if (!token) { if (!cancelled) setIsAdmin(false); return; }
-                const res = await fetch('/api/auth/me', {
-                    headers: { Authorization: 'Bearer ' + token },
-                    cache: 'no-store',
-                });
-                if (cancelled) return;
-                if (!res.ok) { setIsAdmin(false); return; }
-                const body = await res.json();
-                if (!cancelled) setIsAdmin(String(body?.user?.role || '').toLowerCase() === 'admin');
-            } catch {
-                // Offline, or the token expired. No link is the safe answer —
-                // it costs an admin one more open and tells a stranger nothing.
-                if (!cancelled) setIsAdmin(false);
-            } finally {
-                inFlight.current = false;
-            }
-        })();
-        return () => { cancelled = true; };
-    }, [open, user]);
 
     async function signOut() {
         // Clearing localStorage only ever removed the copy in front of us; the
@@ -229,10 +172,13 @@ export default function AccountButton() {
                 aria-expanded={open}
                 title={user.email}
             >
+                {/* The initial alone. The name used to sit beside it and was
+                    the widest thing in the bar for no information a hover title
+                    does not already carry. */}
                 <span className="kj-account-initial" aria-hidden="true">
                     {shortName(user).charAt(0).toUpperCase()}
                 </span>
-                <span className="kj-account-name">{shortName(user)}</span>
+                <span className="kj-sr-only">{fullName(user)}</span>
             </button>
 
             {open && (
@@ -246,14 +192,6 @@ export default function AccountButton() {
                     </div>
                     <a className="kj-account-item" role="menuitem" href="/account">Profile settings</a>
 
-                    {/* Only for administrators, and only because the server said
-                        so a moment ago. /admin is not linked anywhere else on the
-                        site — it is noindex and was URL-only until this. */}
-                    {isAdmin && (
-                        <a className="kj-account-item kj-account-item--admin" role="menuitem" href="/admin">
-                            Admin panel
-                        </a>
-                    )}
 
                     <button type="button" role="menuitem" onClick={signOut}>Sign out</button>
                 </div>

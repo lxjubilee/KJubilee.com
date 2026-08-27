@@ -82,7 +82,7 @@ export default function AuthShell({ children }) {
                     <div className="auth-form-inner">
                         <div className="auth-logo">
                             <a href="/" aria-label="kJubilee.com home">
-                                <img src="/images/members/JubileeNova-Circle-200.png" alt=""
+                                <img src="/images/members/JubileeInspire-Circle-200.png" alt=""
                                      className="auth-logo-img" width="92" height="92" />
                                 <span className="auth-logo-text">
                                     <span className="k">k</span><span className="jubilee">Jubilee</span>.com

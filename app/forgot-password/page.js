@@ -3,7 +3,7 @@ import ForgotPasswordPage from './client';
 export const metadata = {
     title: 'kJubilee — Reset your password',
     robots: { index: false, follow: false },
-    icons: { icon: '/images/members/JubileeNova-Circle-200.png', apple: '/images/members/JubileeNova-Circle-200.png' },
+    icons: { icon: '/images/members/JubileeInspire-Circle-200.png', apple: '/images/members/JubileeInspire-Circle-200.png' },
 };
 
 // ?email= is carried over from the door, so nobody retypes the address they

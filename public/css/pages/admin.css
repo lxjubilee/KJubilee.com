@@ -407,6 +407,31 @@ body:has(.adm-shell) { margin: 0; min-height: 100%; background: #0d1117; }
 .adm-row-open > td { background: var(--adm-bg); padding: 16px 14px 20px; }
 .adm-row-open:hover > td { background: var(--adm-bg); }
 
+/* ── One line per account (Users & roles) ─────────────────────────────────
+   Name over address made every row two lines tall, so a handful of accounts
+   filled the screen and the role column — the reason to open this section —
+   was the hardest thing to scan down. Everything is on one line now: the disc,
+   the name, then the address in dimmed text beside it rather than beneath.
+
+   The address is the only part allowed to shrink, because it is the only part
+   that can be arbitrarily long and the only one whose tail can be dropped
+   without losing the row's identity. */
+.adm-table--users tbody td { white-space: nowrap; }
+.adm-who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.adm-who-disc {
+  display: grid; place-items: center; flex: none;
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--adm-accent-soft); color: var(--adm-accent-text);
+  border: 1px solid var(--adm-border);
+  font-size: 11px; font-weight: 700; letter-spacing: .02em;
+}
+.adm-who-name { font-weight: 600; color: var(--adm-text); flex: none; }
+.adm-who-you { color: var(--adm-text-dim); font-weight: 400; }
+.adm-who-email {
+  color: var(--adm-text-dim); font-size: 12.5px;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis;
+}
+
 .adm-cell-primary { display: block; font-weight: 600; color: var(--adm-text); line-height: 1.35; }
 .adm-cell-dim { display: block; font-size: 12px; color: var(--adm-text-dim); line-height: 1.45; }
 .adm-cell-dim--faint { opacity: 0.75; }

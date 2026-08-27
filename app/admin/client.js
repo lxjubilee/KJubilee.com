@@ -7,7 +7,6 @@ import Stations from './_stations';
 import Albums from './_albums';
 import Feedback from './_feedback';
 import Users from './_users';
-import Documents from './_documents';
 
 /*
  * /admin — the administrator's console.
@@ -33,7 +32,7 @@ import Documents from './_documents';
  */
 
 /* 20px stroke icons, sized by .adm-nav-icon. Inline rather than a sprite —
-   six glyphs are smaller than the request that would fetch them. */
+   five glyphs are smaller than the request that would fetch them. */
 const Icon = ({ d, circle }) => (
     <svg className="adm-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
          strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -77,13 +76,6 @@ const SECTIONS = [
         title: 'Users & roles',
         subtitle: 'Who has an account, and who may open this console.',
         icon: <Icon circle={[9, 7, 4]} d={['M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2', 'M17 11h4', 'M19 9v4']} />,
-    },
-    {
-        id: 'documents',
-        label: 'Documents',
-        title: 'Station documents',
-        subtitle: 'Reference documents for the network, served only to administrators.',
-        icon: <Icon d={['M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z', 'M14 2v6h6', 'M8 13h8', 'M8 17h5']} />,
     },
 ];
 
@@ -239,7 +231,6 @@ export default function AdminClient() {
                 {section === 'albums' && <Albums />}
                 {section === 'feedback' && <Feedback />}
             {section === 'users' && <Users />}
-                {section === 'documents' && <Documents />}
             </main>
         </div>
     );

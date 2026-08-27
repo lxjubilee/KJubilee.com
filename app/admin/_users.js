@@ -31,6 +31,16 @@ function displayName(u) {
     return name || (u.email || '').split('@')[0];
 }
 
+/** One or two letters for the row's disc — the same idea as the header's. */
+function initialsOf(u) {
+    const parts = [u.first_name, u.last_name].map(x => (x || '').trim()).filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+    const src = (parts[0] || u.name || u.email || '?').trim();
+    const words = src.split(/[\s@._-]+/).filter(Boolean);
+    if (words.length >= 2) return (words[0][0] + words[1][0]).toUpperCase();
+    return src.slice(0, 2).toUpperCase();
+}
+
 /** The row's state, in the words the operator needs — not raw columns. */
 function statusOf(u) {
     if (u.is_locked) return { label: 'locked', tone: 'red' };
@@ -159,7 +169,7 @@ export default function Users() {
             )}
 
             <div className="adm-table-wrap">
-                <table className="adm-table">
+                <table className="adm-table adm-table--users">
                     <thead>
                         <tr>
                             <th scope="col">Account</th>
@@ -184,11 +194,19 @@ export default function Users() {
                             const status = statusOf(u);
                             return [
                                 <tr key={u.id} className={confirming?.user?.id === u.id ? 'is-open' : undefined}>
+                                    {/* ONE LINE PER ACCOUNT. Name over address
+                                        made every row two lines tall, so six
+                                        accounts filled the screen and the roles
+                                        column — the reason to be here — was the
+                                        hardest thing to scan. */}
                                     <td>
-                                        <span className="adm-cell-primary">
-                                            {displayName(u)}{isMe && <span className="adm-cell-dim adm-cell-dim--faint"> (you)</span>}
+                                        <span className="adm-who">
+                                            <span className="adm-who-disc" aria-hidden="true">{initialsOf(u)}</span>
+                                            <span className="adm-who-name">
+                                                {displayName(u)}{isMe && <span className="adm-who-you"> (you)</span>}
+                                            </span>
+                                            <span className="adm-who-email" title={u.email}>{u.email}</span>
                                         </span>
-                                        <span className="adm-cell-dim">{u.email}</span>
                                     </td>
                                     <td><span className="adm-cell-dim">{u.jubilee_id ? <code>{u.jubilee_id}</code> : '—'}</span></td>
                                     <td>

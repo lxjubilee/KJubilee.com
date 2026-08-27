@@ -3,7 +3,7 @@ import ResetPasswordPage from './client';
 export const metadata = {
     title: 'kJubilee — Choose a new password',
     robots: { index: false, follow: false },
-    icons: { icon: '/images/members/JubileeNova-Circle-200.png', apple: '/images/members/JubileeNova-Circle-200.png' },
+    icons: { icon: '/images/members/JubileeInspire-Circle-200.png', apple: '/images/members/JubileeInspire-Circle-200.png' },
 };
 
 // The token arrives in the emailed link. It is read here rather than in the
