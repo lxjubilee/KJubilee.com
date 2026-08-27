@@ -203,7 +203,7 @@
         '</td>' +
         '<td class="bases col-bases">' + basesHTML(s) + '</td>' +
         '<td class="host col-host">' +
-          (host ? '<img src="' + esc(host.image) + '" alt="" loading="lazy">' : '') +
+          (host && host.image ? '<img src="' + esc(host.image) + '" alt="" loading="lazy">' : '') +
           '<span>' + esc(host ? host.short : '') + '</span>' +
         '</td>' +
         '<td class="status col-status">' +

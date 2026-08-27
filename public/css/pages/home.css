@@ -83,10 +83,13 @@ img{display:block;max-width:100%}
    wide card per five, and a 12px gutter shared with the station shelves so the
    two grids line up when they sit on the same page.
 
-   The step-down is JubiLujah's as well, and the important part of it is that
-   .hm-card.wide STOPS being wide below 1080px. A two-column card inside a
-   four-column grid tiles into nothing, and the last row goes ragged; dropping
-   the span is what keeps every breakpoint square. */
+   The step-down matches .row exactly — 5/4/3/2/1 at 1199, 899, 699 and 449 —
+   because these cards sit in the same column widths as the station shelves and
+   two different ladders would make the grids disagree down the whole page.
+
+   .hm-card.wide stands down at four columns and at two, and comes back at
+   three: a two-column card only tiles without stranding a hole where the
+   remainder works out, which is at five and at three. */
 .hm-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:var(--shelf-gap)}
 .hm-card.wide{grid-column:span 2}
 .hm-card{
@@ -133,20 +136,25 @@ img{display:block;max-width:100%}
 .hm-card-dot{flex:0 0 auto;color:#6a6a6a}
 .hm-card-read{flex:1 1 auto}
 
-@media (max-width:1080px){
+@media (max-width:1199px){
   .hm-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
   .hm-card.wide{grid-column:span 1}
 }
-@media (max-width:900px){.hm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (max-width:680px){
+@media (max-width:899px){
+  .hm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  /* Three tiles cleanly, so the accent comes back — same as .row. */
+  .hm-card.wide{grid-column:span 2}
+}
+@media (max-width:699px){
   .hm-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* The blurb is the first thing to go when the card gets narrow: at two
      columns the headline and the byline are the whole decision. */
   .hm-card-dek{display:none}
   .hm-card-image{height:auto;aspect-ratio:16/9}
 }
-@media (max-width:480px){
+@media (max-width:449px){
   .hm-grid{grid-template-columns:minmax(0,1fr)}
+  .hm-card.wide{grid-column:auto}
   /* One per row is wide enough to earn the blurb back. */
   .hm-card-dek{display:-webkit-box}
 }
@@ -502,7 +510,12 @@ img{display:block;max-width:100%}
   font-family:var(--font-logo);font-weight:700;font-size:clamp(26px,3.15vw,42px);
   line-height:1;letter-spacing:-.03em;color:hsla(0,0%,100%,.10);white-space:nowrap;
 }
-.card-category,.card-title,.card-blurb,.card-meta{position:relative;z-index:1}
+.card-actions,.card-category,.card-title,.card-blurb,.card-meta{position:relative;z-index:1}
+/* THE CARD BODY WHERE THERE IS NO HOVER PREVIEW.
+   Play, save, like and open are in the markup of every card and hidden here, so
+   a desktop renders exactly what it always did. The media block near the foot of
+   this file is what turns the body into the preview's .cp-body. */
+.card-actions,.card-dur{display:none}
 .card-category{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);margin-bottom:4px}
 .card-title{font-size:16px;font-weight:700;line-height:1.28;color:#fff;margin:0 0 6px}
 .card-blurb{font-size:12.5px;line-height:1.45;color:var(--text-muted);margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -714,67 +727,107 @@ img{display:block;max-width:100%}
   .hero-arrow{display:none}
   .section-intro h1{font-size:23px}
 }
-/* THE PHONE. One column, and the only place the five is given up.
+/* THE COLUMN LADDER — inspiremanna.com's .row, step for step.
 
-   700px rather than the old 460: a phone in portrait is comfortably under it,
-   a tablet at 768 is over it and keeps the five. A phone turned landscape can
-   exceed 700 and will show five narrow columns — the alternative is a width
-   test that also catches small tablets, and five columns everywhere is the
-   instruction. */
-@media (max-width:700px){
-  .row{grid-template-columns:minmax(0,1fr)}
-  /* One column: a card spanning two would overflow the grid. */
-  .card.wide{grid-column:auto}
-  /* Full width means the cover has room to be a proper 16:9 again. */
+   This used to be five columns straight down to one at 700px, on the reasoning
+   that "a tablet at 768 is over it and keeps the five". A 768px tablet showing
+   five columns gives each card about 140px: a 16:9 cover 79px tall and a title
+   clamped mid-word. The jump also meant nothing between a 1200px laptop window
+   and a phone ever changed.
+
+   So it steps, and the steps are the reference's: 5 -> 4 -> 3 -> 2 -> 1.
+
+   .card.wide is the part that is not merely arithmetic. A wide card costs two
+   columns, so it only tiles cleanly where the remainder works out: at five and
+   at three it does, at four and at two it strands a one-column hole beside it.
+   The span therefore stands down at 4 and at 2 and comes back at 3, which is
+   why the 899 block sits AFTER the 1199 one — both match at 800px and the
+   later rule is the one that wins. */
+@media (max-width:1199px){
+  .row{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card.wide{grid-column:span 1}
+}
+@media (max-width:899px){
+  .row{grid-template-columns:repeat(3,minmax(0,1fr))}
+  /* Three tiles cleanly, so the accent comes back. */
+  .card.wide{grid-column:span 2}
+}
+@media (max-width:699px){
+  .row{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card.wide{grid-column:span 1}
+  /* The fixed band becomes proportional. A fixed height is what stops a wide
+     card out-growing its row, and that matters wherever one shares a row; at
+     two columns it spans both and has the row to itself. */
   .card-cover{height:auto;aspect-ratio:16/9}
+}
+/* Under 450px two columns is a 200px card beside a 200px card with the title
+   clamped mid-word. One per row instead: the picture is legible and the title
+   has the whole line. */
+@media (max-width:449px){
+  .row{grid-template-columns:minmax(0,1fr)}
+  .card.wide{grid-column:auto}
   .card-blurb{display:block}
+}
+
+/* ---------- the card body becomes .cp-body, where hover cannot ----------- */
+/* THE CONDITION IS "the preview is unusable", NOT "the screen is small".
+   (hover:none) catches a touch tablet at any width — a mouse-sized screen with
+   no way to open a hover panel on it — and 1024px catches every phone and
+   tablet viewport plus a desktop window narrowed to one, where the panel would
+   be a large fraction of the viewport it opened in. Either one on its own is
+   enough, which is why they are one comma-separated query and not two blocks.
+
+   1024 is also CARD_ACTIONS_MAX in home.js, which stops the hover panel opening
+   from here down. The two numbers are the same number on purpose: the panel and
+   the body are the same four controls, and exactly one of them is on screen at
+   a time. Change one and change the other.
+
+   Every value below is .cp-body's, so a card on a phone reads as exactly the
+   panel a mouse gets rather than as a third design nobody drew. */
+@media (max-width:1024px),(hover:none){
+  /* The panel prints no dial watermark behind its body copy. */
+  .body-freq{display:none}
+  .card-body{padding:14px 16px 18px}
+  /* .cp-body's order is actions, title, meta, reference. .card-body is already
+     a column flexbox, so `order` reaches it without moving any markup — the
+     same nodes, read in the panel's sequence. */
+  .card-actions{display:flex;align-items:center;gap:10px;margin:0 0 12px;order:-1}
+  .card-title{order:1;font-size:15px;line-height:1.3;margin:0 0 8px}
+  .card-meta{order:2;margin:0 0 8px;font-size:12px;color:#d2d2d2;white-space:normal}
+  /* .cp-ref: the description stops being muted supporting copy and becomes the
+     panel's reference line. margin-top:auto is gone from .card-meta above, so
+     this is what sits last. */
+  .card-blurb{order:3;margin:0;font-size:12px;line-height:1.45;color:hsla(0,0%,100%,.72);
+    -webkit-line-clamp:3}
+  /* The format already prints as a pill in the meta row, the way the panel does
+     it, so the line above the title would say it twice. */
+  .card-category{display:none}
+  .card-dur{display:inline-block;flex:none;border:1px solid #5a5a5a;border-radius:3px;
+    padding:0 5px;font-size:10px;color:#aaa;font-variant-numeric:tabular-nums}
+
+  /* .cp-act, to the same numbers. */
+  .card-act{
+    width:38px;height:38px;border-radius:50%;border:2px solid #6d6d6e;padding:0;flex:none;
+    background:rgba(42,42,42,.6);color:#fff;display:grid;place-items:center;cursor:pointer;
+    transition:border-color .15s ease,background .15s ease,transform .1s ease,filter .15s ease;
+  }
+  .card-act:hover{border-color:#fff}
+  .card-act:active{transform:scale(.92)}
+  .card-act svg{display:block}
+  .card-act.play{background:var(--accent);color:#052033;border-color:var(--accent)}
+  .card-act.play:hover{filter:brightness(1.08)}
+  .card-act.is-on{background:var(--accent);border-color:var(--accent);color:#1b1b1b}
+  .card-act.is-on:hover{filter:brightness(1.08)}
+  .card-act.details{margin-left:auto}
+  /* A station with no programming yet. aria-disabled rather than [disabled],
+     because these are spans — .card is a <button> and buttons cannot nest. */
+  .card-act.is-off{opacity:.4;cursor:default}
+  .card-act.is-off:hover{border-color:#6d6d6e}
+  /* At 320px four circles and their gaps come within a few pixels of the line.
+     Wrapping drops the last one to a second row instead of clipping it. */
+  @media (max-width:520px){
+    .card-actions{flex-wrap:wrap;gap:8px}
+  }
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-
-/* ---------- the five-fold band strip ------------------------------------- */
-/* Five of the six categories ARE one of the blocks on setup/hm-bands.md, and
-   this is where a page says so: block, office, frequency range, programming.
-
-   The colour arrives as two custom properties set inline by bandHTML() — the
-   canonical hue and the same hue lifted for a dark ground. This sheet is a dark
-   UI throughout (see .member-name, hardcoded #fff), so --band-dark is what
-   renders; --band is carried for a light ground rather than dropped, so the
-   markup does not have to change if one ever arrives. The light block below is
-   dormant today and correct the moment it is not.
-
-   Home sets no band and bandHTML returns nothing, so there is no empty strip to
-   suppress — the element simply is not there. */
-.band-strip{
-  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;
-  margin:0 0 14px;padding:0 0 0 12px;
-  border-left:3px solid var(--band-dark);
-  font-size:12.5px;line-height:1.5;
-}
-.band-name{
-  font-weight:800;letter-spacing:.02em;color:var(--band-dark);
-  text-transform:uppercase;font-size:12px;
-}
-/* Office and range are the coordinates, so they read as data rather than prose:
-   dimmer than the name, and the range in tabular figures so 300.00 and 319.99
-   line up with every other frequency on the site. */
-.band-office{color:var(--text-muted)}
-.band-office::before{content:"·";margin-right:14px;color:var(--border-strong)}
-.band-range{color:var(--text-muted);font-variant-numeric:tabular-nums}
-.band-range::before{content:"·";margin-right:14px;color:var(--border-strong)}
-/* The programming line is the one full sentence, so it breaks to its own row
-   before it squeezes the coordinates. */
-.band-prog{flex:1 1 100%;color:var(--text-muted)}
-
-@media (prefers-color-scheme:light){
-  .band-strip{border-left-color:var(--band)}
-  .band-name{color:var(--band)}
-}
-
-@media (max-width:700px){
-  /* On a phone the office and the range each take their own line rather than
-     wrapping mid-pair, which is what the leading dots would otherwise do. */
-  .band-strip{gap:2px 12px}
-  .band-office::before,.band-range::before{display:none}
-  .band-office,.band-range{flex:1 1 100%}
-}

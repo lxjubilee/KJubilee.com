@@ -89,11 +89,38 @@
         '</div>' +
         '<div class="card-body">' +
           '<span class="body-freq" aria-hidden="true">' + esc(st.hm) + '</span>' +
+          // PLAY, SAVE, LIKE AND OPEN, WHERE THERE IS NO HOVER PREVIEW.
+          //
+          // These four live only in the hover panel (buildPreview), and a touch
+          // screen has no hover: on a phone none of them could be reached at
+          // all — the card was a picture and a title. So they are ALWAYS in the
+          // markup and hidden by CSS, which leaves the desktop rendering exactly
+          // what it rendered before and costs a phone no second code path.
+          //
+          // Spans with role="button", not buttons: .card is itself a <button>
+          // and buttons cannot nest. Same reason .cover-live is a span, and the
+          // same keyboard wiring applies — see the keydown handler for
+          // [data-kj-play],[data-kj-toggle].
+          '<div class="card-actions">' +
+            (st.prototype
+              // data-kj-toggle, not data-kj-play: this is a transport control,
+              // so pressing it on the station already sounding has to pause it.
+              ? '<span class="card-act play" data-kj-toggle="' + esc(st.slug) + '" role="button" tabindex="0"></span>'
+              : '<span class="card-act play is-off" role="button" aria-disabled="true"' +
+                ' title="Coming soon — this station has no programming yet"></span>') +
+            '<span class="card-act fav" data-act="fav" role="button" tabindex="0"></span>' +
+            '<span class="card-act thumb" data-act="thumb" role="button" tabindex="0"></span>' +
+            '<span class="card-act details" data-act="details" role="button" tabindex="0"' +
+              ' aria-label="More about this station" title="More about this station">' + ICON.chev + '</span>' +
+          '</div>' +
           '<span class="card-category">' + esc(st.format) + '</span>' +
           '<h3 class="card-title">' + esc(st.name) + '</h3>' +
           '<p class="card-blurb">' + esc(st.description) + '</p>' +
           '<div class="card-meta">' +
             '<span class="card-pill">' + esc(st.pill) + '</span>' +
+            // The frequency chip the preview prints. Hidden with the actions on
+            // a desktop, where the cover already carries it.
+            '<span class="card-dur">HM ' + esc(st.hm) + '</span>' +
             '<span class="card-member">' + esc(host ? host.short : '') + '</span>' +
           '</div>' +
         '</div>' +
@@ -427,31 +454,6 @@
   /* -------------------------------------------------------------------- */
   /* Section rendering                                                     */
   /* -------------------------------------------------------------------- */
-  /* The block a category belongs to, stated on the page.
-
-     Five of the six categories ARE one of the five-fold blocks, and the dial
-     only teaches a listener where things live if the pages admit that. So each
-     one opens by naming its block, the office it answers to, the stretch of
-     frequency it occupies and what is programmed there.
-
-     The colour comes from the section data rather than a stylesheet lookup,
-     because setup/hm-bands.md is the authority for it and there is no reason
-     for a second copy here to drift from the first. `dark` is the same hue
-     lifted for a dark ground; which one applies is decided in CSS, so both are
-     handed over as custom properties and neither is chosen in script.
-
-     Home has no block — it draws from all five — so it passes nothing and this
-     renders nothing. */
-  function bandHTML(b) {
-    if (!b) return '';
-    return '<div class="band-strip" style="--band:' + esc(b.colour) + ';--band-dark:' + esc(b.dark) + '">' +
-             '<span class="band-name">' + esc(b.name) + '</span>' +
-             '<span class="band-office">' + esc(b.office) + '</span>' +
-             '<span class="band-range">HM ' + esc(b.range) + '</span>' +
-             '<span class="band-prog">' + esc(b.programming) + '</span>' +
-           '</div>';
-  }
-
   function renderSection(id) {
     var sec = SECTIONS.filter(function (s) { return s.id === id; })[0] || SECTIONS[0];
     stopHero();
@@ -462,8 +464,12 @@
     } else if (sec.intro !== false) {
       // A section can opt out of the heading + blurb entirely; the active nav
       // item already names the category, so a pure card grid needs nothing else.
-      html += '<div class="section-intro">' + bandHTML(sec.band) +
-              '<h1>' + esc(sec.label) + '</h1><p>' + esc(sec.blurb) + '</p></div>';
+      // The page title and then the cards, with nothing between them. There was
+      // a band strip here (block, office, frequency range, programming) and a
+      // sentence of blurb under the heading; both were removed as unwanted
+      // furniture. Whatever a category page has to say about itself, it says
+      // through the stations on it.
+      html += '<div class="section-intro"><h1>' + esc(sec.label) + '</h1></div>';
     }
     if (sec.members) html += membersHTML();
     if (sec.articles) html += articlesHTML(sec.articles);
@@ -1015,6 +1021,19 @@
   // that was meant to open the station.
   var CAN_HOVER = !window.matchMedia || window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
+  /* THE PANEL AND THE CARD BODY ARE THE SAME FOUR CONTROLS, so only one of them
+     may be on screen at a time. Below the tablet width the body carries them
+     (see the media block in home.css, which uses this same number), and opening
+     a panel over a card that is already showing them would be the station
+     announced twice with two sets of buttons.
+
+     Asked per hover rather than read once: a window is dragged across this
+     boundary without the page reloading. */
+  var CARD_ACTIONS_MAX = 1024;
+  function canPreview() {
+    return CAN_HOVER && window.innerWidth > CARD_ACTIONS_MAX;
+  }
+
   var ICON = {
     play:  '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 5v14l12-7z"/></svg>',
     pause: '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
@@ -1103,6 +1122,86 @@
     btn.title = on ? 'Liked — click to undo' : 'I like this station';
     btn.setAttribute('aria-label', btn.title);
   }
+
+  /* ---- the same four controls, on the cards themselves ------------------ */
+
+  /* buildPreview wires its four buttons one panel at a time, because only one
+     panel is ever open. On a touch screen the same four are on EVERY card at
+     once, so they are delegated and painted in bulk instead of per card.
+
+     Favourites are ONE request for the whole page. The panel can afford
+     /favorites/check/<slug> for the single station it is opening; a phone
+     showing twenty cards would fire twenty of them, so the list is fetched once
+     and every card painted from it. Null until it answers, and {} for a signed
+     out visitor — who has no favourites and must not be asked. */
+  var favSet = null;
+
+  function paintCardActions(root) {
+    var scope = (root && root.querySelectorAll) ? root : document;
+    var sp = window.kjPlayer && window.kjPlayer.state ? window.kjPlayer.state() : null;
+    var sounding = (sp && sp.playing) ? sp.slug : null;
+    var liked = thumbs();
+    var acts = scope.querySelectorAll('.card[data-slug] .card-act');
+    Array.prototype.forEach.call(acts, function (el) {
+      var card = el.closest('.card[data-slug]');
+      if (!card) return;
+      var slug = card.getAttribute('data-slug');
+      var st = bySlug[slug];
+      if (el.classList.contains('play')) {
+        // A station with no programming yet keeps a play face and no state:
+        // there is nothing for it to be playing.
+        if (el.classList.contains('is-off')) { el.innerHTML = ICON.play; return; }
+        var on = slug === sounding;
+        el.innerHTML = on ? ICON.pause : ICON.play;
+        el.setAttribute('aria-pressed', on ? 'true' : 'false');
+        el.title = (on ? 'Pause ' : 'Play ') + (st ? st.name : '');
+        el.setAttribute('aria-label', el.title);
+      } else if (el.classList.contains('fav')) {
+        paintFav(el, favSet ? favSet[slug] === 1 : el.classList.contains('is-on'));
+      } else if (el.classList.contains('thumb')) {
+        paintThumb(el, !!liked[slug]);
+      }
+    });
+  }
+
+  function loadFavorites() {
+    var token = authToken();
+    if (!token) { favSet = {}; return; }
+    fetch('/api/radio/favorites', { headers: { 'Authorization': 'Bearer ' + token } })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (d) {
+        favSet = {};
+        if (d && d.favorites) {
+          d.favorites.forEach(function (f) { favSet[f.station_id] = 1; });
+        }
+        paintCardActions();
+      })
+      .catch(function () { favSet = {}; });
+  }
+
+  /* Every render goes through view.innerHTML, and there are half a dozen of
+     them. Watching #view paints whichever one just ran — and the next one
+     somebody adds — rather than needing a call appended to each. */
+  function watchCardActions() {
+    paintCardActions();
+    if (typeof MutationObserver !== 'function') return;
+    var mo = new MutationObserver(function () {
+      /* DISCONNECTED WHILE PAINTING, and this is not optional: painting writes
+         the icon and the title into every .card-act, which are nodes inside the
+         subtree being watched. Left connected, one paint reports itself, the
+         report paints again, and the page spins at 100% CPU without ever
+         settling. disconnect() also clears the queued records, so reconnecting
+         starts clean rather than immediately replaying the paint. */
+      mo.disconnect();
+      paintCardActions();
+      mo.observe(view, { childList: true, subtree: true });
+    });
+    mo.observe(view, { childList: true, subtree: true });
+  }
+
+  /* The transport faces follow the footer bar, exactly as the panel's does: the
+     station can be paused from the bar, or another card can take it over. */
+  window.addEventListener('kj-player-state', function () { paintCardActions(); });
 
   /* ---- geometry -------------------------------------------------------- */
 
@@ -1287,6 +1386,8 @@
     document.addEventListener('mouseover', function (e) {
       var card = e.target.closest && e.target.closest('.card[data-slug]');
       if (!card || card === previewCard) return;
+      // The card is carrying the four controls itself at this width.
+      if (!canPreview()) return;
       clearTimeout(closeTimer);
       clearTimeout(openTimer);
       openTimer = setTimeout(function () {
@@ -1382,7 +1483,15 @@
     // navigate: pressing play on a card is a request for sound, not for the
     // article. Both listeners sit on `document`, so the player's
     // stopPropagation() cannot suppress this one and the guard has to be here.
+    //
+    // The same is true of every control now sitting IN a card body on a touch
+    // screen: play/pause is data-kj-toggle, and save, like and open are
+    // .card-act. Each one is inside the card <button>, so without this the card
+    // would also navigate underneath the control that was pressed — saving a
+    // station would open its page.
     if (e.target.closest('[data-kj-play]')) return;
+    if (e.target.closest('[data-kj-toggle]')) return;
+    if (e.target.closest('.card-act')) return;
 
     var card = e.target.closest('.card, .hero-title button');
     if (card && card.dataset.slug) { go(STATION_PREFIX + card.dataset.slug); }
@@ -1398,11 +1507,43 @@
      underneath and opening the dialog over the player it just started. */
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
-    var play = e.target.closest && e.target.closest('[data-kj-play]');
+    // Every span-as-button on a card: the cover's play badge, and the four
+    // controls in the body that a touch screen gets instead of the panel.
+    var play = e.target.closest &&
+      e.target.closest('[data-kj-play],[data-kj-toggle],.card-act[data-act]');
     if (!play) return;
     e.preventDefault();
     e.stopPropagation();
     play.click();
+  });
+
+  /* Save, like and open, delegated for every card on the page. Play is not
+     here: it is data-kj-toggle, which kj-footer-player.js already listens for
+     on the document, so the card gets the footer's own transport for free. */
+  document.addEventListener('click', function (e) {
+    var act = e.target.closest && e.target.closest('.card-act[data-act]');
+    if (!act) return;
+    var card = act.closest('.card[data-slug]');
+    if (!card) return;
+    var st = bySlug[card.getAttribute('data-slug')];
+    if (!st) return;
+    e.preventDefault();
+    var kind = act.getAttribute('data-act');
+    if (kind === 'fav') {
+      // toggleFavorite paints first and corrects only if the server disagrees.
+      // favSet has to move with it, or the next repaint would paint the card
+      // back from a list fetched before the press.
+      var next = !act.classList.contains('is-on');
+      if (favSet) { if (next) favSet[st.slug] = 1; else delete favSet[st.slug]; }
+      toggleFavorite(st, act);
+    } else if (kind === 'thumb') {
+      var on = !act.classList.contains('is-on');
+      paintThumb(act, on);
+      setThumb(st.slug, on);
+      sendFeedback(st, on ? 'thumb_up' : 'thumb_clear');
+    } else if (kind === 'details') {
+      go(STATION_PREFIX + st.slug);
+    }
   });
 
   document.addEventListener('keydown', function (e) {
@@ -1506,4 +1647,8 @@
     STATIONS.filter(function (s) { return s.region !== 'domestic'; }).length + ' international frequencies';
 
   if (!fromQuery()) route();
+
+  // After the first render, so there are cards to paint.
+  watchCardActions();
+  loadFavorites();
 })();
