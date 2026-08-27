@@ -65,15 +65,26 @@ function statusOf(u) {
 /**
  * The confirm step for a role change.
  *
- * Three roles means there is no single "the other one", so the sentence is
- * built from where the account is going rather than from a promote/demote
- * pair. What each one says is what that role can actually reach — an operator
- * confirming a change should not have to remember the matrix.
+ * A question and two buttons. It used to spell out what each role could reach,
+ * which is the right thing to say ONCE — and it is said, in Roles & permissions
+ * and under the table — but not at the moment somebody has already decided and
+ * is reaching for the mouse. All that is needed here is a chance to notice the
+ * wrong row before the write.
+ *
+ * A dialog rather than a row that unfolds in the table: a modal is the thing
+ * you have to answer, which is what a confirm is for.
  */
 function ConfirmRole({ user, to, onCancel, onDone }) {
     const [busy, setBusy] = useState(false);
     const [error, setError] = useState(null);
     const from = String(user.role || 'user').toLowerCase();
+
+    // Escape closes it, like every other dismissible thing on the site.
+    useEffect(() => {
+        const onKey = e => { if (e.key === 'Escape' && !busy) onCancel(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [busy, onCancel]);
 
     async function go() {
         setBusy(true);
@@ -87,39 +98,45 @@ function ConfirmRole({ user, to, onCancel, onDone }) {
         }
     }
 
-    const consequence = {
-        admin: <>
-            <code>{user.email}</code> will be able to open this console and everything in it —
-            including <strong>Users &amp; roles</strong>, so they will be able to set anyone&rsquo;s
-            role, and <strong>Roles &amp; permissions</strong>. This is the role that cannot be
-            limited.
-        </>,
-        executive: <>
-            <code>{user.email}</code> will be able to open this console, but only the sections the
-            Executive role has been granted in <strong>Roles &amp; permissions</strong>. Change what
-            that includes there, not here — it applies to every Executive at once.
-        </>,
-        user: <>
-            <code>{user.email}</code> keeps their account and loses this console entirely. Anything
-            they already promoted stays promoted, with their name still on it.
-        </>,
-    }[to];
-
     return (
-        <div className="adm-danger">
-            <strong>
-                Change {displayName(user)} from {ROLE_LABEL[from] || from} to {ROLE_LABEL[to] || to}?
-            </strong>
-            <p>{consequence}</p>
-            <div className="adm-form-actions">
-                <button type="button"
-                        className={'adm-btn ' + (to === 'user' ? 'adm-btn--danger' : 'adm-btn--primary')}
-                        disabled={busy} onClick={go}>
-                    {busy ? 'Saving…' : 'Make ' + (ROLE_LABEL[to] || to)}
-                </button>
-                <button type="button" className="adm-btn" onClick={onCancel} disabled={busy}>Cancel</button>
+        <div
+            className="adm-modal-overlay"
+            role="presentation"
+            /* Clicking the backdrop cancels; clicking inside must not, which is
+               why this is on the overlay and the dialog stops the bubble. */
+            onClick={() => { if (!busy) onCancel(); }}
+        >
+            <div
+                className="adm-modal"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="adm-role-confirm"
+                onClick={e => e.stopPropagation()}
+            >
+                <h3 className="adm-modal-title" id="adm-role-confirm">Switch role?</h3>
+                <p className="adm-modal-body">
+                    {displayName(user)} — <strong>{ROLE_LABEL[from] || from}</strong>
+                    {' → '}
+                    <strong>{ROLE_LABEL[to] || to}</strong>
+                </p>
+
+                {error && (
+                    <p className="adm-notice adm-notice--stop" style={{ marginBottom: 16 }}>
+                        <strong>{error}</strong>
+                    </p>
+                )}
+
+                <div className="adm-modal-actions">
+                    <button type="button" className="adm-btn" onClick={onCancel} disabled={busy}>
+                        Cancel
+                    </button>
+                    <button type="button"
+                            className={'adm-btn ' + (to === 'user' ? 'adm-btn--danger' : 'adm-btn--primary')}
+                            disabled={busy} onClick={go}>
+                        {busy ? 'Switching…' : 'Switch'}
+                    </button>
+                </div>
             </div>
-            {error && <p className="adm-notice adm-notice--stop" style={{ marginTop: 12 }}><strong>{error}</strong></p>}
         </div>
     );
 }
@@ -257,18 +274,6 @@ export default function Users() {
                                         </select>
                                     </td>
                                 </tr>,
-                                confirming?.user?.id === u.id && (
-                                    <tr key={u.id + '-confirm'} className="adm-row-open">
-                                        <td colSpan={6}>
-                                            <ConfirmRole
-                                                user={confirming.user}
-                                                to={confirming.to}
-                                                onCancel={() => setConfirming(null)}
-                                                onDone={() => { setConfirming(null); load(); }}
-                                            />
-                                        </td>
-                                    </tr>
-                                ),
                             ];
                         })}
                         {!users.length && state === 'ready' && (
@@ -287,6 +292,15 @@ export default function Users() {
                     </p>
                 ))}
             </div>
+
+            {confirming && (
+                <ConfirmRole
+                    user={confirming.user}
+                    to={confirming.to}
+                    onCancel={() => setConfirming(null)}
+                    onDone={() => { setConfirming(null); load(); }}
+                />
+            )}
 
             <p className="adm-fine">
                 Accounts are created by signing up, not from here — this console changes what an existing

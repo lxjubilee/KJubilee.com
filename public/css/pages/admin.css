@@ -542,6 +542,48 @@ th.adm-perm-col { text-align: center; }
 .adm-textarea { width: 100%; resize: vertical; line-height: 1.5; font: inherit; font-size: 14px; }
 .adm-form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
 
+/* ── Modal ───────────────────────────────────────────────────────────────
+   For the one question that has to be answered before anything else happens.
+   Ported from JubileeInspire's _components/shared.module.css so a confirm
+   looks the same on both sites.
+
+   Fixed to the viewport, not to the console grid: the sidebar is sticky and a
+   dialog positioned inside the scrolling column would drift away from the
+   middle of the screen as the table scrolls under it. */
+.adm-modal-overlay {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: adm-fade 0.12s ease;
+}
+.adm-modal {
+  width: 100%; max-width: 420px;
+  background: var(--adm-surface);
+  border: 1px solid var(--adm-border);
+  border-radius: var(--adm-radius);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  padding: 22px;
+  animation: adm-pop 0.14s ease;
+}
+.adm-modal-title { margin: 0 0 8px; font-size: 17px; font-weight: 600; color: var(--adm-text); }
+.adm-modal-body {
+  margin: 0 0 20px;
+  font-size: 14px; line-height: 1.55; color: var(--adm-text-dim);
+  word-break: break-word;
+}
+.adm-modal-body strong { color: var(--adm-text); font-weight: 600; }
+.adm-modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+@keyframes adm-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes adm-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .adm-modal-overlay, .adm-modal { animation: none; }
+}
+
 .adm-danger {
   border: 1px solid var(--adm-red); border-radius: var(--adm-radius);
   background: rgba(248, 81, 73, 0.08); padding: 16px 18px;
