@@ -45,7 +45,11 @@
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0}
-body{
+/* SCOPED for the same reason as jubilee-id.css: this file outlives the home
+   page, and `height:100dvh` with `overflow:hidden` on a page that is not a
+   fixed-height shell clips whatever follows the fold. #scroll is this page's
+   own scroll container (app/client.js) and exists nowhere else. */
+body:has(#scroll){
   height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;
   /* Reserved up front, not when the deferred player script mounts the bar:
      without it the first measurement of #scroll is 80px too tall and the hero

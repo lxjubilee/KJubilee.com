@@ -35,7 +35,16 @@
 /* dvh, not vh: on a phone 100vh is the viewport with the browser chrome
    RETRACTED, so a 100vh column is always taller than what you can actually see
    and its last rows sit under the address bar. */
-body{font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100dvh;display:flex}
+/* SCOPED WITH :has(), and the display:flex is why it had to be.
+   React hoists every `precedence` stylesheet into <head> and never removes it
+   when the page that asked for it unmounts, so this file was still applying
+   after the router left an auth page. `display:flex` with no flex-direction is
+   a ROW, and a page that returns a fragment puts its header and its main
+   element side by side in one — /sitemap rendered as a narrow right-hand
+   column beside an empty header band, reached by clicking Sitemap in the auth
+   footer. .auth-row exists only in app/_auth-shell.js, so this now applies
+   exactly where it did and nowhere else. */
+body:has(.auth-row){font-family:'Open Sans',system-ui,sans-serif;background:#1a1a1a;color:#fff;min-height:100dvh;display:flex}
 
 /* NOT neutralising the player's body padding, on purpose. It injects its
    stylesheet with document.head.appendChild AT RUNTIME, so its rule
