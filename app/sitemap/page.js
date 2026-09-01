@@ -1,4 +1,4 @@
-import { SECTIONS, stationsByBlock, readCatalogue, isOnAir } from '../_catalogue';
+import { SECTIONS, stationsByBlock, readCatalogue, isOnAir, readSections } from '../_catalogue';
 import Year from '../_year';
 import SiteHeader from '../_site-header';
 
@@ -38,7 +38,10 @@ export default function SitemapPage() {
                 visitor LANDS on from the footer, so leaving it without the nav
                 and the search box stranded them on the one page whose whole
                 purpose is getting somewhere else. */}
-            <SiteHeader />
+            {/* The category bar, rendered here rather than left empty. Every
+                other page fills it from a client script; this page has none, so
+                it hands the header the same sections that script would read. */}
+            <SiteHeader sections={readSections()} />
 
             <main className="sm-wrap">
                 <header className="sm-head">
