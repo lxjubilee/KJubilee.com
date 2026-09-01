@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Station Analytics — kJubilee</title>
+
+<!--
+  /analytics/start.html — the operator's console for the dial.
+
+  A STATIC FILE, NOT A NEXT ROUTE, and deliberately so. Every page on this site
+  is a route under app/ and shares one document, one React tree and one growing
+  pile of hoisted stylesheets; this is an operations console that wants a
+  full-height three-pane layout and its own scroll containers, and it has no
+  business fighting home.css for `body { overflow }`.
+
+  ⚠ A NEW file under public/ needs `systemctl restart kjubilee`. Production is
+  the Next standalone server, which snapshots the public/ file list at STARTUP —
+  a file scp'd afterwards is served as Next's own prerendered 404, which reads
+  exactly like a wrong path. Editing a file that already existed takes effect
+  immediately; adding one does not.
+
+  THE SHAPE, which is the part worth reading before changing anything:
+
+    header    ONE row, and it stays one row. The numbers used to live up here
+              and pushed the fold down on every screen; they are the dashboard
+              now, which is where they can actually be read.
+    left      the dial. Always present, always the way in.
+    right     NOTHING SELECTED -> the network dashboard. Something selected ->
+              three tabs for that station: Analytics, Songs, Voice Scripts.
+
+  WHERE THE NUMBERS COME FROM:
+
+    /data/analytics-stations.json   the dial, the counts, the planned column and
+                                    the voice-script file list. Written by
+                                    tools/build-analytics-index.js — re-run it
+                                    after build-home-data.js.
+    /cdn/radio/<ID>/delivery/music.json
+                                    the songs and the albums. Fetched on click,
+                                    never copied: it is the file the broadcast
+                                    playlist is generated from.
+    /cdn/radio/<ID>/**/*.txt        one voice script, fetched when opened.
+    /api/radio/ratings              the A/B/C promotions, and whether the
+                                    person reading may make one.
+-->
+
+<link rel="icon" href="/images/JubileeLogo.png">
+<link rel="stylesheet" href="/css/scrollbars.css">
+<link rel="stylesheet" href="/css/pages/analytics.css">
+</head>
+<body>
+
+<!-- One row. Everything that wanted to be here is in the dashboard instead. -->
+<header class="an-top">
+  <a class="an-brand" href="/analytics/start.html">
+    <span class="an-brand-k">kJubilee</span>
+    <span class="an-brand-t">Station Analytics</span>
+  </a>
+  <span class="an-top-meta" id="an-top-meta">Loading the dial…</span>
+  <!-- The other half of the ledger. This page is built on the manifests and
+       so can only ever show songs that HAVE audio; todo.html shows the ones
+       that do not, which is the larger number. -->
+  <a class="an-top-link" href="/analytics/todo.html">Lyrics awaiting audio →</a>
+</header>
+
+<div class="an-split" id="an-split">
+
+  <!-- ── Left: the dial ──────────────────────────────────────────────── -->
+  <aside class="an-panel" id="an-panel" aria-label="Stations">
+    <div class="an-panel-head">
+      <input class="an-search" id="an-station-search" type="search"
+             placeholder="Filter by frequency or name…" autocomplete="off" spellcheck="false">
+      <div class="an-chips" id="an-station-filters" role="group" aria-label="Station filter">
+        <button class="an-chip is-on" data-filter="all">All</button>
+        <button class="an-chip" data-filter="onair">On air</button>
+        <button class="an-chip" data-filter="planned">Planned</button>
+      </div>
+    </div>
+    <div class="an-panel-scroll">
+      <ol class="an-stations" id="an-stations"></ol>
+    </div>
+    <div class="an-panel-foot">
+      <span id="an-panel-foot"></span>
+      <button class="an-clear" id="an-clear" hidden>← Dashboard</button>
+    </div>
+  </aside>
+
+  <div class="an-grip" id="an-grip" role="separator" aria-orientation="vertical"
+       tabindex="0" aria-label="Resize station panel"></div>
+
+  <!-- ── Right: dashboard, or the selected station ───────────────────── -->
+  <main class="an-main" id="an-main">
+
+    <!-- The default. Nothing selected is a STATE WORTH RENDERING, not an
+         empty frame: it is the whole network at a glance. -->
+    <section class="an-dash" id="an-dash" aria-label="Network dashboard"></section>
+
+    <section class="an-station" id="an-station" hidden>
+      <!-- Identity and tabs share one row so the songs get the height. -->
+      <div class="an-bar">
+        <div class="an-bar-id" id="an-bar-id"></div>
+        <nav class="an-tabs" id="an-tabs" role="tablist">
+          <button class="an-tab is-on" role="tab" data-tab="analytics">Analytics</button>
+          <button class="an-tab" role="tab" data-tab="songs">Songs</button>
+          <button class="an-tab" role="tab" data-tab="scripts">Voice Scripts</button>
+        </nav>
+      </div>
+      <div class="an-pane" id="an-pane-analytics" role="tabpanel"></div>
+      <div class="an-pane" id="an-pane-songs" role="tabpanel" hidden></div>
+      <div class="an-pane" id="an-pane-scripts" role="tabpanel" hidden></div>
+    </section>
+
+  </main>
+</div>
+
+<div class="an-toast" id="an-toast" role="status" aria-live="polite" hidden></div>
+
+<script src="/js/pages/analytics.js"></script>
+</body>
+</html>

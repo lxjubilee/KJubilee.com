@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Lyrics Awaiting Audio — kJubilee</title>
+
+<!--
+  /analytics/todo.html — the recording queue.
+
+  ONE QUESTION: which written songs still need an mp3, and where would each one
+  air once it exists. /analytics/start.html answers "what does this frequency
+  play"; that page is built on the station manifests, the manifests are built on
+  the ledger, and the ledger only knows songs that HAVE audio — so the entire
+  waiting half of the catalogue was invisible to it by construction. Seven
+  thousand written tracks with no recording, and nothing on this site could name
+  one. This page is the other side of that ledger.
+
+  A STATIC FILE, NOT A NEXT ROUTE, for the same reason start.html is: a
+  three-pane console wants its own scroll containers and its own `body {
+  overflow }`, and has no business sharing a document with the site's React
+  tree. Copy the shape, not the CSS — the two consoles are siblings and neither
+  is the other's parent.
+
+  ⚠ A NEW file under public/ needs `systemctl restart kjubilee`. Production is
+  the Next standalone server, which snapshots the public/ file list at STARTUP.
+  A file scp'd afterwards is served as Next's own prerendered 404, which reads
+  exactly like a wrong path.
+
+  THE SHAPE — three panes, left to right, one question each:
+
+    left    WHERE. THE WHOLE DIAL — all 119 frequencies, up the numbers, with
+            the flagship pinned to the foot because its backlog is a third of
+            the network and it would otherwise sit on top of everything else.
+            Frequencies with no rule in the STATIONS table yet are shown as
+            PLANNED rather than left out; a panel that stops at the 44 buildable
+            ones quietly contradicts /analytics/start.html. The `_unassigned`
+            row at the very bottom is written work no frequency has claimed,
+            which is a different job again.
+    middle  WHICH RECORD. The albums that station would carry, each with the
+            fraction of it that exists as audio.
+    right   THE WORDS. The album's own lyric sheet — every track's body, its
+            `Styles:` prompt and its metadata trailer, straight out of the file
+            it was written in.
+    rail    WHICH SONG. `A` for the whole record, then one dot per track; a dot
+            narrows the right pane to that song alone. Each dot is coloured by
+            its track's state, so the rail is also the album at a glance.
+
+  WHERE THE DATA COMES FROM:
+
+    /data/todo-index.json     the dial, the album rows and every count. Written
+                              by tools/build-todo-index.js, which walks the nine
+                              authoring trees and joins them to the ledger.
+    /cdn/lyrics/<CODE>.json   one album's sheet, fetched on click and never
+                              copied into the index — sixty megabytes of lyric
+                              sheets do not belong in public/. Served from
+                              CDN_LOCAL_ROOT, which is where the station
+                              manifests and voice scripts already live.
+-->
+
+<link rel="icon" href="/images/JubileeLogo.png">
+<link rel="stylesheet" href="/css/scrollbars.css">
+<link rel="stylesheet" href="/css/pages/todo.css">
+</head>
+<body>
+
+<header class="td-top">
+  <a class="td-brand" href="/analytics/todo.html">
+    <span class="td-brand-k">kJubilee</span>
+    <span class="td-brand-t">Lyrics Awaiting Audio</span>
+  </a>
+  <span class="td-top-meta" id="td-top-meta">Reading the queue…</span>
+  <a class="td-top-link" href="/analytics/start.html">Station Analytics →</a>
+</header>
+
+<div class="td-split" id="td-split">
+
+  <!-- ── Left: where it would air ────────────────────────────────────── -->
+  <aside class="td-panel" id="td-panel" aria-label="Stations">
+    <!-- Chips only. The search box went so the list starts higher — on a
+         console the rows ARE the page, and forty pixels of chrome above them
+         is forty pixels of dial you cannot see. -->
+    <div class="td-panel-head">
+      <div class="td-chips" id="td-station-filters" role="group" aria-label="Station filter">
+        <button class="td-chip is-on" data-filter="waiting">Waiting</button>
+        <button class="td-chip" data-filter="all">All</button>
+        <button class="td-chip" data-filter="done">Complete</button>
+        <button class="td-chip" data-filter="planned">Planned</button>
+      </div>
+    </div>
+    <div class="td-panel-scroll">
+      <ol class="td-list td-list-st td-stations" id="td-stations"></ol>
+    </div>
+    <div class="td-panel-foot"><span id="td-panel-foot"></span></div>
+  </aside>
+
+  <div class="td-grip" id="td-grip-1" role="separator" aria-orientation="vertical"
+       tabindex="0" aria-label="Resize station panel" data-target="panel"></div>
+
+  <!-- ── Middle: which record ────────────────────────────────────────── -->
+  <section class="td-albums" id="td-albums" aria-label="Albums">
+    <div class="td-bar" id="td-albums-bar">
+      <div class="td-bar-id" id="td-albums-id"></div>
+    </div>
+    <div class="td-albums-head" id="td-albums-head" hidden>
+      <div class="td-chips" id="td-album-filters" role="group" aria-label="Album filter">
+        <button class="td-chip is-on" data-filter="needs">Needs audio</button>
+        <button class="td-chip" data-filter="all">All</button>
+      </div>
+    </div>
+    <div class="td-list td-list-al td-albums-scroll" id="td-albums-scroll"></div>
+    <div class="td-panel-foot"><span id="td-albums-foot"></span></div>
+  </section>
+
+  <div class="td-grip" id="td-grip-2" role="separator" aria-orientation="vertical"
+       tabindex="0" aria-label="Resize album panel" data-target="albums"></div>
+
+  <!-- ── Right: the words ────────────────────────────────────────────── -->
+  <main class="td-lyrics" id="td-lyrics" aria-label="Lyrics"></main>
+
+  <!-- The track rail. `A` is the whole record; each numbered dot is one song
+       on its own. It sits OUTSIDE the scrolling pane deliberately — a jump list
+       that scrolls away with the thing it is jumping through is a jump list you
+       have to go and find. Built from the album's real track count, so a
+       twelve-track record gets the thirteen dots and a twenty-six-track one
+       gets twenty-seven rather than losing half its songs to a fixed rail. -->
+  <nav class="td-rail" id="td-rail" aria-label="Track filter" hidden></nav>
+
+</div>
+
+<div class="td-toast" id="td-toast" role="status" aria-live="polite" hidden></div>
+
+<!-- The member roster, for the artist portrait on each track's byline. Same
+     file the dial and the shelf load, and the authority on which picture goes
+     with which name — Eliana Inspire's is filed under `JubileeElina`. -->
+<script src="/js/stations-data.js"></script>
+<script src="/js/pages/todo.js"></script>
+</body>
+</html>

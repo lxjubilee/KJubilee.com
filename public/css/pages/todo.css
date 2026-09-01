@@ -1,0 +1,634 @@
+/* ==========================================================================
+   /analytics/todo.html — the recording queue.
+
+   Sibling to analytics.css, not a child of it. The two consoles share a palette
+   on purpose — an operator moving between them should not feel they changed
+   product — and share no rules, because a change made for one console must
+   never silently reshape the other. The tokens below are copied deliberately.
+
+   THREE PANES, and the middle one is the widest by default. The left pane holds
+   forty-four rows and never grows; the right pane holds one album's words and
+   wants room; the middle holds up to a hundred and thirty album rows and is
+   what the operator actually scans. Both dividers drag and both remember.
+
+   THE COLOUR CARRIES THE STATE, and there are only three states worth telling
+   apart at a glance:
+     warn (amber)  needs audio — written, never rendered. The work.
+     accent (blue) recorded, never ingested. One command from airing.
+     ok (green)    ingested. Done.
+   Everything else on the page is grey so those three read as the signal. The
+   list rows carry that colour on the NUMBER alone — `4/12` in amber says both
+   things a progress bar said, in a third of the width, so the name gets the
+   pixels instead.
+
+   This file is safe to state `html, body { height:100% }` in — the page is a
+   standalone document and this is the only stylesheet in it. That is NOT true
+   of the site's Next routes, which share one document; see the long note at the
+   top of account.css before copying any of this into one.
+   ========================================================================== */
+:root{
+  --bg:#000;
+  --surface:#14151d;
+  --surface-2:#16171f;
+  --surface-3:#1c1d27;
+  --text:#f3f2ee;
+  --text-dim:#c9cad4;
+  --text-muted:#8c8d9c;
+  --accent:#3DA5FF;
+  --border:hsla(0,0%,100%,.08);
+  --border-strong:hsla(0,0%,100%,.14);
+  --ok:#4ade80;
+  --warn:#E6AC00;
+  --stop:#E8896F;
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:ui-monospace,"Cascadia Mono","Consolas","SF Mono",Menlo,monospace;
+  --panel-w:346px;
+  --albums-w:474px;
+}
+/* ── Scrollbars ─────────────────────────────────────────────────────────
+   A dark channel and a grey capsule. That is the treatment every serious
+   dark-theme console uses — VS Code, Outlook, the Windows Terminal — and it is
+   the right one here for the reason all of them landed on it: a scrollbar is
+   the one control on the page that must be findable without being looked at,
+   and it earns exactly none of the eye's attention beyond that.
+
+   scrollbars.css gives the site a 12px bar with a pale recessed channel tinted
+   with the page accent. That is right for a reading page and wrong for a
+   console with three scroll containers on screen at once, where three lit
+   channels are the loudest thing in the room before a word is read.
+
+   THE CHANNEL IS DARKER THAN THE PANES IT SITS IN — the surfaces here run
+   #14151d to #16171f, so a near-black gutter reads as recessed rather than as
+   a stripe painted on top of them. The 6px thumb inside a 10px bar is the
+   2px inset either side that makes it a capsule floating in a channel rather
+   than a block filling one.
+
+   Overriding the shared variables rather than the pseudo-elements keeps Firefox
+   in step: the standard-property branch of scrollbars.css reads the same three
+   tokens. These come after scrollbars.css in the document, which is the whole
+   reason equal-specificity :root rules land — do not reorder the <link> tags. */
+:root{
+  --sb-size:10px;
+  --sb-pad:2px;            /* 10 − 2×2 = a 6px capsule in a 10px channel */
+  --sb-track:#0a0b10;
+  --sb-thumb:hsla(0,0%,100%,.20);
+  --sb-thumb-hover:hsla(0,0%,100%,.36);
+}
+::-webkit-scrollbar-track{background:var(--sb-track);border-radius:0}
+/* Fully rounded caps, stated rather than inherited: the radius is what makes
+   this a capsule instead of a bar, and it is not something to leave depending
+   on another file. `min-height` keeps a long list's thumb from collapsing into
+   a dot with no ends to round. */
+::-webkit-scrollbar-thumb{
+  border-radius:999px;
+  min-height:38px;
+  transition:background-color .12s ease;
+}
+/* The thumb belongs to the pane under the pointer, not to whichever thumb the
+   pointer happens to be exactly on top of — a 6px target is not where anyone
+   aims first, and a bar that only lifts once you have already hit it is a bar
+   you cannot find. */
+.td-panel-scroll:hover::-webkit-scrollbar-thumb,
+.td-albums-scroll:hover::-webkit-scrollbar-thumb,
+.td-scroll:hover::-webkit-scrollbar-thumb{
+  background-color:hsla(0,0%,100%,.30);
+}
+.td-panel-scroll::-webkit-scrollbar-thumb:hover,
+.td-albums-scroll::-webkit-scrollbar-thumb:hover,
+.td-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--sb-thumb-hover)}
+::-webkit-scrollbar-thumb:active{background-color:hsla(0,0%,100%,.48)}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+input{font:inherit}
+code{font-family:var(--font-mono);font-size:.92em}
+
+/* ── Header: one row, 38px ──────────────────────────────────────────── */
+.td-top{
+  flex:0 0 auto;height:38px;display:flex;align-items:center;
+  gap:16px;padding:0 14px;
+  border-bottom:1px solid var(--border);background:#0a0b10;
+}
+.td-brand{display:flex;align-items:baseline;gap:8px;color:inherit;text-decoration:none}
+.td-brand:hover{text-decoration:none}
+.td-brand-k{
+  font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);
+}
+.td-brand-t{font-size:14.5px;font-weight:800;letter-spacing:-.01em;white-space:nowrap}
+.td-top-meta{
+  flex:1 1 auto;font-size:11.5px;color:var(--text-muted);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.td-top-meta b{color:var(--text-dim);font-weight:600}
+.td-top-meta .is-warn{color:var(--warn);font-weight:700}
+.td-top-link{flex:0 0 auto;font-size:11.5px;color:var(--text-muted)}
+.td-top-link:hover{color:var(--accent)}
+
+/* ── The split ──────────────────────────────────────────────────────── */
+.td-split{flex:1 1 auto;display:flex;min-height:0}
+
+/* ── PINNED TO ONE STATION ───────────────────────────────────────────────
+   /todo/gospel_by_music.html runs this same console with the first pane
+   already answered, so the station list and the grip that resizes it are
+   removed rather than left empty. `display:none` and not `visibility` or a
+   zero width: the panel is a flex child with its own min-width, and a hidden
+   one would still hold its column open.
+
+   The albums pane then becomes the left-hand edge, so it loses the border it
+   was wearing to separate itself from the panel that is no longer there. */
+body.td-locked #td-panel,
+body.td-locked #td-grip-1{display:none}
+body.td-locked .td-albums{border-left:0}
+
+.td-panel{
+  flex:0 0 var(--panel-w);width:var(--panel-w);min-width:0;
+  display:flex;flex-direction:column;min-height:0;
+  border-right:1px solid var(--border);background:var(--surface);
+}
+.td-panel-head{flex:0 0 auto;padding:7px 10px;border-bottom:1px solid var(--border)}
+
+.td-chips{display:flex;gap:6px;flex-wrap:wrap}
+.td-chip{
+  padding:3px 10px;border-radius:999px;border:1px solid var(--border-strong);
+  font-size:11.5px;font-weight:600;color:var(--text-muted);white-space:nowrap;
+}
+.td-chip:hover{color:var(--text-dim);border-color:hsla(0,0%,100%,.24)}
+.td-chip.is-on{background:var(--accent);border-color:var(--accent);color:#04121f}
+
+.td-panel-scroll{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain}
+.td-panel-foot{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:6px 11px;border-top:1px solid var(--border);
+  font-size:11px;color:var(--text-muted);
+}
+
+/* ── The two lists ──────────────────────────────────────────────────── */
+/* ONE ROW IS ONE LINE. Both lists are message-list grids in the Outlook sense:
+   fixed columns, a sticky header naming them, and a row height a reader can
+   run their eye down without re-finding the left margin on every entry. The
+   earlier two-line rows and full-bleed amber wash were legible one at a time
+   and unscannable forty at a time, which is the only way anyone reads these.
+
+   ONE TEMPLATE PER LIST, declared once and used by both the header and the
+   rows, because a header that drifts a few pixels off its column is worse than
+   no header at all. */
+.td-list{--row-h:27px}
+.td-cols{
+  position:sticky;top:0;z-index:1;
+  display:grid;align-items:center;gap:0 8px;
+  height:23px;padding:0 10px 0 12px;
+  font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--text-muted);border-bottom:1px solid var(--border-strong);
+  white-space:nowrap;
+}
+.td-cols span:last-child{text-align:right}
+.td-row{
+  display:grid;align-items:center;gap:0 8px;
+  height:var(--row-h);padding:0 10px;cursor:pointer;
+  border-left:2px solid transparent;
+  border-bottom:1px solid hsla(0,0%,100%,.035);
+  white-space:nowrap;
+  scroll-margin-top:24px;   /* clear of the sticky column header */
+}
+/* Selection is a tint, not a slab. A flat grey block on a dark list reads as
+   disabled; the accent tint reads as chosen — which is the whole job. */
+.td-row.is-on{
+  background-color:hsla(207,100%,62%,.13);
+  border-left-color:var(--accent);
+}
+.td-row.is-on .td-c-name,.td-row.is-on .td-c-t{color:var(--text)}
+
+/* The number column carries the state, so it is the only coloured thing on a
+   resting row: amber is work outstanding, green is finished, blue is finished
+   writing and waiting on an ingest. */
+.td-c-n{
+  font-family:var(--font-mono);font-size:11.5px;font-weight:700;
+  font-variant-numeric:tabular-nums;text-align:right;color:var(--warn);
+}
+.td-c-n.is-done{color:var(--ok)}
+.td-c-n.is-ingest{color:var(--accent)}
+
+.td-warn{color:var(--stop);font-size:10.5px;margin-left:5px}
+
+/* ── VERIFIED ON THE CDN ─────────────────────────────────────────────────
+   A tick in front of the album code, meaning every track on that record was
+   asked for over the network and answered — see tools/verify-album-audio.js.
+
+   The unverified case renders an EMPTY span of the same width rather than
+   nothing at all. Codes are a monospace column and the eye reads them as one;
+   letting the ticked rows shunt two characters to the right would turn a
+   status glyph into a ragged left edge, and the column would be harder to scan
+   than it was before the ticks existed. */
+.td-ok{display:inline-block;width:11px;flex:none;color:var(--ok);
+  font-size:10.5px;line-height:1;text-align:left}
+.td-ok.is-off{color:transparent}
+
+/* ── Left: stations ─────────────────────────────────────────────────── */
+.td-stations{list-style:none;margin:0;padding:0}
+.td-list-st .td-cols,.td-list-st .td-row{grid-template-columns:62px 1fr 52px}
+.td-list-st .td-cols{background:var(--surface)}
+.td-st:hover{background-color:var(--surface-2)}
+.td-c-hm{
+  font-family:var(--font-mono);font-size:12px;font-weight:700;letter-spacing:-.02em;
+  color:var(--text);overflow:hidden;
+}
+.td-c-hm .u{color:var(--text-muted);font-weight:600;margin-right:3px}
+.td-c-name{
+  font-size:12.5px;color:var(--text-dim);
+  overflow:hidden;text-overflow:ellipsis;
+}
+.td-st.is-orphan .td-c-hm{color:var(--text-muted)}
+/* A planned frequency is real and unbuilt. It reads quieter than a station
+   with a rule, and its dash sits where a number would be — because zero here
+   means "not known", and a zero drawn like a finished one is a lie. */
+.td-st.is-planned .td-c-hm,.td-st.is-planned .td-c-name{color:var(--text-muted)}
+.td-st.is-planned:hover .td-c-name{color:var(--text-dim)}
+/* "planned" replaces the number outright rather than sitting beside it: there
+   is no count to report, and a word in the number's own column says that more
+   plainly than a badge alongside an empty cell. */
+.td-c-n.is-plan{
+  font-family:var(--font-sans);font-size:9px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+
+/* The grip. 5px of hit area over a 1px line — a 1px target is not a target. */
+.td-grip{
+  flex:0 0 5px;margin-left:-3px;margin-right:-1px;z-index:2;
+  cursor:col-resize;background:transparent;
+}
+.td-grip:hover,.td-grip:focus-visible,.td-grip.is-drag{background:var(--accent);outline:none}
+body.is-resizing{cursor:col-resize;user-select:none}
+
+/* ── Middle: albums ─────────────────────────────────────────────────── */
+.td-albums{
+  flex:0 0 var(--albums-w);width:var(--albums-w);min-width:0;
+  display:flex;flex-direction:column;min-height:0;
+  border-right:1px solid var(--border);background:var(--surface-2);
+}
+.td-bar{
+  flex:0 0 auto;display:flex;align-items:center;gap:12px;
+  padding:0 13px;height:40px;border-bottom:1px solid var(--border);
+  background:var(--surface-3);
+}
+.td-bar-id{display:flex;align-items:baseline;gap:9px;min-width:0;flex:1 1 auto}
+.td-bar-hm{flex:0 0 auto;font-family:var(--font-mono);font-size:13px;font-weight:800;color:var(--accent)}
+.td-bar-name{
+  font-size:14.5px;font-weight:800;letter-spacing:-.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.td-bar-sub{
+  flex:0 0 auto;font-size:11px;color:var(--text-muted);white-space:nowrap;
+  font-family:var(--font-mono);
+}
+.td-albums-head{flex:0 0 auto;padding:7px 10px;border-bottom:1px solid var(--border)}
+.td-albums-head[hidden]{display:none}
+.td-albums-scroll{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain}
+
+.td-list-al .td-cols,.td-list-al .td-row{grid-template-columns:92px 1fr 54px}
+.td-list-al .td-cols{background:var(--surface-2)}
+.td-al:hover{background-color:var(--surface-3)}
+.td-c-t{
+  font-size:12.5px;font-weight:600;color:var(--text-dim);
+  overflow:hidden;text-overflow:ellipsis;
+}
+/* THE CODE LEADS THE ROW, the way the frequency leads a station row. It is the
+   album's identity everywhere else in this system — the folder name on disk,
+   the AlbumCode column in the ledger, the key the manifests select on and the
+   name of its lyric bundle on the CDN — so a row without it names a record you
+   then have to go and look up. Monospace and fixed width so a column of them
+   scans; dim, because you read down it for one code rather than across it.
+
+   THE CREDIT IS NOT HERE, and that omission is deliberate: an album is not
+   reliably by one artist. Torah Sings and Gospel By Music are catalogues
+   performed by whichever of thirteen personas the casting called for, so a
+   single name in that column was either a slug naming the body of work rather
+   than a singer, or one performer standing in for several. Both read as a fact
+   and neither was one. The credit that IS true — the per-track `ARTIST:` — is
+   on the byline in the right-hand pane, where it belongs to a song rather than
+   to a record, and the ledger credit is still on the row's hover title. */
+.td-c-code{
+  font-family:var(--font-mono);font-size:11px;font-weight:600;
+  letter-spacing:-.02em;color:var(--text-muted);
+  overflow:hidden;text-overflow:ellipsis;
+}
+.td-row.is-on .td-c-code{color:var(--text-dim)}
+
+/* ── The track rail ─────────────────────────────────────────────────── */
+/* Thirteen dots for a twelve-track record: `A` for the whole album, then one
+   per song. Small enough that a full album's worth stands in one column with
+   no scrolling, which is the only reason it beats scrolling the sheet itself.
+
+   THE DOT CARRIES THE TRACK'S STATE — amber still needs an mp3, blue is
+   recorded and awaiting ingest, green is on the ledger. So the rail is also
+   the album at a glance: twelve amber dots is a record nobody has recorded,
+   and you can see that before reading a word. */
+.td-rail{
+  flex:0 0 42px;display:flex;flex-direction:column;align-items:center;gap:5px;
+  padding:10px 0 14px;overflow-y:auto;overscroll-behavior:contain;
+  border-left:1px solid var(--border);background:var(--surface);
+}
+.td-rail[hidden]{display:none}
+.td-dot{
+  flex:0 0 auto;width:24px;height:24px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border-strong);background:var(--surface-3);
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;line-height:1;
+  color:var(--text-muted);font-variant-numeric:tabular-nums;
+  transition:background-color .12s ease,border-color .12s ease,color .12s ease;
+}
+.td-dot:hover{border-color:hsla(0,0%,100%,.34);color:var(--text)}
+.td-dot.is-needs{color:var(--warn);border-color:hsla(45,100%,45%,.42)}
+.td-dot.is-recorded{color:var(--accent);border-color:hsla(207,100%,62%,.42)}
+.td-dot.is-ingested{color:var(--ok);border-color:hsla(142,69%,58%,.38)}
+/* Selection last, so it beats every state colour above it — a chosen dot is
+   chosen before it is anything else. */
+.td-dot.is-on{background:var(--accent);border-color:var(--accent);color:#04121f}
+.td-dot.is-all{margin-bottom:3px;border-color:hsla(0,0%,100%,.28);color:var(--text-dim)}
+.td-dot.is-all.is-on{color:#04121f}
+/* A hairline under `A` so the album and its songs read as two groups. */
+.td-rail-sep{
+  flex:0 0 auto;width:18px;height:1px;background:var(--border-strong);margin:0 0 5px;
+}
+
+/* ── Right: the words ───────────────────────────────────────────────── */
+.td-lyrics{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0}
+.td-scroll{flex:1 1 auto;overflow-y:auto;padding:16px 20px 40px}
+
+.td-empty{
+  flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;
+  padding:0 30px;max-width:70ch;
+}
+.td-empty h2{margin:0 0 6px;font-size:17px;font-weight:800;letter-spacing:-.02em}
+.td-empty p{margin:0 0 10px;font-size:12.5px;color:var(--text-muted);line-height:1.65}
+.td-empty b{color:var(--text-dim);font-weight:600}
+
+.td-tiles{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.td-tile{
+  min-width:112px;padding:9px 14px 10px;border:1px solid var(--border);
+  border-radius:10px;background:var(--surface);
+}
+.td-tile-n{
+  display:block;font-size:23px;font-weight:800;letter-spacing:-.02em;line-height:1.15;
+  font-variant-numeric:tabular-nums;
+}
+.td-tile-l{
+  display:block;margin-top:2px;font-size:10px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.td-tile.is-warn .td-tile-n{color:var(--warn)}
+.td-tile.is-ok .td-tile-n{color:var(--ok)}
+.td-tile.is-accent .td-tile-n{color:var(--accent)}
+
+.td-al-head{margin:0 0 2px;font-size:19px;font-weight:800;letter-spacing:-.025em}
+.td-al-sub{
+  margin:0 0 14px;font-size:11.5px;color:var(--text-muted);
+  font-family:var(--font-mono);word-break:break-all;
+}
+.td-note{
+  margin:0 0 14px;font-size:12.5px;color:var(--text-dim);line-height:1.6;
+  padding:8px 12px;border-left:2px solid var(--border-strong);background:var(--surface);
+  border-radius:0 8px 8px 0;
+}
+.td-note b{
+  color:var(--text-muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  font-size:10px;margin-right:6px;
+}
+
+/* The sheet header is genuinely long on some properties — Gospel By Music runs
+   forty lines of sourcing notes before the first song. Collapsed by default so
+   it never stands between the operator and the first lyric. */
+.td-fold{border:1px solid var(--border);border-radius:9px;background:var(--surface);margin:0 0 14px}
+.td-fold summary{
+  padding:8px 12px;cursor:pointer;font-size:11px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);list-style:none;
+}
+.td-fold summary::-webkit-details-marker{display:none}
+.td-fold summary:hover{color:var(--text-dim)}
+.td-fold[open] summary{border-bottom:1px solid var(--border)}
+.td-fold pre{margin:0;padding:11px 13px}
+
+pre{
+  font-family:var(--font-mono);font-size:12px;line-height:1.62;
+  white-space:pre-wrap;word-break:break-word;color:var(--text-dim);
+}
+
+/* ── A track ────────────────────────────────────────────────────────── */
+.td-track{
+  border:1px solid var(--border);border-radius:11px;background:var(--surface);
+  margin:0 0 11px;overflow:hidden;
+}
+.td-track.is-needs{border-left:3px solid var(--warn)}
+.td-track.is-recorded{border-left:3px solid var(--accent)}
+.td-track.is-ingested{border-left:3px solid var(--ok)}
+.td-track-h{
+  display:flex;align-items:center;gap:10px;padding:9px 13px;
+  background:var(--surface-2);border-bottom:1px solid var(--border);
+}
+.td-track-n{
+  flex:0 0 auto;font-family:var(--font-mono);font-size:12px;font-weight:700;
+  color:var(--text-muted);
+}
+.td-track-t{
+  flex:1 1 auto;min-width:0;font-size:14px;font-weight:700;letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.td-pill{
+  flex:0 0 auto;font-size:9px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;
+  padding:2px 8px;border-radius:999px;border:1px solid currentColor;
+}
+.td-pill.is-needs{color:var(--warn)}
+.td-pill.is-recorded{color:var(--accent)}
+.td-pill.is-ingested{color:var(--ok)}
+.td-copy{
+  flex:0 0 auto;font-size:10.5px;font-weight:600;color:var(--text-muted);
+  border:1px solid var(--border-strong);border-radius:7px;padding:2px 9px;
+}
+.td-copy:hover{color:var(--accent);border-color:var(--accent)}
+
+.td-track-b{padding:11px 13px 13px}
+
+/* ── The byline ─────────────────────────────────────────────────────────
+   State and performer, on one line, directly under the title and ahead of the
+   Styles prompt. The status pill lives here rather than in the header row
+   because the header is now three copy buttons wide and a pill wedged between
+   the title and them squeezed both; down here it also sits beside the fact it
+   qualifies — "needs mp3, and this is who would sing it".
+
+   The performer is the first thing to know about a song you are about to have
+   rendered, which is why it comes before the prompt that renders it. */
+/* Two halves, pushed apart. `space-between` rather than a spacer element, so
+   the right-hand group stays pinned to the edge at any pane width — the album
+   pane is draggable and a margin-based split would drift with it. */
+.td-byline{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;margin:0 0 11px;min-width:0;
+}
+/* The artist. Allowed to shrink and ellipsis, because a long "feat." credit
+   must not push the state pills off the row — they are the half that has to
+   stay readable at every width. */
+/* INDENTED TO THE WORDS, NOT TO THE PANE.
+   The lyric block below is a bordered box with its own padding, so its TEXT
+   starts 14px in from the track body's edge — 13px of padding and 1px of
+   border — while this row started hard against the edge. Fourteen pixels of
+   disagreement between the performer's name and the song underneath it is
+   exactly enough to look like a mistake without being obvious enough to
+   place, so the left half of the byline is inset to meet it.
+
+   Stated as a variable and consumed in both places, so the two cannot drift:
+   change the lyric box's padding and the byline follows it. Only the LEFT
+   half moves; the state and assignment pills stay flush right, where the eye
+   scans for them down a column of tracks. */
+.td-track-b{--lyric-inset:14px}
+.td-by-who{
+  display:flex;align-items:center;gap:7px;min-width:0;flex:0 1 auto;
+  padding-left:var(--lyric-inset);
+}
+/* 18px, and a circle: the portraits are already circular crops, so squaring
+   them here would show the corners of the canvas. `flex:none` keeps it round
+   when the name beside it is being squeezed. */
+.td-by-img{
+  width:18px;height:18px;border-radius:50%;flex:none;object-fit:cover;
+  background:var(--surface);
+}
+.td-by-a{
+  min-width:0;font-size:12.5px;font-weight:700;color:var(--text);
+  letter-spacing:-.01em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.td-by-tail{
+  display:flex;align-items:center;gap:7px;flex:none;
+}
+/* GOLD, BOLD, UPPERCASE — the house yellow, the same --warn the dial's own
+   accents use. It inherits the base .td-pill weight and letter-spacing, so the
+   only thing said here is the colour; `text-transform` is already uppercase on
+   .td-pill, and repeating it would be a second place to change it. */
+.td-pill.is-assigned{color:var(--warn)}
+.td-styles{
+  margin:0 0 11px;padding:9px 11px;border-radius:8px;background:#0c0d13;
+  border:1px solid var(--border);
+}
+.td-styles-k{
+  display:block;font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:4px;
+}
+.td-styles p{margin:0;font-size:12px;line-height:1.6;color:var(--text-dim)}
+
+/* ── THE FILENAME THE RENDER COMES BACK AS ──────────────────────────────
+   Sits under the Styles prompt because the two are used together: paste the
+   prompt, then name the result. Monospace on the value, and only on the value
+   — it is a literal string to be reproduced exactly, and the proportional face
+   the rest of the sheet uses makes "01" and "Ol" harder to tell apart than a
+   thing being copied by hand deserves.
+
+   `align-items:baseline` so the small uppercase label sits on the same line as
+   the larger value rather than floating against its cap height. */
+.td-songtitle{
+  display:flex;align-items:baseline;gap:7px;margin:0 0 11px;min-width:0;
+}
+/* Inside the prompt block it is the last line of that block, not a row after
+   it: no bottom margin to fight the box's own padding, and a hairline above to
+   separate it from the prompt without spending a whole rule on it. It inherits
+   the box's left padding, so it lines up with the prompt text above rather than
+   with the block's edge. */
+.td-styles .td-songtitle{
+  margin:9px 0 0;padding-top:8px;border-top:1px solid var(--border);
+}
+.td-songtitle-k{
+  flex:none;font-size:9.5px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--accent);
+}
+.td-songtitle-v{
+  min-width:0;font-family:var(--font-mono);font-size:12px;font-weight:600;
+  color:var(--text);letter-spacing:-.01em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* COLUMNS, NOT A GRID. The trailer is mostly one-line ratings, but a few keys
+   carry a paragraph — Gospel By Music's "Load-bearing front" runs to eighty
+   words. In a grid, one tall cell sets the height of its whole row and leaves
+   two short values stranded at the top of a wall of white. Columns let the
+   short rows keep flowing past it. */
+.td-meta{columns:280px 3;column-gap:20px;margin:0 0 11px}
+.td-meta-r{
+  display:flex;gap:8px;padding:2px 0;border-bottom:1px solid hsla(0,0%,100%,.04);
+  min-width:0;break-inside:avoid;
+}
+.td-meta-k{flex:0 0 42%;font-size:11.5px;color:var(--text-muted);overflow:hidden;text-overflow:ellipsis}
+.td-meta-v{flex:1 1 auto;font-size:11.5px;color:var(--text-dim);min-width:0;overflow-wrap:anywhere}
+
+.td-lyric{
+  margin:0;padding:11px 13px;border-radius:8px;background:#0c0d13;
+  border:1px solid var(--border);color:var(--text);font-size:12.5px;
+}
+/* The bracketed production cues are scaffolding, not words. Dimming them is the
+   difference between reading a lyric and reading a stage direction. */
+.td-lyric .cue{color:var(--text-muted)}
+.td-lyric .sec{color:var(--accent);font-weight:600}
+
+.td-none{font-size:12px;color:var(--text-muted);font-style:italic}
+
+/* ── Where it lives on J: ───────────────────────────────────────────────
+   The last thing in every song block, and deliberately the quietest: it is
+   reference, not reading. Monospace because a path is scanned character by
+   character, and wrapping rather than truncating because half a path is not a
+   path. The whole row is the click target — these are copied far more often
+   than they are read. */
+.td-paths{
+  display:flex;flex-direction:column;gap:2px;margin-top:11px;
+  padding-top:9px;border-top:1px solid var(--border);
+}
+.td-path{
+  display:flex;gap:9px;align-items:baseline;text-align:left;width:100%;
+  padding:3px 6px;border-radius:6px;
+}
+.td-path:hover{background:hsla(0,0%,100%,.045)}
+.td-path-k{
+  flex:0 0 78px;font-size:9.5px;font-weight:700;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.td-path-v{
+  flex:1 1 auto;min-width:0;font-family:var(--font-mono);font-size:11px;
+  color:var(--text-muted);word-break:break-all;
+}
+.td-path:hover .td-path-v{color:var(--text-dim)}
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+.td-toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  padding:8px 16px;border-radius:9px;background:#20222e;border:1px solid var(--border-strong);
+  font-size:12.5px;color:var(--text);z-index:20;box-shadow:0 8px 26px rgba(0,0,0,.5);
+}
+.td-toast[hidden]{display:none}
+
+/* A console is a desktop tool. Below this the three panes cannot all be useful
+   at once, so they stack and the page becomes a long scroll rather than a
+   cramped grid that is unreadable in every pane simultaneously. */
+@media (max-width:900px){
+  body{overflow:auto}
+  /* The header is one row at every width. The kJubilee eyebrow is the first
+     thing to go — the page title already says which console this is. */
+  .td-brand-k{display:none}
+  .td-split{flex-direction:column;min-height:0}
+  .td-panel,.td-albums{flex:0 0 auto;width:100%;border-right:0;border-bottom:1px solid var(--border)}
+  .td-panel-scroll,.td-albums-scroll{max-height:38vh}
+  .td-grip{display:none}
+  /* Stacked, the rail is a strip above the sheet rather than a column beside
+     it — and it moves ABOVE, because a jump list under the thing it jumps
+     through is one you scroll past to reach. */
+  .td-rail{
+    order:-1;flex:0 0 auto;width:100%;flex-direction:row;flex-wrap:wrap;
+    justify-content:flex-start;gap:6px;padding:9px 12px;overflow:visible;
+    border-left:0;border-bottom:1px solid var(--border);
+  }
+  .td-rail-sep{width:1px;height:24px;margin:0 2px}
+  .td-dot.is-all{margin-bottom:0}
+}

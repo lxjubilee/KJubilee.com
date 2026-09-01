@@ -1,0 +1,450 @@
+/* ==========================================================================
+   /analytics/start.html — the operator's console for the dial.
+
+   A console, not a destination. It borrows the site's palette so it does not
+   feel like a different product, and then spends every other pixel on density:
+   the point of the page is reading two thousand song rows without scrolling
+   past decoration to reach them.
+
+   THE HEADER IS ONE ROW AND MUST STAY ONE ROW. The network numbers used to sit
+   up there and wrapped to a second line on anything under about 1500px, which
+   pushed the first song below the fold on a laptop. They are the dashboard now.
+   If something new wants to be in the header, it almost certainly wants to be a
+   dashboard tile instead.
+
+   This file is safe to state `html, body { height:100% }` in, which /account and
+   /map are not — see the long note at the top of account.css. Those pages share
+   ONE document with every other page the visitor has been to, and their body
+   rules leak into each other. This page is a standalone file and the only
+   stylesheet in its document.
+   ========================================================================== */
+:root{
+  --bg:#000;
+  --surface:#14151d;
+  --surface-2:#16171f;
+  --surface-3:#1c1d27;
+  --text:#f3f2ee;
+  --text-dim:#c9cad4;
+  --text-muted:#8c8d9c;
+  --accent:#3DA5FF;
+  --border:hsla(0,0%,100%,.08);
+  --border-strong:hsla(0,0%,100%,.14);
+  --ok:#4ade80;
+  --stop:#E8896F;
+  --warn:#E6AC00;
+  /* The three ratings. A is the accent the eye already follows on this site,
+     B a step down in temperature, and C is deliberately the quietest thing on
+     the row — almost everything is C, and a page where the default shouts is a
+     page you cannot skim for the exceptions. */
+  --rate-a:#E6AC00;
+  --rate-b:#3DA5FF;
+  --rate-c:#6b6c7c;
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-mono:ui-monospace,"Cascadia Mono","Consolas","SF Mono",Menlo,monospace;
+  --panel-w:320px;
+  --scripts-w:290px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--font-sans);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+input{font:inherit}
+code{font-family:var(--font-mono);font-size:.92em}
+
+/* ── Header: one row, 38px ──────────────────────────────────────────── */
+.an-top{
+  flex:0 0 auto;height:38px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;padding:0 14px;
+  border-bottom:1px solid var(--border);background:#0a0b10;
+}
+.an-brand{display:flex;align-items:baseline;gap:8px;color:inherit;text-decoration:none}
+.an-brand:hover{text-decoration:none}
+.an-brand-k{
+  font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-muted);
+}
+.an-brand-t{font-size:14.5px;font-weight:800;letter-spacing:-.01em}
+.an-top-meta{
+  font-size:11.5px;color:var(--text-muted);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.an-top-meta b{color:var(--text-dim);font-weight:600}
+.an-top-meta .an-admin{color:var(--ok);font-weight:600}
+/* The header is a three-part row now: brand, numbers, and the way across to
+   the recording queue. The meta grows so the link stays pinned right. */
+.an-top-meta{flex:1 1 auto}
+.an-top-link{flex:0 0 auto;font-size:11.5px;color:var(--text-muted)}
+.an-top-link:hover{color:var(--accent)}
+
+/* ── The split ──────────────────────────────────────────────────────── */
+.an-split{flex:1 1 auto;display:flex;min-height:0}
+
+.an-panel{
+  flex:0 0 var(--panel-w);width:var(--panel-w);min-width:0;
+  display:flex;flex-direction:column;min-height:0;
+  border-right:1px solid var(--border);background:var(--surface);
+}
+.an-panel-head{flex:0 0 auto;padding:9px 11px;border-bottom:1px solid var(--border)}
+.an-search{
+  width:100%;padding:6px 10px;border-radius:8px;
+  border:1px solid var(--border-strong);background:#0c0d13;color:var(--text);
+  font-size:13px;
+}
+.an-search:focus{outline:none;border-color:var(--accent)}
+.an-search::placeholder{color:var(--text-muted)}
+
+.an-chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.an-chip{
+  padding:3px 10px;border-radius:999px;border:1px solid var(--border-strong);
+  font-size:11.5px;font-weight:600;color:var(--text-muted);white-space:nowrap;
+}
+.an-chip:hover{color:var(--text-dim);border-color:hsla(0,0%,100%,.24)}
+.an-chip.is-on{background:var(--accent);border-color:var(--accent);color:#04121f}
+.an-chip.is-on.is-a{background:var(--rate-a);border-color:var(--rate-a);color:#1a1300}
+.an-chip.is-on.is-b{background:var(--rate-b);border-color:var(--rate-b);color:#04121f}
+
+.an-panel-scroll{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain}
+.an-panel-foot{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;
+  padding:6px 11px;border-top:1px solid var(--border);
+  font-size:11px;color:var(--text-muted);
+}
+.an-clear{font-size:11px;color:var(--accent);white-space:nowrap}
+.an-clear:hover{text-decoration:underline}
+
+.an-stations{list-style:none;margin:0;padding:4px 0}
+.an-st{
+  display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:3px 10px;
+  padding:6px 11px;cursor:pointer;border-left:2px solid transparent;
+}
+.an-st:hover{background:var(--surface-2)}
+.an-st.is-on{background:var(--surface-3);border-left-color:var(--accent)}
+/* The frequency is the identity of a station on this network, so it leads the
+   row and gets the monospace treatment — these are read as numbers, and a
+   proportional font makes a column of them impossible to scan. */
+.an-st-hm{
+  grid-column:1;font-family:var(--font-mono);font-size:12.5px;font-weight:700;
+  letter-spacing:-.01em;color:var(--text);
+}
+.an-st-count{
+  grid-column:2;grid-row:1;font-family:var(--font-mono);font-size:11.5px;
+  color:var(--text-dim);font-variant-numeric:tabular-nums;
+}
+.an-st-name{
+  grid-column:1;grid-row:2;font-size:12.5px;color:var(--text-dim);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.an-st-tag{
+  grid-column:2;grid-row:2;font-size:9.5px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.an-st.is-air .an-st-tag{color:var(--ok)}
+.an-st.is-planned .an-st-hm,
+.an-st.is-planned .an-st-name{color:var(--text-muted)}
+.an-st-plan{grid-column:2;grid-row:1;font-size:10.5px;color:var(--warn);font-family:var(--font-mono)}
+
+.an-group{
+  padding:10px 11px 3px;font-size:10px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+
+/* The grip. 5px of hit area over a 1px line — a 1px target is not a target. */
+.an-grip{
+  flex:0 0 5px;margin-left:-3px;margin-right:-1px;z-index:2;
+  cursor:col-resize;background:transparent;
+}
+.an-grip:hover,.an-grip:focus-visible,.an-grip.is-drag{background:var(--accent);outline:none}
+body.is-resizing{cursor:col-resize;user-select:none}
+
+/* ── Right pane ─────────────────────────────────────────────────────── */
+.an-main{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;min-height:0}
+
+/* ── Tiles, shared by the dashboard and the analytics tab ───────────── */
+.an-tiles{display:flex;gap:8px;flex-wrap:wrap}
+.an-tile{
+  min-width:104px;padding:8px 13px 9px;border:1px solid var(--border);
+  border-radius:10px;background:var(--surface);
+}
+.an-tile-n{
+  display:block;font-size:21px;font-weight:800;letter-spacing:-.02em;
+  line-height:1.15;font-variant-numeric:tabular-nums;
+}
+.an-tile-l{
+  display:block;margin-top:2px;font-size:10px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.an-tile-s{display:block;margin-top:3px;font-size:10.5px;color:var(--text-muted)}
+.an-tile.is-ok .an-tile-n{color:var(--ok)}
+.an-tile.is-warn .an-tile-n{color:var(--warn)}
+.an-tile.is-a .an-tile-n{color:var(--rate-a)}
+.an-tile.is-b .an-tile-n{color:var(--rate-b)}
+.an-tile.is-c .an-tile-n{color:var(--text-dim)}
+/* The dashboard's headline row gets more weight than the per-station tiles;
+   it is the first thing on the page and has the room. */
+.an-dash .an-tiles-lead .an-tile{min-width:132px;padding:11px 15px 12px}
+.an-dash .an-tiles-lead .an-tile-n{font-size:27px}
+
+/* ── Dashboard ──────────────────────────────────────────────────────── */
+.an-dash{flex:1 1 auto;overflow-y:auto;padding:16px 18px 28px}
+.an-dash-head{margin:0 0 3px;font-size:17px;font-weight:800;letter-spacing:-.02em}
+.an-dash-sub{margin:0 0 14px;font-size:12.5px;color:var(--text-muted);max-width:78ch;line-height:1.6}
+
+.an-cards{
+  display:grid;gap:12px;margin-top:16px;
+  grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
+}
+.an-card{
+  border:1px solid var(--border);border-radius:11px;background:var(--surface);
+  padding:12px 14px 13px;min-width:0;
+}
+.an-card-h{
+  margin:0 0 2px;font-size:11px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+.an-card-note{margin:0 0 9px;font-size:11.5px;color:var(--text-muted);line-height:1.55}
+
+/* A row of label / bar / number. The bar is a background gradient on the row
+   rather than a child element, so the label sits ON it and no width has to be
+   reserved for a track that is mostly empty at the tail of a long list. */
+.an-bars{display:flex;flex-direction:column;gap:2px}
+.an-bar-row{
+  display:grid;grid-template-columns:1fr auto;align-items:center;gap:10px;
+  padding:4px 8px;border-radius:6px;font-size:12.5px;
+  background:linear-gradient(to right,
+      hsla(207,100%,62%,.20) 0 var(--pct,0%),
+      hsla(0,0%,100%,.028) var(--pct,0%) 100%);
+}
+.an-bar-row.is-warn{
+  background:linear-gradient(to right,
+      hsla(45,100%,45%,.22) 0 var(--pct,0%),
+      hsla(0,0%,100%,.028) var(--pct,0%) 100%);
+}
+.an-bar-row:hover{outline:1px solid var(--border-strong)}
+.an-bar-k{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text-dim)}
+.an-bar-k b{color:var(--text);font-weight:600}
+.an-bar-v{font-family:var(--font-mono);font-size:11.5px;color:var(--text-dim);font-variant-numeric:tabular-nums}
+.an-bar-row.is-link{cursor:pointer}
+.an-bar-row.is-link:hover .an-bar-k b{color:var(--accent)}
+
+.an-flags{display:flex;flex-direction:column;gap:7px;margin-top:2px}
+.an-flag{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;line-height:1.5}
+.an-flag-n{
+  flex:0 0 auto;min-width:34px;text-align:right;font-family:var(--font-mono);
+  font-weight:700;color:var(--warn);font-variant-numeric:tabular-nums;
+}
+.an-flag-n.is-ok{color:var(--ok)}
+.an-flag-t{color:var(--text-dim)}
+.an-flag-t b{color:var(--text);font-weight:600}
+
+/* ── Station: identity + tabs on ONE row ────────────────────────────── */
+/* `hidden` is a UA `display:none`, and both of these set `display` themselves —
+   which wins on specificity and leaves a "hidden" pane stacked on top of the
+   visible one. Every element this page toggles with `hidden` has to say so. */
+.an-station{display:flex;flex-direction:column;min-height:0;flex:1 1 auto}
+.an-station[hidden],.an-dash[hidden]{display:none}
+.an-bar{
+  flex:0 0 auto;display:flex;align-items:center;gap:14px;
+  padding:0 14px;height:40px;border-bottom:1px solid var(--border);
+  background:var(--surface-2);
+}
+.an-bar-id{display:flex;align-items:baseline;gap:9px;min-width:0;flex:1 1 auto}
+.an-bar-hm{font-family:var(--font-mono);font-size:13.5px;font-weight:800;color:var(--accent)}
+.an-bar-name{
+  font-size:15px;font-weight:800;letter-spacing:-.02em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.an-bar-badge{
+  flex:0 0 auto;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  padding:1px 7px;border-radius:999px;border:1px solid currentColor;color:var(--ok);
+}
+.an-bar-badge.is-planned{color:var(--warn)}
+.an-bar-sub{font-size:11.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.an-tabs{flex:0 0 auto;display:flex;gap:2px;align-self:stretch}
+.an-tab{
+  padding:0 14px;font-size:12.5px;font-weight:600;color:var(--text-muted);
+  border-bottom:2px solid transparent;
+}
+.an-tab:hover{color:var(--text-dim)}
+.an-tab.is-on{color:var(--text);border-bottom-color:var(--accent)}
+.an-tab .an-tab-n{
+  margin-left:6px;font-family:var(--font-mono);font-size:10.5px;color:var(--text-muted);
+}
+
+.an-pane{flex:1 1 auto;min-height:0;display:flex;flex-direction:column}
+.an-pane[hidden]{display:none}
+
+/* ── Analytics tab ──────────────────────────────────────────────────── */
+.an-anal{flex:1 1 auto;overflow-y:auto;padding:14px 16px 26px}
+.an-rule{
+  margin:0 0 13px;font-size:12.5px;color:var(--text-dim);
+  padding:7px 11px;border-left:2px solid var(--border-strong);background:var(--surface);
+  border-radius:0 7px 7px 0;
+}
+.an-rule b{
+  color:var(--text-muted);font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;font-size:10px;margin-right:5px;
+}
+.an-facts{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:2px 18px;margin:0;font-size:12.5px;
+}
+.an-fact{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid hsla(0,0%,100%,.04);min-width:0}
+.an-fact-k{flex:0 0 34%;color:var(--text-muted)}
+.an-fact-v{flex:1 1 auto;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis}
+
+/* ── Songs tab ──────────────────────────────────────────────────────── */
+.an-tools{
+  flex:0 0 auto;display:flex;align-items:center;gap:11px;flex-wrap:wrap;
+  padding:7px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);
+}
+.an-tools .an-search{max-width:270px}
+.an-tools .an-chips{margin-top:0}
+.an-tools-count{margin-left:auto;font-size:11.5px;color:var(--text-muted);font-variant-numeric:tabular-nums}
+
+.an-songs-scroll{flex:1 1 auto;overflow:auto;overscroll-behavior:contain}
+.an-songs{width:100%;border-collapse:collapse;font-size:13px}
+.an-songs thead th{
+  position:sticky;top:0;z-index:1;
+  background:#0a0b10;border-bottom:1px solid var(--border-strong);
+  padding:6px 12px;text-align:left;font-size:10px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--text-muted);
+  white-space:nowrap;cursor:pointer;user-select:none;
+}
+.an-songs thead th:hover{color:var(--text-dim)}
+.an-songs thead th.is-sort{color:var(--accent)}
+.an-songs thead th.is-sort::after{content:" ▾";font-size:9px}
+.an-songs thead th.is-sort.is-asc::after{content:" ▴"}
+.an-songs td{padding:4px 12px;border-bottom:1px solid hsla(0,0%,100%,.045);vertical-align:baseline}
+.an-songs tbody tr:hover td{background:var(--surface-2)}
+.an-num{
+  width:1%;text-align:right;font-family:var(--font-mono);font-size:11.5px;
+  color:var(--text-muted);font-variant-numeric:tabular-nums;
+}
+.an-t-title{font-weight:600;color:var(--text)}
+.an-t-album,.an-t-artist{color:var(--text-dim)}
+.an-t-time{
+  width:1%;text-align:right;font-family:var(--font-mono);font-size:11.5px;
+  color:var(--text-muted);font-variant-numeric:tabular-nums;white-space:nowrap;
+}
+.an-t-id{width:1%;font-family:var(--font-mono);font-size:10.5px;color:#5b5c6b;white-space:nowrap}
+.an-t-rate{width:1%;text-align:center}
+
+/* The rating chip. ONE element per row, not three buttons — a station with
+   1,749 songs would otherwise carry 5,247 buttons, and the menu it opens is a
+   single shared element parked at the end of the document. */
+.an-rate{
+  display:inline-block;min-width:26px;padding:1px 0;border-radius:6px;
+  border:1px solid var(--border-strong);
+  font-family:var(--font-mono);font-size:11.5px;font-weight:700;
+  color:var(--rate-c);
+}
+.an-rate[data-r="A"]{color:#1a1300;background:var(--rate-a);border-color:var(--rate-a)}
+.an-rate[data-r="B"]{color:#04121f;background:var(--rate-b);border-color:var(--rate-b)}
+.an-can-rate .an-rate{cursor:pointer}
+.an-can-rate .an-rate:hover{border-color:var(--text-dim)}
+.an-rate[disabled]{cursor:default}
+
+.an-menu{
+  /* fixed, not absolute: <body> is a flex column with overflow:hidden and never
+     scrolls, so a page-coordinate menu would be anchored to a scroll position
+     that does not exist. getBoundingClientRect gives viewport coordinates,
+     which is exactly what fixed wants. */
+  position:fixed;z-index:40;display:flex;gap:3px;padding:4px;
+  border:1px solid var(--border-strong);border-radius:9px;background:var(--surface-3);
+  box-shadow:0 10px 28px rgba(0,0,0,.6);
+}
+.an-menu button{
+  min-width:30px;padding:4px 0;border-radius:6px;font-family:var(--font-mono);
+  font-size:12px;font-weight:700;color:var(--text-dim);
+}
+.an-menu button:hover{background:hsla(0,0%,100%,.1);color:var(--text)}
+.an-menu button[data-r="A"]{color:var(--rate-a)}
+.an-menu button[data-r="B"]{color:var(--rate-b)}
+
+/* ── Voice Scripts tab ──────────────────────────────────────────────── */
+/* Its own two-pane split inside the tab: the categories on the left, the
+   script itself on the right. A script is a paragraph or two, so it is read,
+   not scanned — which is the opposite of the song table and wants the opposite
+   layout. */
+.an-scripts{flex:1 1 auto;display:flex;min-height:0}
+.an-scripts-list{
+  flex:0 0 var(--scripts-w);width:var(--scripts-w);
+  overflow-y:auto;border-right:1px solid var(--border);background:var(--surface);
+  padding:6px 0 14px;
+}
+.an-sc-group{
+  padding:9px 12px 3px;font-size:10px;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--text-muted);
+  display:flex;justify-content:space-between;gap:8px;
+}
+.an-sc-group span{font-family:var(--font-mono);letter-spacing:0}
+.an-sc-file{
+  display:flex;align-items:baseline;justify-content:space-between;gap:8px;
+  padding:4px 12px;cursor:pointer;font-size:12.5px;color:var(--text-dim);
+  border-left:2px solid transparent;
+}
+.an-sc-file:hover{background:var(--surface-2)}
+.an-sc-file.is-on{background:var(--surface-3);border-left-color:var(--accent);color:var(--text)}
+.an-sc-file.is-readme{color:var(--text-muted);font-style:italic}
+.an-sc-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.an-sc-size{
+  flex:0 0 auto;font-family:var(--font-mono);font-size:10.5px;color:var(--text-muted);
+  font-variant-numeric:tabular-nums;
+}
+
+.an-scripts-body{flex:1 1 auto;min-width:0;overflow-y:auto;padding:16px 20px 30px}
+.an-sc-head{margin:0 0 2px;font-size:15px;font-weight:700}
+.an-sc-path{
+  margin:0 0 14px;font-family:var(--font-mono);font-size:11px;color:var(--text-muted);
+  word-break:break-all;
+}
+/* Air copy is read ALOUD. Wider leading and a real measure make it possible to
+   hear the sentence while reading it, which a dense table row does not. */
+.an-sc-text{
+  margin:0;white-space:pre-wrap;font-family:var(--font-sans);font-size:14.5px;
+  line-height:1.75;color:var(--text-dim);max-width:74ch;
+}
+.an-sc-text.is-readme{
+  font-family:var(--font-mono);font-size:12.5px;line-height:1.65;max-width:96ch;
+  color:var(--text-muted);
+}
+
+/* ── Shared empty / note states ─────────────────────────────────────── */
+.an-note{padding:24px 18px;color:var(--text-muted);font-size:13px;max-width:66ch;line-height:1.7}
+.an-note b{color:var(--text-dim)}
+.an-note-hd{margin:0 0 6px;font-size:14.5px;font-weight:700;color:var(--text-dim)}
+
+/* ── Toast ──────────────────────────────────────────────────────────── */
+.an-toast{
+  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  padding:9px 16px;border-radius:9px;border:1px solid var(--border-strong);
+  background:var(--surface-3);font-size:13px;box-shadow:0 10px 28px rgba(0,0,0,.6);
+  z-index:60;max-width:min(560px,90vw);
+}
+.an-toast.is-bad{border-color:var(--stop);color:var(--stop)}
+
+/* ── Narrow windows ─────────────────────────────────────────────────── */
+/* The console is a desktop tool and does not pretend otherwise, but a laptop at
+   1280 and a tablet in landscape should still work. Below 860 the split stacks
+   and the dial takes a slice of the height rather than the width. */
+@media (max-width:1100px){
+  .an-t-id{display:none}
+}
+@media (max-width:860px){
+  .an-split{flex-direction:column}
+  .an-panel{flex:0 0 38vh;width:auto;border-right:0;border-bottom:1px solid var(--border)}
+  .an-grip{display:none}
+  .an-t-album{display:none}
+  .an-bar{height:auto;padding:7px 12px;flex-wrap:wrap;gap:8px}
+  .an-tabs{align-self:auto}
+  .an-scripts{flex-direction:column}
+  .an-scripts-list{flex:0 0 30vh;width:auto;border-right:0;border-bottom:1px solid var(--border)}
+}

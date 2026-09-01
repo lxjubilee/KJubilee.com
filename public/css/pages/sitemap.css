@@ -1,0 +1,94 @@
+/* ---------------------------------------------------------------------------
+   sitemap.css — /sitemap
+
+   The site's dark surface and accent, borrowed by token rather than restated,
+   so this page cannot drift into being a differently-coloured lookalike. It is
+   a reading page: one column, generous line height, and nothing that moves.
+   --------------------------------------------------------------------------- */
+:root {
+  --sm-bg: #0b0c10;
+  --sm-ink: #f3f2ee;
+  --sm-dim: #a7a9b4;
+  --sm-faint: #7c8494;
+  --sm-accent: #3DA5FF;
+  --sm-live: #46D07A;
+  --sm-hair: hsla(0, 0%, 100%, .1);
+  --sm-max: 1100px;
+}
+
+.sm-wrap {
+  background: var(--sm-bg);
+  color: var(--sm-ink);
+  min-height: 100vh;
+  min-height: 100dvh;                       /* phone chrome; see jubilee-id.css */
+  padding: 34px 22px calc(28px + var(--kj-player-h, 0px));
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.sm-head { max-width: var(--sm-max); margin: 0 auto 30px; }
+.sm-head h1 { margin: 0 0 8px; font-size: clamp(26px, 4vw, 38px); letter-spacing: -.01em; }
+.sm-sub { margin: 0; color: var(--sm-dim); font-size: 14.5px; line-height: 1.7; max-width: 68ch; }
+.sm-sub-tight { margin-bottom: 20px; }
+.sm-sub em { color: var(--sm-ink); font-style: normal; }
+
+.sm-block { max-width: var(--sm-max); margin: 0 auto 42px; }
+.sm-block > h2 {
+  margin: 0 0 14px; padding-bottom: 9px;
+  border-bottom: 2px solid var(--sm-accent);
+  font-size: 13px; letter-spacing: .16em; text-transform: uppercase; color: var(--sm-ink);
+}
+
+/* ---- the fixed pages ---- */
+.sm-pages { list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px 26px; }
+.sm-pages li { display: flex; flex-direction: column; gap: 2px; padding: 7px 0; }
+.sm-pages a { color: var(--sm-accent); text-decoration: none; font-size: 15px; }
+.sm-pages a:hover { text-decoration: underline; }
+.sm-note { color: var(--sm-faint); font-size: 12.5px; line-height: 1.5; }
+
+/* ---- the dial ---- */
+.sm-band { margin: 0 0 26px; }
+.sm-band h3 {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px;
+  margin: 0 0 10px; padding-bottom: 7px; border-bottom: 1px solid var(--sm-hair);
+  font-size: 17px; font-weight: 600;
+}
+.sm-range { font-size: 12px; letter-spacing: .06em; color: var(--sm-dim); font-weight: 400; }
+.sm-count { margin-left: auto; font-size: 12px; color: var(--sm-faint); font-weight: 400; }
+
+.sm-stations { list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2px 24px; }
+.sm-stations li {
+  display: flex; align-items: baseline; gap: 10px;
+  padding: 6px 0; border-bottom: 1px solid transparent;
+}
+.sm-stations a { display: flex; align-items: baseline; gap: 10px; min-width: 0;
+  color: var(--sm-dim); text-decoration: none; }
+.sm-stations a:hover { color: var(--sm-ink); }
+.sm-stations a:hover .sm-name { text-decoration: underline; }
+/* Tabular figures so the frequencies line up as a column of numbers rather
+   than drifting with the width of each digit. */
+.sm-hm { font-variant-numeric: tabular-nums; font-size: 12.5px; letter-spacing: .04em;
+  color: var(--sm-faint); flex: 0 0 auto; min-width: 8.4ch; }
+.sm-name { font-size: 14.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sm-state { margin-left: auto; flex: 0 0 auto; font-size: 11px; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--sm-faint); }
+.sm-stations li.is-live .sm-name { color: var(--sm-ink); }
+.sm-stations li.is-live .sm-state { color: var(--sm-live); }
+
+.sm-foot-note { max-width: var(--sm-max); margin: 0 auto 30px; color: var(--sm-faint);
+  font-size: 12.5px; line-height: 1.7; }
+
+/* The shared footer, same as every other page. */
+.sm-wrap .site-footer { max-width: var(--sm-max); margin: 0 auto; background: none;
+  border-top: 1px solid var(--sm-hair); padding: 20px 0 0; text-align: left;
+  color: var(--sm-faint); font-size: 12px; letter-spacing: .04em; }
+.sm-wrap .site-footer a { color: var(--sm-accent); text-decoration: none; }
+.sm-wrap .site-footer a:hover { text-decoration: underline; }
+
+@media (max-width: 640px) {
+  .sm-wrap { padding-left: 16px; padding-right: 16px; }
+  .sm-count { margin-left: 0; width: 100%; }
+  .sm-stations { grid-template-columns: 1fr; }
+}
