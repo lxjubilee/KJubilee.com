@@ -42,14 +42,16 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // to point at www.jubileeinspire.com, which handed people to another domain in
 // the middle of signing in here.
 const FORGOT_URL = '/forgot-password';
-// Terms and Privacy live at the family help pages, because kJubilee has no
-// pages of its own and a CONSENT link must not 404 — the sign-up screen asks
-// people to agree to these before it will create an account, and being unable
-// to read what you are agreeing to is the one failure that is not cosmetic.
+// kJubilee's own, as this comment used to ask for. They pointed at
+// www.jubileeinspire.com/help/*, which asked someone creating an account HERE
+// to agree to another site's document — and the sign-up form will not proceed
+// without that consent, so the link has to lead to the terms that actually
+// govern this service. app/terms and app/privacy are those.
 //
-// Replace both with /terms and /privacy the moment kJubilee publishes its own.
-const TERMS_URL = 'https://www.jubileeinspire.com/help/terms';
-const PRIVACY_URL = 'https://www.jubileeinspire.com/help/privacy';
+// Still target="_blank": this is read mid-signup, and navigating away would
+// empty the form.
+const TERMS_URL = '/terms';
+const PRIVACY_URL = '/privacy';
 
 // ── Icons ────────────────────────────────────────────────────────────────
 const EyeOpen = () => (
