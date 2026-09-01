@@ -34,6 +34,12 @@ tmp/
 test-results/
 coverage/
 
+# Python bytecode. tools/music-ingest and tools/scripture are run in place, so
+# the interpreter drops these beside the sources every time; one was committed
+# before this rule existed and is untracked by the same commit that adds it.
+__pycache__/
+*.py[cod]
+
 # Station Image Studio (WPF): build output and local config
 tools/StationImageStudio/bin/
 tools/StationImageStudio/obj/
@@ -41,4 +47,15 @@ tools/StationImageStudio/studio.config.json
 
 # Next.js
 .next/
+# Any NEXT_DIST_DIR escape hatch, not just the dev one. This checkout is on an
+# SMB share that keeps handles open on a killed build's traced node_modules, so
+# a stuck output directory cannot be deleted and the way forward is a fresh
+# name — see the distDir note in next.config.js. Those are all build output.
+.next-*/
+# The parking bay for those directories once they are finished with. Same
+# reason they cannot simply be deleted - a killed build leaves handles open
+# on the share - so they are renamed out of the way instead, and one
+# ignore covers every naming scheme they have collected (.next.old-*,
+# .next.stale-*, .next.locked-*), none of which .next-*/ above matches.
+.temp/
 next-env.d.ts
