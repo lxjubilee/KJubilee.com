@@ -158,22 +158,7 @@ function useNavCollapse() {
     return { collapsed, open, setOpen, headerRef, rowRef, ghostRef, tailRef };
 }
 
-/* The same two-label treatment the page scripts emit: a section may carry a
-   short name for narrow screens, and CSS chooses between them rather than any
-   measuring, so there is no layout thrash. */
-function navLabel(sec) {
-    if (!sec.navShort) return sec.nav;
-    return (
-        <>
-            <span className="nav-long">{sec.nav}</span>
-            <span className="nav-short">{sec.navShort}</span>
-        </>
-    );
-}
-
-export default function SiteHeader({ current, sections }) {
-    const navSections = Array.isArray(sections) ? sections : [];
-
+export default function SiteHeader({ current }) {
     const isAdmin = useIsAdmin();
     const { collapsed, open, setOpen, headerRef, rowRef, ghostRef, tailRef } = useNavCollapse();
     const menuRef = useRef(null);
@@ -343,32 +328,12 @@ export default function SiteHeader({ current, sections }) {
                     <span className="nav-burger-label">Menu</span>
                 </button>
 
-                {/* EMPTY UNLESS A PAGE HANDS THE SECTIONS IN.
-                    The four pages with a client script fill these themselves from
-                    window.KJ_SECTIONS, and pass nothing — the navs stay empty and
-                    the script writes into them exactly as before.
-
-                    A page WITHOUT a script — /sitemap is a static server
-                    component — had no way to fill them, so its category bar was
-                    an empty grey band. Passing `sections` renders the same bar
-                    server-side. They are anchors rather than the page scripts'
-                    buttons because a section is a place on the home page, reached
-                    by its hash, and from here that is a navigation rather than a
-                    filter of a list this page does not have. */}
-                <nav className="primary-nav" id="nav" aria-label="Station categories">
-                    {navSections.filter(s => s.align !== 'right').map(sec => (
-                        <a key={sec.id} className="nav-link" href={'/#' + sec.id}>{navLabel(sec)}</a>
-                    ))}
-                </nav>
+                <nav className="primary-nav" id="nav" aria-label="Station categories"></nav>
                 <div className="spacer"></div>
                 {/* Right-hand side of the category bar: the HM band explainer, kept
                     apart from the station categories because it is editorial, not
                     a shelf. */}
-                <nav className="primary-nav nav-right" id="nav-right" aria-label="About the band">
-                    {navSections.filter(s => s.align === 'right').map(sec => (
-                        <a key={sec.id} className="nav-link" href={'/#' + sec.id}>{navLabel(sec)}</a>
-                    ))}
-                </nav>
+                <nav className="primary-nav nav-right" id="nav-right" aria-label="About the band"></nav>
 
                 {/* The ruler. Off-canvas rather than display:none, because a box
                     that is not laid out has no width to measure. Inert: nothing

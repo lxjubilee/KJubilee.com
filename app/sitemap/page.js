@@ -1,6 +1,6 @@
-import { SECTIONS, stationsByBlock, readCatalogue, isOnAir, readSections } from '../_catalogue';
+import { SECTIONS, stationsByBlock, readCatalogue, isOnAir } from '../_catalogue';
 import Year from '../_year';
-import SiteHeader from '../_site-header';
+import PlainHeader from '../_plain-header';
 
 export const metadata = {
     title: 'Sitemap — kJubilee.com',
@@ -32,16 +32,15 @@ export default function SitemapPage() {
 
     return (
         <>
-            <link rel="stylesheet" href="/css/site-header.css" precedence="kj-header" />
-            <link rel="stylesheet" href="/css/pages/sitemap.css" precedence="kj-page" />
+                        <link rel="stylesheet" href="/css/pages/sitemap.css" precedence="kj-page" />
             {/* The same header every other page carries. A sitemap is a page a
                 visitor LANDS on from the footer, so leaving it without the nav
                 and the search box stranded them on the one page whose whole
                 purpose is getting somewhere else. */}
-            {/* The category bar, rendered here rather than left empty. Every
-                other page fills it from a client script; this page has none, so
-                it hands the header the same sections that script would read. */}
-            <SiteHeader sections={readSections()} />
+            {/* The quiet bar, not the site header. A sitemap IS a
+                navigation; a category bar above it was a second one stacked on
+                top of the page whose whole job is getting you somewhere. */}
+            <PlainHeader />
 
             <main className="sm-wrap">
                 <header className="sm-head">

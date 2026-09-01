@@ -1,4 +1,5 @@
 import Year from './_year';
+import PlainHeader from './_plain-header';
 
 /*
  * The frame both legal documents sit in.
@@ -17,15 +18,7 @@ export default function LegalPage({ eyebrow, title, updated, effective, lede, ch
         <main className="legal">
             <link rel="stylesheet" href="/css/pages/legal.css" precedence="kj-page" />
 
-            <div className="legal-top">
-                <div className="legal-top-in">
-                    <a className="legal-brand" href="/" aria-label="kJubilee.com home">
-                        <img src="/images/members/JubileeInspire-Circle-200.png" alt="" width="30" height="30" />
-                        <span className="legal-brand-name"><span className="k">k</span>Jubilee.com</span>
-                    </a>
-                    <a className="legal-back" href="/">← Back to the dial</a>
-                </div>
-            </div>
+            <PlainHeader />
 
             <article className="legal-doc">
                 <p className="legal-eyebrow">{eyebrow}</p>

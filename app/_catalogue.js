@@ -34,33 +34,6 @@ function readAssigned(src, name) {
     catch (e) { return null; }
 }
 
-/*
- * The category bar's sections, the same window.KJ_SECTIONS every page script
- * reads. Exposed here so a SERVER component can render the bar itself.
- *
- * The header leaves #nav and #nav-right empty and each page's own client script
- * fills them — which works on the four pages that have one, and leaves /sitemap
- * with an empty grey band, because a static server component loads no script.
- * Reading the same source here means the sitemap's bar cannot drift from the
- * catalogue either.
- */
-let sectionsCache = null;
-
-export function readSections() {
-    if (sectionsCache) return sectionsCache;
-    let src = '';
-    try {
-        src = fs.readFileSync(path.join(process.cwd(), 'public', 'js', 'stations-data.js'), 'utf8');
-    } catch (e) {
-        // Same bargain readCatalogue() makes: a page that cannot read the dial
-        // renders without the category bar rather than failing the route.
-        sectionsCache = [];
-        return sectionsCache;
-    }
-    sectionsCache = readAssigned(src, 'KJ_SECTIONS') || [];
-    return sectionsCache;
-}
-
 let cache = null;
 
 export function readCatalogue() {

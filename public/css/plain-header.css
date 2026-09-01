@@ -1,0 +1,62 @@
+/* ==========================================================================
+   plain-header.css — the quiet bar on the pages that are documents.
+
+   /terms, /privacy and /sitemap are read, not browsed. The full site header
+   belongs on a page you are moving around in; on these it is a row of exits
+   from something somebody opened deliberately — and on /sitemap the category
+   bar was a second navigation stacked above a page that IS a navigation.
+
+   So: the wordmark, which says whose document this is, and one way back.
+
+   Its own tokens rather than a page's, because the three pages that use it
+   have three different surfaces (legal #0f1115, sitemap #0b0c10) and the bar
+   should look the same on all of them. Sized to match the widest thing it sits
+   above — the bar itself spans the viewport, its contents do not.
+   ========================================================================== */
+
+.kj-plainbar {
+  --pb-surface: #161920;
+  --pb-rule: #2a2f38;
+  --pb-text: #e9ecf1;
+  --pb-dim: #aeb6c2;
+  --pb-accent: #3DA5FF;
+
+  background: var(--pb-surface);
+  border-bottom: 1px solid var(--pb-rule);
+  font-family: "Open Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.kj-plainbar-in {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.kj-plainbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--pb-text);
+  text-decoration: none;
+}
+.kj-plainbar-brand:hover { text-decoration: none; }
+.kj-plainbar-brand img { width: 30px; height: 30px; border-radius: 50%; flex: none; }
+.kj-plainbar-name { font-size: 19px; font-weight: 700; letter-spacing: -0.01em; }
+.kj-plainbar-name .k { color: var(--pb-accent); }
+
+.kj-plainbar-back {
+  font-size: 13.5px;
+  color: var(--pb-dim);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.kj-plainbar-back:hover { color: var(--pb-text); text-decoration: none; }
+
+@media (max-width: 640px) {
+  .kj-plainbar-in { padding: 13px 16px; }
+  .kj-plainbar-name { font-size: 17px; }
+}
