@@ -45,7 +45,16 @@ const SONG_RE = /^[A-Z0-9]{4,32}$/;
 
 async function read() {
     try {
-        const doc = JSON.parse(await fsp.readFile(STORE, 'utf8'));
+        /* turbopackIgnore keeps the bundler from trying to trace this read.
+           STORE is `process.env.KJ_RATINGS_FILE || <a path under data/>`, and
+           that env fallback makes the path unresolvable at build time, so the
+           tracer gave up narrowing it and pulled THE WHOLE PROJECT into the
+           route's file trace — public/ and all. On this SMB checkout that is
+           enough I/O to push `next build`'s page-data collection over its
+           limit, and it failed on a different /api route on each run, none of
+           which had anything to do with ratings. The read itself is unchanged
+           and KJ_RATINGS_FILE still works; only the tracing is opted out. */
+        const doc = JSON.parse(await fsp.readFile(/*turbopackIgnore: true*/ STORE, 'utf8'));
         if (!doc || typeof doc !== 'object' || typeof doc.stations !== 'object' || !doc.stations) return { ...EMPTY };
         return doc;
     } catch (err) {

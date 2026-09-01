@@ -143,7 +143,14 @@ function useFooterPlayer() {
         if (hide) return;
         // The player reads window.KJ_STATIONS at load time, so the catalogue
         // has to be in place before it runs.
-        ensureCatalogue().then(() => loadOnce('/js/kj-footer-player.js'));
+        ensureCatalogue().then(() => {
+            loadOnce('/js/kj-footer-player.js');
+            // Presence rides the player: it is on every page and holds the
+            // station across navigations, so a listener stays counted after
+            // they leave the dial. Loaded after, because it reads the
+            // player's state and its state event.
+            loadOnce('/js/kj-presence.js');
+        });
     }, [pathname]);
 
     // Leaving the site entirely should not strand the class on <body> for a

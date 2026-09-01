@@ -76,6 +76,23 @@ function shortName(user) {
 // mirror is stale should be read from the parts. Never falls through to the
 // address — the address is already on the line beneath, and printing it twice
 // says nothing.
+// "Gabriel Ungureanu" -> "GU". BOTH initials, because one letter is not an
+// identity — a household with two accounts saw the same disc for both. Falls
+// back to a single letter when there is no surname to take one from, and to
+// the address when there is no name at all, so the disc is never empty.
+function initials(user) {
+    const first = (user.first_name || '').trim();
+    const last = (user.last_name || '').trim();
+    if (first && last) return (first[0] + last[0]).toUpperCase();
+
+    const parts = (user.name || '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    if (parts.length === 1) return parts[0][0].toUpperCase();
+
+    if (first) return first[0].toUpperCase();
+    return ((user.email || '?')[0]).toUpperCase();
+}
+
 function fullName(user) {
     const joined = [user.first_name, user.last_name]
         .map((p) => (p || '').trim()).filter(Boolean).join(' ');
@@ -172,11 +189,11 @@ export default function AccountButton() {
                 aria-expanded={open}
                 title={user.email}
             >
-                {/* The initial alone. The name used to sit beside it and was
+                {/* The initials alone. The name used to sit beside it and was
                     the widest thing in the bar for no information a hover title
                     does not already carry. */}
                 <span className="kj-account-initial" aria-hidden="true">
-                    {shortName(user).charAt(0).toUpperCase()}
+                    {initials(user)}
                 </span>
                 <span className="kj-sr-only">{fullName(user)}</span>
             </button>

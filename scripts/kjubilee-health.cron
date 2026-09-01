@@ -1,0 +1,47 @@
+# kJubilee — station health watch
+#
+# Install on the app host:
+#   cp scripts/kjubilee-health.cron /etc/cron.d/kjubilee-health
+#   chmod 644 /etc/cron.d/kjubilee-health
+#   systemctl restart cron
+#
+# ── why this exists, and why the nightly publish was not enough ──────────────
+# kjubilee-schedules.cron publishes a week of day files once a day. That covers
+# the failure where programming runs out. It does NOT cover:
+#
+#   · a day file that publishes EMPTY, or with entries whose audio is not there
+#   · a day file that is valid and fully playable but only covers half the day
+#   · a day file deleted, expired or overwritten between nightly runs
+#   · a station added to the dial after the last nightly run
+#   · anything that breaks at 12:05 and would sit broken for 24 hours
+#
+# All of those look identical to a listener: they press play and hear nothing.
+# None of them raise anything anywhere. The only detector this network had was
+# somebody tuning in and telling us — which is exactly how HM 361.90 was found.
+#
+# So: every fifteen minutes, check that every on-air station has a populated day
+# file AND that a random sample of the tracks it schedules actually serves. Any
+# station missing programming — or carrying a day that stops early or has a hole
+# in it — is REPUBLISHED on the spot from the pool this host already holds.
+# Missing audio is reported and not guessed at: it needs the music share and a
+# decision about what belongs on air, and a script that guessed would be worse
+# than one that reports.
+#
+# THE ALARM IS DRILLED, NOT ASSUMED. tools/drill-station-health.js breaks a
+# station three ways behind a proxy — schedule gone, day half-published, audio
+# all 404 — and asserts the watch catches each one, with a control run to prove
+# the drill itself is not what is failing. Run it after touching the checker.
+#
+# Fifteen minutes is the interval a listener would forgive. It also keeps the
+# sampling honest: six tracks per station per run is ~96 draws a day per
+# station, so a systematic audio failure surfaces within a run or two rather
+# than eventually.
+#
+# THE LOG IS THE ALARM. Every run appends; a healthy run is one line. Grep it:
+#   grep FAIL /var/log/kjubilee-health.log | tail
+#
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+MAILTO=""
+
+*/15 * * * * root cd /var/www/kjubilee.com && /usr/bin/node tools/check-station-health.js --days 3 --sample 6 --repair --quiet >> /var/log/kjubilee-health.log 2>&1

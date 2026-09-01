@@ -1,0 +1,11 @@
+[Unit]
+Description=Check the kJubilee watchdog hourly
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1h
+Persistent=true
+Unit=kj-watchdog-heartbeat.service
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,19 @@
+[Unit]
+Description=Run the kJubilee watchdog every 15 minutes
+# The nightly publish is the routine job; this is the safety net under it.
+# Fifteen minutes is chosen against the failure it exists to catch: a station
+# added to the dial mid-afternoon has no day file until someone publishes one,
+# and the gap between "on the dial" and "actually plays" should be minutes, not
+# until noon tomorrow.
+
+[Timer]
+OnBootSec=3min
+OnUnitActiveSec=15min
+# Catch up after the box has been off — a missed window is exactly when the
+# schedule is most likely to have gone thin.
+Persistent=true
+AccuracySec=30s
+Unit=kj-watchdog.service
+
+[Install]
+WantedBy=timers.target

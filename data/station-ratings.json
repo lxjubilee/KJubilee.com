@@ -1,0 +1,6 @@
+{
+  "schema_version": 1,
+  "note": "A/B/C rotation ratings, per station, per SongID. C is the DEFAULT and is never stored — an entry exists here only because a human promoted that song on that station. Written by app/api/radio/ratings/route.js (admins only) and read by /analytics/start.html. The SongID is the permanent primary key, so an entry survives a re-ingest; the station id is the tenant id (HM308.70-EN), so a frequency renumber moves the ratings with the delivery tree. DO NOT scp this file over the production copy — production writes its own, and overwriting it discards every promotion made there.",
+  "updated_at": null,
+  "stations": {}
+}

@@ -1,0 +1,9 @@
+[Unit]
+Description=Check that the kJubilee watchdog is alive and healthy
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/kj-watchdog-heartbeat.sh
+StandardOutput=append:/var/log/kj-watchdog.log
+StandardError=append:/var/log/kj-watchdog.log

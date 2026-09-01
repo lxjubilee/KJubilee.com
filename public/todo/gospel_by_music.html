@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Gospel By Music — Lyrics Awaiting Audio</title>
+
+<!--
+  /todo/gospel_by_music.html — the recording queue for ONE initiative.
+
+  ONE QUESTION: which Gospel By Music songs are written but have no mp3 yet, and
+  what are their words, so the audio can be generated. /analytics/todo.html asks
+  that of the whole dial across 119 frequencies; this asks it of HM 316.00 alone,
+  which is the form the question takes when somebody is actually sitting down to
+  produce a record rather than surveying a backlog.
+
+  THE SAME CONSOLE, NOT A COPY OF IT. This page loads the same stylesheet and the
+  same script as /analytics/todo.html and sets one global:
+
+      window.TD_LOCK_STATION = 'HM316.00-EN'
+
+  todo.js reads that, hides the station pane and its grip, opens the station on
+  boot, prints THIS station's counts in the header instead of the network's, and
+  drops the station out of the URL so a shared link is `#GBMX4001EN` rather than
+  `#HM316.00-EN/GBMX4001EN`.
+
+  A flag rather than a second forty-kilobyte file. The lyric sheet, the track
+  rail, the copy buttons and the J: paths are wanted here exactly as they are
+  there; forking them would mean every later fix had to be made twice, and the
+  second copy would be the one nobody remembered. If another initiative wants
+  its own page, it is this file with one identifier changed.
+
+  THE SHAPE — two panes and a rail, because the first question is answered:
+
+    left    WHICH RECORD. Every Gospel By Music album in numbered order, 4001
+            first, each with the fraction of it that exists as audio. Opens on
+            ALL rather than on the unfinished ones: this is a catalogue being
+            worked through, so the finished records belong in the list, ticked.
+            A green tick in front of the code means every track on that album
+            was asked for over the network and answered — see
+            tools/verify-album-audio.js. It is not read off the ledger, because
+            "ingested" only says the ingest ran, not that the object is on the
+            CDN today.
+    right   THE WORDS. The album's own lyric sheet, in the order the work is
+            done in: the lyrics first, then the `Styles` generation prompt that
+            gets pasted next, then the metadata trailer, and the J: drive path
+            last as the reference it is.
+    rail    WHICH SONG. `A` for the whole record, then one dot per track,
+            coloured by that track's state, so the rail reads as the album at a
+            glance and narrows the right pane to one song.
+
+  WHERE THE DATA COMES FROM — identical to the dial-wide page:
+
+    /data/todo-index.json     the album rows and every count, written by
+                              tools/build-todo-index.js, which walks the nine
+                              authoring trees and joins them to the ledger.
+    /cdn/lyrics/<CODE>.json   one album's sheet, fetched on click. All 117
+                              Gospel By Music bundles are published under
+                              CDN_LOCAL_ROOT/lyrics/ alongside the station
+                              manifests; they are deliberately not copied into
+                              public/, being far too large to ship with the site.
+
+  ⚠ A NEW file under public/ needs `systemctl restart kjubilee`. Production is
+  the Next standalone server, which snapshots the public/ file list at STARTUP.
+  A file scp'd afterwards is served as Next's own prerendered 404, which reads
+  exactly like a wrong path.
+-->
+
+<link rel="icon" href="/images/JubileeLogo.png">
+<link rel="stylesheet" href="/css/scrollbars.css">
+<link rel="stylesheet" href="/css/pages/todo.css">
+
+<!-- Set BEFORE the console loads: todo.js reads it as it initialises, and a
+     lock applied afterwards would arrive a render too late. -->
+<script>
+  window.TD_LOCK_STATION = 'HM316.00-EN';
+  /* Numbered order — GBMX4001EN at the top — because this is a catalogue being
+     worked through rather than a backlog being triaged. The dial-wide page
+     keeps its emptiest-first ordering, which is the right answer there. */
+  window.TD_ALBUM_SORT = 'code';
+  /* One producer for the whole initiative, so the pill is set once here rather
+     than carried per track in the index. The dial-wide console sets nothing and
+     shows no pill, because across 119 frequencies there is no single answer. */
+  window.TD_ASSIGNED_TO = 'Joe Pohl';
+</script>
+</head>
+<body>
+
+<header class="td-top">
+  <a class="td-brand" href="/todo/gospel_by_music.html">
+    <span class="td-brand-k">kJubilee</span>
+    <span class="td-brand-t">Gospel By Music — Lyrics Awaiting Audio</span>
+  </a>
+  <span class="td-top-meta" id="td-top-meta">Reading the queue…</span>
+  <a class="td-top-link" href="/analytics/todo.html">Whole dial →</a>
+</header>
+
+<div class="td-split" id="td-split">
+
+  <!-- The station pane still ships, and todo.js hides it when the lock is set.
+       Kept in the DOM rather than deleted because the script addresses these
+       ids directly; a page missing them would be a page that has to be special
+       cased in the very file this one exists to avoid special casing. -->
+  <aside class="td-panel" id="td-panel" aria-label="Stations">
+    <div class="td-panel-head">
+      <div class="td-chips" id="td-station-filters" role="group" aria-label="Station filter">
+        <button class="td-chip is-on" data-filter="waiting">Waiting</button>
+        <button class="td-chip" data-filter="all">All</button>
+        <button class="td-chip" data-filter="done">Complete</button>
+        <button class="td-chip" data-filter="planned">Planned</button>
+      </div>
+    </div>
+    <div class="td-panel-scroll">
+      <ol class="td-list td-list-st td-stations" id="td-stations"></ol>
+    </div>
+    <div class="td-panel-foot"><span id="td-panel-foot"></span></div>
+  </aside>
+
+  <div class="td-grip" id="td-grip-1" role="separator" aria-orientation="vertical"
+       tabindex="0" aria-label="Resize station panel" data-target="panel"></div>
+
+  <!-- ── Left here: which record ─────────────────────────────────────── -->
+  <section class="td-albums" id="td-albums" aria-label="Albums">
+    <div class="td-bar" id="td-albums-bar">
+      <div class="td-bar-id" id="td-albums-id"></div>
+    </div>
+    <div class="td-albums-head" id="td-albums-head" hidden>
+      <!-- ALL FIRST AND ALL BY DEFAULT. The dial-wide console is a backlog, so
+           it opens on what is unfinished; this page is a catalogue of one
+           initiative, and the useful first view is the whole body of work with
+           the finished records ticked. todo.js reads the `is-on` chip for its
+           starting filter, so this markup IS the default — there is no second
+           place to keep the two in step. -->
+      <div class="td-chips" id="td-album-filters" role="group" aria-label="Album filter">
+        <button class="td-chip is-on" data-filter="all">All</button>
+        <button class="td-chip" data-filter="needs">Needs audio</button>
+      </div>
+    </div>
+    <div class="td-list td-list-al td-albums-scroll" id="td-albums-scroll"></div>
+    <div class="td-panel-foot"><span id="td-albums-foot"></span></div>
+  </section>
+
+  <div class="td-grip" id="td-grip-2" role="separator" aria-orientation="vertical"
+       tabindex="0" aria-label="Resize album panel" data-target="albums"></div>
+
+  <!-- ── Right: the words ────────────────────────────────────────────── -->
+  <main class="td-lyrics" id="td-lyrics" aria-label="Lyrics"></main>
+
+  <!-- The track rail. `A` is the whole record; each numbered dot is one song on
+       its own. Outside the scrolling pane deliberately — a jump list that
+       scrolls away with the thing it is jumping through is a jump list you have
+       to go and find. -->
+  <nav class="td-rail" id="td-rail" aria-label="Track filter" hidden></nav>
+
+</div>
+
+<div class="td-toast" id="td-toast" role="status" aria-live="polite" hidden></div>
+
+<!-- The member roster, for the artist portraits on each track's byline. It is
+     the same file the dial and the shelf load, which is the point: Eliana
+     Inspire's picture is filed under `JubileeElina`, and any lookup built by
+     guessing filenames from names would show the wrong face. Loaded before the
+     console so window.KJ_MEMBERS is there when the first sheet renders. -->
+<script src="/js/stations-data.js"></script>
+<script src="/js/pages/todo.js"></script>
+</body>
+</html>

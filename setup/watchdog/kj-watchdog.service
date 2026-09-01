@@ -1,0 +1,36 @@
+[Unit]
+Description=kJubilee watchdog — no station on the dial goes silent
+Documentation=file:///var/www/kjubilee.com/scripts/kj-watchdog.js
+# Wants=, not Requires=/After=kjubilee.service. The watchdog must run even when
+# the website is down — arguably ESPECIALLY then. It reads the dial over HTTP
+# and repairs schedules on the CDN; neither of those needs the local web app,
+# and tying its lifecycle to the app would mean one outage silencing the thing
+# that exists to catch outages.
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/var/www/kjubilee.com
+Environment=NODE_ENV=production
+Environment=KJ_WATCHDOG_STATE=/var/lib/kj-watchdog
+ExecStart=/usr/bin/node scripts/kj-watchdog.js --repair --days 2
+
+# Exit 1 means "something was missing and I fixed it" — a success for this
+# unit's purpose, and systemd must not record it as a failure or the heartbeat
+# checker would page on every successful repair. Exit 2 is a real failure and
+# is deliberately NOT listed.
+SuccessExitStatus=0 1
+
+# It writes only its own state dir and the repo's tmp/pools + tenants.
+ProtectSystem=full
+ProtectHome=yes
+PrivateTmp=no
+NoNewPrivileges=yes
+StateDirectory=kj-watchdog
+
+StandardOutput=append:/var/log/kj-watchdog.log
+StandardError=append:/var/log/kj-watchdog.log
+
+[Install]
+WantedBy=multi-user.target
