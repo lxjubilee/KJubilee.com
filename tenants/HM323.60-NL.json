@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM323.60-NL",
+  "slug": "nederland-inspire-nederlands",
+  "name": "Nederland Inspire (Nederlands)",
+  "hm": "323.60",
+  "band": "multi",
+  "mount": "nederland",
+  "language": {
+    "code": "NL",
+    "name": "Dutch",
+    "tag": "nl-NL"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Amsterdam",
+    "timezone": "Europe/Amsterdam"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM323.60-NL/delivery",
+    "file": "HM323.60NL-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM323.60-NL/delivery/HM323.60NL-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

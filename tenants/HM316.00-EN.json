@@ -1,0 +1,56 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM316.00-EN",
+  "slug": "gospel-by-music",
+  "name": "Gospel By Music",
+  "hm": "316.00",
+  "band": "fivefold",
+  "mount": "gospel-by-music",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Los Angeles",
+    "timezone": "America/Los_Angeles"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "gospel-by-music"
+      ],
+      "pending": [
+        "GBMX4010EN",
+        "GBMX4011EN",
+        "GBMX4012EN",
+        "GBMX4013EN",
+        "GBMX4014EN",
+        "GBMX4015EN",
+        "GBMX4016EN",
+        "GBMX4017EN",
+        "GBMX4018EN",
+        "GBMX4019EN",
+        "GBMX4020EN",
+        "GBMX4021EN",
+        "GBMX4022EN",
+        "GBMX4023EN",
+        "GBMX4024EN",
+        "GBMX4025EN",
+        "GBMX4026EN",
+        "GBMX4027EN",
+        "GBMX4028EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM316.00-EN/delivery",
+    "file": "HM316.00EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM316.00-EN/delivery/HM316.00EN-20260821.json"
+  },
+  "format": "Scripture Narrative",
+  "timezone": "America/Los_Angeles"
+}

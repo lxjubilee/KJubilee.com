@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM334.40-ZH",
+  "slug": "asia-inspire-zhongwen",
+  "name": "Asia Inspire (中文)",
+  "hm": "334.40",
+  "band": "multi",
+  "mount": "zhongwen",
+  "language": {
+    "code": "ZH",
+    "name": "Mandarin",
+    "tag": "zh-CN"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "台北",
+    "timezone": "Asia/Taipei"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM334.40-ZH/delivery",
+    "file": "HM334.40ZH-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM334.40-ZH/delivery/HM334.40ZH-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

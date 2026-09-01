@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM328.70-AR",
+  "slug": "inspire-crown-arabic",
+  "name": "Inspire Crown (العربية)",
+  "hm": "328.70",
+  "band": "multi",
+  "mount": "crown",
+  "language": {
+    "code": "AR",
+    "name": "Arabic",
+    "tag": "ar-JO"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Amman",
+    "timezone": "Asia/Amman"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM328.70-AR/delivery",
+    "file": "HM328.70AR-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM328.70-AR/delivery/HM328.70AR-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

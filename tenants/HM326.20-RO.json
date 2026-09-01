@@ -17,7 +17,7 @@
     "timezone": "Europe/Bucharest"
   },
   "catalogue": {
-    "pool": "inspire-family"
+    "pool": "all"
   },
   "delivery": {
     "base": "https://cdn.kjubilee.com",

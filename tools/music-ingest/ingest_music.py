@@ -77,6 +77,75 @@ ARTIST_ROOTS = {
     "timo-dobra":    r"J:\backrowfaith.com\music",     # The Back Row
     "party-giggles": r"J:\jubilujah.com\music\children",
     "tiny-tiggles":  r"J:\jubilujah.com\music\children",
+    # Throne Room Vegas — a Vegas showroom act on its own property, filed
+    # <root>/<artist>/<album> like Corner Cipher, so the root is all it needs.
+    "ricky-del-rey": r"J:\throneroomvegas.com\music",
+    # Bucky's Barnyard - Silas & Toby. Filed <root>/<artist>/<album>,
+    # the ordinary shape, so the root is all it needs.
+    "silas-toby":    r"J:\buckysbarnyard.com\music",
+}
+
+# WHERE THE ALBUMS ARE, WHEN THE TREE IS NOT <root>/<artist>/<album>.
+#
+# ARTIST_ROOTS above answers "which drive", and the artist slug is then joined
+# on to give the folder holding the albums. That covers every property whose
+# tree is filed BY ARTIST. Gospel By Music is not: it has no artist tier at all,
+# because twelve personas perform it, and it has one extra tier instead — the
+# book of the Bible.
+#
+#     J:\gospelbymusic.com\music\40_matthew\GBMX4001EN-the-chain-that-would-not-reach
+#     └──────── dir ───────────┘└─ book ──┘└──────────── album ─────────────────────┘
+#
+# Torah Sings has the same shape and answered it with a whole second ingester,
+# but only because it ships a machine-written catalog-manifest.json that is
+# richer than this tool's tree walk — the album folders themselves are the same
+# <album>/tracks/ + <album>/lyrics/ convention this tool already reads. Gospel
+# By Music ships no manifest, so a second ingester would be a copy of this one
+# with two lines changed. The tree walk learns to descend instead.
+#
+# `dir` is absolute and REPLACES the <root>/<artist> join, because there is no
+# artist folder to join. `depth` is how many levels down the album folders sit:
+# 1 is the default shape and needs no entry here. --src-root still overrides,
+# for a genuine one-off, and takes the default depth with it.
+ARTIST_TREES = {
+    "gospel-by-music": {"dir": r"J:\gospelbymusic.com\music", "depth": 2},
+    # Jubilee Prayers - the sung Scripture prayers. Same shape as Gospel By
+    # Music and here for the same reason: no artist tier (the prayer line is
+    # one persona's work but is filed as a catalogue), and one extra tier
+    # instead - the seven petitions of the Model Prayer, which is how the
+    # store is organised:
+    #
+    #   J:\jubileeprayers.com\cantillation-the-name\JEIPX7101EN The Foundational Prayers	racks
+    #   \------------- dir --------------/\-- petition -/\----------- album -----------------/
+    #
+    # depth 2, and the album folders use a SPACE separator, which ALBUM_RE
+    # has always accepted.
+    "jubilee-prayers": {"dir": r"J:\jubileeprayers.com\cantillation", "depth": 2},
+    # Gravel Road Gospel - Hollis Ferriday. One persona, but filed WITHOUT an
+    # artist tier: the albums sit straight under the property's music folder,
+    #
+    #   J:\gravelroadgospel.com\music\HFGR1001EN-sunday-suit	racks
+    #   \--------- dir -------------/\------- album --------/
+    #
+    # so ARTIST_ROOTS (which joins <root>/<artist>) would look for a
+    # `hollis-ferriday` folder that does not exist and report zero albums. No
+    # `depth` key: this is the ordinary one-level shape and 1 is the default.
+    "hollis-ferriday": {"dir": r"J:\gravelroadgospel.com\music"},
+    # Torah Sings - the sung Scripture line. Same shape as Gospel By Music: no
+    # artist tier, and a BOOK tier between the property and the albums,
+    #
+    #   J:\torahsings.com\music\01_Genesis\ANSMX01003EN The Names Outlived the Graves
+    #   \-------- dir --------/\-- book --/\--------------- album ----------------/
+    #
+    # so depth 2, and a SPACE separator in the album folder name.
+    #
+    # It was missing from this table until 2026-08-31 and nothing noticed,
+    # because everything else about the property was already configured - a
+    # code in catalog-config.json, a genre, a content mode, 1,761 rows in the
+    # ledger and a tree in build-todo-index.js. Only the ingest could not find
+    # it, and only when somebody tried to ingest it: the default <root>/<artist>
+    # shape went looking for a `torah-sings` folder that has never existed.
+    "torah-sings": {"dir": r"J:\torahsings.com\music", "depth": 2},
 }
 DEST_ROOT = r"J:\kjubilee.com\music"
 CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalog-config.json")
@@ -110,8 +179,28 @@ ID_LENGTH = 12
 # Previously-matching folders parse identically: the optional group only comes
 # into play where the old pattern failed outright, and the greedy prefix still
 # splits JEIM1001EN exactly as before (verified against both trees).
+# THE PREFIX RUNS TO FIVE. The prayer line extends the general catalogue's
+# <PERSONA2><CAT2><NNNN><LANG2> with a series marker: JE + IP + X + 7101 + EN,
+# so JEIPX7101EN carries a five-letter prefix where every music album carries
+# four. Widening the class cannot re-split anything that already parsed — the
+# fifth character still has to be A-Z, and in JEIM1001EN, GBMX4001EN, IX401EN
+# and TTX301 it is a digit, so the greedy match stops exactly where it did.
+# Being too narrow cost silence, not an error: all twelve prayer albums were
+# skipped by name.
+# `\d{3,5}` and not `{3,4}`: Torah Sings numbers its albums BOOK+INDEX, so
+# ANSMX42008EN is prefix ANSMX, number 42008 (Matthew, album 8), language EN —
+# five digits, twelve characters, and 276 albums filed that way. Against the
+# narrower pattern every one of them was skipped as an "unrecognised folder
+# name", which is why that catalogue could never be ingested by this tool even
+# though its 1,761 rows were already in the ledger and every other part of the
+# pipeline knew about it.
+#
+# Widening was checked against every album code the ledger holds before it was
+# made: of 854 distinct codes, 0 parse differently, 0 stop parsing, and 276
+# start. The prefix is capped at five letters and the language tail is two, so
+# a five-digit number cannot swallow either.
 ALBUM_RE = re.compile(
-    r"^(?P<code>(?P<prefix>[A-Z]{2,4})(?P<number>\d{3,4})(?P<lang>[A-Z]{2})?)[-_ ](?P<slug>.+)$")
+    r"^(?P<code>(?P<prefix>[A-Z]{2,5})(?P<number>\d{3,5})(?P<lang>[A-Z]{2})?)[-_ ](?P<slug>.+)$")
 # Track files look like "01 Sky Splits Open.mp3"
 # A leading "track-" or "song-" is optional. Two My Tiny Tiggles albums are
 # filed that way throughout - TTX312 as song-9-pennys-praise-parade.mp3 and
@@ -625,6 +714,27 @@ def ingest_album(album_dir, artist_slug, cfg, used, assigned, rows, opts):
     return written
 
 
+def _walk_to_depth(root, depth):
+    """Every directory exactly `depth` levels below root, sorted, absolute.
+
+    Depth 1 is the ordinary shape and returns root's own subfolders, which is
+    what the walk did before it could descend at all. Only the LAST level is
+    returned: at depth 2 the book folders are the road, not the destination, so
+    they are never offered to ingest_album and never reported as unrecognised.
+    """
+    level = [root]
+    for _ in range(depth):
+        nxt = []
+        for d in level:
+            try:
+                nxt.extend(os.path.join(d, x) for x in sorted(os.listdir(d))
+                           if os.path.isdir(os.path.join(d, x)))
+            except OSError:
+                pass
+        level = nxt
+    return sorted(level)
+
+
 def main():
     ap = argparse.ArgumentParser(description="Ingest albums into the kJubilee radio repository.")
     ap.add_argument("--artist", required=True, help="artist slug, e.g. jubilee-inspire")
@@ -648,15 +758,25 @@ def main():
         print("language: %s (registered for %s; its folders do not carry one)"
               % (opts.lang, opts.artist))
 
+    # A registered tree names the album folder outright and how deep the albums
+    # sit inside it; the default shape is <src-root>/<artist>, one level down.
+    # An explicit --src-root always wins, and takes the default shape with it.
+    tree = None if opts.src_root else ARTIST_TREES.get(opts.artist)
     if not opts.src_root:
         opts.src_root = ARTIST_ROOTS.get(opts.artist, SRC_ROOT)
-        if opts.src_root != SRC_ROOT:
+        if opts.src_root != SRC_ROOT and not tree:
             print("source: %s (registered for %s)" % (opts.src_root, opts.artist))
 
     with io.open(CONFIG, encoding="utf-8") as fh:
         cfg = json.load(fh)
 
-    artist_src = os.path.join(opts.src_root, opts.artist)
+    album_depth = 1
+    if tree:
+        artist_src, album_depth = tree["dir"], tree.get("depth", 1)
+        print("source: %s (registered for %s; albums %d level(s) down)"
+              % (artist_src, opts.artist, album_depth))
+    else:
+        artist_src = os.path.join(opts.src_root, opts.artist)
     if not os.path.isdir(artist_src):
         raise SystemExit("Artist source folder not found: %s" % artist_src)
 
@@ -667,8 +787,24 @@ def main():
             used.add(row[0])
     print("Existing SongIDs in repository: %d" % len(used))
 
+    # Album folders are ABSOLUTE paths from here down, because at depth 2 the
+    # folder name alone no longer says where the folder is. Everything
+    # downstream keys on the basename, which is unchanged.
     if opts.album:
-        albums = [opts.album]
+        # Accept the album folder name on its own at any depth, so the operator
+        # never has to know which book a record is filed under to re-run it.
+        found = [p for p in _walk_to_depth(artist_src, album_depth)
+                 if os.path.basename(p) == opts.album]
+        if not found:
+            direct = os.path.join(artist_src, opts.album)
+            if os.path.isdir(direct):
+                found = [direct]
+        if not found:
+            raise SystemExit("--album '%s' not found under %s" % (opts.album, artist_src))
+        if len(found) > 1:
+            raise SystemExit("--album '%s' is ambiguous — %d folders share that name:\n  %s"
+                             % (opts.album, len(found), "\n  ".join(found)))
+        albums = found
     else:
         # REPORT WHAT IS NOT BEING INGESTED. This filter used to drop unparsable
         # folder names here, before ingest_album could print its SKIP line, so a
@@ -676,28 +812,27 @@ def main():
         # — which is exactly what My Tiny Tiggles did on its first run: "Albums
         # with audio: 0" and not one word about the thirty-two folders it had
         # just walked past.
-        all_dirs = sorted(d for d in os.listdir(artist_src)
-                          if os.path.isdir(os.path.join(artist_src, d)))
-        albums = [d for d in all_dirs if ALBUM_RE.match(d)]
+        all_dirs = _walk_to_depth(artist_src, album_depth)
+        albums = [d for d in all_dirs if ALBUM_RE.match(os.path.basename(d))]
         for d in all_dirs:
             if d not in albums:
-                print("  SKIP (unrecognised folder name): %s" % d)
+                print("  SKIP (unrecognised folder name): %s"
+                      % os.path.relpath(d, artist_src))
 
     held = set(x.strip() for x in opts.exclude.split(",") if x.strip())
     if held:
-        skipped = [a for a in albums if a in held]
-        albums = [a for a in albums if a not in held]
+        skipped = [a for a in albums if os.path.basename(a) in held]
+        albums = [a for a in albums if os.path.basename(a) not in held]
         for a in skipped:
-            print("  HELD BACK (--exclude): %s" % a)
-        missing = held - set(skipped)
+            print("  HELD BACK (--exclude): %s" % os.path.basename(a))
+        missing = held - set(os.path.basename(a) for a in skipped)
         for a in sorted(missing):
             print("  note: --exclude named '%s', which is not an album here" % a)
 
     rows, copied, ingested_albums = [], 0, 0
     for album in albums:
         before = len(rows)
-        copied += ingest_album(os.path.join(artist_src, album), opts.artist, cfg,
-                               used, assigned, rows, opts)
+        copied += ingest_album(album, opts.artist, cfg, used, assigned, rows, opts)
         if len(rows) > before:
             ingested_albums += 1
 

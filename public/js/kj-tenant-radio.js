@@ -317,7 +317,7 @@
             // that shows "what is on" reads identically:
             //
             //   God's Amazing Grace (JubiLujah)
-            //   kJubilee Radio HM 308.70 (Jubilee Praise & Worship)
+            //   Year of Jubilee HM 308.70 (Jubilee Praise & Worship)
             //
             // The album is in parentheses only when there is one; a track with
             // no album must not render a bare "( )".

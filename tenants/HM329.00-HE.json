@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM329.00-HE",
+  "slug": "israel-inspire-ivrit",
+  "name": "Israel Inspire (עברית)",
+  "hm": "329.00",
+  "band": "multi",
+  "mount": "ivrit",
+  "language": {
+    "code": "HE",
+    "name": "Hebrew",
+    "tag": "he-IL"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "ירושלים",
+    "timezone": "Asia/Jerusalem"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM329.00-HE/delivery",
+    "file": "HM329.00HE-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM329.00-HE/delivery/HM329.00HE-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM321.90-BR",
+  "slug": "brasil-inspire-portugues",
+  "name": "Brasil Inspire (Português)",
+  "hm": "321.90",
+  "band": "multi",
+  "mount": "brasil",
+  "language": {
+    "code": "BR",
+    "name": "Portuguese",
+    "tag": "pt-BR"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "São Paulo",
+    "timezone": "America/Sao_Paulo"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM321.90-BR/delivery",
+    "file": "HM321.90BR-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM321.90-BR/delivery/HM321.90BR-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

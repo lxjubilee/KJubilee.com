@@ -19,11 +19,8 @@
   "catalogue": {
     "pool": "inspire-family",
     "select": {
-      "albums": [
-        "JEIM1016EN",
-        "JEIM1026EN",
-        "JEIM1027EN",
-        "JEIM1065EN"
+      "artists": [
+        "jubilee-inspire"
       ]
     }
   },

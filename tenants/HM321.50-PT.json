@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM321.50-PT",
+  "slug": "portugal-inspire-portugues",
+  "name": "Portugal Inspire (Português)",
+  "hm": "321.50",
+  "band": "multi",
+  "mount": "portugal",
+  "language": {
+    "code": "PT",
+    "name": "Portuguese",
+    "tag": "pt-PT"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Lisboa",
+    "timezone": "Europe/Lisbon"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM321.50-PT/delivery",
+    "file": "HM321.50PT-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM321.50-PT/delivery/HM321.50PT-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

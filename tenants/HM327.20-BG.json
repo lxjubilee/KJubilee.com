@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM327.20-BG",
+  "slug": "bulgaria-inspire-balgarski",
+  "name": "Bulgaria Inspire (Български)",
+  "hm": "327.20",
+  "band": "multi",
+  "mount": "bulgaria",
+  "language": {
+    "code": "BG",
+    "name": "Bulgarian",
+    "tag": "bg-BG"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "София",
+    "timezone": "Europe/Sofia"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM327.20-BG/delivery",
+    "file": "HM327.20BG-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM327.20-BG/delivery/HM327.20BG-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

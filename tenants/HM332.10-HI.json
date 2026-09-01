@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM332.10-HI",
+  "slug": "inspire-india-hindi",
+  "name": "Inspire India (हिन्दी)",
+  "hm": "332.10",
+  "band": "multi",
+  "mount": "india",
+  "language": {
+    "code": "HI",
+    "name": "Hindi",
+    "tag": "hi-IN"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Mumbai",
+    "timezone": "Asia/Kolkata"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM332.10-HI/delivery",
+    "file": "HM332.10HI-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM332.10-HI/delivery/HM332.10HI-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

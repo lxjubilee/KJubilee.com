@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM324.20-DA",
+  "slug": "danmark-inspire-dansk",
+  "name": "Danmark Inspire (Dansk)",
+  "hm": "324.20",
+  "band": "multi",
+  "mount": "danmark",
+  "language": {
+    "code": "DA",
+    "name": "Danish",
+    "tag": "da-DK"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "København",
+    "timezone": "Europe/Copenhagen"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM324.20-DA/delivery",
+    "file": "HM324.20DA-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM324.20-DA/delivery/HM324.20DA-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

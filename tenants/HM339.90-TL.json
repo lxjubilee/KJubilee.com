@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM339.90-TL",
+  "slug": "pilipinas-inspire-tagalog",
+  "name": "Pilipinas Inspire (Tagalog)",
+  "hm": "339.90",
+  "band": "multi",
+  "mount": "pilipinas",
+  "language": {
+    "code": "TL",
+    "name": "Tagalog",
+    "tag": "tl-PH"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Maynila",
+    "timezone": "Asia/Manila"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM339.90-TL/delivery",
+    "file": "HM339.90TL-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM339.90-TL/delivery/HM339.90TL-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

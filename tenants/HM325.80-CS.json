@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM325.80-CS",
+  "slug": "cesko-inspire-cestina",
+  "name": "Česko Inspire (Čeština)",
+  "hm": "325.80",
+  "band": "multi",
+  "mount": "cesko",
+  "language": {
+    "code": "CS",
+    "name": "Czech",
+    "tag": "cs-CZ"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Praha",
+    "timezone": "Europe/Prague"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM325.80-CS/delivery",
+    "file": "HM325.80CS-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM325.80-CS/delivery/HM325.80CS-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

@@ -1,0 +1,51 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM317.40-EN",
+  "slug": "throne-room-vegas",
+  "name": "Throne Room Vegas",
+  "hm": "317.40",
+  "band": "fivefold",
+  "mount": "throne-room-vegas",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Las Vegas",
+    "timezone": "America/Los_Angeles"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "ricky-del-rey"
+      ],
+      "pending": [
+        "RDRM2002EN",
+        "RDRM2007EN",
+        "RDRM2008EN",
+        "RDRM2009EN",
+        "RDRM2010EN",
+        "RDRM2011EN",
+        "RDRM2012EN",
+        "RDRM3001EN",
+        "RDRM3002EN",
+        "RDRM3003EN",
+        "RDRM3004EN",
+        "RDRM4001EN",
+        "RDRM4002EN",
+        "RDRM4003EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM317.40-EN/delivery",
+    "file": "HM317.40EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM317.40-EN/delivery/HM317.40EN-20260821.json"
+  },
+  "format": "Classic Christian Rock",
+  "timezone": "America/Los_Angeles"
+}

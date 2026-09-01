@@ -8,8 +8,8 @@ that enters the kjubilee.com radio ecosystem. It is the authority for the naming
 the tooling in [`tools/music-ingest/`](../tools/music-ingest/) implements what is written
 here.
 
-**Current contents:** 6,045 tracks · 656 albums · 12 Inspire Family personas plus the
-Torah Sings catalogue · 25 languages · ~34 GB, at `J:\kjubilee.com\music\`.
+**Current contents:** 7,832 tracks · 810 albums · 12 Inspire Family personas plus six
+catalogues · 25 languages · 36 genre codes, at `J:\kjubilee.com\music\`.
 
 ---
 
@@ -202,10 +202,20 @@ back to the real title.
 | Catalogue | Code | Genre | Albums | Tracks | Mode |
 |---|---|---|---:|---:|---|
 | torah-sings | `TORA` | `COMH` | 276 | 1,749 | OHI |
+| gospel-by-music | `GOSP` | `COCC` | 9 of 28 | 79 | CCI |
 
 Torah Sings is the Bible sung book by book. Thirteen personas perform it, so the
 repository artist is the *work* (`torah-sings`), and each track keeps its performing
 persona in `album.json` under `performed_by`. It is ingested by its own tool — see §8.
+
+Gospel By Music is the Gospel of Matthew, one album per chapter, twenty-eight in
+all. Same reasoning: all twelve personas perform it, so the artist is the work and
+`performed_by` names the voice. It is filed by book like Torah Sings but is ingested
+by `ingest_music.py`, because its album folders are the ordinary
+`<album>/tracks/` + `<album>/lyrics/` convention — only the tier above them is
+different, and `ARTIST_TREES` covers that in one entry. Nineteen of the twenty-eight
+are written and not yet recorded, and are declared as `pending` on HM 316.00 so each
+joins the station the day its audio lands.
 
 Artist codes follow the pattern the owner set with `JUBI`: the first four letters of the
 persona's name. Two exceptions, both forced: **Eliana → `ELIA`** and **Elias → `ELIS`**
@@ -337,6 +347,13 @@ audited against what the source actually said.
 `content_mode_source` records which rung supplied the answer:
 
 1. **`song-file`** — a per-song lyric file's own `**Content Mode:**` line.
+   Three spellings are read: `**Content Mode:** …`, a bare `Content Mode: …`,
+   and the album-header form `MODE: CCI` that Gospel By Music uses. The third was
+   added after all nine of its albums resolved from `persona-default` while their
+   own files declared the mode plainly — the right answer reached the wrong way,
+   and harmless only until a record declares something the persona default does
+   not. Only `CCI` and `OHI` are accepted after a bare `MODE:`, because the word
+   alone is generic enough to head anything.
 2. **`lyrics`** — the album lyrics file.
 3. **`blueprint`** — the album blueprint.
 4. **`persona-default`** — `artist_content_modes` in `catalog-config.json`.
@@ -371,7 +388,12 @@ Composition order, best material first:
 1. `blueprint:subtheme` — the per-track subtheme (usually scripture + concept)
 2. `blueprint:core-message` — the track's stated core message
 3. `blueprint:function` / `blueprint:role` — cinematic function or act role
-4. `lyrics:emotional-arc` — Establish / Escalate / Elevate, from per-song lyric files
+4. `lyrics:beat` — the scene beat and the verse it is set at, e.g.
+   `THRESHOLD · Matthew 1:1`, taken with the track's `lyrics:archetype`. This is
+   subtheme-grade material and ranks with the blueprint rungs, not below them:
+   Gospel By Music ships no blueprints, and without it all seventy-nine of its
+   tracks were described by quoting their own chorus.
+5. `lyrics:emotional-arc` — Establish / Escalate / Elevate, from per-song lyric files
 5. `blueprint:hook` or `lyrics:chorus` — appended as `Hook: "…"`
 6. `lyrics:archetype` — last resort
 

@@ -39,10 +39,43 @@ SRC_ROOT = r"J:\jubilujah.com\music\inspire"
 # ONCE and then found forever; the --src-root flag is for a one-off, not for
 # a catalogue that will keep growing.
 SRC_ROOTS = [SRC_ROOT,
-             r"J:\singitdone.com\music",
-             r"J:\jubilujah.com\music\children",
-             r"J:\cornercipher.com\music",     # Marcus Reed / Corner Cipher
-             r"J:\backrowfaith.com\music"]     # Timo Dobre / The Back Row
+             r"J:\singitdone.com\music"]
+
+# THE PER-ARTIST ROOTS ARE IMPORTED, NOT RESTATED — the same reason
+# ARTIST_TREES is imported below, and the same failure that comment
+# describes, which then happened again.
+#
+# This list used to carry its own copy of every property: the children's
+# tree, Corner Cipher, The Back Row. Registering Throne Room Vegas in the
+# ingester's ARTIST_ROOTS and not here ingested 204 tracks perfectly and
+# then wrote not one sidecar — the tool could not source a single album,
+# skipped all seventeen exactly as it is designed to, and reported it in a
+# summary that reads the same as "nothing to do". Two lists of one fact is
+# one list that is quietly wrong.
+try:
+    from ingest_music import ARTIST_ROOTS as _INGEST_ROOTS
+except Exception:                                    # pragma: no cover
+    _INGEST_ROOTS = {}
+for _r in _INGEST_ROOTS.values():
+    if _r not in SRC_ROOTS:
+        SRC_ROOTS.append(_r)
+
+# TREES THAT ARE NOT <root>/<artist>/<album> — IMPORTED, NOT RESTATED.
+#
+# Gospel By Music has no artist tier and a book-of-the-Bible tier instead, so
+# neither this tool nor the ingester can find its albums by joining the artist
+# slug onto a root. The shape is declared ONCE, in ingest_music.py, and read
+# here.
+#
+# It is imported rather than copied because the two tools disagreeing about
+# where an album lives is not a hypothetical failure: this file's own comment
+# above records SRC_ROOTS falling out of step with the ingester and nulling 381
+# sidecars' descriptions in a single run, silently. One definition cannot drift
+# from itself.
+try:
+    from ingest_music import ARTIST_TREES
+except ImportError:                                  # pragma: no cover
+    ARTIST_TREES = {}
 DEST_ROOT = r"J:\kjubilee.com\music"
 CONFIG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "catalog-config.json")
 SIDECAR = "album.json"
@@ -126,6 +159,25 @@ def find_content_mode(text):
     m = re.search(r"\*\*Content\s*Mode:?\*\*\s*([^\n]+)", text or "", re.I)
     if not m:
         m = re.search(r"^\s*[-*]?\s*Content\s*Mode:\s*([^\n]+)", text or "", re.I | re.M)
+    if not m:
+        # A THIRD SPELLING, AND SILENCE WAS THE WRONG ANSWER TO IT.
+        #
+        # Gospel By Music writes the declaration as a bare `MODE: CCI` in the
+        # album header, beside CODE / SONGS / BALANCE. The two patterns above
+        # both missed it, so all nine albums resolved from `persona-default`
+        # — the right answer arrived at the wrong way. That is only harmless
+        # while the persona default happens to agree: the first Gospel By Music
+        # record to declare OHI would have been labelled CCI on every one of its
+        # tracks, silently, which is precisely the mislabelling the resolution
+        # order exists to prevent.
+        #
+        # Deliberately narrow. `MODE:` alone is a generic word that could head
+        # anything, so only the two values that ARE content modes are accepted;
+        # anything else is not a declaration this tool can read and still falls
+        # through to the persona.
+        m = re.search(r"^\s*MODE:\s*(CCI|OHI)\b[^\n]*", text or "", re.I | re.M)
+        if m:
+            return clean(m.group(0).split(":", 1)[1])
     return clean(m.group(1)) if m else None
 
 
@@ -343,6 +395,29 @@ def parse_lyrics(path):
         arch = re.search(r"ARCHETYPE(?:\s+SLOT)?:\s*(.+)", body, re.I)
         if arch:
             entry["archetype"] = cap(clean(arch.group(1)), 300)
+        # THE SCENE BEAT — the best per-track material these files carry.
+        #
+        # Gospel By Music heads every song with `BEAT: THRESHOLD · Matthew 1:1`
+        # — the dramatic beat and the verse it is set at. That is a per-track
+        # brief in one line, and it is what a blueprint's `subtheme` would have
+        # said if these albums shipped a blueprint (they do not; they are
+        # lyrics-only). Without it all seventy-nine descriptions fell through to
+        # the chorus, the LAST rung but one, so every song was described by
+        # quoting itself.
+        #
+        # Still extraction, not generation: the beat is text the author wrote,
+        # copied verbatim, and `about_source` says so.
+        beat = re.search(r"^\s*BEAT:\s*(.+)", body, re.I | re.M)
+        if beat:
+            entry["beat"] = cap(clean(beat.group(1)), 300)
+        # WHO SANG IT. Gospel By Music is one work performed by twelve
+        # personas, so the performer is a property of the TRACK, not of the
+        # album — the same shape Torah Sings has, and it is preserved for the
+        # same reason: the repository artist is the work, and without this the
+        # name of the voice on the record exists nowhere in the catalogue.
+        who = re.search(r"^\s*ARTIST:\s*(.+)", body, re.I | re.M)
+        if who:
+            entry["performed_by"] = cap(clean(who.group(1)), 120)
         # First [Chorus] block: the plainest statement of what the song says.
         ch = extract_chorus(body)
         if ch:
@@ -370,6 +445,17 @@ def build_about(brief, lyric):
     if brief.get("function") and len(" ".join(parts)) < 400:
         parts.append(brief["function"])
         source = source or "blueprint:function"
+    # The scene beat is subtheme-grade material — the dramatic beat and the
+    # verse it is set at — so it ranks with the blueprint rungs rather than
+    # down beside the chorus, and takes the archetype with it the way subtheme
+    # takes core-message. It only speaks for albums that ship no blueprint,
+    # because the blueprint rungs above already returned if one existed.
+    if not parts and lyric.get("beat"):
+        parts.append(lyric["beat"])
+        source = "lyrics:beat"
+        if lyric.get("archetype"):
+            parts.append(lyric["archetype"])
+            source = "lyrics:beat+lyrics:archetype"
     if not parts and lyric.get("emotional_arc"):
         parts.append(lyric["emotional_arc"])
         source = "lyrics:emotional-arc"
@@ -415,6 +501,25 @@ def find_source_album(src_roots, artist, album_code):
     sidecars lost every track description in one run, and nothing failed.
     Searching all the roots is what makes the tool safe to run at all.
     """
+    # A registered tree names its album folder outright and says how deep the
+    # albums sit, because there is no artist folder to join onto a root.
+    tree = ARTIST_TREES.get(artist)
+    if tree:
+        level = [tree["dir"]]
+        for _ in range(tree.get("depth", 1)):
+            nxt = []
+            for d in level:
+                try:
+                    nxt.extend(os.path.join(d, x) for x in sorted(os.listdir(d))
+                               if os.path.isdir(os.path.join(d, x)))
+                except OSError:
+                    pass
+            level = nxt
+        for path in level:
+            if os.path.basename(path).startswith(album_code):
+                return path
+        return None
+
     for src_root in src_roots:
         adir = os.path.join(src_root, artist)
         if not os.path.isdir(adir):
@@ -646,7 +751,11 @@ def main():
                     entry[k] = brief[k]
                 elif lyric.get(k):
                     entry[k] = lyric[k]
-            for k in ("chorus", "emotional_arc", "styles"):
+            # `performed_by` names the voice on the record, and is present only
+            # where the work is not the artist — a catalogue performed by many
+            # personas. Torah Sings' own ingester writes the same key.
+            for k in ("chorus", "emotional_arc", "styles", "beat", "archetype",
+                      "performed_by"):
                 if lyric.get(k):
                     entry[k] = lyric[k]
             doc["tracks"].append(entry)

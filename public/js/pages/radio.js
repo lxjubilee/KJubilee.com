@@ -51,7 +51,7 @@ document.addEventListener('error', function (e) {
             //   /cdn/radio/HM308.70-EN/delivery/music.json
             // ===================================================================
             {
-                slug: "jubilee-radio", hm: "308.70", frequency: "HM 308.70", name: "kJubilee Radio",
+                slug: "jubilee-radio", hm: "308.70", frequency: "HM 308.70", name: "Year of Jubilee",
                 band: "fivefold", primary: "music",
                 // The slug stays jubilee-radio. It is the channel's identity —
                 // the generated cover and any listener favourites are keyed to
@@ -70,11 +70,11 @@ document.addEventListener('error', function (e) {
                 // the 2026-08-25 rename. Same zone, so no schedule changed.
                 hostCity: "Sacramento", timezone: "America/Los_Angeles",
                 image: "/images/JubileeLogo.png",
-                description: "kJubilee Radio — continuous worship and teaching from the Inspire Family catalog.",
+                description: "Continuous worship and teaching from the Inspire Family catalog.",
                 listeners: "Inspire Family · 1,502 tracks",
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM308.70-EN/delivery/music.json",
-                currentShow: { name: "Inspire Family Rotation", host: "kJubilee Radio", time: "24/7" },
+                currentShow: { name: "Inspire Family Rotation", host: "Year of Jubilee", time: "24/7" },
                 schedule: [
                     { time: "00:00", show: "Continuous Inspire Family playback" }
                 ]
@@ -119,7 +119,7 @@ document.addEventListener('error', function (e) {
                 formatLabel: "Angel Songs",
                 mode: "OHI", phase: 1, bestseller: 96, reach: "480M",
                 image: "/images/jubilee-profile.png",
-                description: "Angel Songs flagship — Torah-rooted worship voiced by Zev, the family workhorse station.",
+                description: "Torah-rooted worship voiced by Zev. The Angel Songs flagship, and the workhorse of the family.",
                 listeners: "Angel Songs · 1,749 tracks · Genesis to Revelation",
                 // A live Icecast mount like the rest of the dial — every listener
                 // hears the same track at the same moment. Liquidsoap broadcasts
@@ -181,16 +181,23 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
-                slug: "upper-room", hm: "340.30", frequency: "HM 340.30", name: "The Upper Room",
+                // The editorial label. Without it genreFor() answers with the
+                // programming type — "Prayer" — which is the block this
+                // frequency sits in, not the name of what it plays.
+                formatLabel: "Jubilee Prayers",
+                slug: "upper-room", hm: "350.00", frequency: "HM 350.00", name: "The Upper Room",
                 band: "fivefold", primary: "prayer",
-                mode: "Both", phase: 1, bestseller: 91, reach: "180M",
+                mode: "OHI", phase: 1, bestseller: 91, reach: "180M",
                 image: "/images/jubilee-profile.png",
-                description: "Live & recorded prayer — biblically iconic name (Acts 1–2). Listener participation at scale.",
-                listeners: "Prayer · Continuous Intercession",
-                streamUrl: STREAM_ADULT,
-                currentShow: { name: "The Upper Room Live", host: "Intercession Team", time: "24/7 Live" },
+                description: "Sung Scripture prayer, chanted — the cantillation store from jubileeprayers.com, programmed as one continuous prayer station. The prayers do not introduce or conclude themselves, so a listener joining at any point is not joining late.",
+                listeners: "Continuous Prayer · Sung Scripture",
+                // NO streamUrl. It carried the shared adult Icecast mount while
+                // it was a placeholder; it now has its own day file, and
+                // station-guidelines 2.5.6 says to retire those mounts rather
+                // than leave scheduled programming pointed at one.
+                currentShow: { name: "The Prayers, Continuously", host: "Jubilee Prayers", time: "24/7" },
                 schedule: [
-                    { time: "00:00", show: "Watchman's Hour" },
+                    { time: "00:00", show: "The Watch" },
                     { time: "12:00", show: "Midday Prayer" }
                 ]
             },
@@ -262,7 +269,7 @@ document.addEventListener('error', function (e) {
                 // its blueprints. It is not inferred from the lyrics.
                 mode: "OHI", phase: 1, bestseller: 91, reach: "210M",
                 image: "/images/jubilee-profile.png",
-                description: "The SingItDone declaration albums — all twelve of the Inspire Family, one record each, singing who they already are before Yahuah. Every promise of Elohim is Yes and Amen in Him.",
+                description: "The SingItDone declaration albums: all twelve of the Inspire Family, one record each, singing who they already are before Yahuah. Every promise of Elohim is Yes and Amen in Him.",
                 listeners: "Covenant Worship · Inspire Family · 191 tracks",
                 // Client-side rotation straight off the repository. Rebuild with:
                 //   node tools/build-station-manifest.js --station HM303.10-EN
@@ -364,7 +371,7 @@ document.addEventListener('error', function (e) {
                 band: "fivefold", primary: "children",
                 mode: "Non-OHI", phase: 1, bestseller: 88, reach: "140M",
                 image: "/images/jubilee-profile.png",
-                description: "Bible songs and instrumentals for the youngest listeners — warm, parent-attractive.",
+                description: "Warm, parent-attractive Bible songs and instrumentals for the youngest listeners.",
                 listeners: "Kids 3–5 · My Tiny Tiggles",
                 // ON AIR from its own catalogue, not from a mount. My Tiny
                 // Tiggles is the second children's act on the dial - 357 tracks
@@ -416,7 +423,7 @@ document.addEventListener('error', function (e) {
                 formatLabel: "Kids Praise",
                 mode: "Mixed", phase: 1, bestseller: 90, reach: "165M",
                 image: "/images/jubilee-profile.png",
-                description: "Family-celebratory programming — multiplies through parent-driven discovery and household co-listening.",
+                description: "Family-celebratory programming that multiplies through parent-driven discovery and household co-listening.",
                 listeners: "Kids 6–8 · Family Party",
                 streamUrl: null,
                 musicManifestUrl: "/cdn/radio/HM361.90-EN/delivery/music.json",
@@ -424,6 +431,25 @@ document.addEventListener('error', function (e) {
                 schedule: [
                     { time: "08:00", show: "Party Morning" },
                     { time: "16:00", show: "After-School Bash" }
+                ]
+            },
+            {
+                slug: "buckys-barnyard", hm: "370.30", frequency: "HM 370.30", name: "Bucky's Barnyard",
+                band: "fivefold", primary: "children",
+                // Its own label, like Jubilee Kids Party's: this is barnyard
+                // bluegrass praise, not storytelling and not lullabies, and the
+                // shared "Kids" that primary:children gives would hide that.
+                formatLabel: "Kids Barnyard Praise",
+                mode: "Mixed", phase: 1, bestseller: 88, reach: "120M",
+                image: "/images/jubilee-profile.png",
+                description: "Barnyard bluegrass praise for children — banjos, goats and hallelujahs, sung by Silas & Toby.",
+                listeners: "Kids · Barnyard Bluegrass",
+                streamUrl: null,
+                musicManifestUrl: "/cdn/radio/HM370.30-EN/delivery/music.json",
+                currentShow: { name: "Bucky's Barnyard Live", host: "Silas & Toby", time: "24/7 Live" },
+                schedule: [
+                    { time: "09:00", show: "Morning Chores" },
+                    { time: "17:00", show: "Hoedown Hour" }
                 ]
             },
             {
@@ -526,7 +552,7 @@ document.addEventListener('error', function (e) {
                 band: "fivefold", primary: "music",
                 mode: "Both", phase: 1, bestseller: 88, reach: "155M",
                 image: "/images/jubilee-profile.png",
-                description: "Energetic gospel — cross-denominational appeal in Pentecostal, charismatic, and Black-church contexts.",
+                description: "Energetic gospel with cross-denominational appeal in Pentecostal, charismatic, and Black-church contexts.",
                 listeners: "Pentecostal Shout · Imani & Zariah Inspire · 331 tracks",
                 // Manifest-driven, not an Icecast mount. A persona station:
                 // Imani Inspire's whole English catalogue, whose lane
@@ -673,6 +699,76 @@ document.addEventListener('error', function (e) {
                 description: "Christian rap out of Atlanta — Marcus Reed on the mic, trap and lyrical and soul-gospel, talking about the block he actually came from.",
                 listeners: "Christian Rap · Atlanta",
                 currentShow: { name: "The Corner", host: "Marcus Reed", time: "24/7 Live" },
+            },
+            {
+                // HM 317.40 - throneroomvegas.com. Ricky Del Rey, one act on his
+                // own property, seventeen albums deep on the day it opened -
+                // which makes it the deepest station ever to sign on here.
+                //
+                // Sits one number along from Gravel Road on purpose: both are
+                // single-act properties rather than family catalogues, and a
+                // listener walking the Crossing block meets them together.
+                //
+                // No streamUrl. It plays its own day file off the CDN; the
+                // shared adult mount would put English adult contemporary under
+                // a Vegas showroom name. bestseller and reach are the same
+                // placeholder scale its neighbours opened with, not a
+                // measurement.
+                slug: "throne-room-vegas", hm: "317.40", frequency: "HM 317.40", name: "Throne Room Vegas",
+                band: "fivefold", primary: "music",
+                // The editorial label. Without it genreFor() falls through to
+                // the programming type and every music station reads "Praise &
+                // Worship" - true of the block, useless as the one line that
+                // says what this frequency sounds like.
+                formatLabel: "Classic Christian Rock",
+                mode: "CCI", phase: 2, bestseller: 81, reach: "45M",
+                image: "/images/jubilee-profile.png",
+                description: "Christian classic rock from Ricky Del Rey - horns, Hammond and a showroom band on the Strip, singing the long way back from the marquee to the altar. Big-band swagger on the outside, a redemption story underneath.",
+                listeners: "Classic Christian Rock · Showroom Big-Band",
+                currentShow: { name: "Viva Las Vanity", host: "Ricky Del Rey", time: "24/7 Live" },
+            },
+            {
+                // HM 317.20 - gravelroadgospel.com. On the dial and ON AIR from
+                // one album, which is below every depth floor the house keeps;
+                // the STATIONS block in build-station-manifest.js carries the
+                // reasoning and the owner decision. No streamUrl: it plays its
+                // own day file off the CDN, and the shared adult mount would put
+                // English adult contemporary under this name.
+                //
+                // bestseller and reach are the same placeholder scale its two
+                // neighbours were opened with, not a measurement.
+                slug: "gravel-road-gospel", hm: "317.20", frequency: "HM 317.20", name: "Gravel Road Gospel",
+                band: "fivefold", primary: "music",
+                // Without a formatLabel, genreFor() falls through to the
+                // programming type and every music station reads "Praise &
+                // Worship" — true of the block, useless as the line that says
+                // what this frequency actually sounds like.
+                formatLabel: "Southern Gothic Americana",
+                mode: "OHI", phase: 2, bestseller: 79, reach: "45M",
+                image: "/images/jubilee-profile.png",
+                description: "Southern Gothic Americana from Hollis Ferriday - Sacred Harp singing, talking blues and old-time banjo, written for the man in the truck who left church years ago and can still quote it word for word.",
+                listeners: "Southern Gothic Americana · Sacred Harp",
+                currentShow: { name: "Sunday Suit", host: "Hollis Ferriday", time: "24/7 Live" },
+            },
+            {
+                slug: "gospel-by-music", hm: "316.00", frequency: "HM 316.00", name: "Gospel By Music",
+                band: "fivefold", primary: "music",
+                // Stated rather than left to the primary:music default, which is
+                // the generic "Praise & Worship". This station is the Gospels set
+                // to music book by book, and its tenant has said "Scripture
+                // Narrative" all along — but the tenant takes its format FROM
+                // here, so without this line every sync-tenants run would
+                // quietly overwrite the accurate value with the generic one.
+                formatLabel: "Scripture Narrative",
+                mode: "Both", phase: 2, bestseller: 83, reach: "150M",
+                image: "/images/jubilee-profile.png",
+                description: "The Gospel of Matthew set to music, chapter by chapter, in the order it was written — twenty-eight albums, all twelve voices, hosted by Jubilee. Start anywhere; it reads straight through.",
+                listeners: "Scripture Narrative · The Gospel of Matthew",
+                currentShow: { name: "Matthew, Start to Finish", host: "Jubilee Inspire", time: "24/7 Live" },
+                schedule: [
+                    { time: "06:00", show: "The Genealogy Hour" },
+                    { time: "18:00", show: "Chapter and Verse" }
+                ]
             },
             {
                 slug: "radiant-stones-radio", hm: "301.90", frequency: "HM 301.90", name: "Radiant Stones Concerts",
@@ -1801,6 +1897,11 @@ document.addEventListener('error', function (e) {
                 ]
             },
             {
+                // TWO LANGUAGES ON ONE FREQUENCY, so it says so. The tenant
+                // id is HM310.90-EN and the code derived from it would be a
+                // half-truth: this station airs English and Spanish together
+                // by design. See langCodeFor() in build-home-data.js.
+                langCode: "EN-ES",
                 slug: "latin-worship", hm: "310.90", frequency: "HM 310.90", name: "Latin Worship (English-Spanish)",
                 band: "fivefold", primary: "music",
                 // Carries its own format name rather than the shared
@@ -3298,9 +3399,13 @@ document.addEventListener('error', function (e) {
             // showing "No station selected" — the deep-link branch and
             // the default-station branch are pure DOM updates.
             //
-            // Default tuned station: Jubilee Praise (HM 305.40). On a
-            // ?station= deep link we honour that instead and also start
-            // playback (the user explicitly asked for it via URL).
+            // Default tuned station: Year of Jubilee, HM 308.70 — the
+            // flagship, and what the dial and the footer bar both open on
+            // when nothing is remembered. This comment used to say "Jubilee
+            // Praise (HM 305.40)", which is Torah Sings' frequency and was
+            // never what the line below selected. On a ?station= deep link we
+            // honour that instead and also start playback (the user
+            // explicitly asked for it via URL).
             try {
                 const params = new URLSearchParams(window.location.search);
                 const stationParam = params.get('station');
@@ -3804,7 +3909,7 @@ document.addEventListener('error', function (e) {
 
         const DISCOVER_FEATURED = {
             eyebrow: 'Featured · HM 308.70',
-            title: 'kJubilee Radio',
+            title: 'Year of Jubilee',
             artist: 'Inspire Family · Continuous worship & teaching',
             plays: '1,802 tracks · 24/7 manifest rotation',
             // Default station — Jubilee Radio, the manifest-driven prototype

@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM328.20-TR",
+  "slug": "turkiye-inspire-turkce",
+  "name": "Türkiye Inspire (Türkçe)",
+  "hm": "328.20",
+  "band": "multi",
+  "mount": "turkiye",
+  "language": {
+    "code": "TR",
+    "name": "Turkish",
+    "tag": "tr-TR"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "İstanbul",
+    "timezone": "Europe/Istanbul"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM328.20-TR/delivery",
+    "file": "HM328.20TR-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM328.20-TR/delivery/HM328.20TR-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

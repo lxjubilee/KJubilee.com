@@ -1,0 +1,68 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM350.00-EN",
+  "slug": "upper-room",
+  "name": "The Upper Room",
+  "hm": "350.00",
+  "band": "fivefold",
+  "mount": "upper-room",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "Jerusalem",
+    "timezone": "Asia/Jerusalem"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "jubilee-prayers"
+      ],
+      "pending": [
+        "JEIPX7102EN",
+        "JEIPX7103EN",
+        "JEIPX7104EN",
+        "JEIPX7105EN",
+        "JEIPX7106EN",
+        "JEIPX7107EN",
+        "JEIPX7108EN",
+        "JEIPX7109EN",
+        "JEIPX7110EN",
+        "JEIPX7111EN",
+        "JEIPX7112EN",
+        "JEIPX7113EN",
+        "JEIPX7114EN",
+        "JEIPX7115EN",
+        "JEIPX7116EN",
+        "JEIPX7117EN",
+        "JEIPX7118EN",
+        "JEIPX7119EN",
+        "JEIPX7120EN",
+        "JEIPX7121EN",
+        "JEIPX7122EN",
+        "JEIPX7123EN",
+        "JEIPX7124EN",
+        "JEIPX7125EN",
+        "JEIPX7126EN",
+        "JEIPX7127EN",
+        "JEIPX7128EN",
+        "JEIPX7129EN",
+        "JEIPX7130EN",
+        "JEIPX7131EN",
+        "JEIPX7132EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM350.00-EN/delivery",
+    "file": "HM350.00EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM350.00-EN/delivery/HM350.00EN-20260821.json"
+  },
+  "format": "Jubilee Prayers",
+  "timezone": "America/Los_Angeles"
+}

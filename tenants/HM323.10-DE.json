@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM323.10-DE",
+  "slug": "deutschland-inspire-deutsch",
+  "name": "Deutschland Inspire (Deutsch)",
+  "hm": "323.10",
+  "band": "multi",
+  "mount": "deutschland",
+  "language": {
+    "code": "DE",
+    "name": "German",
+    "tag": "de-DE"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Berlin",
+    "timezone": "Europe/Berlin"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM323.10-DE/delivery",
+    "file": "HM323.10DE-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM323.10-DE/delivery/HM323.10DE-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

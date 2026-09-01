@@ -88,6 +88,11 @@ const INSPIRE_FAMILY = {
 // and the station — is the work, not any one voice. Kept out of INSPIRE_FAMILY
 // so a family-only station cannot silently absorb 1,749 Torah Sings tracks.
 const CATALOGUES = {
+    // Silas & Toby, from buckysbarnyard.com — barnyard bluegrass for children,
+    // and the act behind HM 370.30. A catalogue rather than a family member for
+    // the same reason as the other children's acts: a station that selects "the
+    // Inspire Family" must not quietly pick up somebody else's property.
+    'silas-toby': 'Silas & Toby',
     'torah-sings': 'Torah Sings',
     // Marcus Reed's own property. A catalogue rather than a family member for
     // the usual reason: the flagship names four voices and must not pick up
@@ -107,6 +112,30 @@ const CATALOGUES = {
     // rather than in INSPIRE_FAMILY - a family-only station must not absorb
     // another 357 kids' tracks.
     'tiny-tiggles': 'My Tiny Tiggles',
+    // The Gospel of Matthew set to music, chapter by chapter. Exactly the shape
+    // Torah Sings has and here for exactly the same reason: all twelve personas
+    // perform it, so the catalogue is the WORK, and a station selecting "the
+    // Inspire Family" must not absorb it a chapter at a time under four names.
+    'gospel-by-music': 'Gospel By Music',
+    // The sung Scripture prayers - jubileeprayers.com's cantillation store.
+    // A catalogue and not a persona for the usual reason, and for one more:
+    // the prayer line's album code carries Jubilee's JE prefix, so filing it
+    // under jubilee-inspire would have been defensible and would have been
+    // wrong - the flagship names four voices and would have absorbed a body
+    // of continuous chanted prayer that is not a music record at all. The
+    // work is the catalogue; the persona is who carries it.
+    'jubilee-prayers': 'Jubilee Prayers',
+    // Hollis Ferriday - gravelroadgospel.com's own property, and a catalogue
+    // for the plainest of the reasons above: he is not one of the family's
+    // voices and the flagship must not pick up a Southern Gothic record by a
+    // man none of its four is credited as. His station is HM 317.20.
+    'hollis-ferriday': 'Hollis Ferriday',
+    // Ricky Del Rey - throneroomvegas.com's own property, one act, and here
+    // for the same reason Hollis is: a Vegas showroom rock act is not one of
+    // the twelve voices, and 204 tracks of horns and classic rock landing on
+    // the flagship would change what that station is. His is HM 317.40, next
+    // along from Gravel Road because both are single-act properties.
+    'ricky-del-rey': 'Ricky Del Rey',
 };
 
 // ── Country Gospel selection ─────────────────────────────────────────────
@@ -180,7 +209,7 @@ const STATIONS = {
     // which is why they have their own frequencies.
     'HM308.70-EN': {
         slug: 'jubilee-radio',
-        name: 'kJubilee Radio',
+        name: 'Year of Jubilee',
         hm: '308.70',
         mount: 'jubilee',   // Icecast mount + playlist basename on the radio host
         // English only. EVERY station is single-language — see the rule below.
@@ -407,6 +436,301 @@ const STATIONS = {
         pool: 'catalogues',
         select: { artists: ['marcus-reed'] },
     },
+    // HM 317.20 GRAVEL ROAD GOSPEL - Hollis Ferriday, Southern Gothic Americana.
+    //
+    // In The Crossing for the same reason Corner Cipher is: domestic English
+    // gospel-forward music. A genre the dial did not carry, a function it
+    // already knows.
+    //
+    // TWELVE TRACKS, AND THAT IS BELOW EVERY FLOOR THE HOUSE KEEPS:
+    //
+    //   station-guidelines.md §4   under 80 -> "Not a station"      <- AUTHORITY
+    //   import-refresh.md          under ~150 -> hold it back
+    //   MUSIC-REPOSITORY-SPEC.md   under 60 -> unworkable
+    //
+    // One album, Sunday Suit, is recorded; it loops about every forty-five
+    // minutes. Backrow Faith was held at exactly this depth two days ago, and
+    // Gospel By Music shipped one track under the floor only because nineteen
+    // written albums were behind it. This station has five, and they are
+    // lyrics-complete rather than recorded.
+    //
+    // ON AIR ON THE OWNER'S DECISION, 2026-08-29, with that stated plainly
+    // rather than smoothed over. If the five below stall, the correct move is
+    // to pull this back to COMING SOON, not to lower the bar again.
+    // THRONE ROOM VEGAS - one property, one act, one frequency.
+    //
+    // A Vegas showroom act with a redemption arc: neon, horns and classic rock
+    // on the outside, and a catalogue that names Jesus 154 times and God 546
+    // across its 403 lyric sheets. It gets its own dial position rather than a
+    // share of an existing one because nothing else on the network sounds like
+    // it - the genre lane CRSR (Classic Christian Rock x Showroom Big-Band)
+    // was minted for it, measured off 372 declared Styles blocks: rock 339,
+    // classic rock 95, horns 157, showroom 73.
+    //
+    // `artists` and nothing else. Every RDRM record is his, the property files
+    // no one else, and a new album joins on the next build with no edit here -
+    // which is the whole reason a roster beats a typed album list.
+    'HM317.40-EN': {
+        slug: 'throne-room-vegas',
+        name: 'Throne Room Vegas',
+        hm: '317.40',
+        mount: 'throne-room-vegas',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        // CCI, and measured rather than assumed: Yahuah and Yeshua appear zero
+        // times across the catalogue, Jesus 154 and Lord 487. Its blueprints
+        // declare CCI on all seventeen recorded albums, which agrees.
+        mode: 'CCI',
+        // The act is the Strip. Nothing about the day file reads this, but a
+        // station whose whole conceit is a Vegas showroom should not claim
+        // Nashville.
+        hostCity: 'Las Vegas',
+        timezone: 'America/Los_Angeles',
+        pool: 'catalogues',
+        select: {
+            artists: ['ricky-del-rey'],
+            // Fourteen albums are written and lyrics-complete with no audio
+            // yet. Named so each joins the day it is ingested rather than the
+            // day somebody remembers this file exists.
+            pending: [
+                'RDRM2002EN', 'RDRM2007EN', 'RDRM2008EN', 'RDRM2009EN',
+                'RDRM2010EN', 'RDRM2011EN', 'RDRM2012EN',
+                'RDRM3001EN', 'RDRM3002EN', 'RDRM3003EN', 'RDRM3004EN',
+                'RDRM4001EN', 'RDRM4002EN', 'RDRM4003EN',
+            ],
+        },
+    },
+    'HM317.20-EN': {
+        slug: 'gravel-road-gospel',
+        name: 'Gravel Road Gospel',
+        hm: '317.20',
+        mount: 'gravel-road-gospel',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        // OHI, and it is the property's own declaration: catalog-manifest.json
+        // and every album.meta.json under it say OHI, and the blueprint states
+        // it on the album's front page.
+        mode: 'OHI',
+        // The property names no home town - Bethel Rock is a fiction. Muscle
+        // Shoals is the one real place its own album styles cite, it sits in
+        // the Sacred Harp country these records are sung out of, and hostCity
+        // is metadata the day file ignores either way.
+        hostCity: 'Muscle Shoals',
+        timezone: 'America/Chicago',
+        pool: 'catalogues',
+        select: {
+            artists: ['hollis-ferriday'],
+            // Season 1, albums 2 through 6. Written and lyrics-complete, no
+            // audio yet. Named here so each joins the day it is ingested - the
+            // builder prints GRADUATED when one does, and that is the cue to
+            // listen to what arrived before it airs.
+            pending: [
+                'HFGR1002EN',   // every word and none of the meaning
+                'HFGR1003EN',   // the map on the wall
+                'HFGR1004EN',   // nobody leaves this building
+                'HFGR1005EN',   // cut loose from the chapter
+                'HFGR1006EN',   // the name on the sign
+            ],
+        },
+    },
+    // HM 316.00 GOSPEL BY MUSIC — the Gospel of Matthew, chapter by chapter.
+    //
+    // Twenty-eight albums, one per chapter, all twelve personas performing.
+    // In The Crossing because it is domestic English gospel-forward music and
+    // because it is the front door doing what the front door is for: someone
+    // who has never read Matthew can hear it straight through.
+    //
+    // JUBILEE PRESENTS IT, and the selection is NOT narrowed to her. She leads
+    // seventeen of the two hundred and thirty-three songs; Caleb leads forty.
+    // She is the host, not the performer, so the DJ is set in radio.js where
+    // every other station's host lives and where it actually renders — not as
+    // a field here, which nothing on this side reads.
+    //
+    // IT SHIPS ONE TRACK UNDER THE DEPTH FLOOR, AND THAT IS A KNOWN DEBT.
+    //
+    // Nine chapters are recorded: 79 tracks, 331 minutes, about five and a half
+    // hours before a repeat. Three documents set a bar and they do not agree,
+    // so the strictest one governs:
+    //
+    //   station-guidelines.md §4   under 80 -> "Not a station"      <- AUTHORITY
+    //   import-refresh.md          under ~150 -> hold it back
+    //   MUSIC-REPOSITORY-SPEC.md   60-149 -> "workable, repetitive"
+    //
+    // §4 is the authority AGENTS.md names for programming, and 79 is one track
+    // below its floor. The ambient/contemplative exception in §4 is NOT invoked
+    // here: this is a narrative record with hooks, not atmosphere, and §11 is
+    // explicit that a coherence problem is moved rather than smoothed over.
+    //
+    // Shipped anyway, on the owner's decision, because the shortfall is one
+    // track and is temporary by construction: the nineteen `pending` albums
+    // below are written and cast, and Matthew 10 alone clears the floor. That
+    // is the difference from Backrow Faith, which was held back at twelve
+    // tracks with no second album coming.
+    //
+    // THE DEBT IS REAL WHILE IT LASTS. Until a tenth chapter is ingested this
+    // station repeats more than the house standard allows. If Matthew 10 stalls,
+    // the correct move is to pull it back to COMING SOON, not to lower the bar.
+    'HM316.00-EN': {
+        slug: 'gospel-by-music',
+        name: 'Gospel By Music',
+        hm: '316.00',
+        mount: 'gospel-by-music',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        mode: 'CCI',
+        hostCity: 'Los Angeles',
+        timezone: 'America/Los_Angeles',
+        pool: 'catalogues',
+        select: {
+            artists: ['gospel-by-music'],
+            // Matthew 10 through 28. Written, cast and lyric-complete; not yet
+            // recorded. Named here so each joins the day its audio is ingested
+            // — the builder prints GRADUATED when one does, and that line is
+            // the cue to listen to what arrived before it airs.
+            pending: [
+                'GBMX4010EN',   // sheep among wolves
+                'GBMX4011EN',   // are you the one
+                'GBMX4012EN',   // the sabbath belongs to him
+                'GBMX4013EN',   // everything he said was a story
+                'GBMX4014EN',   // a head on a platter, bread on the grass
+                'GBMX4015EN',   // even the dogs get crumbs
+                'GBMX4016EN',   // on this rock, and get behind me
+                'GBMX4017EN',   // the face that changed on the mountain
+                'GBMX4018EN',   // seventy times seven
+                'GBMX4019EN',   // what the rich man kept
+                'GBMX4020EN',   // the last hired, the same wage
+                'GBMX4021EN',   // he rode in and turned over the tables
+                'GBMX4022EN',   // whose image is on it
+                'GBMX4023EN',   // woe seven times
+                'GBMX4024EN',   // not one stone
+                'GBMX4025EN',   // three stories about being ready
+                'GBMX4026EN',   // the cup he asked to pass
+                'GBMX4027EN',   // the curtain tore from the top
+                'GBMX4028EN',   // go therefore
+            ],
+        },
+    },
+    // ── HM 350.00 The Upper Room ─────────────────────────────────────────
+    // The station that takes its block's own name: 340.00-359.99 IS The Upper
+    // Room, the prophetic office, prayer and intercession (setup/hm-bands.md).
+    //
+    // MOVED FROM HM 340.30 TO HM 350.00 ON 2026-08-28, board decision, the day
+    // it went live. Fifty is the Pentecost number - the fiftieth day, the count
+    // from the sheaf to the descent in the upper room - so the block's namesake
+    // now sits on the number the block is about. It also seats the station at
+    // the head of its own run: 350.50 through 359.50 are the Jubilee Prayers
+    // language editions, and the English prayer station is now the round number
+    // they count up from rather than an unrelated frequency 10 units below.
+    //
+    // The card had stood at 340.30 as a placeholder since the dial was laid
+    // out, and 340.30 is retired outright rather than left as an empty card -
+    // the move is a correction to the plan, not a second frequency.
+    //
+    // Programming is the jubileeprayers.com cantillation store: sung Scripture
+    // prayers, chanted, in the four prayer voices - address, petition,
+    // declaration at the mountain, thanksgiving. Programmed as a CONTINUOUS
+    // PRAYER STATION, which is the reason the prayers neither introduce nor
+    // conclude themselves. A listener joining at any point is not joining late.
+    // That property is the format, and it is why a prayer that would be an
+    // awkward radio edit anywhere else is correct here.
+    //
+    // OHI, and not by preference. The prayer line holds a single register -
+    // Yahuah, Yeshua, Elohim, Ruach HaKodesh - and there is no alternate
+    // naming edition of a prayer album and none may be produced.
+    //
+    // ───────────────────────────────────────────────────────────────────────
+    // THE CATALOG DEPTH DEBT, RECORDED HONESTLY. 12 tracks. One album.
+    //
+    //   station-guidelines.md §4   under 80 -> "Not a station"     <- AUTHORITY
+    //   §4 ambient exception       60-80 minimum, and this is 12
+    //   import-refresh.md          under ~150 -> hold it back
+    //   MUSIC-REPOSITORY-SPEC.md   under 60 -> below every tier
+    //
+    // This does not clear the gate on any reading. The ambient/contemplative
+    // exception in §4 is the one this format genuinely qualifies for -
+    // chanted prayer over drone is atmosphere, listeners are here to pray
+    // rather than to hear a hook, and repetition is the point of a prayer
+    // station in a way it is not of a music station - but the exception's own
+    // floor is 60 tracks and twelve is a fifth of it. At 12 tracks of roughly
+    // three and a half minutes the station repeats about every 42 minutes.
+    //
+    // SHIPPED ANYWAY, ON THE OWNER'S EXPLICIT INSTRUCTION, 2026-08-28. This is
+    // the same call that shipped Gospel By Music one track under the floor,
+    // and it is a much larger shortfall. Unlike Gospel By Music the relief is
+    // NOT yet under construction: the eleven albums named as `pending` below
+    // are scaffolded blueprints, every one DRAFT and none through the Founder
+    // approval gate, so no lyric may be written against them yet. They are
+    // declared here so each joins the day its audio is ingested - the builder
+    // prints GRADUATED when one does - and NOT as a claim that they are close.
+    //
+    // THE DEBT IS REAL WHILE IT LASTS. Clearing it takes five more recorded
+    // albums to reach the ambient floor. If the prayer line stalls, the
+    // correct move is to pull this back to COMING SOON, not to lower the bar.
+    // ───────────────────────────────────────────────────────────────────────
+    'HM350.00-EN': {
+        slug: 'upper-room',
+        name: 'The Upper Room',
+        hm: '350.00',
+        mount: 'upper-room',   // Icecast mount + playlist basename
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        mode: 'OHI',
+        hostCity: 'Jerusalem',
+        timezone: 'Asia/Jerusalem',
+        pool: 'catalogues',
+        select: {
+            artists: ['jubilee-prayers'],
+            // The other eleven of the Core Twelve. Scaffolded and blueprinted
+            // in w:\JubileePrayers.com, all DRAFT, none approved. Named here
+            // for exactly the reason `pending` exists: so the album joins on
+            // the day its audio lands without anyone having to remember that
+            // this file exists.
+            pending: [
+                'JEIPX7102EN',   // because he said ask
+                'JEIPX7103EN',   // the name he proclaimed
+                'JEIPX7104EN',   // his mercy endures forever
+                'JEIPX7105EN',   // create in me a clean heart
+                'JEIPX7106EN',   // until you answered me
+                'JEIPX7107EN',   // i stand in the gap
+                'JEIPX7108EN',   // the eyes of my heart
+                'JEIPX7109EN',   // the name upon you
+                'JEIPX7110EN',   // i lift my eyes
+                'JEIPX7111EN',   // give us this day
+                'JEIPX7112EN',   // keep me in the watch
+                // THE TEN WORDS. Ten albums, one per commandment, Exodus 20:3-17.
+                // Founder instruction 2026-08-28; slate at
+                // w:\JubileePrayers.com\docslbum-slate-ten-words.md. Blueprinted
+                // and canon-table complete, none recorded.
+                'JEIPX7113EN',   // I  no other gods
+                'JEIPX7114EN',   // II  no graven image
+                'JEIPX7115EN',   // III  the Name
+                'JEIPX7116EN',   // IV  the Sabbath
+                'JEIPX7117EN',   // V  honour father and mother
+                'JEIPX7118EN',   // VI  you shall not murder
+                'JEIPX7119EN',   // VII  you shall not commit adultery
+                'JEIPX7120EN',   // VIII  you shall not steal
+                'JEIPX7121EN',   // IX  no false witness
+                'JEIPX7122EN',   // X  you shall not covet
+                // THE TEACHING. Ten albums on the principles Yeshua taught.
+                // Founder instruction 2026-08-28; slate at
+                // w:\JubileePrayers.com\docslbum-slate-the-teaching.md
+                'JEIPX7123EN',   // the Beatitudes, Matthew 5:1-12
+                'JEIPX7124EN',   // salt, light and the antitheses, Matthew 5:13-48
+                'JEIPX7125EN',   // the hidden life, Matthew 6
+                'JEIPX7126EN',   // the new birth, John 3
+                'JEIPX7127EN',   // the seven parables, Matthew 13
+                'JEIPX7128EN',   // the community discourse, Matthew 18
+                'JEIPX7129EN',   // the Great Commandment and the Samaritan, Luke 10
+                'JEIPX7130EN',   // the vine, John 15
+                'JEIPX7131EN',   // the farewell, John 14
+                'JEIPX7132EN',   // the Olivet discourse, Matthew 24-25
+            ],
+        },
+    },
     'HM326.20-RO': {
         slug: 'jubilee-praise-romana',
         name: 'Jubilee Praise (Română)',
@@ -482,6 +806,39 @@ const STATIONS = {
     //
     // Selected explicitly by artist, so it grows when more Party Giggles albums
     // are ingested and never picks up anyone else's tracks.
+    /* HM 370.30 Bucky's Barnyard — Silas & Toby, in The Living Room.
+     *
+     * TWO SOURCES, AND ONLY ONE ALBUM FROM THE SECOND. `artists` and `albums`
+     * are OR'd, so this takes everything Silas & Toby record plus exactly one
+     * Party Giggles album — the Goat's Bluegrass Hoedown, which is barnyard
+     * bluegrass and belongs here rather than on the party rotation. Naming the
+     * album and not the artist is what keeps the other forty-odd Party Giggles
+     * records off this frequency; `artists: ['party-giggles']` would pull the
+     * whole catalogue across.
+     *
+     * The artist list grows on its own as Silas & Toby record more. The single
+     * album is pinned by code because it is a borrowing, not a body of work,
+     * and a borrowing should have to be stated.
+     *
+     * TWENTY-FOUR TRACKS, which is far under the ~150 that setup/import-refresh.md
+     * warns will loop audibly. Shipped anyway at the owner's decision
+     * (2026-09-01), with more to come; the rotation is honest about what it has
+     * rather than padded with music that belongs elsewhere.
+     */
+    'HM370.30-EN': {
+        slug: 'buckys-barnyard',
+        name: "Bucky's Barnyard",
+        hm: '370.30',
+        mount: 'buckys-barnyard',
+        language: 'EN',
+        languageName: 'English',
+        languageTag: 'en-US',
+        mode: 'CCI',
+        hostCity: 'Nashville',
+        timezone: 'America/Chicago',
+        pool: 'catalogues',
+        select: { artists: ['silas-toby'], albums: ['IX417EN'] },
+    },
     'HM361.90-EN': {
         slug: 'jubilee-kids-party',
         name: 'Jubilee Kids Party',
@@ -538,7 +895,7 @@ const STATIONS = {
     // material is only 24 tracks, nowhere near enough to carry a frequency.
     'HM310.90-EN': {
         slug: 'latin-worship',
-        name: 'Latin Worship (Sung in English)',
+        name: 'Latin Worship (English-Spanish)',
         hm: '310.90',
         mount: 'latin-worship',   // Icecast mount + playlist basename on the radio host
         language: 'EN',
@@ -655,7 +1012,21 @@ const STATIONS = {
         hostCity: 'Jerusalem',
         timezone: 'Asia/Jerusalem',
         pool: 'inspire-family',
-        select: { albums: YESHUA.albums },
+        /* THE WHOLE JUBILEE INSPIRE CATALOGUE, by owner decision 2026-08-29.
+           It was `albums: YESHUA.albums` — the four records that data/yeshua-
+           selection.json found singing the name, scanned out of the lyric
+           sheets. That is a precise rule and it produced a station 48 songs
+           deep, which is under every depth floor the house keeps: a listener
+           heard the same four records round in about three hours.
+
+           The trade is stated rather than hidden. This frequency is named for
+           a WORD, and selecting the artist instead means most of what airs no
+           longer sings it — the station is now Jubilee Inspire's English
+           catalogue under a name that promises something narrower. The precise
+           rule is still there in data/yeshua-selection.json and re-running
+           tools/scan-lyrics-for-name.js keeps it current, so narrowing back is
+           one line whenever the catalogue is deep enough to carry it. */
+        select: { artists: ['jubilee-inspire'] },
     },
     // Nova's Celtic and European ambient: contemplative cinematic and ambient
     // healing. Her whole English catalogue — her synthwave/chillwave records are
@@ -745,6 +1116,151 @@ const STATIONS = {
         timezone: 'Asia/Amman',
         pool: 'inspire-family',
         select: { artists: ['amir-inspire'] },
+    },
+
+    /* ── THE INTERNATIONAL BAND ──────────────────────────────────────────
+       One frequency per language, built 2026-08-26 from a scan of the
+       repository: every language holding at least twelve songs gets a
+       station, so a language with a catalogue has somewhere to play and a
+       placeholder to grow into.
+
+       `pool: 'all'`, never 'inspire-family'. The rule these stations state
+       is "this language", and a family pool quietly breaks it the moment a
+       non-persona act records in that language — the same way Radiant
+       Stones' Romanian tracks sat in the ledger, on no station, with
+       nothing reporting it (see HM326.20-RO below).
+
+       No `select`. The language filter and the pool are the whole rule, so
+       a future ingest in any of these languages joins on the next build
+       without an edit here. That is the point of a placeholder. */
+
+    // --- Europe & the Americas ---------------------------------------
+    'HM320.30-ES': {
+        slug: 'familia-inspire-espanol', name: 'Familia Inspire (Español)', hm: '320.30',
+        mount: 'familia', language: 'ES', languageName: 'Spanish', languageTag: 'es-ES',
+        mode: 'CCI', hostCity: 'Madrid', timezone: 'Europe/Madrid', pool: 'all',
+    },
+    // BR and PT are separate ledger codes carrying separate traditions —
+    // samba and Brazilian popular forms against European Portuguese — and
+    // the language filter takes exactly one code. Folding them together
+    // would have dropped twenty-four tracks on the floor silently, so each
+    // gets its own frequency.
+    'HM321.90-BR': {
+        slug: 'brasil-inspire-portugues', name: 'Brasil Inspire (Português)', hm: '321.90',
+        mount: 'brasil', language: 'BR', languageName: 'Portuguese', languageTag: 'pt-BR',
+        mode: 'CCI', hostCity: 'São Paulo', timezone: 'America/Sao_Paulo', pool: 'all',
+    },
+    'HM321.50-PT': {
+        slug: 'portugal-inspire-portugues', name: 'Portugal Inspire (Português)', hm: '321.50',
+        mount: 'portugal', language: 'PT', languageName: 'Portuguese', languageTag: 'pt-PT',
+        mode: 'CCI', hostCity: 'Lisboa', timezone: 'Europe/Lisbon', pool: 'all',
+    },
+    'HM322.50-FR': {
+        slug: 'france-inspire-francais', name: 'France Inspire (Français)', hm: '322.50',
+        mount: 'france', language: 'FR', languageName: 'French', languageTag: 'fr-FR',
+        mode: 'CCI', hostCity: 'Paris', timezone: 'Europe/Paris', pool: 'all',
+    },
+    'HM323.10-DE': {
+        slug: 'deutschland-inspire-deutsch', name: 'Deutschland Inspire (Deutsch)', hm: '323.10',
+        mount: 'deutschland', language: 'DE', languageName: 'German', languageTag: 'de-DE',
+        mode: 'CCI', hostCity: 'Berlin', timezone: 'Europe/Berlin', pool: 'all',
+    },
+    'HM323.60-NL': {
+        slug: 'nederland-inspire-nederlands', name: 'Nederland Inspire (Nederlands)', hm: '323.60',
+        mount: 'nederland', language: 'NL', languageName: 'Dutch', languageTag: 'nl-NL',
+        mode: 'CCI', hostCity: 'Amsterdam', timezone: 'Europe/Amsterdam', pool: 'all',
+    },
+    'HM324.20-DA': {
+        slug: 'danmark-inspire-dansk', name: 'Danmark Inspire (Dansk)', hm: '324.20',
+        mount: 'danmark', language: 'DA', languageName: 'Danish', languageTag: 'da-DK',
+        mode: 'CCI', hostCity: 'København', timezone: 'Europe/Copenhagen', pool: 'all',
+    },
+    'HM324.40-SV': {
+        slug: 'sverige-inspire-svenska', name: 'Sverige Inspire (Svenska)', hm: '324.40',
+        mount: 'sverige', language: 'SV', languageName: 'Swedish', languageTag: 'sv-SE',
+        mode: 'CCI', hostCity: 'Stockholm', timezone: 'Europe/Stockholm', pool: 'all',
+    },
+    'HM324.80-IT': {
+        slug: 'italia-inspire-italiano', name: 'Italia Inspire (Italiano)', hm: '324.80',
+        mount: 'italia', language: 'IT', languageName: 'Italian', languageTag: 'it-IT',
+        mode: 'CCI', hostCity: 'Roma', timezone: 'Europe/Rome', pool: 'all',
+    },
+    'HM325.40-PL': {
+        slug: 'polska-inspire-polski', name: 'Polska Inspire (Polski)', hm: '325.40',
+        mount: 'polska', language: 'PL', languageName: 'Polish', languageTag: 'pl-PL',
+        mode: 'CCI', hostCity: 'Warszawa', timezone: 'Europe/Warsaw', pool: 'all',
+    },
+    'HM325.80-CS': {
+        slug: 'cesko-inspire-cestina', name: 'Česko Inspire (Čeština)', hm: '325.80',
+        mount: 'cesko', language: 'CS', languageName: 'Czech', languageTag: 'cs-CZ',
+        mode: 'CCI', hostCity: 'Praha', timezone: 'Europe/Prague', pool: 'all',
+    },
+    'HM326.80-HU': {
+        slug: 'magyar-inspire-magyar', name: 'Magyar Inspire (Magyar)', hm: '326.80',
+        mount: 'magyar', language: 'HU', languageName: 'Hungarian', languageTag: 'hu-HU',
+        mode: 'CCI', hostCity: 'Budapest', timezone: 'Europe/Budapest', pool: 'all',
+    },
+    'HM327.20-BG': {
+        slug: 'bulgaria-inspire-balgarski', name: 'Bulgaria Inspire (Български)', hm: '327.20',
+        mount: 'bulgaria', language: 'BG', languageName: 'Bulgarian', languageTag: 'bg-BG',
+        mode: 'CCI', hostCity: 'София', timezone: 'Europe/Sofia', pool: 'all',
+    },
+    'HM327.60-RU': {
+        slug: 'russia-inspire-russkiy', name: 'Russia Inspire (Русский)', hm: '327.60',
+        mount: 'russia', language: 'RU', languageName: 'Russian', languageTag: 'ru-RU',
+        mode: 'CCI', hostCity: 'Москва', timezone: 'Europe/Moscow', pool: 'all',
+    },
+
+    // --- The Middle East ---------------------------------------------
+    'HM328.20-TR': {
+        slug: 'turkiye-inspire-turkce', name: 'Türkiye Inspire (Türkçe)', hm: '328.20',
+        mount: 'turkiye', language: 'TR', languageName: 'Turkish', languageTag: 'tr-TR',
+        mode: 'CCI', hostCity: 'İstanbul', timezone: 'Europe/Istanbul', pool: 'all',
+    },
+    'HM328.70-AR': {
+        slug: 'inspire-crown-arabic', name: 'Inspire Crown (العربية)', hm: '328.70',
+        mount: 'crown', language: 'AR', languageName: 'Arabic', languageTag: 'ar-JO',
+        mode: 'CCI', hostCity: 'Amman', timezone: 'Asia/Amman', pool: 'all',
+    },
+    // OHI rather than CCI: a Hebrew-language catalogue uses the Hebrew names
+    // throughout, so forcing the mainstream naming convention onto it would
+    // describe the songs wrongly. Same reasoning as HM306.20-EN.
+    'HM329.00-HE': {
+        slug: 'israel-inspire-ivrit', name: 'Israel Inspire (עברית)', hm: '329.00',
+        mount: 'ivrit', language: 'HE', languageName: 'Hebrew', languageTag: 'he-IL',
+        mode: 'OHI', hostCity: 'ירושלים', timezone: 'Asia/Jerusalem', pool: 'all',
+    },
+
+    // --- Asia ---------------------------------------------------------
+    'HM332.10-HI': {
+        slug: 'inspire-india-hindi', name: 'Inspire India (हिन्दी)', hm: '332.10',
+        mount: 'india', language: 'HI', languageName: 'Hindi', languageTag: 'hi-IN',
+        mode: 'CCI', hostCity: 'Mumbai', timezone: 'Asia/Kolkata', pool: 'all',
+    },
+    'HM334.40-ZH': {
+        slug: 'asia-inspire-zhongwen', name: 'Asia Inspire (中文)', hm: '334.40',
+        mount: 'zhongwen', language: 'ZH', languageName: 'Mandarin', languageTag: 'zh-CN',
+        mode: 'CCI', hostCity: '台北', timezone: 'Asia/Taipei', pool: 'all',
+    },
+    'HM336.60-JA': {
+        slug: 'japan-inspire-nihongo', name: 'Japan Inspire (日本語)', hm: '336.60',
+        mount: 'nihongo', language: 'JA', languageName: 'Japanese', languageTag: 'ja-JP',
+        mode: 'CCI', hostCity: '東京', timezone: 'Asia/Tokyo', pool: 'all',
+    },
+    'HM337.20-TH': {
+        slug: 'thailand-inspire-thai', name: 'Thailand Inspire (ไทย)', hm: '337.20',
+        mount: 'thailand', language: 'TH', languageName: 'Thai', languageTag: 'th-TH',
+        mode: 'CCI', hostCity: 'กรุงเทพมหานคร', timezone: 'Asia/Bangkok', pool: 'all',
+    },
+    'HM337.70-VI': {
+        slug: 'vietnam-inspire-tieng-viet', name: 'Vietnam Inspire (Tiếng Việt)', hm: '337.70',
+        mount: 'vietnam', language: 'VI', languageName: 'Vietnamese', languageTag: 'vi-VN',
+        mode: 'CCI', hostCity: 'Thành phố Hồ Chí Minh', timezone: 'Asia/Ho_Chi_Minh', pool: 'all',
+    },
+    'HM339.90-TL': {
+        slug: 'pilipinas-inspire-tagalog', name: 'Pilipinas Inspire (Tagalog)', hm: '339.90',
+        mount: 'pilipinas', language: 'TL', languageName: 'Tagalog', languageTag: 'tl-PH',
+        mode: 'CCI', hostCity: 'Maynila', timezone: 'Asia/Manila', pool: 'all',
     },
 };
 

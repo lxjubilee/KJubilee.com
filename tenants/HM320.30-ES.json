@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM320.30-ES",
+  "slug": "familia-inspire-espanol",
+  "name": "Familia Inspire (Español)",
+  "hm": "320.30",
+  "band": "multi",
+  "mount": "familia",
+  "language": {
+    "code": "ES",
+    "name": "Spanish",
+    "tag": "es-ES"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Madrid",
+    "timezone": "Europe/Madrid"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM320.30-ES/delivery",
+    "file": "HM320.30ES-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM320.30-ES/delivery/HM320.30ES-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

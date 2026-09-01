@@ -95,6 +95,10 @@ const NO_CACHE = [
 // /radio.html even though the rewrite lands there.
 const NO_CACHE_SOURCES = [
     ...PAGE_ROUTES,
+    // /analytics/start.html — an operations console, and the one page here whose
+    // whole value is that its numbers are current. A cached copy of it reports
+    // yesterday's dial with today's confidence.
+    '/analytics/(.*)',
     '/js/(.*)',
     '/css/(.*)',
     '/data/(.*)',
@@ -105,6 +109,24 @@ const NO_CACHE_SOURCES = [
 /** @type {import('next').NextConfig} */
 module.exports = {
     reactStrictMode: true,
+
+    // Where the build output goes. Stays '.next' everywhere by default, so the
+    // standalone deploy below is untouched. The override exists because this
+    // checkout lives on an SMB share (\\HDC-INSPIRESERVER\Websites): when a dev
+    // server is killed, the share keeps handles open on .next/dev/trace and on
+    // Samba's delete-pending placeholders, and every later `next dev` dies with
+    // EPERM before it serves a request. distDir may not leave the project
+    // directory, so pointing a dev run at a sibling is the way out:
+    //   NEXT_DIST_DIR=.next-dev npm run dev
+    distDir: process.env.NEXT_DIST_DIR || '.next',
+
+    // Part two of the same share problem. The dev server takes a lockfile inside
+    // distDir to catch a second `next dev`; on SMB that file cannot be removed
+    // when the server is killed, so the next start either refuses ("Another next
+    // dev server is already running", naming a PID that no longer exists) or
+    // dies with "Access is denied (os error 5)" trying to retake it. Off only
+    // under the NEXT_DIST_DIR workaround, so a normal run still gets the guard.
+    experimental: process.env.NEXT_DIST_DIR ? { lockDistDir: false } : {},
 
     // Build here, ship the result. The production box (94.72.120.231) also runs
     // jubilujah, torahsings and the radio, and has roughly 1 GB of its 11.7 GB

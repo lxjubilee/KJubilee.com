@@ -16,11 +16,21 @@
 #      or every client in the world fetches it from the origin within the same
 #      minute.
 #
-# Running at midday with --days 3 solves both: today is already published (and
-# republishing it is a no-op, since the generator is deterministic), tomorrow
-# goes out twelve hours early and is warm at the edge by midnight, and the day
-# after that is a spare. A completely failed run therefore costs nothing —
-# there are two more days already published before anyone notices.
+# Running at midday solves both: today is already published (and republishing it
+# is a no-op, since the generator is deterministic), tomorrow goes out twelve
+# hours early and is warm at the edge by midnight, and the rest are spares.
+#
+# ── why SEVEN days and not three ─────────────────────────────────────────────
+# It was --days 3, on the reasoning that a failed run costs nothing because two
+# more days are already out. That is true of ONE failed run. Three consecutive
+# failures — a box down over a long weekend, a token expiry nobody sees on a
+# Friday, an R2 outage — and stations start going dark with no warning at all,
+# because nothing about a missing day file is visible until a listener presses
+# play. A week of runway costs four more small JSON files per station per night
+# and turns a three-day silence into a six-day one nobody will ever reach.
+#
+# Prove it rather than assume it: `node tools/check-schedules.js 7` reports any
+# on-air station without a populated day file, and exits non-zero.
 #
 # ── pools ────────────────────────────────────────────────────────────────────
 # --rebuild-pools is deliberately NOT set. Rebuilding reads the frame headers of
@@ -33,4 +43,4 @@ SHELL=/bin/sh
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 MAILTO=""
 
-0 12 * * * root cd /var/www/kjubilee.com && /usr/bin/node scripts/r2-publish-schedules.js --apply --days 3 >> /var/log/kjubilee-schedules.log 2>&1
+0 12 * * * root cd /var/www/kjubilee.com && /usr/bin/node scripts/r2-publish-schedules.js --apply --days 7 >> /var/log/kjubilee-schedules.log 2>&1

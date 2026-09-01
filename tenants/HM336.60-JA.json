@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM336.60-JA",
+  "slug": "japan-inspire-nihongo",
+  "name": "Japan Inspire (日本語)",
+  "hm": "336.60",
+  "band": "multi",
+  "mount": "nihongo",
+  "language": {
+    "code": "JA",
+    "name": "Japanese",
+    "tag": "ja-JP"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "東京",
+    "timezone": "Asia/Tokyo"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM336.60-JA/delivery",
+    "file": "HM336.60JA-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM336.60-JA/delivery/HM336.60JA-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

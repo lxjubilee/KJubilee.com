@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM324.40-SV",
+  "slug": "sverige-inspire-svenska",
+  "name": "Sverige Inspire (Svenska)",
+  "hm": "324.40",
+  "band": "multi",
+  "mount": "sverige",
+  "language": {
+    "code": "SV",
+    "name": "Swedish",
+    "tag": "sv-SE"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Stockholm",
+    "timezone": "Europe/Stockholm"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM324.40-SV/delivery",
+    "file": "HM324.40SV-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM324.40-SV/delivery/HM324.40SV-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

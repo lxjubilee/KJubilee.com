@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM326.80-HU",
+  "slug": "magyar-inspire-magyar",
+  "name": "Magyar Inspire (Magyar)",
+  "hm": "326.80",
+  "band": "multi",
+  "mount": "magyar",
+  "language": {
+    "code": "HU",
+    "name": "Hungarian",
+    "tag": "hu-HU"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Budapest",
+    "timezone": "Europe/Budapest"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM326.80-HU/delivery",
+    "file": "HM326.80HU-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM326.80-HU/delivery/HM326.80HU-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

@@ -1,0 +1,38 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM370.30-EN",
+  "slug": "buckys-barnyard",
+  "name": "Bucky's Barnyard",
+  "hm": "370.30",
+  "band": "fivefold",
+  "mount": "buckys-barnyard",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Nashville",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "silas-toby"
+      ],
+      "albums": [
+        "IX417EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM370.30-EN/delivery",
+    "file": "HM370.30EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM370.30-EN/delivery/HM370.30EN-20260821.json"
+  },
+  "format": "Kids Barnyard Praise",
+  "timezone": "America/Los_Angeles"
+}

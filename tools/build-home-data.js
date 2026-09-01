@@ -91,6 +91,23 @@ const MEMBERS = [
   // works until someone changes the other end. One id everywhere, and the
   // NAME below is the one a listener sees.
   { id: 'timo-dobra',    name: 'Timo Dobre',    short: 'Timo',         focus: 'Romanian-American gospel',     gradient: ['#6B3A2E', '#C08457'],
+    image: null },
+  // Hollis Ferriday, from his own property (gravelroadgospel.com, Muscle
+  // Shoals). Here for the same reason Marcus and Timo are: he fronts his own
+  // frequency, so HOST_OVERRIDE names him, and a host id with no MEMBERS entry
+  // resolves to no name at all — the station would print a blank where the
+  // presenter goes.
+  { id: 'hollis-ferriday', name: 'Hollis Ferriday', short: 'Hollis',   focus: 'Southern Gothic Americana',    gradient: ['#3A2E22', '#8A6A45'],
+    image: null },
+  // Ricky Del Rey, from his own property (throneroomvegas.com, Las Vegas).
+  // Same shape again: one act, one frequency, HM 317.40.
+  { id: 'ricky-del-rey', name: 'Ricky Del Rey', short: 'Ricky',        focus: 'Christian classic rock',       gradient: ['#2A1B33', '#6E4A86'],
+    image: null },
+  // Silas & Toby, from buckysbarnyard.com. Same shape again: one act, one
+  // frequency, HM 370.30. A duo rather than a person, which the roster already
+  // allows for — `short` is what the cards print when the full name will not
+  // fit, and "Silas & Toby" does not shorten to a first name.
+  { id: 'silas-toby', name: 'Silas & Toby', short: 'Silas & Toby', focus: 'Barnyard bluegrass for children', gradient: ['#2E3A1F', '#7E9A64'],
     image: null }
 ];
 const AVATAR = {
@@ -178,6 +195,44 @@ function isPrayerLine(s) { return /^Jubilee Prayers in /.test(s.name); }
  * Everything else keeps the label for its programming type, which for a Bible
  * study or a prayer line already IS the format.
  */
+/* ── THE LANGUAGE CODE BESIDE THE FREQUENCY ──────────────────────────────
+   Every station prints a two-letter code to the right of its number, the way
+   HM sits to the left. On a dial carrying thirty languages that is not
+   decoration: it is the difference between tuning past a station and knowing
+   why you did not understand it.
+
+   THE TENANT ID IS THE AUTHORITY. `HM321.90-BR` and `HM321.50-PT` are both
+   Portuguese and are not the same station, so a name→code table could never
+   tell them apart — the suffix can. The table below is only for frequencies
+   that have no tenant yet (the planned side of the dial), where there is
+   nothing else to read.
+
+   A STATION MAY OVERRIDE IT with `langCode` in the catalogue, and one does:
+   HM 310.90 airs English and Spanish together and prints `EN-ES`. Any station
+   that genuinely mixes languages should say so the same way rather than pick
+   whichever half its tenant id happens to name. */
+const LANG_CODE = {
+    English: 'EN', Spanish: 'ES', Portuguese: 'PT', Mandarin: 'ZH', Hindi: 'HI',
+    Arabic: 'AR', French: 'FR', Romanian: 'RO', Korean: 'KO', German: 'DE',
+    Russian: 'RU', Italian: 'IT', Tagalog: 'TL', Vietnamese: 'VI', Swahili: 'SW',
+    Yoruba: 'YO', Amharic: 'AM', Polish: 'PL', Indonesian: 'ID', Dutch: 'NL',
+    Danish: 'DA', Swedish: 'SV', Czech: 'CS', Hungarian: 'HU', Bulgarian: 'BG',
+    Turkish: 'TR', Hebrew: 'HE', Thai: 'TH', Japanese: 'JA', Bengali: 'BN',
+};
+
+function langCodeFor(s, tenantId, intl) {
+    if (s.langCode) return String(s.langCode).toUpperCase();
+    if (tenantId) {
+        const tail = String(tenantId).split('-').pop();
+        if (/^[A-Z]{2}$/.test(tail)) return tail;
+    }
+    /* The same source the emitted `lang` uses — `intl[0] || 'English'`. Read
+       off the catalogue entry instead, this returned nothing for all 59 planned
+       domestic frequencies: the source rows carry no `lang` field at all, and
+       English is a default applied here rather than a fact written there. */
+    return LANG_CODE[intl[0] || 'English'] || '';
+}
+
 function genreFor(s, intl) {
     if (s.formatLabel) return s.formatLabel;
     if (intl && intl[0]) return isPrayerLine(s) ? 'Prayer' : 'Praise & Worship';
@@ -213,17 +268,17 @@ const INTL = {
   'jubilee-prayers-hindi':        ['Hindi',      'in', 'south',    'amir'],
   'inspire-crown-arabic':         ['Arabic',     'sa', 'middle',   'amir'],
   'jubilee-prayers-arabic':       ['Arabic',     'sa', 'middle',   'amir'],
-  'france-inspire-francais':      ['French',     'fr', 'europe',   'zariah'],
-  'jubilee-prayers-french':       ['French',     'fr', 'europe',   'zariah'],
+  'france-inspire-francais':      ['French',     'fr', 'europe',   'nova'],
+  'jubilee-prayers-french':       ['French',     'fr', 'europe',   'nova'],
   'jubilee-praise-romana':        ['Romanian',   'ro', 'europe',   'elias'],
-  'korea-inspire-hangugeo':       ['Korean',     'kr', 'asia',     'eliana'],
-  'jubilee-prayers-korean':       ['Korean',     'kr', 'asia',     'eliana'],
-  'deutschland-inspire-deutsch':  ['German',     'de', 'europe',   'elias'],
+  'korea-inspire-hangugeo':       ['Korean',     'kr', 'asia',     'jubilee'],
+  'jubilee-prayers-korean':       ['Korean',     'kr', 'asia',     'jubilee'],
+  'deutschland-inspire-deutsch':  ['German',     'de', 'europe',   'eliana'],
   'russia-inspire-russkiy':       ['Russian',    'ru', 'europe',   'zev'],
   'jubilee-prayers-russian':      ['Russian',    'ru', 'europe',   'zev'],
-  'italia-inspire-italiano':      ['Italian',    'it', 'europe',   'elias'],
-  'pilipinas-inspire-tagalog':    ['Tagalog',    'ph', 'asia',     'eliana'],
-  'jubilee-prayers-tagalog':      ['Tagalog',    'ph', 'asia',     'eliana'],
+  'italia-inspire-italiano':      ['Italian',    'it', 'europe',   'eliana'],
+  'pilipinas-inspire-tagalog':    ['Tagalog',    'ph', 'asia',     'melody'],
+  'jubilee-prayers-tagalog':      ['Tagalog',    'ph', 'asia',     'melody'],
   'vietnam-inspire-tieng-viet':   ['Vietnamese', 'vn', 'asia',     'eliana'],
   'africa-inspire-kiswahili':     ['Swahili',    'tz', 'africa',   'imani'],
   'jubilee-prayers-swahili':      ['Swahili',    'tz', 'africa',   'imani'],
@@ -241,7 +296,7 @@ const INTL = {
   'cesko-inspire-cestina':        ['Czech',      'cz', 'europe',   'zev'],
   'magyar-inspire-magyar':        ['Hungarian',  'hu', 'europe',   'elias'],
   'bulgaria-inspire-balgarski':   ['Bulgarian',  'bg', 'europe',   'zev'],
-  'turkiye-inspire-turkce':       ['Turkish',    'tr', 'middle',   'amir'],
+  'turkiye-inspire-turkce':       ['Turkish',    'tr', 'middle',   'elias'],
   // Zev keeps the Hebrew roots and the feasts, so the Hebrew edition is his.
   'israel-inspire-ivrit':         ['Hebrew',     'il', 'middle',   'zev'],
   'thailand-inspire-thai':        ['Thai',       'th', 'asia',     'eliana']
@@ -278,6 +333,20 @@ const HOST_OVERRIDE = {
     'jubilee-ccm': 'jubilee',         // Celebrate Yeshua! — HM304.80, fronted by Jubilee
     // The two children's catalogues front their own stations.
     'corner-cipher': 'marcus-reed',        // HM315.20 — his own show, his own catalogue
+    'gravel-road-gospel': 'hollis-ferriday',  // HM317.20 — ditto
+    // PINNED TO WHAT IT ALREADY HAD. Not a preference: pinning the two
+    // stations above frees the rota slots they were consuming, which re-deals
+    // every later music station. Gospel By Music moved jubilee -> melody on
+    // that alone. Naming it here holds it still, which is what the note at the
+    // top of this table asks for.
+    'gospel-by-music': 'jubilee',          // HM316.00
+    'throne-room-vegas': 'ricky-del-rey',  // HM317.40 — his own show, his own catalogue
+    // HM370.30 — Silas & Toby present the station they record. Pinning also
+    // takes this frequency OUT of the rota, which is the point: a barnyard
+    // bluegrass station dealt a Jubilee persona would name a presenter who has
+    // nothing to do with it. Watch the diff after adding any pin — freeing a
+    // slot re-deals every station below it.
+    'buckys-barnyard': 'silas-toby',
     'backrow-faith': 'timo-dobra',         // HM316.60 — ditto; see the note in MEMBERS
     'gods-little-lambs': 'tiny-tiggles',    // HM360.30 — plays the Tiny Tiggles catalogue
     'jubilee-kids-party': 'party-giggles',  // HM361.90 — plays the Party Giggles catalogue
@@ -354,7 +423,44 @@ function varyGradient(pair, hm) {
 // for 5 programmed stations: the other 97 pointed at a shared mount running a
 // 1-2 track loop out of a local /songs folder. A station with a stream URL but
 // no catalog is a placeholder, and the card should say so.
-const RADIO_ROOT = path.join(process.env.CDN_LOCAL_ROOT || 'J:\kjubilee.com', 'radio');
+/* 'J:\\kjubilee.com', not 'J:\kjubilee.com'. In a JS string \k is not an escape
+   sequence, so the single-backslash form silently became "J:kjubilee.com" — a
+   DRIVE-RELATIVE path that only resolves while the current directory on J: is
+   its root. It worked here and would have failed on another machine with no
+   error worth reading. build-analytics-index.js had it right; this now matches. */
+const CDN_ROOT = process.env.CDN_LOCAL_ROOT || 'J:\\kjubilee.com';
+const RADIO_ROOT = path.join(CDN_ROOT, 'radio');
+const MUSIC_ROOT = process.env.MUSIC_LOCAL_ROOT || path.join(CDN_ROOT, 'music');
+
+/* ── HOW MANY SONGS EXIST ────────────────────────────────────────────────
+   The ledger, and nothing else. Every row is one ingested .mp3 under a SongID
+   that the ingest guarantees unique, so counting distinct SongIDs is by
+   definition the number of unique mp3 files in the catalogue.
+
+   IT IS NOT THE SUM OF THE STATION TRACK COUNTS. One song on several stations
+   is intended here (see AGENTS.md), so adding the per-station figures counts
+   the shared ones once per station — 8,788 against a real 7,844 today. The
+   overlapping number is the one a listener would call wrong.
+
+   NOR DOES IT INCLUDE THE VOICE SCRIPTS. Those are the text beside each
+   delivery tree — branded, breaks, scripture, donation, delight — and they are
+   not audio and carry no SongID, so they never enter the ledger.
+   build-analytics-index.js counts them separately as voice_scripts. */
+function ledgerSongCount() {
+  let text;
+  try { text = fs.readFileSync(path.join(MUSIC_ROOT, 'songid-registry.tsv'), 'utf8'); }
+  catch (e) { return null; }            // ledger unreachable: emit null, print nothing
+  const lines = text.split('\n').filter(Boolean);
+  if (!lines.length) return null;
+  const col = lines[0].split('\t').indexOf('SongID');
+  if (col < 0) return null;
+  const ids = new Set();
+  for (let i = 1; i < lines.length; i++) {
+    const id = lines[i].split('\t')[col];
+    if (id && id.trim()) ids.add(id.trim());
+  }
+  return ids.size;
+}
 
 function programmedStations() {
   const byHm = new Map();
@@ -403,6 +509,28 @@ const BASES_BY_SLUG = (function () {
       + 'run `node tools/build-broadcast-bases.js` first (' + e.message + ')');
   }
   return doc.stations || {};
+})();
+
+/* THE CITY GAZETTEER — city to state, or city to country.
+ *
+ * What turns "Sacramento" on a card into "Sacramento, California". Written by
+ * tools/build-city-places.js out of data/broadcast-bases.json.
+ *
+ * OPTIONAL, DELIBERATELY, unlike station-bases.json above. This generator runs
+ * on the VPS every night and the VPS carries no `data/` directory, so the file
+ * that feeds this one is not even present there. Were a missing gazetteer fatal,
+ * the first nightly build after this shipped — or any build run before the file
+ * reached the server — would take the schedule for every station down with it.
+ * Absent, the cards print the bare city name, which is a smaller loss than a
+ * dial that does not build. */
+const CITY_PLACES = (function () {
+  try {
+    const doc = JSON.parse(fs.readFileSync(path.join(ROOT, 'public', 'data', 'city-places.json'), 'utf8'));
+    return doc.places || {};
+  } catch (e) {
+    console.log('no public/data/city-places.json — cards will print the city without its state');
+    return {};
+  }
 })();
 
 const raw = readStations();
@@ -455,6 +583,8 @@ const stations = raw.map(function (s, i) {
     // for a stream-backed station it had no way to know what was playing.
     // Matched on hm, which is unambiguous; slug is not (see HM 305.40).
     tenant: tenantByHm[s.hm] || null,
+    // Printed to the right of the frequency — see langCodeFor().
+    langCode: langCodeFor(s, tenantByHm[s.hm], intl),
     manifest: s.musicManifestUrl || null,
     stream: s.streamUrl || null,
     host: host,
@@ -618,6 +748,19 @@ const HOME_EMPHASIS = [
   'corner-cipher',            // HM 315.20  Christian rap
   'inspire-acapella',         // HM 307.60  not on air yet — kept on purpose
   'gods-little-lambs',        // HM 360.30  The Living Room, closes the shelf
+  'gospel-by-music',          // HM 316.00  Matthew chapter by chapter, newest
+  // THE FIRST CARD ON THE SHELF FROM THE UPPER ROOM, and the reason the shelf
+  // is editorial rather than a rule: nothing about rank or block would ever
+  // have surfaced a prayer station on a page of music stations, and it is
+  // exactly what the dial should be emphasising as the prophetic block opens.
+  // Owner decision, 2026-08-28 — featured on Home as well as in Prayer Rooms.
+  'upper-room',               // HM 350.00  The Upper Room, the block's own name
+  // LAST CARD ON THE SHELF, and last deliberately: it is the newest station on
+  // the dial and the shallowest, one album deep. Home is an editorial list, so
+  // a new station only appears here by being written down - it is already in
+  // Christian Music automatically, because 317.20 is a Crossing number and the
+  // category is the block. Owner decision, 2026-08-29.
+  'gravel-road-gospel',       // HM 317.20  Gravel Road Gospel, newest
 ];
 
 // --- 5a. Heavenly Modulation editorial ------------------------------------
@@ -746,7 +889,7 @@ const HM_CORE = [
       'in it whether or not every track names God out loud. And there are the international ' +
       'stations, hosted in their own languages for the nations rather than translated into them ' +
       'afterwards. Four kinds, one dial, and no menu to work your way through.',
-      'If you want somewhere to start, start at HM 308.70 \u2014 kJubilee Radio. It is the flagship of ' +
+      'If you want somewhere to start, start at HM 308.70 \u2014 Year of Jubilee. It is the flagship of ' +
       'the band and it is the station built for exactly the case this article has been describing: ' +
       'the one where you do not want to make a decision. It carries continuous worship and teaching ' +
       'from the Inspire Family catalog, running day and night, and it will not play you the same ' +
@@ -2205,7 +2348,7 @@ const HM_CORE = [
       'there are the international frequencies, hosted in their own languages rather than ' +
       'translated into them afterwards. No menu, no queue to assemble, and no decision to ' +
       'make before anything starts.',
-      'If you want somewhere to start, start at HM 308.70 — kJubilee Radio. It is the ' +
+      'If you want somewhere to start, start at HM 308.70 — Year of Jubilee. It is the ' +
       'flagship of the band and it is the right test of everything above, because it is ' +
       'the frequency most likely to be playing when you get there and the one that will ' +
       'not play you the same song twice in a day. Put it on in the morning while you are ' +
@@ -5595,7 +5738,7 @@ const HM_VOICES_1 = [
       'And there are the international frequencies, hosted in their own languages rather ' +
       'than translated into them. Every one of them assumes something about who is ' +
       'listening. One of them does not.',
-      'So start where the strangers start: HM 308.70 — kJubilee Radio. It is the front ' +
+      'So start where the strangers start: HM 308.70 — Year of Jubilee. It is the front ' +
       'door of the band, running continuous worship and teaching from the Inspire Family ' +
       'catalogue day and night, on five bases across five time zones so it meets you at ' +
       'your own hour. It is the station to leave on when the house is full of people who ' +
@@ -6269,7 +6412,7 @@ const HM_VOICES_1 = [
       'playable in a room with children in it. And there are the international stations, ' +
       '' + hmFacts.intl + ' of them across ' + langCount + ' languages, hosted in their own ' +
       'tongues rather than translated into them afterwards.',
-      'The station this article has been describing is HM 308.70 — kJubilee Radio, the ' +
+      'The station this article has been describing is HM 308.70 — Year of Jubilee, the ' +
       'flagship of the band. It carries continuous worship and teaching from the Inspire ' +
       'Family catalog, day and night, and it will not play you the same song twice in a ' +
       'day. That single rule is the reason to start there rather than anywhere else. It ' +
@@ -6542,8 +6685,8 @@ const HM_VOICES_2 = [
       'international, hosted in ' + langCount + ' languages for the nations rather than ' +
       'translated into them afterwards, which matters in more kitchens than people assume ' +
       '— plenty of households pray in one language and argue about shoes in another.',
-      'For the case this article has been describing, start at HM 308.70 — kJubilee ' +
-      'Radio. It is the flagship, it carries continuous worship and teaching from the ' +
+      'For the case this article has been describing, start at HM 308.70 — Year of ' +
+      'Jubilee. It is the flagship, it carries continuous worship and teaching from the ' +
       'Inspire Family catalogue, it runs day and night, and it will not play you the same ' +
       'song twice in a day. What recommends it here is not the catalogue but that it asks ' +
       'nothing of the person switching it on. There is no title to choose, no episode to ' +
@@ -7387,21 +7530,21 @@ const HM_VOICES_2 = [
     stands: 'The drum was not borrowed from the dancehall. Both of them got it from the same place, and the church got there first.',
     body: [
       'Tape comes squeaking off the roll in a church hall on a Saturday afternoon, and ' +
-      'the man pulling it is up on a chair, winding a microphone onto a broom handle ' +
-      'because the stand has been broken since Easter and there is no money for another. ' +
-      'The kit in the corner has one cymbal and a snare with a tea towel over it. A boy ' +
-      'of about twelve is behind it playing something that will not be on tomorrow’s ' +
-      'service sheet, and the man on the chair is not telling him to stop; he is winding ' +
-      'the tape round the handle in time with it without noticing. Somebody’s mother ' +
-      'comes in with a stack of chairs and asks whether anybody has seen the kettle. The ' +
-      'boy does not stop playing. Nobody asks him to.',
+      'the man pulling it is up on a chair with a microphone in one hand and a broom ' +
+      'handle in the other, because the stand has been broken since Easter and there is ' +
+      'no money for another. The kit in the corner has one cymbal and a snare with a tea ' +
+      'towel over it. A boy of about twelve is behind it playing something that will not ' +
+      'be on tomorrow’s service sheet, and the man on the chair is not telling him to ' +
+      'stop; he is winding the tape round the handle in time with it without noticing. ' +
+      'Somebody’s mother comes in with a stack of chairs and asks whether anybody has ' +
+      'seen the kettle. The boy does not stop playing. Nobody asks him to.',
       'There is a tidy story about Caribbean gospel in which that boy is doing something ' +
       'borrowed. In it the church arrives late and reluctantly, picks up a popular rhythm ' +
       'from outside, and puts it to work to reach young people. It is the story told ' +
       'about a great deal of music, and it has the direction of travel backwards.',
       'The rhythm was in the hall first. The charts came afterwards and took the credit, ' +
-      'and the church, which has never been good at defending itself on questions of this ' +
-      'kind, largely let them.',
+      'and the church, never good at defending itself on questions of this kind, largely ' +
+      'let them.',
       'Take the word riddim literally, because the word carries the argument. It does not ' +
       'simply mean a beat. In the tradition it names a piece of ground many different ' +
       'songs stand on — one rhythm, one bassline, held in common, voiced over by whoever ' +
@@ -7431,13 +7574,13 @@ const HM_VOICES_2 = [
       'has a broom handle.',
       'So the station is built as the older stream rather than an outreach idea. Zariah ' +
       'Inspire’s catalogue runs reggae, dancehall, soca and Afrobeats straight into ' +
-      'teaching hymnody and gospel-soul, same frequency, same rotation, with no handover ' +
+      'teaching hymnody and gospel-soul, same frequency, same rotation, no handover ' +
       'apologising for the change of gear. Arranged that way, the ear learns what a ' +
-      'playlist cannot teach: that the bassline under the dancehall track and the ' +
-      'bassline under the hymn are relatives, and hearing them one after another is not a ' +
-      'clash but a family resemblance nobody had pointed out.',
-      'Which brings up the objection raised in every hall of this kind, usually by ' +
-      'somebody who has earned the right to raise it.',
+      'playlist cannot teach: that the bassline under the dancehall track and the one ' +
+      'under the hymn are relatives, and hearing them together is not a clash but a ' +
+      'family resemblance nobody had pointed out.',
+      'Which brings up the objection raised in every hall like it, usually by somebody ' +
+      'who has earned the right to raise it.',
       'The objection is that this music is too much for worship — too physical, too close ' +
       'to the street, too easy to enjoy for the wrong reasons. Be fair to it. It is ' +
       'rarely snobbery and rarely about volume. It is nearly always a specific memory: ' +
@@ -7468,12 +7611,12 @@ const HM_VOICES_2 = [
       'congregation would want no part of. Owning the origin of something is not owning ' +
       'what happened to it since.',
       'But that is an argument for playing it, not putting it down. A rhythm nobody in ' +
-      'the church plays any more is a rhythm the church has no say in. The only way to ' +
-      'stop a thing being taken somewhere you would not follow is to keep going where it ' +
-      'goes — to keep the drum in the room it came out of, weekly, with the tea towel on ' +
-      'the snare. That is not a compromise with the world. It is maintenance of something ' +
-      'the congregation owns outright, and the elder who is cautious about it is guarding ' +
-      'a possession he has been talked into thinking is a loan.',
+      'the church plays any more is one the church has no say in. The only way to stop a ' +
+      'thing being taken somewhere you would not follow is to keep going where it goes — ' +
+      'to keep the drum in the room it came out of, weekly, with the tea towel on the ' +
+      'snare. That is no compromise with the world. It is maintenance of something the ' +
+      'congregation owns outright, and the elder who is cautious about it is guarding a ' +
+      'possession he has been talked into thinking is a loan.',
       'So the direction of travel matters. This is not an evangelistic use of somebody ' +
       'else’s sound, and the station need not apologise for the drum or justify it to a ' +
       'nervous board. It also settles the question of whether the music is too worldly ' +
@@ -7529,14 +7672,14 @@ const HM_VOICES_2 = [
       'a piano and one acoustic guitar and a great deal of care. He is upright perhaps ' +
       'two seconds before he registers the room and sits down again, and nobody appears ' +
       'to have noticed, and the woman beside him passes him a mint. Afterwards everybody ' +
-      'is kind to him at the tea table and asks whether the flat is warm enough. He says ' +
-      'very well, thank you, and means it.',
+      'is kind at the tea table and asks whether the flat is warm enough. He says very ' +
+      'well, thank you, and means it.',
       'Nothing went wrong in that room. That is what makes it impossible to raise. There ' +
       'is no complaint to be made, nobody has done anything, and the sensation has no ' +
-      'name that survives being said out loud at a tea table.',
+      'name that survives being said aloud at a tea table.',
       'It is not exclusion, and calling it exclusion would be a lie told about kind ' +
       'people. It is narrower and harder to fix. Worship has become a translation, ' +
-      'performed in your own head, in real time, every week.',
+      'performed in your head, in real time, every week.',
       'Take the word translation literally, because that is where the difficulty sits. ' +
       'You can know every word of the hymn in the new language and understand the ' +
       'theology better than anyone around you and still be translating — because what is ' +
@@ -7570,17 +7713,17 @@ const HM_VOICES_2 = [
       'Francophone and Caribbean Christian music on one number, for France and Belgium ' +
       'and Quebec and the wider Francophonie, on the understanding that these were never ' +
       'going to sound like one place.',
-      'The obvious objection is that all of this has a much simpler answer, and it is ' +
-      'worth taking seriously.',
+      'The obvious objection is that all of this has a simpler answer, and it is worth ' +
+      'taking seriously.',
       'The simple answer is: find a church of your own people. Plenty do, it is often ' +
       'right, and a diaspora congregation is one of the most durable institutions there ' +
       'is. But be honest about what it cannot always deliver. There may be none within ' +
       'reach, or none in your language, or one thirty years older than you and conducted ' +
       'in a register your children cannot follow. It can harden into a Sunday enclave a ' +
       'fifteen-year-old will refuse to attend and be right to refuse. And it does nothing ' +
-      'about the church you actually live near, with the good heating and the mint, which ' +
-      'you have not left and do not want to leave.',
-      'A person who is always translating never rests.',
+      'about the church you live near, with the good heating and the mint, which you have ' +
+      'not left and do not want to leave.',
+      'A person always translating never rests.',
       'It is a Tuesday evening and a woman is ironing school shirts in a flat where the ' +
       'radio has been on since she came in. Her son is at the table with his maths and ' +
       'has not looked up in twenty minutes. He was born here. He has been to the country ' +
@@ -7592,8 +7735,8 @@ const HM_VOICES_2 = [
       'does it again.',
       'That is an inheritance handed over in the background of a maths exercise. It ' +
       'cannot be taught in a lesson, because it is not information — it is a set of ' +
-      'instincts about how a line is supposed to move, and instincts are only picked up ' +
-      'by being near something often.',
+      'instincts about how a line moves, and instincts are only picked up by being near ' +
+      'something often.',
       'There is a cost here and it should be stated rather than glossed. A station in ' +
       'your own language will not give you back the country. It cannot reproduce the ' +
       'heat, or the walk home afterwards, or the four people who made that congregation ' +
@@ -7601,7 +7744,7 @@ const HM_VOICES_2 = [
       'distance sharper rather than softer, and there are evenings when the honest thing ' +
       'is to turn it off. Nobody was ever cured of home by a radio. And it can be used ' +
       'badly — to avoid the congregation down the road, an hour of the old country ' +
-      'standing in for the work of belonging to the people within walking distance.',
+      'standing in for the work of belonging where you live.',
       'But an hour in which you are not translating is not an escape from that ' +
       'congregation. It is very often what makes the rest of the week inside it ' +
       'survivable. The loneliness at the top of this article is not caused by kind people ' +
@@ -7614,7 +7757,7 @@ const HM_VOICES_2 = [
       'taken, and nobody has to explain why that matters. It is not a substitute for a ' +
       'church, not a comment on the church you attend, and not nostalgia. It is forty ' +
       'minutes a week in which a believer worships in their first language of the body as ' +
-      'well as the mouth, and then goes back out and is gracious for another six days.',
+      'well as the mouth, and then goes out and is gracious for another six days.',
       'All of which is theory until something is actually playing. So here is the part ' +
       'that is not theory.',
       'The dial carries four kinds of programming and it helps to know they are there ' +
@@ -7622,15 +7765,15 @@ const HM_VOICES_2 = [
       'Family programming, safe in a room with children in it. And the multilanguage ' +
       'band, ' + hmFacts.intl + ' stations across ' + langCount + ' languages, each hosted in ' +
       'its own rather than translated into it: Inspire Crown in Arabic, Pilipinas Inspire ' +
-      'in Tagalog, Brasil Inspire in Portuguese, Asia Inspire in Chinese, and a good many ' +
-      'more. If yours is on the dial, that is the number to learn first.',
+      'in Tagalog, Brasil Inspire in Portuguese, Asia Inspire in Chinese, and many more. ' +
+      'If yours is on the dial, that is the number to learn first.',
       'If you want somewhere to start, start at HM 322.50 — France Inspire. It is the ' +
       'French-language flagship, and the reason to send you here is that it is the ' +
       'clearest working example of the argument. French on this dial is not the French of ' +
       'one country. The same frequency carries Hexagonal worship, African Francophone ' +
       'worship and Caribbean Christian music, so the station has already conceded that a ' +
       'shared language does not produce a shared body — that a believer from ' +
-      'Fort-de-France and a believer from Lyon can sing identical words and be doing two ' +
+      'Fort-de-France and one from Lyon can sing identical words and be doing two ' +
       'different things with their shoulders, and both belong on the number. A station ' +
       'built on that admission is a room where more than one kind of person stops ' +
       'translating, which is harder and better than a station for a country.',
@@ -7640,8 +7783,8 @@ const HM_VOICES_2 = [
       'actually have. If you want it closer to hand, add the page to your home screen. ' +
       'And do make yourself an account while you are there. It keeps your favourites with ' +
       'you across every Jubilee site, and it is how this band finds out which languages ' +
-      'people reach for and from where — which is, very directly, how the next language ' +
-      'gets added.',
+      'people reach for and from where — which is, very directly, how the next one gets ' +
+      'added.',
       'So take this as an invitation and not an offer. Put HM 322.50 on this Tuesday ' +
       'while you are doing something ordinary, and do not sit down to evaluate it. Iron ' +
       'the shirts. Let it play at the speed it plays at, and notice at some point that ' +
@@ -10378,8 +10521,11 @@ const HM_VOICES_4 = [
       'one day of fire. The movement took its name from the one day.',
       'This band runs from HM ' + hmFacts.low + ' to HM ' + hmFacts.high + ' and carries ' +
       '' + hmFacts.total + ' stations, of which ' + hmFacts.live + ' are on air. Two of them ' +
-      'sit directly on this beat: HM 341.90 Pentecostal Fire and HM 340.30 The Upper Room ' +
-      'are both assigned and both still in build.',
+      'sit directly on this beat. HM 350.00 is The Upper Room, and the number is not an ' +
+      'accident: fifty is the count from the sheaf to the fiftieth day, so the station ' +
+      'named after the room sits on the number of what happened in it. It is on air, ' +
+      'carrying sung Scripture prayer continuously. HM 341.90 Pentecostal Fire is ' +
+      'assigned and still in build.',
       'What the interval actually cost the people inside it is worth stating without ' +
       'decoration. They were told to wait, with no date given, in a city that had ' +
       'recently executed their teacher, by a man who had then left. They were a group ' +
@@ -13977,16 +14123,16 @@ const HM_VOICES_5 = [
       'this band it is not a footnote under something more important. It is a block ' +
       'twenty units wide with its own colour, and the whole of The Living Room sits in ' +
       'it.',
-      'Here is the honest part, and it is uncomfortable because it is checkable. Two of ' +
-      'the five blocks on this dial are currently silent. HM 340.30 The Upper Room, the ' +
-      'prayer station the block is named after, is assigned, in build and not yet on air. ' +
-      'HM 383.20 Jubilee Teaching, up in The Table, is assigned and still silent too. ' +
-      'Frequencies have been allocated across the prophetic and the teaching blocks and ' +
-      'nothing is playing on either of them today. Three offices are sounding. Two are ' +
-      'not.',
+      'Here is the honest part, and it is uncomfortable because it is checkable. One of ' +
+      'the five blocks on this dial is still silent. HM 383.20 Jubilee Teaching, up in ' +
+      'The Table, is assigned and nothing is playing on it today. The prophetic block ' +
+      'stood the same way until this year, when HM 350.00 The Upper Room — the prayer ' +
+      'station the block is named after — went on air carrying sung Scripture prayer; ' +
+      'that leaves the teaching office as the one still allocated and unsounded. Four ' +
+      'offices are sounding. One is not.',
       'That is not a fault in the structure. It is the structure doing its one job. A ' +
       'list of five functions is useful precisely because it lets a community notice ' +
-      'which ones are absent, and a dial that shows the gaps as two quiet stretches of ' +
+      'which ones are absent, and a dial that shows the gap as a quiet stretch of ' +
       'band is doing what the passage was for. Most churches are short of at least two of ' +
       'the five, and noticing which two is considerably more productive than working out ' +
       'which one you are. A church can tell itself a story about its gaps for twenty ' +
@@ -15892,7 +16038,8 @@ const HM_VOICES_6 = [
       'appear to matter, and learning from the audience postpones every one of them until ' +
       'there is an audience to have an opinion. By then the habits are the institution.',
       'So the numbers here are committed before there is evidence that anybody wants ' +
-      'them. HM 340.30 is The Upper Room, a prayer station, assigned and in build. HM ' +
+      'them. HM 350.00 is The Upper Room, a prayer station, which opened this year on a ' +
+      'number that had been set aside for it long before anybody asked for it. HM ' +
       '393.10 is Grief Walked and HM 367.20 is Story Hour; both are assigned, and neither ' +
       'has opened yet. Each is a permanent commitment made on no data, which is the ' +
       'reverse of the sensible order and the only order in which anything with a name has ' +
@@ -16189,12 +16336,15 @@ const SECTIONS = [
   {
     id: 'prayer', nav: 'Prayer Rooms', label: 'Prayer Rooms',
     catalog: 'Prayer Rooms', note: 'The Upper Room — prayer and intercession',
-    // SAYS PLAINLY THAT NOTHING HERE IS OPEN YET.
+    // THE FIRST ROOM IS OPEN. As of 2026-08-28 The Upper Room (HM 350.00) is
+    // on air with the jubileeprayers.com cantillation store — the block's own
+    // name on the block's first live frequency.
     //
-    // Every one of these twelve is planned and none is on air. The cards render
-    // as placeholders like any other unopened frequency, but a page that is
-    // entirely placeholders needs to admit it in words — otherwise it reads as
-    // a page that is broken rather than a block that is being built.
+    // The rest are still planned, and their cards still render as placeholders
+    // like any other unopened frequency. That was true of all twelve until
+    // today, and the page said so in words because a page that is entirely
+    // placeholders reads as broken rather than as a block being built. It is
+    // no longer entirely placeholders, so it no longer needs to say it.
     shelves: [
       // The two English rooms first: they are the block's own programming, and
       // they sat under Bible Teachings until now for want of anywhere better.
@@ -16333,6 +16483,7 @@ const articleSplit = (function splitArticleBodies() {
 })();
 
 // --- 6. emit --------------------------------------------------------------
+const LEDGER_SONGS = ledgerSongCount();
 const banner = '/* GENERATED FILE - do not edit by hand.\n' +
   ' * Produced by tools/build-home-data.js from the station catalog in\n' +
   ' * public/radio.html. Re-run `node tools/build-home-data.js` after\n' +
@@ -16342,11 +16493,28 @@ const out = [
   'window.KJ_MEMBERS = ' + JSON.stringify(MEMBERS) + ';',
   'window.KJ_STATIONS = ' + JSON.stringify(stations) + ';',
   'window.KJ_SECTIONS = ' + JSON.stringify(SECTIONS) + ';',
+  // City -> state or country, for the location line on every station card.
+  // Emitted as one shared table rather than stamped onto each of the ~350 base
+  // records, which would repeat "California" thirty times over.
+  'window.KJ_CITIES = ' + JSON.stringify(CITY_PLACES) + ';',
   'window.KJ_FEATURED = ' + JSON.stringify(FEATURED) + ';',
   // THE STATION A VISITOR GETS BEFORE THEY HAVE CHOSEN ONE. Emitted rather than
   // hardcoded in the player, so the flagship is named once in this file and the
   // bar, the hero and the shelves all follow it together.
   'window.KJ_DEFAULT = ' + JSON.stringify(FLAGSHIP) + ';',
+  /* CATALOGUE TOTALS, REBUILT ON EVERY PUBLISH.
+     These live here because this file is regenerated in Phase 5 of every import
+     refresh, so a figure read from it cannot go stale behind an ingest. That is
+     exactly what went wrong with the figures in circulation-data.js: that file
+     is written by build-circulation.js, which is NOT part of the pipeline, so
+     "songs in the catalogue" sat at 7,741 through several publishes while the
+     ledger climbed past 7,800 and nothing reported the drift. */
+  'window.KJ_TOTALS = ' + JSON.stringify({
+    songsInLedger: LEDGER_SONGS,
+    stations: stations.length,
+    stationsOnAir: stations.filter(function (s) { return s.prototype; }).length,
+    generatedAt: new Date().toISOString().slice(0, 10),
+  }) + ';',
   ''
 ].join('\n');
 fs.writeFileSync(OUT, out, 'utf8');
@@ -16383,3 +16551,35 @@ const unplaced = stations.filter(function (s) {
 console.log(unplaced.length
   ? '  not on any shelf (' + unplaced.length + '): ' + unplaced.map(function (s) { return s.freq + ' ' + s.name; }).join(', ')
   : '  every station appears on at least one shelf');
+
+/* COVERS THAT NO LONGER SHOW THEIR HOST.
+ *
+ * The Station Image Studio puts the station's host persona INTO the artwork, and
+ * records who it drew in stations-images.json. So reassigning a host silently
+ * invalidates that station's cover: the card goes on saying Nova Inspire under a
+ * picture of Zariah, and nothing anywhere complains. Nine hosts moved in one
+ * afternoon and eight covers went stale in the same breath — which is exactly
+ * the kind of drift nobody notices until a listener does.
+ *
+ * Reported at build time because that is the moment the host changed. Not fatal,
+ * and read defensively: the provenance file is 450 KB of prompts that the VPS has
+ * no need of, so a build without it must still finish. */
+(function coverHostDrift() {
+  let prov;
+  try {
+    prov = JSON.parse(fs.readFileSync(
+      path.join(ROOT, 'public', 'images', 'stations', 'stations-images.json'), 'utf8')).stations || {};
+  } catch (e) { return; }   // no provenance here, nothing to compare
+
+  const stale = stations.filter(function (s) {
+    const p = prov[s.slug];
+    return p && p.host && p.host !== s.host;
+  });
+  if (!stale.length) { console.log('  every cover shows the host the catalogue names'); return; }
+
+  console.log('  ' + stale.length + ' cover(s) show a persona who is no longer the host — regenerate:');
+  stale.forEach(function (s) {
+    console.log('    ' + s.freq + '  ' + s.name + ' — card says ' + s.host +
+                ', artwork has ' + prov[s.slug].host);
+  });
+})();

@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM337.70-VI",
+  "slug": "vietnam-inspire-tieng-viet",
+  "name": "Vietnam Inspire (Tiếng Việt)",
+  "hm": "337.70",
+  "band": "multi",
+  "mount": "vietnam",
+  "language": {
+    "code": "VI",
+    "name": "Vietnamese",
+    "tag": "vi-VN"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Thành phố Hồ Chí Minh",
+    "timezone": "Asia/Ho_Chi_Minh"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM337.70-VI/delivery",
+    "file": "HM337.70VI-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM337.70-VI/delivery/HM337.70VI-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

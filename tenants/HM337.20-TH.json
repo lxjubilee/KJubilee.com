@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM337.20-TH",
+  "slug": "thailand-inspire-thai",
+  "name": "Thailand Inspire (ไทย)",
+  "hm": "337.20",
+  "band": "multi",
+  "mount": "thailand",
+  "language": {
+    "code": "TH",
+    "name": "Thai",
+    "tag": "th-TH"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "กรุงเทพมหานคร",
+    "timezone": "Asia/Bangkok"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM337.20-TH/delivery",
+    "file": "HM337.20TH-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM337.20-TH/delivery/HM337.20TH-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

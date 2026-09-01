@@ -37,7 +37,8 @@ is a run that did not take a snapshot first, and it is not finished.
 ```
   J:\jubilujah.com\music\inspire  ─┐
   J:\jubilujah.com\music\children ─┤
-  J:\torahsings.com               ─┼─► [1] INGEST ──► J:\kjubilee.com\music
+  J:\torahsings.com               ─┤
+  J:\gospelbymusic.com\music      ─┼─► [1] INGEST ──► J:\kjubilee.com\music
   J:\singitdone.com\music         ─┘                  + songid-registry.tsv
                                      ▲                       │
                           [0] SNAPSHOT                       ▼
@@ -81,7 +82,9 @@ wc -l < "J:/kjubilee.com/music/songid-registry.tsv"
 
 # Source .mp3 counts, per tree
 for d in "J:/jubilujah.com/music/inspire" "J:/jubilujah.com/music/children" \
-         "J:/torahsings.com" "J:/singitdone.com/music"; do
+         "J:/torahsings.com" "J:/singitdone.com/music" \
+         "J:/cornercipher.com/music" "J:/backrowfaith.com/music" \
+         "J:/gospelbymusic.com/music"; do
   printf "%-38s %s\n" "$d" "$(find "$d" -name '*.mp3' 2>/dev/null | wc -l)"
 done
 ```
@@ -115,15 +118,17 @@ HMX2026EN01-7XJ29ZW8X70P-JUBI-CCJP_sky-splits-open_sky-splits-open.mp3
 └─ batch ─┘ └─ SongID ─┘ └art┘ └gen┘ └─ album ──┘ └─ song slug ──┘
 ```
 
-### The five source trees
+### The seven source trees
 
 | Source | Tool | Contents |
 |---|---|---|
 | `J:\jubilujah.com\music\inspire` | `ingest_music.py` | The twelve Inspire Family personas |
 | `J:\jubilujah.com\music\children` | `ingest_music.py` | Party Giggles, Tiny Tiggles |
-| `J:	orahsings.com` | `ingest_torahsings.py` | Torah Sings — organised by book of the Bible, not by album, which is why it has its own ingester |
+| `J:\torahsings.com` | `ingest_torahsings.py` | Torah Sings — organised by book of the Bible, not by album, which is why it has its own ingester |
 | `J:\singitdone.com\music` | `ingest_music.py --src-root` | The 2001–2003 declaration series, one folder per persona |
 | `J:\cornercipher.com\music` | `ingest_music.py` | Marcus Reed / Corner Cipher |
+| `J:\gospelbymusic.com\music` | `ingest_music.py` | Gospel By Music — the Gospel of Matthew, chapter by chapter. Filed by book of the Bible like Torah Sings, but it needs no ingester of its own: see `ARTIST_TREES` below |
+| `J:\jubileeprayers.com\cantillation` | `ingest_music.py` | Jubilee Prayers — sung Scripture prayers, filed under the seven petitions of the Model Prayer. Same shape as Gospel By Music and registered the same way, in `ARTIST_TREES` at `depth: 2` |
 
 `singitdone` is the one tree that still needs `--src-root`, because its twelve
 folders are the SAME personas whose default root is `inspire`, and an artist can
@@ -131,6 +136,13 @@ only have one registered root. Everything else resolves on its own:
 
 - **`ARTIST_ROOTS`** in `ingest_music.py` maps an artist to its tree, so Corner
   Cipher and the children’s catalogues need no flag.
+- **`ARTIST_TREES`** is for a tree that is not `<root>/<artist>/<album>` at
+  all. Gospel By Music has no artist tier — twelve personas perform it — and a
+  book-of-the-Bible tier instead, so the entry names the album folder outright
+  and says how many levels down the albums sit. Torah Sings has the same shape
+  and answered it with a second ingester; that was right for Torah Sings, which
+  ships a manifest richer than any tree walk, and would have been a copy of
+  `ingest_music.py` here.
 - **`ARTIST_LANG`** does the same for a language the folder names do not carry.
   Tiny Tiggles’ folders are `TTX301-penguino-s-palooza`, with no language code, so
   without it every one of its thirty-one albums is skipped — and skipped SILENTLY,
@@ -271,6 +283,95 @@ already in browsers' caches and mid-broadcast.
 To put new music on the air sooner, republish today explicitly and accept that
 listeners pick it up within the five-minute cache window.
 
+### The nightly job — and the sync it depends on
+
+Day files are also published every night by cron on the app host:
+
+```
+/etc/cron.d/kjubilee-schedules
+  0 12 * * *  cd /var/www/kjubilee.com && node scripts/r2-publish-schedules.js --apply --days 3
+```
+
+`--days 3` is what keeps at least 48 hours in front of every listener at all
+times, in every timezone the dial broadcasts into.
+
+> **THAT DIRECTORY IS NOT THE WEBSITE, AND IT DOES NOT UPDATE ITSELF.**
+>
+> The site deploys to `/var/www/kjubilee.com-next`. The scheduler runs out of
+> `/var/www/kjubilee.com`, which is a separate checkout kept only because it has
+> what the publisher needs and the standalone build does not: `scripts/`,
+> `tools/`, `tenants/`, `node_modules` and — crucially — `tmp/pools/`, which
+> cannot be rebuilt on a host that cannot see the music share.
+>
+> **A station added to the dial does not reach that checkout by deploying the
+> site.** On 2026-08-29 it still held 41 tenants against the dial's 43: Gospel
+> By Music (HM 316.00) had never had a single day file published, and The Upper
+> Room's move to HM 350.00 was unknown to it. Both stations flashed the pause
+> icon and fell straight back to play, because the player asks for a day file
+> that answers 404. The cron had been running successfully every night the whole
+> time, publishing 123 files for the stations it knew about.
+>
+> So after adding, moving or retiring a station, push the publisher's inputs:
+>
+> ```bash
+> tar czf tmp/kj-sched.tgz tenants tools/build-station-manifest.js >     tools/build-schedule-manifest.js tools/lib >     scripts/r2-publish-schedules.js tmp/pools
+> scp -i ~/.ssh/id_ed25519_jubilee_prod tmp/kj-sched.tgz root@94.72.120.231:/tmp/
+> ssh -i ~/.ssh/id_ed25519_jubilee_prod root@94.72.120.231 >     'cd /var/www/kjubilee.com && tar xzf /tmp/kj-sched.tgz && ls tenants/*.json | wc -l'
+> ```
+>
+> The count it prints must equal the number of on-air stations. Extracting does
+> not delete, so a RETIRED frequency has to be removed by hand — otherwise the
+> job keeps publishing day files for an address the dial no longer has.
+
+### The watchdog
+
+The nightly cron is the routine job. `scripts/kj-watchdog.js` is the safety net
+under it, running every 15 minutes as its own systemd timer on the app host:
+
+```
+/etc/systemd/system/kj-watchdog.timer        -> kj-watchdog.service      (every 15 min, --repair --days 2)
+/etc/systemd/system/kj-watchdog-heartbeat.timer -> the checker           (hourly)
+/var/lib/kj-watchdog/heartbeat.json          the last run, machine-readable
+/var/log/kj-watchdog.log                     what it did
+```
+
+**It asks the live site, not the disk.** It reads `stations-data.js` over HTTP —
+the same file a listener's browser gets — and requires every on-air station to
+have a day file on the CDN for today and the next two days. That is the whole
+design: the outage on 2026-08-29 happened because every local list agreed with
+every other local list and all of them were wrong. A watchdog reading `tenants/`
+would have reported all clear.
+
+**It repairs a station it has never heard of.** A pool IS the station's
+manifest, and manifests are published to `radio/<ID>/delivery/music.json` by
+`scripts/r2-publish-manifests.js`. So when a station is missing locally the
+watchdog fetches its manifest, normalises the URL layout, writes it as the pool,
+derives the tenant record from the same document, and publishes. Proven on the
+host by deleting a day file AND both local inputs: it recovered all three.
+
+A tenant it reconstructs carries `_recoveredBy` and is marked PROVISIONAL — it
+is faithful enough to schedule from but cannot recover `pending`, which is
+editorial. Re-run the sync above to put the authored file back.
+
+Exit codes are the contract: `0` all covered, `1` something was missing and is
+now fixed, `2` something is missing that it could not fix — that one is worth a
+page. `SuccessExitStatus=0 1` in the unit is why a successful repair is not
+recorded as a unit failure.
+
+> **Both halves run on the same box, and that is the honest limit of it.** The
+> watchdog is independent of the website — it does not need `kjubilee.service`
+> and will keep repairing while the site is down — and the heartbeat checker is
+> plain `/bin/sh` with no dependency on node or the checkout, so it still works
+> when those are what broke. But if the machine itself dies, both die with it.
+> Genuine out-of-band monitoring needs a second host or an external uptime
+> service pinging a health endpoint; nothing here can substitute for that.
+
+**A few songs is not a reason to skip a station.** The generator fills the whole
+broadcast day from whatever the pool holds, reshuffling as it goes, so a station
+with 12 tracks gets the same 24-hour file as one with 1,700 — it simply comes
+round more often. There is no minimum, and there should not be one: a station
+that is thin today is a station being filled this month.
+
 ---
 
 ## Phase 5 — Site data
@@ -295,6 +396,50 @@ This step is what updates:
 - **Article facts** — the dial range, station count and language count are read
   live from the catalogue, so they correct themselves
 
+Then rebuild the index behind the operator's console:
+
+```bash
+node tools/build-analytics-index.js
+```
+
+Writes `public/data/analytics-stations.json`, which is what
+[`/analytics/start.html`](../public/analytics/start.html) reads for the dial, the
+per-station counts and the planned column. **It must run AFTER
+`build-home-data.js`** — it reads that file's output for the station list, so
+running it first means a station added today is missing from the panel.
+
+It is also the one place the *planned* side of the ledger is reported: albums
+named as `pending` in the `STATIONS` table, written and awaiting audio. A pending
+album that gained audio in this run stops being counted here, which is the same
+GRADUATED event Phase 2 prints — and the same cue to listen to what arrived.
+
+It indexes the **voice scripts** too — the `branded/`, `breaks/`, `scripture/`,
+`donation/` and `delight/` text beside each delivery tree. Nothing else in the
+toolchain looks at them, so a station can be perfectly programmed and completely
+silent between the songs with nothing reporting it. The run prints how many
+on-air stations have none.
+
+Then rebuild the recording queue:
+
+```bash
+node tools/build-todo-index.js
+```
+
+Writes `public/data/todo-index.json` and one lyric bundle per album under
+`<CDN_LOCAL_ROOT>/lyrics/`, which is what
+[`/analytics/todo.html`](../public/analytics/todo.html) reads. It answers the
+question no other tool here can: **which written songs still have no mp3.**
+Every other index in this pipeline is built on the ledger, and the ledger only
+knows songs that HAVE audio, so the ~7,100 tracks that exist only as words are
+invisible to all of them. This one walks the nine authoring trees directly.
+
+It is the natural end of an import refresh because an ingest is exactly what
+moves a track off this list. Re-run it and the queue shrinks by what Phase 1
+brought in.
+
+> **The lyric bundles do not ship with `public/`.** They are 59 MB and live on
+> the CDN with the station manifests. Deploy them separately — see Phase 6.
+
 ### Gate
 
 ```bash
@@ -306,6 +451,11 @@ console.log('stations '+S.length+'  ON AIR '+S.filter(s=>s.prototype).length
 
 ON AIR should equal the number of stations with a built manifest. If it dropped,
 Phase 2 did not run or a frequency changed without the manifests following.
+
+`build-analytics-index.js` prints the same count and one number no other step
+reports: how many ingested songs are on **no station at all**. That is a
+selection rule that did not fire, not a file to re-copy — see
+[Phase 2's note on fan-out](#phase-2--manifests-ledger--per-station-catalogues).
 
 ---
 
@@ -336,9 +486,17 @@ Phase 2 did not run or a frequency changed without the manifests following.
 Only `public/` needs to move. Skip `images/` unless artwork changed; it is 21 MB and
 almost never part of an audio refresh.
 
+**`public/data` must go with `public/js`.** The Heavenly Band article bodies were
+split out of `stations-data.js` into `public/data/hm-articles/` — one file per
+slug, fetched when a reader opens the piece — because at full length they were
+four fifths of a file that every page loads and that is served `no-store`.
+Shipping `js` without `data` leaves a hundred and thirteen article pages fetching
+bodies that are not there, and the failure is invisible from the shelf: the cards
+render, the reading times are right, and only opening one shows the retry.
+
 ```bash
 # 1. Package just what changed
-tar czf tmp/kj-public.tgz public/js public/css
+tar czf tmp/kj-public.tgz public/js public/css public/data public/analytics
 
 # 2. Upload
 scp -i ~/.ssh/id_ed25519_jubilee_prod tmp/kj-public.tgz \
@@ -347,12 +505,33 @@ scp -i ~/.ssh/id_ed25519_jubilee_prod tmp/kj-public.tgz \
 # 3. Back up, extract, restart
 ssh -i ~/.ssh/id_ed25519_jubilee_prod root@94.72.120.231 'set -e
   cd /var/www/kjubilee.com-next
-  tar czf /root/public-predeploy-$(date +%F-%H%M).tgz public/js public/css
+  tar czf /root/public-predeploy-$(date +%F-%H%M).tgz public/js public/css public/data
   tar xzf /tmp/kj-public.tgz
   systemctl restart kjubilee
   sleep 4 && systemctl is-active kjubilee
   rm -f /tmp/kj-public.tgz'
 ```
+
+### The lyric bundles — a separate copy, to a different tree
+
+`tools/build-todo-index.js` writes 59 MB of per-album lyric JSON to
+`<CDN_LOCAL_ROOT>/lyrics/`. That is **not** under `public/` and does not move with
+the tarball above. It goes where the station manifests go — the VPS's
+`CDN_LOCAL_ROOT`, which is `/var/www/kjubilee.com/cdn-local`, served at `/cdn/`
+by Express for everything that is not `/cdn/music/`.
+
+```powershell
+# From PowerShell — write the archive, then scp it. Do not pipe tar into ssh.
+tar czf tmp/kj-lyrics.tgz -C J:\kjubilee.com lyrics
+scp -i $env:USERPROFILE\.ssh\id_ed25519_jubilee_prod tmp/kj-lyrics.tgz `
+    root@94.72.120.231:/tmp/kj-lyrics.tgz
+ssh -i $env:USERPROFILE\.ssh\id_ed25519_jubilee_prod root@94.72.120.231 `
+    'tar xzf /tmp/kj-lyrics.tgz -C /var/www/kjubilee.com/cdn-local && rm -f /tmp/kj-lyrics.tgz'
+```
+
+Only re-send it when the queue was rebuilt. The build rewrites a bundle only when
+its bytes change, so `rsync` moves a handful of files after a normal ingest — but
+`tar` is what survives a Windows-to-Linux hop without a working rsync.
 
 `jubilee-prod` is an alias with no `~/.ssh/config` entry on the Windows workstation;
 use the IP and the identity file directly, or add a `Host` block.
@@ -366,6 +545,18 @@ archive mid-stream. Write the file, then `scp` it.
 ## Phase 7 — Verify
 
 Nothing counts as done until sound comes out.
+
+```bash
+# Every on-air station has a populated day file for the next week.
+node tools/check-schedules.js 7
+```
+
+**ON AIR is not the same question as playable.** `prototype` is derived from a
+station having a built manifest — what it *could* play. What the player fetches
+is the day file, and until this tool existed nothing checked one was there. The
+nightly cron publishes `--days 7` for exactly this reason: at `--days 3` a
+single bad weekend was three days from silence, and a missing day file is
+invisible until a listener presses play.
 
 ```bash
 # 1. Every tenant's day file resolves at its published address
@@ -421,7 +612,7 @@ node tools/import-report.js --json     # same data, for a dashboard or a diff
   --------------------------------------------------------------------------
   HM302.50-EN    HM 302.50  Pentecostal Shout             370    379     +9
   HM303.10-EN    HM 303.10  Yes and Amen                  185    191     +6
-  HM308.70-EN    HM 308.70  kJubilee Radio               1561   1561      ·
+  HM308.70-EN    HM 308.70  Year of Jubilee               1561   1561      ·
   …
 
   9 new song(s) → 15 placement(s) across 2 station(s)
@@ -501,7 +692,7 @@ for reading.
 
 | Tenant | Station | Mode | Lang | Selection rule |
 |---|---|---|---|---|
-| `HM308.70-EN` | kJubilee Radio *(flagship)* | CCI | EN | 4 artists, minus album `CAIM1027EN` |
+| `HM308.70-EN` | Year of Jubilee *(flagship)* | CCI | EN | 4 artists, minus album `CAIM1027EN` |
 | `HM305.40-EN` | Torah Sings | OHI | EN | artist `torah-sings` |
 | `HM304.80-EN` | Celebrate Yeshua! | CCI | EN | 4 curated albums from `data/yeshua-selection.json` |
 | `HM303.10-EN` | Yes and Amen | OHI | EN | album pattern `^[A-Z]{4}200[0-9][A-Z]{2}$` — the SingItDone 2001–2003 series, any persona |
@@ -513,6 +704,8 @@ for reading.
 | `HM312.10-EN` | Island Hallelujah | CCI | EN | 1 artist |
 | `HM313.80-EN` | The Ancient Paths | CCI | EN | 1 artist |
 | `HM314.40-EN` | Midnight Praise | CCI | EN | 1 artist |
+| `HM316.00-EN` | Gospel By Music | CCI | EN | artist `gospel-by-music`, plus 19 `pending` albums |
+| `HM350.00-EN` | The Upper Room | OHI | EN | artist `jubilee-prayers`, plus 11 `pending` albums — **12 tracks, below every depth floor; see the station block** |
 | `HM326.20-RO` | Jubilee Praise (Română) | OHI | RO | **no filter** — every Romanian track, from whichever persona recorded it |
 | `HM360.30-EN` | God's Little Lambs | CCI | EN | artist `tiny-tiggles` (ages 3–5) |
 | `HM361.90-EN` | Jubilee Kids Party | CCI | EN | artist `party-giggles` (ages 6–8) |
@@ -574,16 +767,50 @@ change are the only things standing between new audio and the air.
    wrong offset, and `tests/tenant-radio.test.js` is what catches it.
 3. Confirm its frequency sits in the right five-fold block — see
    [`hm-bands.md`](hm-bands.md).
-4. Run Phase 2 with `--station <ID> --dry-run` and read the track count. **Under
+4. **Give it a home city, and let the base build seed the rest.** `hostCity` in
+   the `STATIONS` block is what `sync-tenants.js` writes into the tenant's
+   `origin.city`, and that origin is the anchor
+   `tools/build-broadcast-bases.js` reads. Run it: a station with no entry in
+   `data/broadcast-bases.json` is **seeded automatically** from that origin and
+   marked `"auto": true`, so a frequency can never go on air with no origin —
+   but `--check` still fails on a seeded entry, because the placeholder
+   rationale is meant to be replaced with a real anchor and relays. **A station
+   with no `hostCity` cannot be seeded at all** and is a hard failure.
+5. **Give it a language code.** Every station prints a two-letter code to the
+   right of its frequency, the way `HM` sits to its left — `EN`, `JA`, `RO`.
+   It is derived automatically from the tenant id suffix
+   (`HM336.60-JA` → `JA`), so a station named correctly in step 1 needs nothing
+   here. **A station that airs more than one language must say so** with an
+   explicit `langCode` in the catalogue entry in `public/js/pages/radio.js`:
+   HM 310.90 carries English and Spanish and prints `EN-ES`, because the code
+   derived from its tenant id would have been a half-truth. See `langCodeFor()`
+   in `tools/build-home-data.js`.
+6. Run Phase 2 with `--station <ID> --dry-run` and read the track count. **Under
    ~150 tracks it will loop audibly**; that is a station to hold back, not ship.
-5. Then Phases 3–7 as normal.
+7. Then Phases 3–7 as normal.
+8. **Prove it is playable, not merely on air.** `node tools/check-schedules.js 7`
+   — ON AIR is derived from having a *manifest*, which says what a station
+   could play; the day file is what the player actually fetches, and a station
+   can read ON AIR, carry two thousand tracks and be silent.
 
 ### Adding a source tree
 
-Point `ingest_music.py --src-root` at it, or write a dedicated ingester when the
-tree is not organised by album — that is exactly why `ingest_torahsings.py` exists
-for a library filed by book of the Bible. Register the artist codes and genre lanes
-in `catalog-config.json` first, dry-run until clean, then commit.
+Register it, in this order of preference:
+
+1. **`ARTIST_ROOTS`** — the tree is `<root>/<artist>/<album>` and only the root
+   is new. One line.
+2. **`ARTIST_TREES`** — the tree has no artist tier, or an extra one. Name the
+   folder that holds the albums and how deep they sit. Gospel By Music is filed
+   `music/40_matthew/GBMX4001EN-.../tracks`, so it is `depth: 2`.
+3. **A dedicated ingester** — only when the source carries more than a tree walk
+   can read. `ingest_torahsings.py` earns its existence that way: its
+   `catalog-manifest.json` names every performer and audio file, which no walk
+   could reconstruct. Do not write one for a tree that is merely shaped oddly.
+
+Register the artist codes and genre lanes in `catalog-config.json` first, dry-run
+until clean, then commit. `--src-root` remains for a genuine one-off; a property
+that will keep growing belongs in a map, because a flag you have to remember is a
+flag you forget.
 
 ---
 
@@ -636,9 +863,14 @@ node scripts/r2-publish-schedules.js --apply --rebuild-pools
 
 # 5  site data
 node tools/build-home-data.js
+node tools/build-analytics-index.js       # after build-home-data, never before
+node tools/build-todo-index.js            # the recording queue: what still has no mp3
 
 # 6  deploy  (target: kjubilee.com-next)
-tar czf tmp/kj-public.tgz public/js public/css
+#     public/analytics and public/data ride along: the operator's console is a
+#     static file plus its index, and shipping js+css alone leaves it reporting
+#     the dial as it stood at the last deploy.
+tar czf tmp/kj-public.tgz public/js public/css public/data public/analytics
 scp -i ~/.ssh/id_ed25519_jubilee_prod tmp/kj-public.tgz root@94.72.120.231:/tmp/
 ssh -i ~/.ssh/id_ed25519_jubilee_prod root@94.72.120.231 \
   'cd /var/www/kjubilee.com-next && tar xzf /tmp/kj-public.tgz && systemctl restart kjubilee'

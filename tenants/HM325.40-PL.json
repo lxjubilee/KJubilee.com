@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM325.40-PL",
+  "slug": "polska-inspire-polski",
+  "name": "Polska Inspire (Polski)",
+  "hm": "325.40",
+  "band": "multi",
+  "mount": "polska",
+  "language": {
+    "code": "PL",
+    "name": "Polish",
+    "tag": "pl-PL"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Warszawa",
+    "timezone": "Europe/Warsaw"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM325.40-PL/delivery",
+    "file": "HM325.40PL-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM325.40-PL/delivery/HM325.40PL-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

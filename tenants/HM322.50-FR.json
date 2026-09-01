@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM322.50-FR",
+  "slug": "france-inspire-francais",
+  "name": "France Inspire (Français)",
+  "hm": "322.50",
+  "band": "multi",
+  "mount": "france",
+  "language": {
+    "code": "FR",
+    "name": "French",
+    "tag": "fr-FR"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Paris",
+    "timezone": "Europe/Paris"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM322.50-FR/delivery",
+    "file": "HM322.50FR-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM322.50-FR/delivery/HM322.50FR-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

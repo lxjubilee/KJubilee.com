@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM327.60-RU",
+  "slug": "russia-inspire-russkiy",
+  "name": "Russia Inspire (Русский)",
+  "hm": "327.60",
+  "band": "multi",
+  "mount": "russia",
+  "language": {
+    "code": "RU",
+    "name": "Russian",
+    "tag": "ru-RU"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Москва",
+    "timezone": "Europe/Moscow"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM327.60-RU/delivery",
+    "file": "HM327.60RU-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM327.60-RU/delivery/HM327.60RU-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

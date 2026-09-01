@@ -1,0 +1,30 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM324.80-IT",
+  "slug": "italia-inspire-italiano",
+  "name": "Italia Inspire (Italiano)",
+  "hm": "324.80",
+  "band": "multi",
+  "mount": "italia",
+  "language": {
+    "code": "IT",
+    "name": "Italian",
+    "tag": "it-IT"
+  },
+  "mode": "CCI",
+  "origin": {
+    "city": "Roma",
+    "timezone": "Europe/Rome"
+  },
+  "catalogue": {
+    "pool": "all"
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM324.80-IT/delivery",
+    "file": "HM324.80IT-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM324.80-IT/delivery/HM324.80IT-20260821.json"
+  },
+  "format": "Praise & Worship",
+  "timezone": "America/Los_Angeles"
+}

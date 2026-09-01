@@ -19,9 +19,14 @@
     "radiant-stones": "RSTN",
     "torah-sings": "TORA",
     "party-giggles": "PGIG",
+    "silas-toby": "SITO",
     "tiny-tiggles": "TTIG",
     "marcus-reed": "MRCS",
-    "timo-dobra": "TIMO"
+    "timo-dobra": "TIMO",
+    "gospel-by-music": "GOSP",
+    "hollis-ferriday": "HOLL",
+    "jubilee-prayers": "PRAY",
+    "ricky-del-rey": "RICK"
   },
   "genre_codes": {
     "_note": "Two-letter codes. Primary and secondary are concatenated into the 4-char genre field. Sourced from J:\\jubilujah.com\\music\\inspire\\persona-music-styles.md (the canonical persona genre authority) and from fused_genre in album.meta.json where present.",
@@ -60,7 +65,11 @@
     "HH": "Hip-Hop / Christian Rap",
     "TR": "Trap",
     "RF": "Romanian Folk / Horă & Sârbă",
-    "PB": "Posaunenchor Brass Chorale"
+    "SG": "Southern Gothic Americana",
+    "SH": "Sacred Harp Shape-Note Hymnody",
+    "PB": "Posaunenchor Brass Chorale",
+    "CR": "Classic Christian Rock",
+    "SR": "Showroom Big-Band / Lounge Revue"
   },
   "album_genre_overrides": {
     "_note": "Keyed by album PREFIX+NUMBER (language-independent) so every language edition inherits the same genre, while staying distinct across artists. Beats artist_genres.",
@@ -145,16 +154,16 @@
   },
   "album_slug_overrides": {
     "_note": "Album slugs for folder names no deterministic transliteration can produce, keyed by album code. An album whose slug derives empty is REFUSED by the ingester rather than written with a hole in the filename — see the note above album_slug in ingest_music.py.",
-    "MDIM1091HI": "shahar-jaag-gaya"
+    "MDIM1091HI": "shahar-jaag-gaya",
+    "_collision_note": "TWO ALBUMS, ONE TITLE. The destination folder and the SongID key are both (language, album_slug, track_number), so two albums whose titles slug the same land in the same folder and overwrite each other's registry rows. Torah Sings has two such pairs, because Psalm 118 and Isaiah 65 are each quoted in two books: ANSMX40009EN (Matthew 21) with ANSMX44002EN (Acts 4), and ANSMX23010EN (Isaiah 65) with ANSMX61001EN (2 Peter 3). The Isaiah/Peter pair is LEFT ALONE deliberately - both are already ingested with distinct SongIDs and a slug change would re-roll them, and a SongID is permanent. Only ANSMX44002EN is overridden, because it had been displaced and carried no registry rows at the time, so a new slug cost nothing.",
+    "ANSMX44002EN": "the-stone-the-builders-refused-acts"
   },
-
   "song_slug_overrides": {
     "_note": "Hand-authored slugs for titles no deterministic transliteration can produce. Keyed by '<ALBUM_CODE>/<track number>'. Arabic and Hebrew are fully vowelled in the source and romanized accordingly; Chinese is Hanyu Pinyin without tones; Japanese is Hepburn; Thai is RTGS. Reviewed by no native speaker - see docs/MUSIC-REPOSITORY-SPEC.md open items.",
     "MDIM1091HI/06": "aaj-nahin",
     "MDIM1091HI/07": "mera-naam",
     "MDIM1091HI/08": "bas-aise-hi",
     "MDIM1091HI/12": "subah-tak",
-
     "AMIM1011AR/01": "al-qalbu-kulluhu-laka",
     "AMIM1011AR/02": "al-maliku-al-jarih",
     "AMIM1011AR/03": "fi-al-huduw",
@@ -282,7 +291,9 @@
     "ZEIM1025HE/09": "bli-machloket-hashem-bechol-maasav",
     "ZEIM1025HE/10": "shema-leil-hamila-haacharona-halaila",
     "ZEIM1025HE/11": "lamdu-et-hayeladim-et-shmo",
-    "ZEIM1025HE/12": "adonai-echad-nisa-et-hashem-habayta"
+    "ZEIM1025HE/12": "adonai-echad-nisa-et-hashem-habayta",
+    "_note_HFGR1001EN_11": "Written as Read Straight, recorded as Tobacco Faith. The blueprint and album.meta.json both name the written title; the audio file and its ID3 TIT2 both say Tobacco Faith, and the lyric inside it is the archetype-G spoken Scripture piece the blueprint describes. Same song, renamed in the studio. The name that airs is the one on the recording.",
+    "HFGR1001EN/11": "tobacco-faith"
   },
   "artist_genres": {
     "_note": "Default primary+secondary genre per persona, from persona-music-styles.md. album_genre_overrides beat this. jubilee-inspire is pinned to CCJP by owner decision (the original reference filename), not to its persona-doc lane.",
@@ -301,9 +312,14 @@
     "torah-sings": "COMH",
     "radiant-stones": "JPPW",
     "marcus-reed": "HHTR",
+    "gospel-by-music": "COCC",
     "timo-dobra": "RFPB",
+    "hollis-ferriday": "SGSH",
     "party-giggles": "KDPY",
-    "tiny-tiggles": "KDPY"
+    "silas-toby": "KDBA",
+    "tiny-tiggles": "KDPY",
+    "jubilee-prayers": "HCAH",
+    "ricky-del-rey": "CRSR"
   },
   "fallback_genre": "CCJP",
   "_fallback_genre_note": "Last resort only: used when an artist has no artist_genres entry.",
@@ -324,10 +340,15 @@
     "tahoma-inspire": "CCI",
     "torah-sings": "OHI",
     "party-giggles": "CCI",
+    "silas-toby": "CCI",
     "tiny-tiggles": "CCI",
     "radiant-stones": "CCI",
     "marcus-reed": "CCI",
-    "timo-dobra": "CCI"
+    "gospel-by-music": "CCI",
+    "timo-dobra": "CCI",
+    "jubilee-prayers": "OHI",
+    "hollis-ferriday": "OHI",
+    "ricky-del-rey": "CCI"
   },
   "artist_slug_source": {
     "_note": "Which source names a song for this catalogue. Default is the album metadata; 'filename' says the files on disk carry the authored slugs and the metadata does not match the audio. Hand-authored song_slug_overrides still win either way.",

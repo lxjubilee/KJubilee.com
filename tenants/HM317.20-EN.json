@@ -1,0 +1,42 @@
+{
+  "schema": "kj.tenant/1",
+  "id": "HM317.20-EN",
+  "slug": "gravel-road-gospel",
+  "name": "Gravel Road Gospel",
+  "hm": "317.20",
+  "band": "fivefold",
+  "mount": "gravel-road-gospel",
+  "language": {
+    "code": "EN",
+    "name": "English",
+    "tag": "en-US"
+  },
+  "mode": "OHI",
+  "origin": {
+    "city": "Muscle Shoals",
+    "timezone": "America/Chicago"
+  },
+  "catalogue": {
+    "pool": "catalogues",
+    "select": {
+      "artists": [
+        "hollis-ferriday"
+      ],
+      "pending": [
+        "HFGR1002EN",
+        "HFGR1003EN",
+        "HFGR1004EN",
+        "HFGR1005EN",
+        "HFGR1006EN"
+      ]
+    }
+  },
+  "delivery": {
+    "base": "https://cdn.kjubilee.com",
+    "dir": "radio/HM317.20-EN/delivery",
+    "file": "HM317.20EN-{YYYYMMDD}.json",
+    "example": "https://cdn.kjubilee.com/radio/HM317.20-EN/delivery/HM317.20EN-20260821.json"
+  },
+  "format": "Southern Gothic Americana",
+  "timezone": "America/Los_Angeles"
+}
