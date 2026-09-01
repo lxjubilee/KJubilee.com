@@ -1,0 +1,560 @@
+{
+  "schema": "kj.circulation/1",
+  "updated": "2026-08-27",
+  "method": "docs/CIRCULATION-METHODOLOGY.md",
+  "_readme": [
+    "THIS FILE IS THE INPUT, NOT THE ANSWER. Circulation is computed from it by",
+    "tools/build-circulation.js, so a station added tomorrow gets a number from",
+    "the model without anyone re-running the research. Edit the figures here as",
+    "better data arrives; never hand-edit a computed circulation onto a station.",
+    "",
+    "Every number below is an ESTIMATE. Where a figure is well sourced it is",
+    "cited in `sources`; where it is a judgement call it says so. The point is",
+    "that the judgement is written down and arguable rather than buried."
+  ],
+  "sources": [
+    {
+      "id": "pew-2025",
+      "what": "Global Christian population: 2.3 billion in 2020, 28.8% of world population. Sub-Saharan Africa now holds 31% of all Christians.",
+      "url": "https://www.pewresearch.org/religion/2025/06/09/how-the-global-religious-landscape-changed-from-2010-to-2020/"
+    },
+    {
+      "id": "pew-country-2025",
+      "what": "Christian population change and country-level Christian shares, 2010-2020.",
+      "url": "https://www.pewresearch.org/religion/2025/06/09/christian-population-change/"
+    },
+    {
+      "id": "smartphone-2025",
+      "what": "Global smartphone users ~5.3-5.8 billion in 2025, about 70% of world population; developed markets exceed 90% among adults 18-49.",
+      "url": "https://explodingtopics.com/blog/smartphone-stats"
+    },
+    {
+      "id": "christianity-by-country",
+      "what": "Per-country Christian shares used to weight each language's christianShare.",
+      "url": "https://en.wikipedia.org/wiki/Christianity_by_country"
+    },
+    {
+      "id": "gordon-conwell-2025",
+      "what": "Pentecostal/Charismatic 663 million and Evangelicals 420 million worldwide, against roughly 2.64 billion Christians.",
+      "url": "https://www.gordonconwell.edu/wp-content/uploads/sites/13/2025/01/Status-of-Global-Christianity-2025.pdf"
+    },
+    {
+      "id": "pew-renewalist",
+      "what": "Pentecostals and charismatics are about 26.7% of Christians; 86% of them live in the Global South.",
+      "url": "https://www.pewresearch.org/religion/2006/10/05/spirit-and-power/"
+    }
+  ],
+  "assumptions": {
+    "deviceBasis": "A smartphone or personal computer with a working internet connection. This band needs no app and no card, so device access is the only hard gate on whether a person could listen at all.",
+    "unionCeiling": 0.92,
+    "unionCeilingWhy": "Within one language, the union of everyone reachable by at least one station cannot be the whole online population — some fraction will not listen to any radio, in any genre, ever. 0.92 is a judgement call and the single biggest lever on the global total; raise or lower it here rather than anywhere else.",
+    "reachBasisPerStation": "total",
+    "reachBasisForTotal": "l1",
+    "basisWhy": "A station's own circulation uses TOTAL speakers (first plus second language), because a Dutch speaker who also speaks English really can listen to an English station. The global total uses FIRST-language speakers only, because otherwise the same bilingual person is counted under both languages and the total exceeds the actual number of human beings — which is the failure mode this whole model exists to avoid.",
+    "childDeviceFactor": 0.65,
+    "childDeviceWhy": "A child rarely owns the phone. This is the share of children in a connected household who can actually reach a device to listen on — a judgement call, and the reason the children's stations are not simply sized on the child population.",
+    "headline": "device-reachable",
+    "headlineWhy": "The figure shown on the dial is every person with a smartphone or computer, believer or not, because this band carries stations for both. That is the outreach the band is aiming at once it is finished — not what today's stations reach, which is tracked separately as `reachedToday`.",
+    "worldDeviceUsers": 5564218900,
+    "worldDeviceUsersWhy": "Every person on earth with a smartphone. Sources put this between 5.3 and 5.8 billion for 2025 (Exploding Topics; Statista counts 1.46bn connections in China alone). The figure carried here sits inside that range. THE LAST TWO DIGITS ARE ZERO AND THE PRECISION IS PRESENTATIONAL — nobody counts phones to the hundred. It is a point estimate inside a cited range, not a measurement, and it is the headline on the dial because this band carries stations for believers and everyone else alike.",
+    "languageEditionFullReach": true,
+    "languageEditionWhy": "A language edition is the ONLY station on this dial in its language, so its potential outreach is everyone who speaks it and has a device — full stop. No belief filter and no genre filter. Applying them stacked three narrowings on top of each other and produced 1,337 people for Israel Inspire against 8.1 million Hebrew speakers online, and 703,313 for Japan against 116 million. The point of a language edition is to reach people who are NOT yet believers, so filtering it down to existing Christians measured the opposite of what the station is for."
+  },
+  "languages": {
+    "English": {
+      "l1": 380000000,
+      "total": 1500000000,
+      "online": 0.88,
+      "christianShare": 0.52,
+      "note": "L2 speakers concentrated in India, Nigeria, the Philippines and Europe. christianShare is weighted low against the L1 core because much of the L2 population is not Christian-majority.",
+      "childShare": 0.2
+    },
+    "Spanish": {
+      "l1": 490000000,
+      "total": 560000000,
+      "online": 0.82,
+      "christianShare": 0.88,
+      "note": "Latin America plus Spain; Christian share among the highest of any large language.",
+      "childShare": 0.22
+    },
+    "Portuguese": {
+      "l1": 235000000,
+      "total": 265000000,
+      "online": 0.81,
+      "christianShare": 0.85,
+      "note": "Brazil dominates the pool; Portugal is the smaller share. Split across two stations, see the pool note in the methodology.",
+      "childShare": 0.2
+    },
+    "Mandarin": {
+      "l1": 940000000,
+      "total": 1120000000,
+      "online": 0.78,
+      "christianShare": 0.05,
+      "note": "Christian share is contested and estimates vary widely; 5% is a mid-range figure.",
+      "childShare": 0.17
+    },
+    "Hindi": {
+      "l1": 345000000,
+      "total": 610000000,
+      "online": 0.62,
+      "christianShare": 0.023,
+      "childShare": 0.26
+    },
+    "Arabic": {
+      "l1": 310000000,
+      "total": 400000000,
+      "online": 0.72,
+      "christianShare": 0.04,
+      "note": "Copts, Levantine and Gulf-diaspora Christians.",
+      "childShare": 0.3
+    },
+    "French": {
+      "l1": 80000000,
+      "total": 310000000,
+      "online": 0.7,
+      "christianShare": 0.45,
+      "note": "L2 pool is heavily West and Central African, which raises the Christian share above metropolitan France's.",
+      "childShare": 0.28
+    },
+    "Romanian": {
+      "l1": 24000000,
+      "total": 26000000,
+      "online": 0.83,
+      "christianShare": 0.86,
+      "childShare": 0.16
+    },
+    "Korean": {
+      "l1": 80000000,
+      "total": 82000000,
+      "online": 0.97,
+      "christianShare": 0.28,
+      "childShare": 0.11
+    },
+    "German": {
+      "l1": 95000000,
+      "total": 135000000,
+      "online": 0.93,
+      "christianShare": 0.52,
+      "note": "Nominal affiliation; practising share is far lower.",
+      "childShare": 0.14
+    },
+    "Russian": {
+      "l1": 150000000,
+      "total": 255000000,
+      "online": 0.87,
+      "christianShare": 0.68,
+      "childShare": 0.18
+    },
+    "Italian": {
+      "l1": 65000000,
+      "total": 68000000,
+      "online": 0.88,
+      "christianShare": 0.8,
+      "childShare": 0.13
+    },
+    "Tagalog": {
+      "l1": 28000000,
+      "total": 90000000,
+      "online": 0.75,
+      "christianShare": 0.92,
+      "note": "Philippines; the diaspora is scattered across nearly every country.",
+      "childShare": 0.3
+    },
+    "Vietnamese": {
+      "l1": 85000000,
+      "total": 86000000,
+      "online": 0.79,
+      "christianShare": 0.09,
+      "childShare": 0.23
+    },
+    "Swahili": {
+      "l1": 20000000,
+      "total": 90000000,
+      "online": 0.35,
+      "christianShare": 0.6,
+      "note": "East Africa. Device access is the binding constraint here, not belief.",
+      "childShare": 0.4
+    },
+    "Yoruba": {
+      "l1": 46000000,
+      "total": 50000000,
+      "online": 0.45,
+      "christianShare": 0.5,
+      "childShare": 0.42
+    },
+    "Amharic": {
+      "l1": 35000000,
+      "total": 60000000,
+      "online": 0.28,
+      "christianShare": 0.63,
+      "note": "Ethiopian Orthodox; lowest device access on the band.",
+      "childShare": 0.4
+    },
+    "Polish": {
+      "l1": 40000000,
+      "total": 42000000,
+      "online": 0.9,
+      "christianShare": 0.87,
+      "childShare": 0.15
+    },
+    "Indonesian": {
+      "l1": 45000000,
+      "total": 200000000,
+      "online": 0.72,
+      "christianShare": 0.1,
+      "childShare": 0.25
+    },
+    "Dutch": {
+      "l1": 24000000,
+      "total": 30000000,
+      "online": 0.95,
+      "christianShare": 0.39,
+      "childShare": 0.15
+    },
+    "Danish": {
+      "l1": 5500000,
+      "total": 6000000,
+      "online": 0.98,
+      "christianShare": 0.72,
+      "note": "High nominal membership of the folk church, low practice.",
+      "childShare": 0.16
+    },
+    "Swedish": {
+      "l1": 10000000,
+      "total": 13000000,
+      "online": 0.96,
+      "christianShare": 0.53,
+      "childShare": 0.17
+    },
+    "Czech": {
+      "l1": 10500000,
+      "total": 11000000,
+      "online": 0.9,
+      "christianShare": 0.2,
+      "note": "One of the most secular populations in Europe.",
+      "childShare": 0.16
+    },
+    "Hungarian": {
+      "l1": 13000000,
+      "total": 14000000,
+      "online": 0.89,
+      "christianShare": 0.56,
+      "childShare": 0.14
+    },
+    "Bulgarian": {
+      "l1": 8000000,
+      "total": 9000000,
+      "online": 0.79,
+      "christianShare": 0.8,
+      "childShare": 0.15
+    },
+    "Turkish": {
+      "l1": 84000000,
+      "total": 90000000,
+      "online": 0.83,
+      "christianShare": 0.002,
+      "note": "A very small church in a very large population.",
+      "childShare": 0.22
+    },
+    "Hebrew": {
+      "l1": 5000000,
+      "total": 9000000,
+      "online": 0.9,
+      "christianShare": 0.02,
+      "note": "Messianic and Arab-Israeli Christian communities.",
+      "childShare": 0.28
+    },
+    "Thai": {
+      "l1": 60000000,
+      "total": 70000000,
+      "online": 0.88,
+      "christianShare": 0.012,
+      "childShare": 0.16
+    },
+    "Japanese": {
+      "l1": 123000000,
+      "total": 125000000,
+      "online": 0.93,
+      "christianShare": 0.011,
+      "note": "Among the smallest Christian shares of any developed nation.",
+      "childShare": 0.12
+    },
+    "Bengali": {
+      "l1": 240000000,
+      "total": 270000000,
+      "online": 0.45,
+      "christianShare": 0.004,
+      "childShare": 0.27
+    }
+  },
+  "genres": {
+    "_note": "Share of the addressable audience this station could plausibly REACH — not the share who would name it their favourite. Those are different questions and the first version answered the second one, which is why every general-audience station came out implausibly small. Shares overlap on purpose; the total is a capped union, never a sum.",
+    "Praise & Worship": {
+      "audience": "christian",
+      "share": 0.55
+    },
+    "Jubilee Praise": {
+      "audience": "christian",
+      "share": 0.5
+    },
+    "Covenant Worship": {
+      "audience": "christian",
+      "share": 0.3
+    },
+    "Ambient Worship": {
+      "audience": "christian",
+      "share": 0.18
+    },
+    "Biblical Music": {
+      "audience": "christian",
+      "share": 0.22
+    },
+    "Celebration": {
+      "audience": "christian",
+      "share": 0.24
+    },
+    "Angel Songs": {
+      "audience": "christian",
+      "share": 0.12
+    },
+    "Bible Study": {
+      "audience": "christian",
+      "share": 0.3
+    },
+    "Online Church": {
+      "audience": "christian",
+      "share": 0.26
+    },
+    "Devotional": {
+      "audience": "christian",
+      "share": 0.28
+    },
+    "Prayer": {
+      "audience": "christian",
+      "share": 0.3
+    },
+    "Talk": {
+      "audience": "christian",
+      "share": 0.16
+    },
+    "Storytelling": {
+      "audience": "christian",
+      "share": 0.14
+    },
+    "Radio Theater": {
+      "audience": "christian",
+      "share": 0.12
+    },
+    "Christian Country": {
+      "audience": "christian",
+      "share": 0.22
+    },
+    "Country": {
+      "audience": "christian",
+      "share": 0.22
+    },
+    "Christian Rap": {
+      "audience": "christian",
+      "share": 0.13
+    },
+    "Afro-Caribbean": {
+      "audience": "christian",
+      "share": 0.1
+    },
+    "Latin Worship": {
+      "audience": "christian",
+      "share": 0.14
+    },
+    "Hawaiian Praise": {
+      "audience": "christian",
+      "share": 0.04
+    },
+    "Middle Eastern": {
+      "audience": "christian",
+      "share": 0.05
+    },
+    "Hebrew Roots": {
+      "audience": "christian",
+      "share": 0.07
+    },
+    "Messianic Worship": {
+      "audience": "christian",
+      "share": 0.06
+    },
+    "Kids Praise": {
+      "audience": "christian",
+      "share": 0.18,
+      "note": "Sized on parents of young children within the faith audience, not on children."
+    },
+    "Sleep & Rest": {
+      "audience": "christian",
+      "share": 0.2
+    },
+    "Live Sessions": {
+      "audience": "christian",
+      "share": 0.13
+    },
+    "New & Rising": {
+      "audience": "christian",
+      "share": 0.11
+    },
+    "Pre-Evangelistic Pop": {
+      "audience": "general",
+      "share": 0.85,
+      "note": "Aimed past the faith audience on purpose, so it draws from the general pool at a low share."
+    },
+    "Family Pop": {
+      "audience": "general",
+      "share": 0.45
+    },
+    "Kids": {
+      "audience": "general",
+      "share": 0.35
+    },
+    "Classical": {
+      "audience": "general",
+      "share": 0.2
+    },
+    "Jazz": {
+      "audience": "general",
+      "share": 0.18
+    },
+    "Chill": {
+      "audience": "general",
+      "share": 0.3
+    },
+    "Coffeehouse": {
+      "audience": "general",
+      "share": 0.25
+    },
+    "Drive Time": {
+      "audience": "general",
+      "share": 0.35
+    },
+    "Focus & Study": {
+      "audience": "general",
+      "share": 0.3
+    },
+    "Throwback": {
+      "audience": "general",
+      "share": 0.3
+    },
+    "80s & 90s": {
+      "audience": "general",
+      "share": 0.3
+    },
+    "Holiday": {
+      "audience": "general",
+      "share": 0.35
+    },
+    "Wellness": {
+      "audience": "general",
+      "share": 0.22
+    },
+    "Latin": {
+      "audience": "general",
+      "share": 0.2
+    },
+    "Classical Worship": {
+      "audience": "christian",
+      "share": 0.1
+    }
+  },
+  "genreFallback": {
+    "faith": {
+      "audience": "christian",
+      "share": 0.15,
+      "why": "A format with no entry above is assumed to reach a modest slice of the faith audience rather than none, so a new station is never silently worth zero."
+    },
+    "general": {
+      "audience": "general",
+      "share": 0.25
+    }
+  },
+  "audiences": {
+    "_note": "What a station is actually programmed FOR. Multiplying the whole Christian pool by a genre share was wrong: it produced 377 million English-speaking Pentecostals, which is more renewalists than exist in any language. A station tied to a tradition is sized on that tradition, not on Christians in general.",
+    "general": {
+      "of": "online",
+      "share": 1.0,
+      "note": "Everyone with a device. Family-safe and mainstream formats ask the listener to believe nothing first."
+    },
+    "christian": {
+      "of": "christian",
+      "share": 1.0,
+      "note": "The whole Christian pool of that language."
+    },
+    "renewalist": {
+      "of": "christian",
+      "share": 0.25,
+      "note": "Pentecostal and Charismatic. 663M against ~2.64bn Christians (Gordon-Conwell 2025); Pew puts it at 26.7%. 86% live in the Global South, which is why the English figure stays large — Nigeria, Kenya, Ghana and the Philippines are English-accessible."
+    },
+    "evangelical": {
+      "of": "christian",
+      "share": 0.16,
+      "note": "420M narrow definition against ~2.64bn Christians. The broad 'wider evangelical' definition would be 0.35; the narrow one is used deliberately."
+    },
+    "hebraic": {
+      "of": "christian",
+      "share": 0.015,
+      "note": "Messianic Jewish congregations plus the Hebrew-roots movement among gentile believers. Genuinely small — Messianic Jews number in the hundreds of thousands worldwide — and this share is the most uncertain figure in the file."
+    },
+    "children": {
+      "of": "children",
+      "share": 1.0,
+      "note": "Sized on children with device access, not on their parents. See childShare per language and childDeviceFactor."
+    }
+  },
+  "stationOverrides": {
+    "_note": "Format does not identify a tradition — Pentecostal Shout's format is 'Praise & Worship', the same as a generic worship station — so the stations whose identity IS a tradition are named here. Curated by hand on purpose: a keyword rule tagged Raising Arrows as a children's station when its audience is parents, and tagged every station using the Yeshua name as Hebrew-roots when that is the house naming style across the whole band, not a niche audience.",
+    "jubilee-gospel-fire": {
+      "audience": "renewalist",
+      "why": "Pentecostal Shout"
+    },
+    "pentecostal-fire": {
+      "audience": "renewalist",
+      "why": "Pentecostal Fire"
+    },
+    "upper-room": {
+      "audience": "renewalist",
+      "why": "The Upper Room — Acts 2 identity"
+    },
+    "word-of-fire": {
+      "audience": "renewalist",
+      "why": "Word of Fire!"
+    },
+    "apostolic-five-fold": {
+      "audience": "renewalist",
+      "why": "Apostolic & Five-Fold"
+    },
+    "shema-roots": {
+      "audience": "hebraic",
+      "why": "Hebrew roots"
+    },
+    "hebraic-celebrations": {
+      "audience": "hebraic",
+      "why": "Messianic worship and the feasts"
+    },
+    "israel-inspire-ivrit": {
+      "audience": "hebraic",
+      "why": "Hebrew-language Messianic worship"
+    },
+    "gods-little-lambs": {
+      "audience": "children"
+    },
+    "jubilee-kids-party": {
+      "audience": "children"
+    },
+    "inspire-kids": {
+      "audience": "children"
+    },
+    "bedtime-blessings": {
+      "audience": "children"
+    },
+    "inspire-lullaby": {
+      "audience": "children"
+    },
+    "story-hour": {
+      "audience": "children"
+    }
+  }
+}

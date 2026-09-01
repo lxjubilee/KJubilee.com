@@ -168,8 +168,17 @@ for (const [name, meta] of Object.entries(src.cities)) {
         continue;
     }
 
+    // Carried through to the cards, which print "Sacramento, California". A
+    // notice rather than a failure: a city with no state or country still
+    // renders, as the bare city name, and refusing to write the whole roster
+    // over one missing label would be the wrong trade.
+    if (!meta.place) notices.push('city "' + name + '" has no "place" (its state, or its country outside the US)');
+
     city[name] = {
         city: name,
+        // The state for a US city, the country for every other — what a reader
+        // needs after the comma to know where the station actually is.
+        place: meta.place,
         cc: meta.cc,
         tz: meta.tz,
         tower: !!hit,
@@ -219,20 +228,126 @@ for (const [slug, entry] of Object.entries(src.stations)) {
     out[slug] = {
         why: entry.why || '',
         bases: resolved.map(b => ({
-            city: b.city, cc: b.cc, tz: b.tz, tower: b.tower,
+            city: b.city, place: b.place, cc: b.cc, tz: b.tz, tower: b.tower,
             lat: b.lat, lon: b.lon, region: b.region,
         })),
     };
 }
 
+/* ── EVERY STATION GETS A HOME, WITHOUT ANYONE REMEMBERING TO GIVE IT ONE ──
+   A station with no base is a station with no origin, and until now that was
+   caught here and nowhere else: this tool refused to write, somebody read the
+   error, and the station stayed base-less until they got round to it. Fifteen
+   of them had been sitting like that, including one added the same day.
+
+   So a station that reaches this point with no bases is SEEDED rather than
+   rejected. The anchor is the station's own declared origin — the tenant's
+   `origin.city`, which sync-tenants.js writes from the STATIONS table's
+   hostCity, so a new frequency already knows where it is from before this ever
+   runs. Relays are taken from DEFAULT_RELAYS: the first gazetteer cities that
+   add a UTC offset the anchor does not have, which is the minimum the schema
+   demands and no more.
+
+   A SEEDED ENTRY IS WRITTEN BACK to data/broadcast-bases.json marked
+   `"auto": true`, and its `why` says it was seeded and wants a human. The point
+   is that a station is never broadcast-less, not that the guess is good: the
+   guess is a placeholder, and it is written down so replacing it is editing a
+   line rather than starting from nothing.
+
+   `--check` NEVER WRITES. It reports what would be seeded and still fails, so
+   the validation gate keeps its meaning in CI and nobody's "check" quietly
+   mutates an editorial file. */
+const seeded = [];
+
+/* Gazetteer cities only, in the order they are tried. Between the American
+   coasts, western Europe and east Asia, any anchor on earth finds a second
+   offset within the first few. */
+const DEFAULT_RELAYS = ['Newark', 'Los Angeles', 'Frankfurt', 'Tokyo',
+                        'Chicago', 'Dubai', 'Honolulu', 'Sydney'];
+
+function gazetteerCity(name) {
+    if (!name) return null;
+    for (const c of Object.values(city)) {
+        if (sameCity(c.city, name)) return c;
+    }
+    return null;
+}
+
+function seedBases(slug) {
+    const anchor = gazetteerCity(tenantOrigin[slug]);
+    if (!anchor) return null;            // nothing to anchor on — still a failure
+
+    const bases = [anchor.city];
+    const offsets = new Set([anchor.offset]);
+    for (const name of DEFAULT_RELAYS) {
+        if (offsets.size >= 2 && bases.length >= 3) break;
+        const c = city[name];
+        if (!c || bases.indexOf(c.city) >= 0 || offsets.has(c.offset)) continue;
+        bases.push(c.city);
+        offsets.add(c.offset);
+    }
+    return offsets.size >= 2 ? bases : null;
+}
+
 // Every station on the dial needs somewhere to broadcast from.
 for (const s of catalogue) {
-    if (!out[s.slug] && !problems.some(p => p.startsWith(s.slug + ':'))) {
-        fail('station has no bases: ' + s.slug + ' (' + s.name + ')');
+    if (out[s.slug] || problems.some(p => p.startsWith(s.slug + ':'))) continue;
+
+    const bases = seedBases(s.slug);
+    if (!bases) {
+        fail('station has no bases and none could be seeded: ' + s.slug + ' (' + s.name + ')'
+            + ' — give it a hostCity in the STATIONS table (sync-tenants writes it to the'
+            + ' tenant origin), or an entry in data/broadcast-bases.json');
+        continue;
     }
+
+    const why = 'SEEDED AUTOMATICALLY from the station origin — replace this with a real'
+        + ' anchor-and-relay rationale. The anchor is where the station says it is from;'
+        + ' the relays only guarantee the two time zones the schema requires.';
+    seeded.push({ slug: s.slug, name: s.name, bases: bases, why: why });
+
+    const resolved = bases.map(n => city[n]);
+    out[s.slug] = {
+        why: why,
+        auto: true,
+        bases: resolved.map(b => ({
+            city: b.city, place: b.place, cc: b.cc, tz: b.tz, tower: b.tower,
+            lat: b.lat, lon: b.lon, region: b.region,
+        })),
+    };
+}
+
+/* Write the seeds back into the editorial file, so the next run reads a real
+   entry rather than seeding again — and so the placeholder is somewhere a
+   person can find and fix. Skipped under --check, which must stay read-only. */
+if (seeded.length && !CHECK_ONLY) {
+    for (const sd of seeded) {
+        src.stations[sd.slug] = { bases: sd.bases, why: sd.why, auto: true };
+    }
+    fs.writeFileSync(SRC, JSON.stringify(src, null, 2) + '\n');
 }
 
 // ── report ───────────────────────────────────────────────────────────────
+/* Under --check a seed is a FAILURE, not a fix. The seed keeps a live deploy
+   from shipping a station with no origin; the gate exists to make sure nobody
+   leaves the placeholder rationale in place. Both are true at once, and this
+   is the line that keeps them from cancelling each other out. */
+if (seeded.length && CHECK_ONLY) {
+    for (const sd of seeded) {
+        fail('station has no bases in data/broadcast-bases.json: ' + sd.slug
+            + ' — a normal run would seed it as ' + sd.bases.join(', ')
+            + '; write a real anchor and relays instead');
+    }
+}
+
+if (seeded.length) {
+    console.log('\n  ' + seeded.length + ' station(s) had no base and were SEEDED from their origin —');
+    console.log('  edit data/broadcast-bases.json to replace the placeholder rationale:');
+    for (const sd of seeded) {
+        console.log('    · ' + sd.slug + '  ->  ' + sd.bases.join(', '));
+    }
+}
+
 for (const n of notices) console.log('  · ' + n);
 
 if (problems.length) {

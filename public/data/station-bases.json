@@ -7,6 +7,7 @@
    "bases": [
     {
      "city": "Mexico City",
+     "place": "Mexico",
      "cc": "MX",
      "tz": "America/Mexico_City",
      "tower": true,
@@ -16,6 +17,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -25,6 +27,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -39,6 +42,7 @@
    "bases": [
     {
      "city": "Madrid",
+     "place": "Spain",
      "cc": "ES",
      "tz": "Europe/Madrid",
      "tower": true,
@@ -48,6 +52,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -57,6 +62,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -71,6 +77,7 @@
    "bases": [
     {
      "city": "São Paulo",
+     "place": "Brazil",
      "cc": "BR",
      "tz": "America/Sao_Paulo",
      "tower": true,
@@ -80,6 +87,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -89,6 +97,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -103,6 +112,7 @@
    "bases": [
     {
      "city": "Lisbon",
+     "place": "Portugal",
      "cc": "PT",
      "tz": "Europe/Lisbon",
      "tower": true,
@@ -112,6 +122,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -121,6 +132,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -135,6 +147,7 @@
    "bases": [
     {
      "city": "Taipei",
+     "place": "Taiwan",
      "cc": "TW",
      "tz": "Asia/Taipei",
      "tower": true,
@@ -144,6 +157,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -153,6 +167,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -167,6 +182,7 @@
    "bases": [
     {
      "city": "Taipei",
+     "place": "Taiwan",
      "cc": "TW",
      "tz": "Asia/Taipei",
      "tower": true,
@@ -176,6 +192,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -185,6 +202,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -199,6 +217,7 @@
    "bases": [
     {
      "city": "New Delhi",
+     "place": "India",
      "cc": "IN",
      "tz": "Asia/Kolkata",
      "tower": true,
@@ -208,6 +227,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -217,6 +237,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -231,6 +252,7 @@
    "bases": [
     {
      "city": "Kathmandu",
+     "place": "Nepal",
      "cc": "NP",
      "tz": "Asia/Kathmandu",
      "tower": true,
@@ -240,6 +262,7 @@
     },
     {
      "city": "New Delhi",
+     "place": "India",
      "cc": "IN",
      "tz": "Asia/Kolkata",
      "tower": true,
@@ -249,6 +272,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -263,6 +287,7 @@
    "bases": [
     {
      "city": "Dubai",
+     "place": "United Arab Emirates",
      "cc": "AE",
      "tz": "Asia/Dubai",
      "tower": true,
@@ -272,6 +297,7 @@
     },
     {
      "city": "Detroit",
+     "place": "Michigan",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -281,6 +307,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -295,6 +322,7 @@
    "bases": [
     {
      "city": "Cairo",
+     "place": "Egypt",
      "cc": "EG",
      "tz": "Africa/Cairo",
      "tower": true,
@@ -304,6 +332,7 @@
     },
     {
      "city": "Detroit",
+     "place": "Michigan",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -313,6 +342,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -327,6 +357,7 @@
    "bases": [
     {
      "city": "Paris",
+     "place": "France",
      "cc": "FR",
      "tz": "Europe/Paris",
      "tower": true,
@@ -336,6 +367,7 @@
     },
     {
      "city": "Montréal",
+     "place": "Canada",
      "cc": "CA",
      "tz": "America/Toronto",
      "tower": true,
@@ -345,6 +377,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -359,6 +392,7 @@
    "bases": [
     {
      "city": "Brussels",
+     "place": "Belgium",
      "cc": "BE",
      "tz": "Europe/Brussels",
      "tower": true,
@@ -368,6 +402,7 @@
     },
     {
      "city": "Montréal",
+     "place": "Canada",
      "cc": "CA",
      "tz": "America/Toronto",
      "tower": true,
@@ -377,6 +412,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -391,6 +427,7 @@
    "bases": [
     {
      "city": "Bucharest",
+     "place": "Romania",
      "cc": "RO",
      "tz": "Europe/Bucharest",
      "tower": true,
@@ -400,6 +437,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -409,6 +447,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -423,6 +462,7 @@
    "bases": [
     {
      "city": "Seoul",
+     "place": "South Korea",
      "cc": "KR",
      "tz": "Asia/Seoul",
      "tower": true,
@@ -432,6 +472,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -441,6 +482,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -455,6 +497,7 @@
    "bases": [
     {
      "city": "Seoul",
+     "place": "South Korea",
      "cc": "KR",
      "tz": "Asia/Seoul",
      "tower": true,
@@ -464,6 +507,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -473,6 +517,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -487,6 +532,7 @@
    "bases": [
     {
      "city": "Frankfurt",
+     "place": "Germany",
      "cc": "DE",
      "tz": "Europe/Berlin",
      "tower": true,
@@ -496,6 +542,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -505,6 +552,7 @@
     },
     {
      "city": "Philadelphia",
+     "place": "Pennsylvania",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -519,6 +567,7 @@
    "bases": [
     {
      "city": "Moscow",
+     "place": "Russia",
      "cc": "RU",
      "tz": "Europe/Moscow",
      "tower": true,
@@ -528,6 +577,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -537,6 +587,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -551,6 +602,7 @@
    "bases": [
     {
      "city": "Kyiv",
+     "place": "Ukraine",
      "cc": "UA",
      "tz": "Europe/Kyiv",
      "tower": true,
@@ -560,6 +612,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -569,6 +622,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -583,6 +637,7 @@
    "bases": [
     {
      "city": "Rome",
+     "place": "Italy",
      "cc": "IT",
      "tz": "Europe/Rome",
      "tower": true,
@@ -592,6 +647,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -601,6 +657,7 @@
     },
     {
      "city": "Philadelphia",
+     "place": "Pennsylvania",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -615,6 +672,7 @@
    "bases": [
     {
      "city": "Manila",
+     "place": "Philippines",
      "cc": "PH",
      "tz": "Asia/Manila",
      "tower": true,
@@ -624,6 +682,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -633,6 +692,7 @@
     },
     {
      "city": "Las Vegas",
+     "place": "Nevada",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -647,6 +707,7 @@
    "bases": [
     {
      "city": "Cebu",
+     "place": "Philippines",
      "cc": "PH",
      "tz": "Asia/Manila",
      "tower": true,
@@ -656,6 +717,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -665,6 +727,7 @@
     },
     {
      "city": "Honolulu",
+     "place": "Hawaii",
      "cc": "US",
      "tz": "Pacific/Honolulu",
      "tower": true,
@@ -679,6 +742,7 @@
    "bases": [
     {
      "city": "Ho Chi Minh City",
+     "place": "Vietnam",
      "cc": "VN",
      "tz": "Asia/Ho_Chi_Minh",
      "tower": true,
@@ -688,6 +752,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -697,6 +762,7 @@
     },
     {
      "city": "Houston",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -711,6 +777,7 @@
    "bases": [
     {
      "city": "Nairobi",
+     "place": "Kenya",
      "cc": "KE",
      "tz": "Africa/Nairobi",
      "tower": true,
@@ -720,6 +787,7 @@
     },
     {
      "city": "Minneapolis",
+     "place": "Minnesota",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -729,6 +797,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -743,6 +812,7 @@
    "bases": [
     {
      "city": "Dar Es Salaam",
+     "place": "Tanzania",
      "cc": "TZ",
      "tz": "Africa/Dar_es_Salaam",
      "tower": true,
@@ -752,6 +822,7 @@
     },
     {
      "city": "Nairobi",
+     "place": "Kenya",
      "cc": "KE",
      "tz": "Africa/Nairobi",
      "tower": true,
@@ -761,6 +832,7 @@
     },
     {
      "city": "Minneapolis",
+     "place": "Minnesota",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -775,6 +847,7 @@
    "bases": [
     {
      "city": "Lagos",
+     "place": "Nigeria",
      "cc": "NG",
      "tz": "Africa/Lagos",
      "tower": true,
@@ -784,6 +857,7 @@
     },
     {
      "city": "Houston",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -793,6 +867,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -807,6 +882,7 @@
    "bases": [
     {
      "city": "Addis Ababa",
+     "place": "Ethiopia",
      "cc": "ET",
      "tz": "Africa/Addis_Ababa",
      "tower": true,
@@ -816,6 +892,7 @@
     },
     {
      "city": "Ashburn",
+     "place": "Virginia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -825,6 +902,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -839,6 +917,7 @@
    "bases": [
     {
      "city": "Warsaw",
+     "place": "Poland",
      "cc": "PL",
      "tz": "Europe/Warsaw",
      "tower": true,
@@ -848,6 +927,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -857,6 +937,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -871,6 +952,7 @@
    "bases": [
     {
      "city": "Jakarta",
+     "place": "Indonesia",
      "cc": "ID",
      "tz": "Asia/Jakarta",
      "tower": true,
@@ -880,6 +962,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -889,6 +972,7 @@
     },
     {
      "city": "Philadelphia",
+     "place": "Pennsylvania",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -903,6 +987,7 @@
    "bases": [
     {
      "city": "Tokyo",
+     "place": "Japan",
      "cc": "JP",
      "tz": "Asia/Tokyo",
      "tower": true,
@@ -912,6 +997,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -921,6 +1007,7 @@
     },
     {
      "city": "Honolulu",
+     "place": "Hawaii",
      "cc": "US",
      "tz": "Pacific/Honolulu",
      "tower": true,
@@ -935,6 +1022,7 @@
    "bases": [
     {
      "city": "Dhaka",
+     "place": "Bangladesh",
      "cc": "BD",
      "tz": "Asia/Dhaka",
      "tower": true,
@@ -944,6 +1032,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -953,6 +1042,7 @@
     },
     {
      "city": "Detroit",
+     "place": "Michigan",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -963,10 +1053,11 @@
    ]
   },
   "jubilee-radio": {
-   "why": "The flagship carries five bases where every other station carries three, because it is the dial's front door and should reach a listener on their own clock wherever they are. Sacramento, Denver, Houston, Miami and Honolulu are five distinct time zones — Pacific, Mountain, Central, Eastern and Hawaii — which is every zone the United States keeps except Alaska.",
+   "why": "Sacramento is the flagship home. Denver, New Orleans, Tampa and Honolulu spread the network across five zones so no listener in the United States is outside a base's own clock.",
    "bases": [
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -976,6 +1067,7 @@
     },
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -984,25 +1076,28 @@
      "region": "North America"
     },
     {
-     "city": "Miami",
+     "city": "New Orleans",
+     "place": "Louisiana",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
+    },
+    {
+     "city": "Tampa",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
-     "lat": 25.77,
-     "lon": -80.19,
-     "region": "North America"
-    },
-    {
-     "city": "Houston",
-     "cc": "US",
-     "tz": "America/Chicago",
-     "tower": true,
-     "lat": 29.76,
-     "lon": -95.36,
+     "lat": 27.95,
+     "lon": -82.46,
      "region": "North America"
     },
     {
      "city": "Honolulu",
+     "place": "Hawaii",
      "cc": "US",
      "tz": "Pacific/Honolulu",
      "tower": true,
@@ -1013,10 +1108,11 @@
    ]
   },
   "jubilee-praise": {
-   "why": "Torah Sings keeps its Jerusalem origin — one of the four stations whose anchor is deliberately not an edge city. Los Angeles and NY/NJ hold the two largest Messianic communities in America.",
+   "why": "Jerusalem is the book this catalogue sings, and the anchor. Newark carries the diaspora seven zones west.",
    "bases": [
     {
      "city": "Jerusalem",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
      "tower": false,
@@ -1025,16 +1121,8 @@
      "region": null
     },
     {
-     "city": "Los Angeles",
-     "cc": "US",
-     "tz": "America/Los_Angeles",
-     "tower": true,
-     "lat": 34.05,
-     "lon": -118.24,
-     "region": "North America"
-    },
-    {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1045,19 +1133,11 @@
    ]
   },
   "jubilee-ccm": {
-   "why": "Jerusalem per the tenant, with Nashville as the CCM relay and Los Angeles closing the Pacific.",
+   "why": "Nashville is where the catalogue is recorded; Jerusalem is the name the station is built on, nine zones east.",
    "bases": [
     {
-     "city": "Jerusalem",
-     "cc": "IL",
-     "tz": "Asia/Jerusalem",
-     "tower": false,
-     "lat": null,
-     "lon": null,
-     "region": null
-    },
-    {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1066,21 +1146,23 @@
      "region": "North America"
     },
     {
-     "city": "Los Angeles",
-     "cc": "US",
-     "tz": "America/Los_Angeles",
-     "tower": true,
-     "lat": 34.05,
-     "lon": -118.24,
-     "region": "North America"
+     "city": "Jerusalem",
+     "place": "Israel",
+     "cc": "IL",
+     "tz": "Asia/Jerusalem",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
     }
    ]
   },
   "yes-and-amen": {
-   "why": "Boston anchors, with Phoenix and Charlotte covering Mountain and the Southeast. The anchor moved off the tenant's Nashville on 2026-08-25; Boston and Charlotte both keep Eastern time, so Phoenix is what makes the set span more than one clock.",
+   "why": "Boston anchors the declaration series in the east; Phoenix covers the mountain zone two hours behind.",
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1090,29 +1172,22 @@
     },
     {
      "city": "Phoenix",
+     "place": "Arizona",
      "cc": "US",
      "tz": "America/Phoenix",
      "tower": true,
      "lat": 33.45,
      "lon": -112.07,
      "region": "North America"
-    },
-    {
-     "city": "Charlotte",
-     "cc": "US",
-     "tz": "America/New_York",
-     "tower": true,
-     "lat": 35.23,
-     "lon": -80.84,
-     "region": "North America"
     }
    ]
   },
   "country-gospel": {
-   "why": "Nashville per the tenant. Sacramento reaches the Central Valley, which is real country-gospel country, and Charlotte the Carolinas.",
+   "why": "Nashville is country music, and the anchor. Charlotte carries the southeastern audience an hour east.",
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1121,16 +1196,8 @@
      "region": "North America"
     },
     {
-     "city": "Sacramento",
-     "cc": "US",
-     "tz": "America/Los_Angeles",
-     "tower": true,
-     "lat": 38.58,
-     "lon": -121.49,
-     "region": "North America"
-    },
-    {
      "city": "Charlotte",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1141,10 +1208,11 @@
    ]
   },
   "jubilee-gospel-fire": {
-   "why": "Memphis per the tenant and the home of COGIC. Atlanta and Los Angeles are the two other centres of Black gospel.",
+   "why": "Memphis is the anchor this music comes out of; Atlanta adds the eastern zone and the larger Pentecostal audience.",
    "bases": [
     {
      "city": "Memphis",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1154,29 +1222,22 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
      "lat": 33.75,
      "lon": -84.39,
      "region": "North America"
-    },
-    {
-     "city": "Los Angeles",
-     "cc": "US",
-     "tz": "America/Los_Angeles",
-     "tower": true,
-     "lat": 34.05,
-     "lon": -118.24,
-     "region": "North America"
     }
    ]
   },
   "ancient-paths": {
-   "why": "Amman per the tenant. Dallas and Los Angeles carry the American audience for Amir's catalogue across two zones.",
+   "why": "Amman anchors the ancient paths; Dallas carries the American audience ten zones west.",
    "bases": [
     {
      "city": "Amman",
+     "place": "Jordan",
      "cc": "JO",
      "tz": "Asia/Amman",
      "tower": true,
@@ -1186,29 +1247,22 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
      "lat": 32.78,
      "lon": -96.81,
      "region": "North America"
-    },
-    {
-     "city": "Los Angeles",
-     "cc": "US",
-     "tz": "America/Los_Angeles",
-     "tower": true,
-     "lat": 34.05,
-     "lon": -118.24,
-     "region": "North America"
     }
    ]
   },
   "riddim-and-rhyme": {
-   "why": "Kingston per the tenant. Miami and Newark are the two ends of the Caribbean diaspora corridor.",
+   "why": "Kingston is the music itself, and the anchor. Miami is the Caribbean diaspora capital and keeps a different clock through the summer.",
    "bases": [
     {
      "city": "Kingston",
+     "place": "Jamaica",
      "cc": "JM",
      "tz": "America/Jamaica",
      "tower": true,
@@ -1218,29 +1272,22 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
      "lat": 25.77,
      "lon": -80.19,
      "region": "North America"
-    },
-    {
-     "city": "Newark",
-     "cc": "US",
-     "tz": "America/New_York",
-     "tower": true,
-     "lat": 40.74,
-     "lon": -74.17,
-     "region": "North America"
     }
    ]
   },
   "latin-worship": {
-   "why": "Miami per the tenant. Sung in English for a Latino audience, so the relays follow US Latino population rather than Latin America.",
+   "why": "Miami anchors the Latin catalogue; Los Angeles and San Antonio are the other two poles of US Hispanic life, three zones across.",
    "bases": [
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1250,6 +1297,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1259,6 +1307,7 @@
     },
     {
      "city": "San Antonio",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1269,19 +1318,21 @@
    ]
   },
   "hebraic-celebrations": {
-   "why": "Jerusalem per the tenant — the feasts are kept on Jerusalem time. South Florida and Los Angeles hold the largest US audiences for them.",
+   "why": "Tel Aviv anchors the feasts; Miami and Los Angeles hold the two largest Jewish populations outside Israel, seven and ten zones west.",
    "bases": [
     {
-     "city": "Jerusalem",
+     "city": "Tel Aviv",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
-     "tower": false,
-     "lat": null,
-     "lon": null,
-     "region": null
+     "tower": true,
+     "lat": 32.08,
+     "lon": 34.78,
+     "region": "Middle East"
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1291,6 +1342,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1301,10 +1353,11 @@
    ]
   },
   "midnight-praise": {
-   "why": "The one station where the clock is the whole point. Dublin, Chicago and Seattle are eight hours apart end to end, so midnight rolls continuously rather than arriving everywhere at once.",
+   "why": "Dublin anchors the Celtic and European ambient this station is built on. Chicago and Seattle carry the overnight slot across the American zones, six and eight hours behind it.",
    "bases": [
     {
      "city": "Dublin",
+     "place": "Ireland",
      "cc": "IE",
      "tz": "Europe/Dublin",
      "tower": true,
@@ -1314,6 +1367,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1323,6 +1377,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1333,10 +1388,11 @@
    ]
   },
   "island-hallelujah": {
-   "why": "Honolulu is proposed as the anchor over the tenant's Seattle — a Hawaiian praise station should originate in Hawaii. Seattle is kept as Tahoma's own base; San Diego carries the Pacific mainland.",
+   "why": "Honolulu is the island sound and the anchor; San Diego carries the mainland Pacific audience three zones east.",
    "bases": [
     {
      "city": "Honolulu",
+     "place": "Hawaii",
      "cc": "US",
      "tz": "Pacific/Honolulu",
      "tower": true,
@@ -1345,16 +1401,8 @@
      "region": "North America"
     },
     {
-     "city": "Seattle",
-     "cc": "US",
-     "tz": "America/Los_Angeles",
-     "tower": true,
-     "lat": 47.61,
-     "lon": -122.33,
-     "region": "North America"
-    },
-    {
      "city": "San Diego",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1365,10 +1413,11 @@
    ]
   },
   "radiant-stones-radio": {
-   "why": "A clean three-zone spread with no strong regional claim on the format.",
+   "why": "Seattle anchors the trio and Atlanta carries the concert audience three zones east.",
    "bases": [
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1377,16 +1426,8 @@
      "region": "North America"
     },
     {
-     "city": "Denver",
-     "cc": "US",
-     "tz": "America/Denver",
-     "tower": true,
-     "lat": 39.74,
-     "lon": -104.98,
-     "region": "North America"
-    },
-    {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1401,6 +1442,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1410,6 +1452,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1419,6 +1462,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1433,6 +1477,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1442,6 +1487,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1451,6 +1497,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1465,6 +1512,7 @@
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1474,6 +1522,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1483,6 +1532,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1497,6 +1547,7 @@
    "bases": [
     {
      "city": "Ashburn",
+     "place": "Virginia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1506,6 +1557,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1515,6 +1567,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1529,6 +1582,7 @@
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1538,6 +1592,7 @@
     },
     {
      "city": "Kansas City",
+     "place": "Missouri",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1547,6 +1602,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1561,6 +1617,7 @@
    "bases": [
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1570,6 +1627,7 @@
     },
     {
      "city": "Charlotte",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1579,6 +1637,7 @@
     },
     {
      "city": "Phoenix",
+     "place": "Arizona",
      "cc": "US",
      "tz": "America/Phoenix",
      "tower": true,
@@ -1593,6 +1652,7 @@
    "bases": [
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -1602,6 +1662,7 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1611,6 +1672,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1625,6 +1687,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1634,6 +1697,7 @@
     },
     {
      "city": "Salt Lake City",
+     "place": "Utah",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -1643,6 +1707,7 @@
     },
     {
      "city": "Raleigh-Durham",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1657,6 +1722,7 @@
    "bases": [
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1666,6 +1732,7 @@
     },
     {
      "city": "Columbus",
+     "place": "Ohio",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1675,6 +1742,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1689,6 +1757,7 @@
    "bases": [
     {
      "city": "Jerusalem",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
      "tower": false,
@@ -1698,6 +1767,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1707,6 +1777,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1721,6 +1792,7 @@
    "bases": [
     {
      "city": "Houston",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1730,6 +1802,7 @@
     },
     {
      "city": "Tampa",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1739,6 +1812,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1753,6 +1827,7 @@
    "bases": [
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1762,6 +1837,7 @@
     },
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -1771,6 +1847,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1785,6 +1862,7 @@
    "bases": [
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1794,6 +1872,7 @@
     },
     {
      "city": "Richmond",
+     "place": "Virginia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1803,6 +1882,7 @@
     },
     {
      "city": "Phoenix",
+     "place": "Arizona",
      "cc": "US",
      "tz": "America/Phoenix",
      "tower": true,
@@ -1817,6 +1897,7 @@
    "bases": [
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1826,6 +1907,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1835,6 +1917,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1849,6 +1932,7 @@
    "bases": [
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1858,6 +1942,7 @@
     },
     {
      "city": "Pittsburgh",
+     "place": "Pennsylvania",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1867,6 +1952,7 @@
     },
     {
      "city": "Salt Lake City",
+     "place": "Utah",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -1881,6 +1967,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1890,6 +1977,7 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1899,6 +1987,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1913,6 +2002,7 @@
    "bases": [
     {
      "city": "Minneapolis",
+     "place": "Minnesota",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1922,6 +2012,7 @@
     },
     {
      "city": "Philadelphia",
+     "place": "Pennsylvania",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1931,6 +2022,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1945,6 +2037,7 @@
    "bases": [
     {
      "city": "Memphis",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1954,6 +2047,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -1963,6 +2057,7 @@
     },
     {
      "city": "Las Vegas",
+     "place": "Nevada",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -1977,6 +2072,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -1986,6 +2082,7 @@
     },
     {
      "city": "Phoenix",
+     "place": "Arizona",
      "cc": "US",
      "tz": "America/Phoenix",
      "tower": true,
@@ -1995,6 +2092,7 @@
     },
     {
      "city": "Cleveland",
+     "place": "Ohio",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2009,6 +2107,7 @@
    "bases": [
     {
      "city": "Kansas City",
+     "place": "Missouri",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2018,6 +2117,7 @@
     },
     {
      "city": "Charlotte",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2027,6 +2127,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2041,6 +2142,7 @@
    "bases": [
     {
      "city": "Minneapolis",
+     "place": "Minnesota",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2050,6 +2152,7 @@
     },
     {
      "city": "Phoenix",
+     "place": "Arizona",
      "cc": "US",
      "tz": "America/Phoenix",
      "tower": true,
@@ -2059,6 +2162,7 @@
     },
     {
      "city": "Tampa",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2073,6 +2177,7 @@
    "bases": [
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2082,6 +2187,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2091,6 +2197,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2105,6 +2212,7 @@
    "bases": [
     {
      "city": "Salt Lake City",
+     "place": "Utah",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -2114,6 +2222,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2123,6 +2232,7 @@
     },
     {
      "city": "Columbus",
+     "place": "Ohio",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2137,6 +2247,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2146,6 +2257,7 @@
     },
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -2155,6 +2267,7 @@
     },
     {
      "city": "Raleigh-Durham",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2169,6 +2282,7 @@
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2178,6 +2292,7 @@
     },
     {
      "city": "St. Louis",
+     "place": "Missouri",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2187,6 +2302,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2201,6 +2317,7 @@
    "bases": [
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -2210,6 +2327,7 @@
     },
     {
      "city": "Detroit",
+     "place": "Michigan",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2219,6 +2337,7 @@
     },
     {
      "city": "San Diego",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2233,6 +2352,7 @@
    "bases": [
     {
      "city": "Austin",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2242,6 +2362,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2251,6 +2372,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2265,6 +2387,7 @@
    "bases": [
     {
      "city": "Las Vegas",
+     "place": "Nevada",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2274,6 +2397,7 @@
     },
     {
      "city": "Memphis",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2283,6 +2407,7 @@
     },
     {
      "city": "Cincinnati",
+     "place": "Ohio",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2297,6 +2422,7 @@
    "bases": [
     {
      "city": "Omaha",
+     "place": "Nebraska",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2306,6 +2432,7 @@
     },
     {
      "city": "Richmond",
+     "place": "Virginia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2315,6 +2442,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2329,6 +2457,7 @@
    "bases": [
     {
      "city": "Buffalo",
+     "place": "New York",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2338,6 +2467,7 @@
     },
     {
      "city": "Oklahoma City",
+     "place": "Oklahoma",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2347,6 +2477,7 @@
     },
     {
      "city": "San Diego",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2357,34 +2488,77 @@
    ]
   },
   "upper-room": {
-   "why": "Kansas City is the natural anchor for a continuous prayer room — it is where the 24/7 model in America was built. Atlanta and Seattle keep the watch covered around the clock.",
+   "why": "Jerusalem is the room this station is named for and the anchor. The other six are chosen so a continuous prayer line is inside somebody's waking hours at every hour of the clock: Sacramento, New York, London, Dubai, Tokyo and Hong Kong span seven distinct offsets between them, which is what a station that never stops needs.",
    "bases": [
     {
-     "city": "Kansas City",
-     "cc": "US",
-     "tz": "America/Chicago",
-     "tower": true,
-     "lat": 39.1,
-     "lon": -94.58,
-     "region": "North America"
+     "city": "Jerusalem",
+     "place": "Israel",
+     "cc": "IL",
+     "tz": "Asia/Jerusalem",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
     },
     {
-     "city": "Atlanta",
-     "cc": "US",
-     "tz": "America/New_York",
-     "tower": true,
-     "lat": 33.75,
-     "lon": -84.39,
-     "region": "North America"
-    },
-    {
-     "city": "Seattle",
+     "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
-     "lat": 47.61,
-     "lon": -122.33,
+     "lat": 38.58,
+     "lon": -121.49,
      "region": "North America"
+    },
+    {
+     "city": "New York",
+     "place": "New York",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
+    },
+    {
+     "city": "London",
+     "place": "England",
+     "cc": "GB",
+     "tz": "Europe/London",
+     "tower": true,
+     "lat": 51.51,
+     "lon": -0.13,
+     "region": "Europe"
+    },
+    {
+     "city": "Dubai",
+     "place": "United Arab Emirates",
+     "cc": "AE",
+     "tz": "Asia/Dubai",
+     "tower": true,
+     "lat": 25.08,
+     "lon": 55.31,
+     "region": "Middle East"
+    },
+    {
+     "city": "Tokyo",
+     "place": "Japan",
+     "cc": "JP",
+     "tz": "Asia/Tokyo",
+     "tower": true,
+     "lat": 35.69,
+     "lon": 139.69,
+     "region": "Asia"
+    },
+    {
+     "city": "Hong Kong",
+     "place": "Hong Kong",
+     "cc": "HK",
+     "tz": "Asia/Hong_Kong",
+     "tower": true,
+     "lat": 22.28,
+     "lon": 114.17,
+     "region": "Asia"
     }
    ]
   },
@@ -2393,6 +2567,7 @@
    "bases": [
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2402,6 +2577,7 @@
     },
     {
      "city": "Memphis",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2411,6 +2587,7 @@
     },
     {
      "city": "Oklahoma City",
+     "place": "Oklahoma",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2425,6 +2602,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2434,6 +2612,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2443,6 +2622,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2457,6 +2637,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2466,6 +2647,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2475,6 +2657,7 @@
     },
     {
      "city": "Tampa",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2489,6 +2672,7 @@
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2498,6 +2682,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2507,6 +2692,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2521,6 +2707,7 @@
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2530,6 +2717,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2539,6 +2727,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2553,6 +2742,7 @@
    "bases": [
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2562,6 +2752,7 @@
     },
     {
      "city": "Minneapolis",
+     "place": "Minnesota",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2571,6 +2762,7 @@
     },
     {
      "city": "Raleigh-Durham",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2585,6 +2777,7 @@
    "bases": [
     {
      "city": "Jerusalem",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
      "tower": false,
@@ -2594,6 +2787,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2603,6 +2797,7 @@
     },
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2617,6 +2812,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2626,6 +2822,7 @@
     },
     {
      "city": "Ashburn",
+     "place": "Virginia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2635,6 +2832,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2649,6 +2847,7 @@
    "bases": [
     {
      "city": "Jerusalem",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
      "tower": false,
@@ -2658,6 +2857,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2667,6 +2867,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2681,6 +2882,7 @@
    "bases": [
     {
      "city": "Jerusalem",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
      "tower": false,
@@ -2690,6 +2892,7 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2699,6 +2902,7 @@
     },
     {
      "city": "Phoenix",
+     "place": "Arizona",
      "cc": "US",
      "tz": "America/Phoenix",
      "tower": true,
@@ -2713,6 +2917,7 @@
    "bases": [
     {
      "city": "Tel Aviv",
+     "place": "Israel",
      "cc": "IL",
      "tz": "Asia/Jerusalem",
      "tower": true,
@@ -2722,6 +2927,7 @@
     },
     {
      "city": "Charlotte",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2731,6 +2937,7 @@
     },
     {
      "city": "San Diego",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2745,6 +2952,7 @@
    "bases": [
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2754,6 +2962,7 @@
     },
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2763,6 +2972,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2777,6 +2987,7 @@
    "bases": [
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2786,6 +2997,7 @@
     },
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2795,6 +3007,7 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2809,6 +3022,7 @@
    "bases": [
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2818,6 +3032,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2827,6 +3042,7 @@
     },
     {
      "city": "Tampa",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2841,6 +3057,7 @@
    "bases": [
     {
      "city": "Seattle",
+     "place": "Washington",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2850,6 +3067,7 @@
     },
     {
      "city": "Austin",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2859,6 +3077,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2873,6 +3092,7 @@
    "bases": [
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2882,6 +3102,7 @@
     },
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -2891,6 +3112,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2905,6 +3127,7 @@
    "bases": [
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2914,6 +3137,7 @@
     },
     {
      "city": "Austin",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2923,6 +3147,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2937,6 +3162,7 @@
    "bases": [
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2946,6 +3172,7 @@
     },
     {
      "city": "Houston",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2955,6 +3182,7 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -2969,6 +3197,7 @@
    "bases": [
     {
      "city": "Las Vegas",
+     "place": "Nevada",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -2978,6 +3207,7 @@
     },
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -2987,6 +3217,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3001,6 +3232,7 @@
    "bases": [
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3010,6 +3242,7 @@
     },
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -3019,6 +3252,7 @@
     },
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3033,6 +3267,7 @@
    "bases": [
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3042,6 +3277,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3051,6 +3287,7 @@
     },
     {
      "city": "San Jose",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3065,6 +3302,7 @@
    "bases": [
     {
      "city": "Detroit",
+     "place": "Michigan",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3074,6 +3312,7 @@
     },
     {
      "city": "Philadelphia",
+     "place": "Pennsylvania",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3083,6 +3322,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3097,6 +3337,7 @@
    "bases": [
     {
      "city": "Memphis",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3106,6 +3347,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3115,6 +3357,7 @@
     },
     {
      "city": "Newark",
+     "place": "New Jersey",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3129,6 +3372,7 @@
    "bases": [
     {
      "city": "Miami",
+     "place": "Florida",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3138,6 +3382,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3147,6 +3392,7 @@
     },
     {
      "city": "San Antonio",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3161,6 +3407,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3170,6 +3417,7 @@
     },
     {
      "city": "Dallas",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3179,6 +3427,7 @@
     },
     {
      "city": "Sacramento",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3193,6 +3442,7 @@
    "bases": [
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3202,6 +3452,7 @@
     },
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3211,6 +3462,7 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3225,6 +3477,7 @@
    "bases": [
     {
      "city": "Denver",
+     "place": "Colorado",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -3234,6 +3487,7 @@
     },
     {
      "city": "San Diego",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3243,6 +3497,7 @@
     },
     {
      "city": "Minneapolis",
+     "place": "Minnesota",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3257,6 +3512,7 @@
    "bases": [
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3266,6 +3522,7 @@
     },
     {
      "city": "Boston",
+     "place": "Massachusetts",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3275,6 +3532,7 @@
     },
     {
      "city": "Salt Lake City",
+     "place": "Utah",
      "cc": "US",
      "tz": "America/Denver",
      "tower": true,
@@ -3289,6 +3547,7 @@
    "bases": [
     {
      "city": "Chicago",
+     "place": "Illinois",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3298,6 +3557,7 @@
     },
     {
      "city": "Portland",
+     "place": "Oregon",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3307,6 +3567,7 @@
     },
     {
      "city": "Raleigh-Durham",
+     "place": "North Carolina",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
@@ -3321,6 +3582,7 @@
    "bases": [
     {
      "city": "Austin",
+     "place": "Texas",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3330,6 +3592,7 @@
     },
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3339,6 +3602,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3353,6 +3617,7 @@
    "bases": [
     {
      "city": "Nashville",
+     "place": "Tennessee",
      "cc": "US",
      "tz": "America/Chicago",
      "tower": true,
@@ -3362,6 +3627,7 @@
     },
     {
      "city": "Los Angeles",
+     "place": "California",
      "cc": "US",
      "tz": "America/Los_Angeles",
      "tower": true,
@@ -3371,12 +3637,573 @@
     },
     {
      "city": "Atlanta",
+     "place": "Georgia",
      "cc": "US",
      "tz": "America/New_York",
      "tower": true,
      "lat": 33.75,
      "lon": -84.39,
      "region": "North America"
+    }
+   ]
+  },
+  "backrow-faith": {
+   "why": "Sacramento is the anchor because the catalogue already says so — the largest Romanian-American community in the United States, and the one this station is written for. Chicago carries the Midwest Romanian churches an hour ahead of it, and Bucharest is the country the second generation prays in, ten zones the other way.",
+   "bases": [
+    {
+     "city": "Sacramento",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 38.58,
+     "lon": -121.49,
+     "region": "North America"
+    },
+    {
+     "city": "Chicago",
+     "place": "Illinois",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 41.85,
+     "lon": -87.65,
+     "region": "North America"
+    },
+    {
+     "city": "Bucharest",
+     "place": "Romania",
+     "cc": "RO",
+     "tz": "Europe/Bucharest",
+     "tower": true,
+     "lat": 44.43,
+     "lon": 26.11,
+     "region": "Europe"
+    }
+   ]
+  },
+  "corner-cipher": {
+   "why": "Atlanta is the tenant origin and the centre of gravity of Christian hip-hop. Chicago and Los Angeles are the other two cities the form was built in, and between them the three cover the American day end to end.",
+   "bases": [
+    {
+     "city": "Atlanta",
+     "place": "Georgia",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 33.75,
+     "lon": -84.39,
+     "region": "North America"
+    },
+    {
+     "city": "Chicago",
+     "place": "Illinois",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 41.85,
+     "lon": -87.65,
+     "region": "North America"
+    },
+    {
+     "city": "Los Angeles",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 34.05,
+     "lon": -118.24,
+     "region": "North America"
+    }
+   ]
+  },
+  "throne-room-vegas": {
+   "why": "Las Vegas is the act — the Strip is the whole conceit of the station. Nashville is where a showroom band with horns is actually recorded and sits an hour east; Atlanta adds the third zone and a large classic-rock audience.",
+   "bases": [
+    {
+     "city": "Las Vegas",
+     "place": "Nevada",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 36.17,
+     "lon": -115.14,
+     "region": "North America"
+    },
+    {
+     "city": "Nashville",
+     "place": "Tennessee",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 36.17,
+     "lon": -86.78,
+     "region": "North America"
+    },
+    {
+     "city": "Atlanta",
+     "place": "Georgia",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 33.75,
+     "lon": -84.39,
+     "region": "North America"
+    }
+   ]
+  },
+  "gravel-road-gospel": {
+   "why": "Muscle Shoals is the room this music comes out of and the tenant origin. Atlanta is the nearest zone east with a real Southern Gothic audience, and Los Angeles covers the West Coast Americana scene.",
+   "bases": [
+    {
+     "city": "Muscle Shoals",
+     "place": "Alabama",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
+    },
+    {
+     "city": "Atlanta",
+     "place": "Georgia",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 33.75,
+     "lon": -84.39,
+     "region": "North America"
+    },
+    {
+     "city": "Los Angeles",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 34.05,
+     "lon": -118.24,
+     "region": "North America"
+    }
+   ]
+  },
+  "gospel-by-music": {
+   "why": "Sacramento is where the catalogue is produced. Jerusalem is the ground the Gospel of Matthew stands on, nine zones east, and London carries the European audience between them.",
+   "bases": [
+    {
+     "city": "Sacramento",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 38.58,
+     "lon": -121.49,
+     "region": "North America"
+    },
+    {
+     "city": "Jerusalem",
+     "place": "Israel",
+     "cc": "IL",
+     "tz": "Asia/Jerusalem",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
+    },
+    {
+     "city": "London",
+     "place": "England",
+     "cc": "GB",
+     "tz": "Europe/London",
+     "tower": true,
+     "lat": 51.51,
+     "lon": -0.13,
+     "region": "Europe"
+    }
+   ]
+  },
+  "portugal-inspire-portugues": {
+   "why": "Lisbon is the tenant origin and this is European Portuguese, not Brazilian — Brasil Inspire has its own frequency. Paris carries the largest Portuguese community in Europe an hour ahead, and Newark the largest in the United States five behind.",
+   "bases": [
+    {
+     "city": "Lisbon",
+     "place": "Portugal",
+     "cc": "PT",
+     "tz": "Europe/Lisbon",
+     "tower": true,
+     "lat": 38.73,
+     "lon": -9.15,
+     "region": "Europe"
+    },
+    {
+     "city": "Paris",
+     "place": "France",
+     "cc": "FR",
+     "tz": "Europe/Paris",
+     "tower": true,
+     "lat": 48.85,
+     "lon": 2.35,
+     "region": "Europe"
+    },
+    {
+     "city": "Newark",
+     "place": "New Jersey",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 40.74,
+     "lon": -74.17,
+     "region": "North America"
+    }
+   ]
+  },
+  "nederland-inspire-nederlands": {
+   "why": "Amsterdam is the tenant origin. Brussels shares the clock but adds six and a half million Dutch speakers in Flanders, which is audience rather than coverage and worth a base on its own. Montréal carries the Dutch-Canadian churches six zones west.",
+   "bases": [
+    {
+     "city": "Amsterdam",
+     "place": "North Holland",
+     "cc": "NL",
+     "tz": "Europe/Amsterdam",
+     "tower": true,
+     "lat": 52.37,
+     "lon": 4.89,
+     "region": "Europe"
+    },
+    {
+     "city": "Brussels",
+     "place": "Belgium",
+     "cc": "BE",
+     "tz": "Europe/Brussels",
+     "tower": true,
+     "lat": 50.85,
+     "lon": 4.35,
+     "region": "Europe"
+    },
+    {
+     "city": "Montréal",
+     "place": "Canada",
+     "cc": "CA",
+     "tz": "America/Toronto",
+     "tower": true,
+     "lat": 45.51,
+     "lon": -73.59,
+     "region": "North America"
+    }
+   ]
+  },
+  "danmark-inspire-dansk": {
+   "why": "Copenhagen is the tenant origin. Minneapolis anchors the Danish-American Midwest seven zones west, and Los Angeles reaches the Danish settlement in Solvang and the Pacific coast.",
+   "bases": [
+    {
+     "city": "Copenhagen",
+     "place": "Denmark",
+     "cc": "DK",
+     "tz": "Europe/Copenhagen",
+     "tower": true,
+     "lat": 55.68,
+     "lon": 12.57,
+     "region": "Europe"
+    },
+    {
+     "city": "Minneapolis",
+     "place": "Minnesota",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 44.98,
+     "lon": -93.26,
+     "region": "North America"
+    },
+    {
+     "city": "Los Angeles",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 34.05,
+     "lon": -118.24,
+     "region": "North America"
+    }
+   ]
+  },
+  "sverige-inspire-svenska": {
+   "why": "Stockholm is the tenant origin. Chicago held the largest Swedish population outside Sweden and still carries its churches; Seattle and the Pacific Northwest were the other great Swedish landing, two zones further west again.",
+   "bases": [
+    {
+     "city": "Stockholm",
+     "place": "Sweden",
+     "cc": "SE",
+     "tz": "Europe/Stockholm",
+     "tower": true,
+     "lat": 59.33,
+     "lon": 18.07,
+     "region": "Europe"
+    },
+    {
+     "city": "Chicago",
+     "place": "Illinois",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 41.85,
+     "lon": -87.65,
+     "region": "North America"
+    },
+    {
+     "city": "Seattle",
+     "place": "Washington",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 47.61,
+     "lon": -122.33,
+     "region": "North America"
+    }
+   ]
+  },
+  "cesko-inspire-cestina": {
+   "why": "Prague is the tenant origin. Cleveland and Chicago were the two American cities Czech emigration actually went to, an hour apart from each other and six or seven from the anchor.",
+   "bases": [
+    {
+     "city": "Prague",
+     "place": "Czechia",
+     "cc": "CZ",
+     "tz": "Europe/Prague",
+     "tower": true,
+     "lat": 50.09,
+     "lon": 14.42,
+     "region": "Europe"
+    },
+    {
+     "city": "Cleveland",
+     "place": "Ohio",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 41.5,
+     "lon": -81.7,
+     "region": "North America"
+    },
+    {
+     "city": "Chicago",
+     "place": "Illinois",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 41.85,
+     "lon": -87.65,
+     "region": "North America"
+    }
+   ]
+  },
+  "magyar-inspire-magyar": {
+   "why": "Budapest is the tenant origin. Bucharest is an hour ahead and carries the million-plus Hungarian speakers of Transylvania, who are the largest Hungarian audience outside Hungary; Cleveland is the largest in America.",
+   "bases": [
+    {
+     "city": "Budapest",
+     "place": "Hungary",
+     "cc": "HU",
+     "tz": "Europe/Budapest",
+     "tower": true,
+     "lat": 47.5,
+     "lon": 19.04,
+     "region": "Europe"
+    },
+    {
+     "city": "Bucharest",
+     "place": "Romania",
+     "cc": "RO",
+     "tz": "Europe/Bucharest",
+     "tower": true,
+     "lat": 44.43,
+     "lon": 26.11,
+     "region": "Europe"
+    },
+    {
+     "city": "Cleveland",
+     "place": "Ohio",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 41.5,
+     "lon": -81.7,
+     "region": "North America"
+    }
+   ]
+  },
+  "bulgaria-inspire-balgarski": {
+   "why": "Sofia is the tenant origin. Frankfurt carries the Bulgarian community in Germany an hour behind, and Chicago the largest in the United States eight behind that.",
+   "bases": [
+    {
+     "city": "Sofia",
+     "place": "Bulgaria",
+     "cc": "BG",
+     "tz": "Europe/Sofia",
+     "tower": true,
+     "lat": 42.7,
+     "lon": 23.32,
+     "region": "Europe"
+    },
+    {
+     "city": "Frankfurt",
+     "place": "Germany",
+     "cc": "DE",
+     "tz": "Europe/Berlin",
+     "tower": true,
+     "lat": 50.12,
+     "lon": 8.68,
+     "region": "Europe"
+    },
+    {
+     "city": "Chicago",
+     "place": "Illinois",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 41.85,
+     "lon": -87.65,
+     "region": "North America"
+    }
+   ]
+  },
+  "turkiye-inspire-turkce": {
+   "why": "Istanbul is the tenant origin. Frankfurt is not a convenience: the Turkish community in Germany is the largest anywhere outside Türkiye and sits two zones west. Newark reaches the American Turkish churches.",
+   "bases": [
+    {
+     "city": "Istanbul",
+     "place": "Türkiye",
+     "cc": "TR",
+     "tz": "Europe/Istanbul",
+     "tower": true,
+     "lat": 41.01,
+     "lon": 28.95,
+     "region": "Europe"
+    },
+    {
+     "city": "Frankfurt",
+     "place": "Germany",
+     "cc": "DE",
+     "tz": "Europe/Berlin",
+     "tower": true,
+     "lat": 50.12,
+     "lon": 8.68,
+     "region": "Europe"
+    },
+    {
+     "city": "Newark",
+     "place": "New Jersey",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 40.74,
+     "lon": -74.17,
+     "region": "North America"
+    }
+   ]
+  },
+  "israel-inspire-ivrit": {
+   "why": "Jerusalem is the tenant origin and is off-tower on purpose — it carries seven stations already. Newark and Los Angeles hold the two largest Hebrew-speaking populations outside Israel, seven and ten zones west.",
+   "bases": [
+    {
+     "city": "Jerusalem",
+     "place": "Israel",
+     "cc": "IL",
+     "tz": "Asia/Jerusalem",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
+    },
+    {
+     "city": "Newark",
+     "place": "New Jersey",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": true,
+     "lat": 40.74,
+     "lon": -74.17,
+     "region": "North America"
+    },
+    {
+     "city": "Los Angeles",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 34.05,
+     "lon": -118.24,
+     "region": "North America"
+    }
+   ]
+  },
+  "thailand-inspire-thai": {
+   "why": "Bangkok is the tenant origin. Taipei is an hour ahead and carries the Thai migrant workforce in Taiwan; Los Angeles holds the largest Thai community outside Thailand, fifteen zones the other way.",
+   "bases": [
+    {
+     "city": "Bangkok",
+     "place": "Thailand",
+     "cc": "TH",
+     "tz": "Asia/Bangkok",
+     "tower": true,
+     "lat": 13.75,
+     "lon": 100.5,
+     "region": "Asia"
+    },
+    {
+     "city": "Taipei",
+     "place": "Taiwan",
+     "cc": "TW",
+     "tz": "Asia/Taipei",
+     "tower": true,
+     "lat": 25.05,
+     "lon": 121.53,
+     "region": "Asia"
+    },
+    {
+     "city": "Los Angeles",
+     "place": "California",
+     "cc": "US",
+     "tz": "America/Los_Angeles",
+     "tower": true,
+     "lat": 34.05,
+     "lon": -118.24,
+     "region": "North America"
+    }
+   ]
+  },
+  "buckys-barnyard": {
+   "why": "Nashville is where the act is based and where the tradition this catalogue is written in is published. Bristol, Tennessee is where country music was first commercially recorded — the 1927 Bristol Sessions — and sits an hour east of the other two, so the station is never outside a base's own zone. Owensboro, Kentucky holds the Bluegrass Music Hall of Fame and is the genre's institutional home.",
+   "bases": [
+    {
+     "city": "Nashville",
+     "place": "Tennessee",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": true,
+     "lat": 36.17,
+     "lon": -86.78,
+     "region": "North America"
+    },
+    {
+     "city": "Bristol",
+     "place": "Tennessee",
+     "cc": "US",
+     "tz": "America/New_York",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
+    },
+    {
+     "city": "Owensboro",
+     "place": "Kentucky",
+     "cc": "US",
+     "tz": "America/Chicago",
+     "tower": false,
+     "lat": null,
+     "lon": null,
+     "region": null
     }
    ]
   }
