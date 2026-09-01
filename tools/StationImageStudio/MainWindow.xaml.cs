@@ -209,8 +209,14 @@ public partial class MainWindow : Window
     // A render that only exists on W: is not published, and the site cannot
     // serve it. The production box keeps its CDN tree at
     // /var/www/kjubilee.com/cdn-local, which the node app serves under /cdn/*,
-    // so <slug>.webp copied into cdn-local/stations is immediately live at
-    // https://www.kjubilee.com/cdn/stations/<slug>.webp.
+    // so <slug>.webp copied into cdn-local/stations/images is immediately live at
+    // https://www.kjubilee.com/cdn/stations/images/<slug>.webp.
+    //
+    // The `images` segment was added 2026-08-27 when the covers moved out of
+    // the bare stations/ folder. THE SITE ASKS FOR THE NEW PATH — home.js,
+    // stations.js and kj-footer-player.js all build
+    // /cdn/stations/images/<slug>.webp — so a render published to the old
+    // directory is a file nothing will ever request.
     //
     // scp/ssh are shelled out to rather than pulling in an SSH library: the key
     // is already on this machine and already trusted by the host, and Windows
@@ -218,8 +224,8 @@ public partial class MainWindow : Window
     // credentials to keep in step.
     private const string DefaultPublishHost = "root@94.72.120.231";
     private const string DefaultPublishKey = @"%USERPROFILE%\.ssh\id_ed25519_jubilee_prod";
-    private const string DefaultPublishDir = "/var/www/kjubilee.com/cdn-local/stations";
-    private const string DefaultPublicBase = "https://www.kjubilee.com/cdn/stations";
+    private const string DefaultPublishDir = "/var/www/kjubilee.com/cdn-local/stations/images";
+    private const string DefaultPublicBase = "https://www.kjubilee.com/cdn/stations/images";
 
     private bool _publishEnabled = true;
     private string _publishHost = DefaultPublishHost;

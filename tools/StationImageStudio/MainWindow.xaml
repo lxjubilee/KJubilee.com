@@ -570,7 +570,7 @@
                     <Button x:Name="BtnPublishAll" Content="Publish every image now" Height="26" FontSize="11"
                             Click="BtnPublishAll_Click"
                             ToolTip="Copies every .webp already in the images folder, plus the sidecar manifest. Use it for images rendered before publishing was switched on, or to retry after a failure." />
-                    <TextBlock Text="Served at https://www.kjubilee.com/cdn/stations/&lt;slug&gt;.webp once copied. A failed copy leaves the local file untouched, so it can be retried."
+                    <TextBlock Text="Served at https://www.kjubilee.com/cdn/stations/images/&lt;slug&gt;.webp once copied. A failed copy leaves the local file untouched, so it can be retried."
                                Foreground="#6f7684" FontSize="10" TextWrapping="Wrap" Margin="0,4,0,0" />
                 </StackPanel>
 

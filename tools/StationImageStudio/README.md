@@ -230,6 +230,45 @@ Startup reports which of the twelve portraits it can see, so an absent voice sho
 up once rather than nine stations later. Untick **Put the station's host persona
 in the image** to turn the whole path off.
 
+## Asking for a cover to be made again
+
+Done-ness is the file, and that is still true. But it only answers *is there
+an image*, and there is a second question it cannot answer: *is the image
+right*. The only way to say no in the filesystem is to delete the cover, which
+takes it off a live site until somebody happens to run this tool.
+
+So the console asks instead. An administrator hovering a station card on
+kjubilee.com gets a red button in the top-right corner of the cover; pressing
+it writes a row to `kj_station_image_queue` (migrations/006). The cover stays
+up, and the request is recorded with who asked and why.
+
+Bring the list down to the workstation with:
+
+    KJ_ADMIN_TOKEN=... node tools/fetch-image-queue.js
+
+which writes `public/images/stations/requeue.json` beside the images — the
+open slugs, who asked, when, and any reason they typed.
+
+**This tool does not read that file yet.** For now the queue is a worklist for
+a person: tick *show stations with images*, find those stations, regenerate
+them. Wiring it into `Pending()` is a small change with one open question —
+this app holds a logged-in ChatGPT session, not a kJubilee admin one, so
+either it reads the JSON the fetch tool leaves on disk (no credentials here,
+one manual step) or it is given a token of its own (no manual step, a secret
+to store). The first is the smaller change and the safer default.
+
+### A cover can also go stale without anybody pressing anything
+
+The host persona is drawn INTO the artwork, and `stations-images.json` records
+who was drawn. Reassign a station to a different host and the picture silently
+stops matching the card underneath it. `node tools/build-home-data.js` now
+reports that drift on every run:
+
+    8 cover(s) show a persona who is no longer the host — regenerate:
+      HM 322.50  France Inspire (Francais) — card says nova, artwork has zariah
+
+Those stations need regenerating exactly as if somebody had pressed the button.
+
 ## Done-ness is the file, not a field
 
 An article could be marked done in its own frontmatter. A station has nowhere to
@@ -270,10 +309,10 @@ the production CDN as soon as it is written:
 public/images/stations/<slug>.webp      the record that the station is done
         |  scp, key already trusted by the host
         v
-/var/www/kjubilee.com/cdn-local/stations/<slug>.webp
+/var/www/kjubilee.com/cdn-local/stations/images/<slug>.webp
         |  the node app serves the CDN root as /cdn/*
         v
-https://www.kjubilee.com/cdn/stations/<slug>.webp
+https://www.kjubilee.com/cdn/stations/images/<slug>.webp
 ```
 
 The copy runs **after** the local write and the manifest entry, so a publish that
@@ -288,10 +327,16 @@ host, key path and destination folder, plus **Publish every image now** for imag
 rendered before publishing was switched on, or to retry after a failure - that
 button sends the sidecar manifest too, so the CDN carries its own provenance.
 
-> **The website does not read these images yet.** The station cards on the home
-> page draw their ident from the gradient in `stations-data.js`. Pointing the
-> cards at `/cdn/stations/<slug>.webp` is a website change and is deliberately
-> not part of this tool.
+> **The website reads these images.** It did not when this tool was written — the
+> station cards drew their ident from the gradient in `stations-data.js`, and the
+> note here said so. That changed: `home.js`, `stations.js` and
+> `kj-footer-player.js` all build `/cdn/stations/images/<slug>.webp` today, so a
+> render that fails to publish is a visibly broken card, not just a file missing
+> from a folder nobody reads.
+>
+> **The `images/` segment was added 2026-08-27.** The covers used to sit directly
+> in `stations/`. Publishing to the old directory now puts a file where nothing
+> will ever ask for it.
 
 ## The window
 
