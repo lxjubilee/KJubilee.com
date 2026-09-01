@@ -1,0 +1,41 @@
+/* ==========================================================================
+   base.css — the ground the whole site stands on.
+
+   WHY THIS FILE HAD TO EXIST.
+
+   Nothing set the body background. Of seventeen stylesheets only three —
+   admin, legal and jubilee-id — ever declared one, and the rest inherited a
+   dark body by accident: jubilee-id.css and home.css each styled `body` for
+   their own layout, React hoists a `precedence` stylesheet and never removes
+   it when its page unmounts, so whichever of those you had visited was still
+   painting the body on every page you visited afterwards.
+
+   That is not a background, it is a coincidence — and it showed the moment
+   those two rules were scoped to their own pages: /sitemap opened directly
+   had body's default 8px margin and the browser's white, framing the page in
+   a white border.
+
+   So the baseline is declared here, once, and loaded from the root layout
+   rather than by any page. Deliberately minimal: the ground colour, the
+   margin reset, and the colour scheme. Anything more opinionated belongs to
+   the page that wants it — every page paints its own surface over this, and
+   this is only what shows when one does not reach the edge.
+   ========================================================================== */
+
+html {
+  background: #000;
+  /* Tells the browser to render its own furniture dark — the scrollbar gutter
+     most of all, which was a pale strip down the right of every page whose
+     stylesheet did not happen to declare a scheme. */
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  /* The readable default. jubilee-id.css used to supply this by leaking
+     `color:#fff` to every page; pages that set their own text colour still
+     win, and pages that never did no longer get black on black. */
+  color: #f3f2ee;
+}

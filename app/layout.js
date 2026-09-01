@@ -78,6 +78,13 @@ export default function RootLayout({ children }) {
                     rel="stylesheet"
                     href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700&family=Open+Sans:wght@300;400;600;700&display=swap"
                 />
+                {/* The ground colour and the margin reset, before anything
+                    else. Every page paints its own surface over this; base.css
+                    is only what shows where one does not reach the edge — which
+                    used to be the browser's white. It is a plain link rather
+                    than a hoisted one so it is in the document ahead of every
+                    page stylesheet, and any page rule wins over it. */}
+                <link rel="stylesheet" href="/css/base.css" />
                 <link rel="stylesheet" href="/css/scrollbars.css" />
             </head>
             <body>
