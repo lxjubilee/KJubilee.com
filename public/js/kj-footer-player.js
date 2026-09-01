@@ -103,16 +103,74 @@
     // listener who pressed pause, and rejoins in the first case only.
     var wantPlaying = false;
 
+    /* ── PENDING: THE CLICK HAS BEEN HEARD, THE SOUND HAS NOT ARRIVED ───────
+       Starting a station is not instant. A day file is a fetch away, the audio
+       element then has to load, and only when that promise resolves does
+       state().playing become true. Every transport on the site drew itself from
+       that flag alone, so for the whole of that gap — often a second, longer on
+       a cold CDN or a phone — the button still showed a play triangle and the
+       page looked like it had ignored the press.
+
+       It was worse than cosmetic. The listener pressed again, and the second
+       press reached toggle() with `current` already switched but `audio` not yet
+       assigned, which fell through to destroy() + start() and TORE DOWN THE
+       LOAD THAT WAS ALREADY RUNNING. The third press usually landed after audio
+       existed and finally worked. That is the "two or three clicks" exactly:
+       the interface was undoing its own work.
+
+       So intent is drawn as well as achievement. `pending` is true from the
+       press until the play promise settles either way, the button shows the
+       pause icon for that whole time, and a press arriving while it is true is
+       ignored rather than allowed to restart the load. paintPlaying() is the
+       definitive answer and always clears it. */
+    var pending = false;
+    var pendingSlug = null;
+    var pendingTimer = null;
+
+    function clearPending() {
+        pending = false;
+        pendingSlug = null;
+        if (pendingTimer) { clearTimeout(pendingTimer); pendingTimer = null; }
+        if (bar) bar.classList.remove('pending');
+    }
+
+    /**
+     * Let an <audio> element GO — properly, the way iOS needs.
+     *
+     * Dropping the last JavaScript reference is not enough. A media element
+     * that has buffered a track holds a decoder and its decoded audio, and on
+     * iOS those are a scarce, process-wide resource that is NOT released on a
+     * lazy garbage collection. Safari will sooner reclaim the whole page's
+     * media than free a decoder nobody has explicitly torn down.
+     *
+     * Clearing src and calling load() is the documented way to say "I am
+     * finished with this": it aborts any pending fetch, empties the buffer and
+     * frees the decoder immediately, rather than whenever the collector next
+     * feels like it.
+     *
+     * This matters most for warm(), which builds one of these per track. Over
+     * an evening's listening that is a hundred-odd abandoned decoders on a
+     * phone, which is exactly the shape of a session that plays fine for hours
+     * and then goes quiet.
+     */
+    function releaseAudio(el) {
+        if (!el) return;
+        try {
+            el.pause();
+            el.removeAttribute('src');
+            el.src = '';
+            el.load();                 // the step that actually frees it
+        } catch (e) {}
+    }
+
     function destroy() {
         wantPlaying = false;
+        clearPending();
         stopWatchdog();
-        if (audio) {
-            try { audio.pause(); audio.src = ''; } catch (e) {}
-            audio = null;
-        }
+        if (audio) { releaseAudio(audio); audio = null; }
         queue = []; qi = 0;
         dayIndex = -1;
-        preload = null;
+        if (preload) { releaseAudio(preload.el); preload = null; }
     }
 
     // The manifest stores production URLs; the dev server and the live host both
@@ -267,7 +325,8 @@
         if (!current) return;
         setStation(stationName(current));
         setTitle(lineSong(nowTrack));
-        setSub(lineStation(current));
+        setSub(lineStation(current, nowTrack));
+        updateMediaSession();
     }
 
     function broadcastDate(ms) {
@@ -513,9 +572,14 @@
     // "station", so the following entry is in cache before this one ends.
     function warm(doc, i) {
         var e = doc.entries[i + 1];
-        if (!e || !e.u) { preload = null; return; }
+        // THE SLOT IS FREED BEFORE IT IS REFILLED, and before the early return
+        // too: a preload nobody is going to use is still holding a decoder.
+        // This used to just drop the reference, which on a desktop is invisible
+        // and on a phone is a leak of one buffered track per track played.
+        if (!e || !e.u) { if (preload) releaseAudio(preload.el); preload = null; return; }
         var url = trackUrl(doc, e);
         if (preload && preload.key === url) return;
+        if (preload) releaseAudio(preload.el);
         try {
             var a = new Audio();
             a.preload = 'auto';
@@ -536,9 +600,22 @@
         var id = station.tenant;
         return fetchDay(id, broadcastDate(now())).then(function (doc) {
             if (!current || current.tenant !== id) throw new Error('tuned away');
-            if (!doc) { setSub('Programming not published yet'); throw new Error('no day file'); }
+            if (!doc) {
+                // Not fatal: a day file can be a minute late or a fetch can
+                // fail. Say so, and keep trying rather than ending here.
+                setSub('Programming not published yet');
+                scheduleRecovery('no day file');
+                throw new Error('no day file');
+            }
             var at = resolveAt(doc, now());
-            if (!at) { setSub('Off air'); throw new Error('outside the broadcast day'); }
+            if (!at) {
+                // Outside the published day — which resolves on its own the
+                // moment the next day file lands, so wait for it rather than
+                // stopping for good.
+                setSub('Off air');
+                scheduleRecovery('outside the broadcast day');
+                throw new Error('outside the broadcast day');
+            }
 
             if (!el) el = new Audio();
             el.volume = elGain(volume());
@@ -556,7 +633,10 @@
             // costs one track rather than the session.
             el.addEventListener('ended', function () { onTrackEnded(el); });
             el.addEventListener('error', function () { skipBadTrack(el); });
-            el.addEventListener('playing', function () { badRun = 0; });
+            el.addEventListener('playing', function () {
+                badRun = 0; clearRetry(); updateMediaSession();
+            });
+            el.addEventListener('pause', function () { onUnexpectedPause(el); });
             hookWaves(el);
             warm(doc, at.index);
             announce();
@@ -652,16 +732,55 @@
         });
     }
 
+    /* ── A STATION THAT STOPS MUST START ITSELF AGAIN ────────────────────
+       This used to end the broadcast. Nine dead tracks in a row printed
+       "Programming unavailable", paused the player and cleared nothing else —
+       and because the stall watchdog only runs WHILE PLAYING, pausing here
+       switched off the one thing that could have recovered it. The station was
+       then silent until somebody reloaded the page. A burst of CDN 5xx, a
+       laptop waking from sleep, thirty seconds of bad wifi: any of them could
+       reach nine, and the listener got permanent silence from a transient
+       fault.
+
+       Nine consecutive failures still means something bigger is wrong than one
+       bad file, and walking five hundred entries one 404 at a time would hammer
+       the CDN for nothing. So the run still stops the WALK — but it no longer
+       stops the STATION. It backs off and tries the whole thing again: clock,
+       day file, position. `wantPlaying` is deliberately left standing, because
+       the listener has not changed their mind; only the network has. */
+    var RETRY_MS = [4000, 8000, 16000, 30000, 60000];
+    var retryStep = 0;
+    var retryTimer = null;
+
+    function clearRetry() {
+        if (retryTimer) { clearTimeout(retryTimer); retryTimer = null; }
+        retryStep = 0;
+    }
+
+    /* Re-derive from the clock rather than resume where it broke: the day file
+       has moved on while we were failing, and the position that matters is the
+       one the broadcast is at now. */
+    function scheduleRecovery(reason) {
+        if (retryTimer || !wantPlaying) return;
+        var wait = RETRY_MS[Math.min(retryStep, RETRY_MS.length - 1)];
+        retryStep++;
+        setSub('Reconnecting…');
+        console.info('[kj-player] ' + reason + ' — retrying in ' + (wait / 1000) + 's');
+        retryTimer = setTimeout(function () {
+            retryTimer = null;
+            if (!wantPlaying || !current) return;
+            badRun = 0;
+            syncClock(true).then(function () { syncDay(true); });
+        }, wait);
+    }
+
     function skipBadTrack(el) {
         if (el !== audio || !current || !current.tenant) return;
         var id = current.tenant;
-        // A whole run of dead files means something bigger is wrong than one
-        // bad track; walking 500 entries one 404 at a time would hammer the CDN
-        // and never produce audio.
-        if (++badRun > 8) { setSub('Programming unavailable'); paintPlaying(false); return; }
+        if (++badRun > 8) { scheduleRecovery('a run of unplayable tracks'); return; }
         fetchDay(id, broadcastDate(now())).then(function (doc) {
             if (!doc || el !== audio || !current || current.tenant !== id) return;
-            if (!playEntry(doc, dayIndex + 1, 0)) { setSub('Off air'); paintPlaying(false); }
+            if (!playEntry(doc, dayIndex + 1, 0)) scheduleRecovery('no playable entry');
         });
     }
 
@@ -830,7 +949,225 @@
 
     function stopWatchdog() {
         if (watchTimer) { clearInterval(watchTimer); watchTimer = null; }
+        stopHeartbeat();
         watchLast = -1; watchMissed = 0;
+        // A deliberate stop — pause, or tuning away — must not leave a recovery
+        // armed that would start the sound again behind the listener.
+        clearRetry();
+    }
+
+    /* ══ THE PHONE IS NOT A SMALL DESKTOP ═══════════════════════════════════
+     *
+     * Everything above recovers on a setInterval, and on a desktop that is
+     * enough because the timers keep running. On iOS they do not. The moment
+     * the listener locks the phone or switches apps, Safari suspends the page's
+     * timers — so the fifteen-second re-derive and the two-second stall
+     * watchdog, the only two things that can notice a station has stopped, both
+     * stop with it. Whatever goes wrong while the app is in the background goes
+     * unnoticed for as long as it stays there.
+     *
+     * And things do go wrong there. iOS reclaims media decoders under memory
+     * pressure without firing an error. A phone call, Siri, a video in another
+     * app or a Bluetooth handover pauses the element from outside. A frozen
+     * page can be restored from the back/forward cache with its element dead
+     * and its state hours stale.
+     *
+     * All of those look identical to the listener: they come back to the app
+     * and the radio is silent. None of them are visible to a timer that is not
+     * running. So the return itself has to be the trigger, which is what this
+     * section is: every way the system has of saying "you are live again"
+     * leads to one honest re-derive from the clock.
+     */
+
+    /**
+     * The one recovery, used by every wake-up path below.
+     *
+     * Deliberately the same call the stall watchdog makes — clock first, then a
+     * forced re-derive — because after a suspension the position is not merely
+     * stale, it is wrong by however long the phone was away. syncDay(true) is a
+     * no-op when the correct track is already sounding, so this is safe to call
+     * on every return, including the ones where nothing was actually broken.
+     */
+    function hardResync(reason) {
+        if (!wantPlaying || !current) return;
+        console.info('[kj-player] ' + reason + ' — re-deriving from the clock');
+        clearRetry();
+        badRun = 0;
+        syncClock(true).then(function () { syncDay(true); });
+    }
+
+    /**
+     * Did the browser stop running us?
+     *
+     * A suspended page cannot notice its own suspension while it is suspended —
+     * but it can notice afterwards, because the first tick to fire again comes
+     * back with a wall-clock gap far larger than the interval it was scheduled
+     * on. That gap is the only evidence there is that time passed without us,
+     * and it catches the cases visibilitychange does not: a tab merely throttled
+     * rather than hidden, a device asleep with the screen on, an iOS timer
+     * budget that quietly stopped paying out.
+     *
+     * Date.now() is right here and a monotonic clock would be wrong: the
+     * question is how much real time passed, not how long this page was running.
+     */
+    var BEAT_MS = 5000;
+    var SUSPEND_GAP = 20000;      // four missed beats: throttling, not jitter
+    var beatTimer = null;
+    var lastBeat = 0;
+
+    function startHeartbeat() {
+        if (beatTimer) return;
+        lastBeat = Date.now();
+        beatTimer = setInterval(function () {
+            var gap = Date.now() - lastBeat;
+            lastBeat = Date.now();
+            if (gap > SUSPEND_GAP && wantPlaying) {
+                hardResync('asleep for ' + Math.round(gap / 1000) + 's');
+            }
+        }, BEAT_MS);
+    }
+
+    function stopHeartbeat() {
+        if (beatTimer) { clearInterval(beatTimer); beatTimer = null; }
+    }
+
+    /**
+     * The wake-up events, wired once for the life of the page.
+     *
+     * visibilitychange is the reliable one on iOS and fires on the return from
+     * the app switcher and from the lock screen. pageshow with persisted set is
+     * the back/forward cache restoring a frozen page, where every timer and the
+     * media element may be in whatever state they were abandoned in. focus is
+     * the belt-and-braces case for desktop browsers that report neither.
+     *
+     * Each one only ever asks for a re-derive; none of them start sound the
+     * listener did not ask for, because hardResync returns immediately unless
+     * wantPlaying already stands.
+     */
+    var lifecycleWired = false;
+
+    function wireLifecycle() {
+        if (lifecycleWired || typeof document === 'undefined') return;
+        lifecycleWired = true;
+
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState !== 'visible') { lastBeat = Date.now(); return; }
+            // Back in the foreground. Re-arm the beat first so the resync below
+            // is not immediately followed by the heartbeat calling it again for
+            // the same absence.
+            lastBeat = Date.now();
+            hardResync('back in the foreground');
+        });
+
+        window.addEventListener('pageshow', function (e) {
+            lastBeat = Date.now();
+            if (e && e.persisted) hardResync('restored from the page cache');
+        });
+
+        window.addEventListener('focus', function () {
+            if (wantPlaying && audio && audio.paused) hardResync('window focused, sound was wanted');
+        });
+    }
+
+    /**
+     * SOMETHING ELSE PAUSED US.
+     *
+     * On a phone the element gets paused by things that are not the listener: a
+     * call, Siri, a video starting in another app, a Bluetooth device
+     * disconnecting, iOS reclaiming the audio session under pressure. The
+     * element reports a plain `pause` for all of them, exactly as if the button
+     * had been pressed, and nothing else ever fires.
+     *
+     * The tell is `wantPlaying`. The button clears it BEFORE pausing, so a pause
+     * that arrives while it still stands did not come from here.
+     *
+     * The delay is not politeness, it is correctness: loading a new src pauses
+     * the element as part of the load algorithm, so a track change raises this
+     * same event a moment before the next track starts. Acting immediately would
+     * fight every hand-over. A second and a half later, a real interruption is
+     * still paused and a track change is playing.
+     */
+    var pauseProbe = null;
+
+    function onUnexpectedPause(el) {
+        if (el !== audio || !wantPlaying) return;
+        if (pauseProbe) clearTimeout(pauseProbe);
+        pauseProbe = setTimeout(function () {
+            pauseProbe = null;
+            if (!wantPlaying || el !== audio || !audio.paused) return;   // it recovered
+            // Try to simply carry on; iOS often allows this straight after an
+            // interruption ends, and it is seamless when it works.
+            var p = audio.play();
+            if (p && p.catch) {
+                p.catch(function () {
+                    /* Refused: the interruption spent our gesture. Rather than
+                       leave a dead-looking bar, say so plainly and let the next
+                       touch anywhere bring it back — the same path a refused
+                       autoplay takes after a refresh. */
+                    setSub('Tap to resume');
+                    paintPlaying(false, true);
+                    armResume(true);
+                });
+            }
+        }, 1500);
+    }
+
+    /**
+     * THE LOCK SCREEN IS PART OF THE PRODUCT.
+     *
+     * Two reasons, and the second is the one that matters here. The obvious one
+     * is that a radio the listener cannot control without unlocking and finding
+     * the tab is a worse radio: this puts the station, the song and the artwork
+     * on the lock screen with working controls.
+     *
+     * The less obvious one is that a page holding a live MediaSession is a page
+     * iOS treats as a media app rather than as a background tab, which makes it
+     * meaningfully less likely to have its audio session taken away. Declaring
+     * what is playing is itself a measure against going silent.
+     *
+     * Guarded throughout because it does not exist on every browser, and a radio
+     * must never fail to play because a lock screen could not be decorated.
+     */
+    function updateMediaSession() {
+        try {
+            if (!navigator.mediaSession || typeof MediaMetadata === 'undefined') return;
+            if (!current) return;
+            var art = '/cdn/stations/' + encodeURIComponent(current.slug) + '.webp';
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: (nowTrack && nowTrack.title) || stationName(current),
+                artist: (nowTrack && nowTrack.artist) || ('HM ' + current.hm),
+                album: stationName(current),
+                artwork: [
+                    { src: art, sizes: '512x512', type: 'image/webp' },
+                    { src: art, sizes: '256x256', type: 'image/webp' }
+                ]
+            });
+            navigator.mediaSession.playbackState =
+                (audio && !audio.paused) ? 'playing' : 'paused';
+        } catch (e) {}
+    }
+
+    var sessionWired = false;
+
+    function wireMediaSession() {
+        if (sessionWired) return;
+        try {
+            if (!navigator.mediaSession || !navigator.mediaSession.setActionHandler) return;
+            sessionWired = true;
+            navigator.mediaSession.setActionHandler('play', function () {
+                if (!wantPlaying || !audio || audio.paused) toggle();
+            });
+            navigator.mediaSession.setActionHandler('pause', function () {
+                if (audio && !audio.paused) toggle();
+            });
+            navigator.mediaSession.setActionHandler('stop', function () {
+                if (audio && !audio.paused) toggle();
+            });
+            /* Deliberately NOT wiring seek: this is live radio and the position
+               is derived from the clock, so a scrub would be undone by the next
+               re-derive. Offering a control that visibly does nothing is worse
+               than not offering it. */
+        } catch (e) { sessionWired = true; }
     }
 
     /** Keep the bar — and, once playing, the audio — tied to the day file. */
@@ -839,6 +1176,9 @@
         if (!station || !station.tenant || typeof fetch !== 'function') return;
         syncClock();                 // §4.3: a fresh sync before the first position
         startWatchdog();             // §9.11
+        wireLifecycle();             // the phone-specific wake-ups
+        startHeartbeat();            // ...and the detector for when none of them fire
+        wireMediaSession();          // lock-screen controls, and a claim on the session
         syncDay(false);
         dayTimer = setInterval(function () {
             // §4.3: every five minutes during active playback. syncClock()
@@ -1010,11 +1350,21 @@
     }
 
     /** Line three: where on the dial, and the format in brackets. */
-    function lineStation(s) {
-        return 'HM ' + s.hm + (s.format ? ' (' + s.format + ')' : '');
+    /* THE THIRD LINE: who is singing, then where you are on the dial.
+       `Jubilee Inspire · HM 308.70 (Jubilee Praise)`.
+
+       The artist comes from the day file's own `ar` field, so it is the artist
+       of the track actually sounding rather than the station's credit — which
+       matters on the catalogues, where one frequency carries a dozen different
+       performers. Before a track loads there is no artist and the line is just
+       the frequency; it fills in when the first entry resolves. */
+    function lineStation(s, track) {
+        var dial = 'HM ' + s.hm + (s.format ? ' (' + s.format + ')' : '');
+        var artist = track && track.artist ? String(track.artist).trim() : '';
+        return artist ? artist + ' \u00b7 ' + dial : dial;
     }
 
-    function subFor(s) { return lineStation(s); }
+    function subFor(s) { return lineStation(s, nowTrack); }
 
     // ---- the bar ----------------------------------------------------------
     var ICON = {
@@ -1037,7 +1387,21 @@
         if (document.getElementById('kj-footer-player-css')) return;
         var css = [
 '#kjPlayer{position:fixed;left:0;right:0;bottom:0;height:80px;z-index:90000;',
+/* THE HOME INDICATOR SITS ON TOP OF A FIXED BOTTOM BAR.
+   On every iPhone since the X, and on iPad, the OS draws its gesture bar over
+   the bottom of the viewport. An 80px bar pinned to bottom:0 therefore loses
+   its lower third to it — the transport buttons end up under the indicator and
+   the first tap goes to the OS, not to us. env(safe-area-inset-*) is the only
+   way to know how much to keep clear, and it reports 0 unless the document
+   asks for viewport-fit=cover, which app/layout.js now does.
+
+   Declared TWICE on purpose, the same way this codebase writes 100vh then
+   100dvh: a browser that has never heard of env() drops the second declaration
+   as invalid and keeps the plain 80px, so nothing regresses anywhere else.
+   The left/right insets matter too — in landscape the notch takes a side. */
+'  height:calc(80px + env(safe-area-inset-bottom,0px));',
 '  display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:20px;padding:0 20px;',
+'  padding:0 calc(20px + env(safe-area-inset-right,0px)) env(safe-area-inset-bottom,0px) calc(20px + env(safe-area-inset-left,0px));',
 '  background:linear-gradient(180deg,rgba(20,21,29,.97),rgba(10,11,16,.99));',
 '  border-top:2px solid var(--kjp-accent,#3DA5FF);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);',
 '  font-family:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,sans-serif;color:#f3f2ee;',
@@ -1080,10 +1444,28 @@
 '  display:flex;align-items:center;justify-content:center;cursor:pointer;',
 '  transition:transform .18s ease,box-shadow .18s ease}',
 '#kjPlayer .cover:hover{transform:scale(1.04);box-shadow:0 4px 18px rgba(61,165,255,.35)}',
-'#kjPlayer .cover img{width:100%;height:100%;object-fit:cover;display:block}',
+/* ABOVE THE FREQUENCY, NOT UNDER IT. .hm below is absolutely positioned and
+   the image was not, and a positioned box paints over an in-flow one whatever
+   the DOM order says — so every station that HAS artwork was showing its
+   frequency stamped across it in white. The ident text was only ever meant to
+   be what you see when there is no picture (see paintStation: the <img>
+   removes itself on error, uncovering the gradient and this label). Making the
+   image positioned puts it back on top and leaves that fallback intact. */
+'#kjPlayer .cover img{width:100%;height:100%;object-fit:cover;display:block;position:relative;z-index:1}',
 '#kjPlayer .cover .hm{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;',
 '  font-family:"Orbitron","Segoe UI",sans-serif;font-weight:700;font-size:12px;color:hsla(0,0%,100%,.92)}',
-'#kjPlayer .meta{min-width:0;display:flex;flex-direction:column;gap:2px}',
+'#kjPlayer .meta{min-width:0;display:flex;flex-direction:column;gap:2px;justify-content:center}',
+/* THE BAR OWNS ITS OWN BOX MODEL, and this line is why the three lines used to
+   sit low in it. `.station`, `.title` and `.sub` are generic class names, and
+   the bar is global chrome that lands inside whatever stylesheet the page
+   brought with it. /player defines `.station{margin:18px 0 6px}` for the big
+   name under the dial — and that margin leaked straight into the footer,
+   pushing all three lines 18px down and opening a 6px hole under the first.
+   The block looked bottom-aligned because it WAS: 24px of somebody else's
+   margin inside a 75px box.
+   `#kjPlayer .station` outranks a bare `.station`, so resetting here holds
+   whatever page the bar is dropped onto, including ones not written yet. */
+'#kjPlayer .station,#kjPlayer .title,#kjPlayer .sub{margin:0;min-height:0;padding:0}',
 '#kjPlayer .station{font-weight:700;font-size:14px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
 '#kjPlayer .title{font-size:12.5px;line-height:1.2;color:#d8dae4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
 '#kjPlayer .sub{font-size:11.5px;line-height:1.2;color:#a9abb8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
@@ -1126,7 +1508,13 @@
 '#kjPlayer .volume input{width:88px;accent-color:var(--kjp-accent,#3DA5FF);cursor:pointer}',
 // --kj-player-h lets a page size content against the bar (index.html's hero
 // runs to exactly the top of it) without hard-coding 80px in a second place.
+/* The static fallback only. The real value is republished from the bar's
+   MEASURED height once it mounts, so the safe-area growth above reaches every
+   page that reserves space for the bar without any of them knowing about it. */
 'body.kj-has-player{--kj-player-h:80px;padding-bottom:var(--kj-player-h,80px)}',
+'@supports(padding:env(safe-area-inset-bottom)){',
+'  body.kj-has-player{--kj-player-h:calc(80px + env(safe-area-inset-bottom,0px))}',
+'}',
 '@media (max-width:860px){',
 '  #kjPlayer{grid-template-columns:1fr auto;gap:12px;padding:0 12px}',
      /* Two columns here, so the transport is right-aligned rather than centred
@@ -1595,7 +1983,38 @@
     // `quiet` updates the bar without republishing the shared playing flag, so a
     // tab yielding to another one does not overwrite the state that other tab
     // has just set.
+    /* The press, drawn immediately. Icon and label only — no waves, no stored
+       state, no claim that sound exists — because none of that is true yet.
+       The one thing it does assert is that the button was heard. */
+    function paintPending(slug) {
+        pending = true;
+        pendingSlug = slug || (current ? current.slug : null);
+        if (bar) bar.classList.add('pending');
+        var b = document.getElementById('kjpPlay');
+        if (b) b.innerHTML = svg(ICON.pause);
+
+        /* A LOAD THAT NEVER SETTLES MUST NOT LOCK THE BUTTON. If the promise
+           neither resolves nor rejects — a stalled CDN, a dead socket — pending
+           would stay true and the control would ignore presses for the rest of
+           the session. Releasing it after a beat gives the listener the button
+           back; the load, if it is still coming, still repaints on arrival. */
+        if (pendingTimer) clearTimeout(pendingTimer);
+        pendingTimer = setTimeout(function () {
+            if (!pending) return;
+            clearPending();
+            paintPlaying(!!(audio && !audio.paused), true);
+        }, 12000);
+
+        try {
+            window.dispatchEvent(new CustomEvent('kj-player-state', {
+                detail: { slug: pendingSlug, playing: false, pending: true },
+            }));
+        } catch (e) {}
+    }
+
     function paintPlaying(on, quiet) {
+        // The settled answer, whichever way it went, ends the pending look.
+        clearPending();
         if (!bar) return;
         // The waves follow the sound, and this is the one function that knows
         // whether there is any. Tapping here also means the AudioContext is
@@ -1646,6 +2065,8 @@
     function start() {
         if (!current) return;
         wantPlaying = true;
+        // Draw the press before doing any of the work it asked for.
+        paintPending(current.slug);
         // Safari and iOS grant playback only to an element touched inside the
         // gesture that asked for it, and the day file is a fetch away — by the
         // time it lands the click is off the stack. Creating the element here,
@@ -1810,10 +2231,26 @@
 
     function toggle() {
         if (!current) return;
+        /* A START IS ALREADY RUNNING FOR THIS STATION — do nothing.
+           This is the line that fixes the multi-press bug. Without it a second
+           press fell through to destroy() + start() below and restarted the
+           load it was impatient with, so being impatient made it slower. The
+           button already shows pause, so the press has been acknowledged; there
+           is nothing left for it to usefully do. */
+        if (pending && pendingSlug === current.slug) return;
         if (audio && !audio.paused) { wantPlaying = false; audio.pause(); paintPlaying(false); return; }
         // A paused catalog station resumes where it was; a live mount has moved
         // on in the meantime, so it reconnects instead.
         if (audio && audio.paused && audio.src && current.manifest) {
+            /* THIS BRANCH NEEDS THE PENDING LOOK TOO, and not setting it here
+               was the whole bug surviving in miniature. Resuming a paused
+               element is not instant on a slow connection — play() sits
+               unresolved while it rebuffers — and without this the button stayed
+               on the play triangle for that entire wait, which is the exact
+               complaint the pending state exists to answer. start() covers the
+               cold path; this is the warm one, and it is the commoner of the two
+               for anyone who pauses and comes back. */
+            paintPending(current.slug);
             audio.play().then(function () { paintPlaying(true); })
                         .catch(function () { destroy(); start(); });
             return;
@@ -1844,9 +2281,16 @@
             };
         },
         isLive: function (slug) { return liveIndex(slug) >= 0; },
-        /** What is tuned, and whether it is sounding right now. */
+        /** What is tuned, whether it is sounding, and whether a press is still
+            being served. `pending` exists so a transport drawn by another script
+            can show the press immediately instead of waiting for audio. */
         state: function () {
-            return { slug: current ? current.slug : null, playing: !!(audio && !audio.paused) };
+            return {
+                slug: current ? current.slug : null,
+                playing: !!(audio && !audio.paused),
+                pending: !!pending,
+                pendingSlug: pending ? pendingSlug : null,
+            };
         },
         /**
          * Play this station, or pause it if it is the one already playing.
@@ -1856,6 +2300,9 @@
          * station while one is sounding must switch stations, not pause.
          */
         toggle: function (slug) {
+            // Same guard as toggle()'s own, one level up: a press on the station
+            // whose start is already in flight must not restart it.
+            if (pending && pendingSlug === slug) return;
             if (current && current.slug === slug) { toggle(); return; }
             tune(slug, true);
         },

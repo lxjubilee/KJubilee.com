@@ -29,15 +29,8 @@
     if (left) left.innerHTML = navHTML(SECTIONS.filter(function (s) { return s.align !== 'right'; }));
     if (right) right.innerHTML = navHTML(SECTIONS.filter(function (s) { return s.align === 'right'; }));
 
-    // Searching stations is something only the home page can do, so the box
-    // hands the query over rather than pretending to search the map.
-    var input = document.getElementById('q'), btn = document.getElementById('qbtn');
-    function submit() {
-      var v = (input.value || '').trim();
-      if (v) location.href = '/?q=' + encodeURIComponent(v);
-    }
-    if (btn) btn.addEventListener('click', submit);
-    if (input) input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+    // The header's search box is wired in app/_site-header.js and goes to
+    // JubileeSearch; the map does not touch it.
   })();
 
   var listEl = document.getElementById('list');

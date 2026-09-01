@@ -83,7 +83,7 @@ img{display:block;max-width:100%}
    wide card per five, and a 12px gutter shared with the station shelves so the
    two grids line up when they sit on the same page.
 
-   The step-down matches .row exactly — 5/4/3/2/1 at 1199, 899, 699 and 449 —
+   The step-down matches .row exactly — 5/4/3/2/1 at 1199, 899, 699 and 479 —
    because these cards sit in the same column widths as the station shelves and
    two different ladders would make the grids disagree down the whole page.
 
@@ -112,9 +112,17 @@ img{display:block;max-width:100%}
 .hm-card:hover .cover-art{transform:scale(1.03)}
 
 .hm-card-body{position:relative;display:flex;flex-direction:column;flex:1 1 auto;min-width:0;padding:12px 14px 14px}
+/* THE KICKER WEARS THE SAME CHIP AS EVERY OTHER CATEGORY, so an article card
+   and a station card label their subject the same way. inline-block and
+   align-self are both load-bearing: .hm-card-body is a column flexbox, and a
+   stretched child would draw the border across the full card width instead of
+   around the word. */
 .hm-card-category{
-  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;
-  color:var(--accent);margin-bottom:5px;
+  display:inline-block;align-self:flex-start;max-width:100%;
+  padding:2px 8px;border:1px solid var(--accent);border-radius:999px;
+  background:rgba(61,165,255,.14);color:var(--accent);
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:5px;
 }
 /* Clamped to two lines: these headlines are written long on purpose, and a
    third line pushes the meta row off the bottom of a normal-width card while
@@ -152,7 +160,7 @@ img{display:block;max-width:100%}
   .hm-card-dek{display:none}
   .hm-card-image{height:auto;aspect-ratio:16/9}
 }
-@media (max-width:449px){
+@media (max-width:479px){
   .hm-grid{grid-template-columns:minmax(0,1fr)}
   .hm-card.wide{grid-column:auto}
   /* One per row is wide enough to earn the blurb back. */
@@ -211,6 +219,18 @@ img{display:block;max-width:100%}
      min-height, not height, so an unusually tall caption can still grow the box
      rather than spill out of it. */
   position:relative;overflow:hidden;
+  /* THE HORIZONTAL AXIS BELONGS TO THE SWIPE, THE VERTICAL ONE TO THE PAGE.
+     Without this the browser reads a sideways drag on the hero as its own
+     back/forward gesture. This site routes on the hash, so "back" is the
+     previous section: swiping right to reach the previous slide unmounted the
+     carousel and left the reader somewhere else entirely. Caught by driving a
+     real touch swipe, not by reading the code.
+
+     pan-y keeps vertical scrolling native — the page scrolls through this
+     element — and pinch-zoom is named explicitly so that declaring an intent
+     about panning does not also take magnification away from anyone who needs
+     it. See the touchstart/touchend pair in home.js. */
+  touch-action:pan-y pinch-zoom;
   min-height:calc(100vh  - var(--topbar-h) - var(--kj-player-h, 0px));
   min-height:calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px));
   min-height:var(--hero-h, calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px)));
@@ -236,13 +256,40 @@ img{display:block;max-width:100%}
 }
 .hero-shot{position:absolute;inset:0;opacity:0;transition:opacity .7s ease}
 .hero-shot.is-live{opacity:1}
-/* STAYS ABSOLUTE. The base .ident-freq is absolutely positioned and this rule
-   only re-places it; setting `relative` here turned right/bottom into flow
-   nudges and the watermark jumped to the top-left corner over the title. */
-.hero-shot .ident-freq{position:absolute;z-index:2;right:44px;bottom:auto;top:26px;transform:none;font-size:clamp(44.8px,6.3vw,105px);color:hsla(0,0%,100%,.225)}
+/* ---------- the frequency, one number for the whole carousel -------------
+
+   IT USED TO LIVE INSIDE EACH SLIDE and fade with it, which is why it blinked
+   between stations: the outgoing shot took its number down while the incoming
+   shot was still bringing its own up, and for a moment neither was lit. It is
+   now a single pair of layers over the carousel, and paintHero trades their
+   opacity so one number dissolves into the next with no gap.
+
+   .hero-freq is a full-bleed, click-through anchor rather than a box at the
+   corner, so the layers can take exactly the offsets the old rule used and the
+   coordinate system is unchanged. It also means these rules no longer have to
+   undo the base .ident-freq (top:50%, translateY) — they are not that element
+   any more, so there is nothing to override.
+
+   bottom is NEGATIVE and in em. line-height:1 makes the box one em tall, but
+   digits stop at the baseline and the descender space below them is empty, so
+   bottom:0 leaves a visible gap under the numbers. A tenth of an em spends
+   that space and sits them on the picture's edge. em, so it tracks the clamp()
+   rather than drifting as the hero resizes — the value to tune if the numbers
+   sit a hair high or low. */
+.hero-freq{position:absolute;inset:0;z-index:2;pointer-events:none}
+.hero-freq-layer{
+  position:absolute;right:14px;bottom:-.1em;
+  font-family:var(--font-logo);font-weight:700;font-size:clamp(44.8px,6.3vw,105px);
+  line-height:1;letter-spacing:-.03em;white-space:nowrap;
+  color:hsla(0,0%,100%,.225);
+  /* Both layers carry it, so one rises exactly as the other falls. */
+  opacity:0;transition:opacity .9s ease;
+}
+.hero-freq-layer.is-on{opacity:1}
+
 /* The "HM" prefix reads at 70% of the frequency it labels, so the number stays
    the thing you see. em, not px — it has to track the clamp() above. */
-.hero-shot .ident-freq .ident-freq-hm{font-size:.7em}
+.hero-freq-layer .ident-freq-hm{font-size:.7em}
 /* The hero picture. Same fade and same top anchoring as a tile cover — it is
    the same class — but the hero box is roughly 3:1, far wider than the 16:9
    render, so the vertical crop here is the largest anywhere on the page and the
@@ -268,17 +315,58 @@ img{display:block;max-width:100%}
    starting at the picture's own edge. */
 .hero-content{position:relative;z-index:3;width:100%;max-width:var(--site-max);padding:0 16px;margin:0 auto;animation:heroIn .5s ease both}
 @keyframes heroIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-/* ONE ROW OF CHROME, NOT THREE STACKED LINES.
-   "Featured · <format>", the frequency and the host each used to own a line of
-   their own above and below the title, so five things were stacked before the
-   buttons were reached. They are all labels, so they read as a single row. */
-.hero-meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 10px;min-height:22px}
-.hero-eyebrow{display:inline-block;padding:4px 10px;border-radius:4px;background:var(--accent);color:#04121f;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.hero-format{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:hsla(0,0%,100%,.72)}
-.hero-freq{font-family:var(--font-logo);font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--accent)}
+/* ---------- move this picture in its frame (administrators only) --------
+
+   Two flat red discs, top-right of any hero that carries artwork: one nudges
+   the picture up five pixels, one nudges it down. The setting is per picture
+   and stored server-side, so what an operator lines up here is what every
+   visitor afterwards sees — see /api/station-offsets.
+
+   RED, AND THE SAME RED AS .cp-regen. That button is the other control on this
+   page that reaches past the reader and changes what everyone gets; sharing
+   one colour is what makes the pair legible as a category rather than as two
+   unrelated buttons that happen to be bright.
+
+   IN THE MARKUP FOR EVERYONE, PAINTED FOR NOBODY. The admin answer arrives
+   from /api/auth/me after first paint, and re-rendering a hero to add two
+   buttons when it lands would restart the carousel. So the arrows always
+   ship and body.kj-admin is what uncovers them — a visitor who digs them out
+   of the DOM and presses one gets a 403 from the route, which asks the
+   database rather than the browser. */
+.img-nudge{
+  position:absolute;top:14px;right:14px;z-index:6;
+  display:none;flex-direction:column;gap:8px;
+}
+body.kj-admin .img-nudge{display:flex}
+.img-nudge-btn{
+  width:32px;height:32px;padding:0;border-radius:50%;cursor:pointer;
+  display:grid;place-items:center;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(198,40,40,.92);color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.45);
+  transition:background .15s ease,transform .12s ease;
+}
+.img-nudge-btn:hover{background:#e53935;transform:scale(1.08)}
+.img-nudge-btn:active{transform:scale(.94)}
+.img-nudge-btn svg{display:block}
+/* A phone has no business re-cropping a picture for the whole site, and the
+   hero has no room to spare there. */
+@media (max-width:760px){
+  body.kj-admin .img-nudge{display:none}
+}
+
+/* The label row that used to sit here — .hero-meta-row with its "Featured"
+   badge, the format and the frequency — is gone from the markup, so its rules
+   are gone with it rather than left behind to be wondered about. The slide
+   leads with the station's name now. */
 /* ONE LINE, CLIPPED. A station name is short; the nowrap is what guarantees the
    title stays a single sweep across the picture even when one is not. */
-.hero-title{font-weight:700;font-size:40px;line-height:1.18;margin:0 0 10px;color:#fff;max-width:100%}
+/* top:5px, NOT margin-top:5px. A margin would push the description down by the
+   same 5px and the gap between them would be exactly as it was; a relative
+   offset moves the painted title only, so the space below it closes by 5px
+   while the line above gains it. The 10px bottom margin is untouched. */
+.hero-title{font-weight:700;font-size:40px;line-height:1.18;margin:0 0 10px;color:#fff;max-width:100%;
+  position:relative;top:5px}
 .hero-title,.hero-title button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hero-title button{display:block;text-align:left;font:inherit;letter-spacing:inherit;width:100%;max-width:100%}
 .hero-title button:hover{text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
@@ -303,8 +391,6 @@ img{display:block;max-width:100%}
 }
 .btn-accent:hover{filter:brightness(1.06)}
 .btn-accent:active{transform:translateY(1px)}
-.hero-meta{font-size:13px;font-weight:500;color:hsla(0,0%,100%,.82)}
-.hero-tag{font-size:13px;font-weight:600;color:var(--accent)}
 .hero-arrow{
   position:absolute;z-index:4;top:50%;transform:translateY(-50%);width:40px;height:40px;
   display:grid;place-items:center;border-radius:50%;color:#fff;
@@ -438,7 +524,7 @@ img{display:block;max-width:100%}
   color:var(--accent);border:1px solid var(--accent);
   max-width:190px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-.cp-dur{flex:none;border:1px solid #5a5a5a;border-radius:3px;padding:0 5px;font-size:10px;color:#aaa;font-variant-numeric:tabular-nums}
+/* .cp-dur is gone: the panel printed the frequency twice. Its slot is .cp-place. */
 .cp-member{margin-left:auto;font-size:12px;color:#ddd;white-space:nowrap}
 .cp-ref{font-size:12px;color:hsla(0,0%,100%,.72);line-height:1.45;
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
@@ -516,7 +602,16 @@ img{display:block;max-width:100%}
    a desktop renders exactly what it always did. The media block near the foot of
    this file is what turns the body into the preview's .cp-body. */
 .card-actions,.card-dur{display:none}
-.card-category{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--accent);margin-bottom:4px}
+/* The genre above the title, in the chip the location and the format already
+   wear below it. Same inline-block/align-self note as .hm-card-category:
+   .card-body is a column flexbox and would otherwise stretch the box. */
+.card-category{
+  display:inline-block;align-self:flex-start;max-width:100%;
+  padding:2px 8px;border:1px solid var(--accent);border-radius:999px;
+  background:rgba(61,165,255,.14);color:var(--accent);
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-bottom:4px;
+}
 .card-title{font-size:16px;font-weight:700;line-height:1.28;color:#fff;margin:0 0 6px}
 .card-blurb{font-size:12.5px;line-height:1.45;color:var(--text-muted);margin:0 0 10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .card-meta{display:flex;align-items:center;gap:8px;margin-top:auto;font-size:11px;color:var(--text-muted);min-width:0;white-space:nowrap}
@@ -543,10 +638,23 @@ img{display:block;max-width:100%}
    this is not a separate .html file - THE MUSIC KEEPS PLAYING. A document load
    would tear the footer player down and take the audio with it.
    ------------------------------------------------------------------------ */
-.kja{display:block;margin:calc(-1 * var(--pad-top)) calc(-1 * var(--site-pad)) 0}
+/* FULL BLEED, THE SAME WAY .hero IS — and for the same reason it was not.
+   .scroll-inner has no max-width; it centres the page by PADDING, which at 1920
+   is 186px a side. Pulling back --site-pad escaped ten of them and left the
+   other 176 as bars down both edges of the station's photograph, so the picture
+   sat in a column while the nav above it ran edge to edge.
+
+   --hero-bleed is the padding .scroll-inner actually got, measured and published
+   by sizeHero() in home.js. It cannot be worked out in CSS from in here: the
+   100% in that padding resolves against .scroll, while a percentage in this rule
+   resolves against .scroll-inner's content box. Fallback is the old behaviour
+   for the frame before the script runs. */
+.kja{display:block;margin:calc(-1 * var(--pad-top)) calc(-1 * var(--hero-bleed, var(--site-pad))) 0}
 
 /* The hero is the full width of the viewport and most of its height, the way
-   the home hero is, so arriving on a station feels like arriving somewhere. */
+   the home hero is, so arriving on a station feels like arriving somewhere.
+   .kja-hero-photo below is already object-fit:cover, so widening the box is all
+   it takes for the picture to fill it. */
 .kja-hero{position:relative;overflow:hidden;background:var(--surface);
   min-height:calc(100vh - var(--topbar-h) - var(--kj-player-h, 0px));
   min-height:calc(100dvh - var(--topbar-h) - var(--kj-player-h, 0px));
@@ -563,12 +671,21 @@ img{display:block;max-width:100%}
 .kja-hero-overlay{position:relative;z-index:2;width:100%;
   padding:120px 0 34px;
   background:linear-gradient(transparent,rgba(6,6,12,.86) 45%,rgba(6,6,12,.97))}
-.kja-hero-inner{max-width:var(--site-max);margin:0 auto;
-  padding:0 max(20px,calc((100% - var(--site-max)) / 2 + 20px))}
-.kja-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.kja-hero-inner{max-width:var(--site-max);margin:0 auto;padding:0 20px}
+.kja-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px}
 .kja-tab{display:inline-block;padding:4px 10px;border-radius:4px;background:var(--accent);
   color:#06121f;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase}
-.kja-tab-link{font:inherit;cursor:pointer}
+/* THE TWO PILLS ARE ONE PILL. `font:inherit` was here to undo the base
+   `button{font:inherit}` reset, but it is the same specificity as .kja-tab and
+   sits after it, so it won — and the `font` shorthand resets font-size and
+   font-weight along with the family. The linked pill came out at the inherited
+   15px/400 beside an 11px/800 one: taller, lighter, and visibly a different
+   control for what is the same label.
+
+   Nothing needs re-declaring. .kja-tab is a class, `button` is an element, so
+   .kja-tab already beats the base reset on its own. All the link adds is the
+   cursor and the hover. */
+.kja-tab-link{cursor:pointer}
 .kja-tab-link:hover{filter:brightness(1.08)}
 .kja-meta-plain{font-family:var(--font-logo);font-size:12px;letter-spacing:.06em;color:var(--text-dim)}
 .kja-title{font-size:clamp(34px,4.6vw,52px);font-weight:800;letter-spacing:-.02em;
@@ -582,8 +699,22 @@ img{display:block;max-width:100%}
 .kja-back:hover{background:rgba(6,6,12,.9);border-color:var(--accent);color:var(--accent)}
 
 /* ---- body: prose + a sidebar that stays with you ---- */
+/* ONE WAY OF CENTRING, NOT TWO — .bsa-container on inspiremanna.com.
+   These three (.kja-hero-inner, .kja-container, .kja-more) each carried
+   max-width AND the pad-to-centre trick .scroll-inner uses:
+
+       padding: … max(20px, calc((100% - var(--site-max)) / 2 + 20px)) …
+
+   That expression is for a FULL-WIDTH element with no cap. Its 100% is the
+   PARENT's width, so once .kja went full bleed the parent became 1856 and the
+   padding computed to 174px a side. box-sizing is border-box, so those gutters
+   came out of the 1548 rather than sitting outside it: the container measured
+   1548 and had 1200 of usable width. Widening the hero is what inflated it.
+
+   max-width + margin:0 auto already centres. The gutter is now a plain 20px,
+   which only bites below 1548 where there is no room to centre in. */
 .kja-container{max-width:var(--site-max);margin:0 auto;
-  padding:44px max(20px,calc((100% - var(--site-max)) / 2 + 20px)) 20px;
+  padding:44px 20px 20px;
   display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:48px;align-items:start}
 .kja-main{min-width:0}
 .kja-banner{margin:0 0 26px;padding:14px 18px;border-radius:8px;
@@ -627,16 +758,43 @@ img{display:block;max-width:100%}
 .kja-widget{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:18px}
 .kja-widget-title{margin:0 0 12px;font-size:11px;font-weight:800;letter-spacing:.12em;
   text-transform:uppercase;color:var(--text-muted)}
-.kja-now{display:flex;align-items:center;gap:11px}
+/* Top-aligned, not centred: the text beside it is two lines now, and can be
+   three when a show name wraps. Centring the dot against a growing block walks
+   it down the box; the margin sits it on the title's own line and keeps it
+   there. */
+.kja-now{display:flex;align-items:flex-start;gap:11px}
 .kja-now-dot{width:7px;height:7px;border-radius:50%;background:var(--onair);flex:none;
+  margin-top:6px;
   animation:kjpulse 1.8s ease-in-out infinite}
 @keyframes kjpulse{0%,100%{opacity:1}50%{opacity:.25}}
-.kja-now-text{min-width:0}
-.kja-now-title{font-size:14px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kja-now-sub{font-size:12.5px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kja-facts{margin:0;display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:13.5px}
-.kja-facts dt{color:var(--text-muted)}
-.kja-facts dd{margin:0;color:var(--text-dim);text-align:right}
+/* THE TITLE AND THE TIME ARE TWO LINES, NOT ONE RUN-ON.
+   .kja-now-text is a <span> wrapping two more spans, and it carried nothing but
+   min-width:0 — so it stayed INLINE and its two children ran straight into each
+   other: "Pentecostal Shout Live24/7 Live", with no break and no space.
+
+   The nowrap/ellipsis pair underneath was trying to protect against a long show
+   name, but text-overflow only applies to a block container. On inline spans it
+   did nothing at all, so a long name had nothing stopping it and pushed out past
+   the widget's padding instead of being trimmed.
+
+   A column flex fixes both at once: the children become block-level flex items,
+   so they stack the way the two type sizes always intended, and they can be
+   given a real wrapping rule. Wrapping rather than ellipsis, because a show name
+   is worth reading in full and the widget has the height to spare;
+   overflow-wrap:anywhere is for the one long unbroken token that would otherwise
+   still breach the edge. */
+.kja-now-text{min-width:0;display:flex;flex-direction:column;gap:2px}
+.kja-now-title{font-size:14px;font-weight:700;color:#fff;overflow-wrap:anywhere}
+.kja-now-sub{font-size:12.5px;color:var(--text-muted);overflow-wrap:anywhere}
+/* minmax(0,…) on both tracks. `auto 1fr` lets the label column size itself to
+   its widest label and refuse to shrink below it, so a long label and a long
+   value together push the pair wider than the widget rather than wrapping
+   inside it. With a floor of 0 both columns can give way, and the wrapping
+   rules below decide what happens then. */
+.kja-facts{margin:0;display:grid;grid-template-columns:minmax(0,auto) minmax(0,1fr);
+  gap:8px 14px;font-size:13.5px}
+.kja-facts dt{color:var(--text-muted);overflow-wrap:anywhere}
+.kja-facts dd{margin:0;color:var(--text-dim);text-align:right;overflow-wrap:anywhere}
 .kja-sched{list-style:none;margin:0;padding:0;display:grid;gap:9px;font-size:13.5px}
 .kja-sched li{display:flex;gap:12px;align-items:baseline}
 .kja-sched time{font-family:var(--font-logo);font-size:12px;color:var(--accent);flex:none}
@@ -666,8 +824,7 @@ img{display:block;max-width:100%}
 .kja-cta-sub{font-size:13.5px;color:var(--text-muted)}
 
 /* ---- the rest of the dial ---- */
-.kja-more{max-width:var(--site-max);margin:0 auto;
-  padding:38px max(20px,calc((100% - var(--site-max)) / 2 + 20px)) 10px}
+.kja-more{max-width:var(--site-max);margin:0 auto;padding:38px 20px 10px}
 .kja-more-title{font-size:22px;font-weight:800;letter-spacing:-.01em;color:#fff;margin:0 0 18px}
 
 @media (max-width:980px){
@@ -675,7 +832,14 @@ img{display:block;max-width:100%}
   .kja-sidebar{position:static;order:2}
 }
 @media (max-width:620px){
-  .kja-hero-overlay{padding:90px 0 26px}
+  /* The overlay sits tighter to the foot of the picture, and the two lines over
+     it stop competing with the photograph: a 34px title and a 17px strapline
+     were most of a phone screen of type on top of the one thing the station
+     page has to show. */
+  .kja-hero-overlay{padding:90px 0 16px}
+  .kja-title{font-size:clamp(22px,4.6vw,52px);font-weight:600;letter-spacing:-.02em;
+    line-height:1.06;margin:0 0 10px;color:#fff}
+  .kja-need{margin:0;max-width:720px;font-size:12px;line-height:1.3;color:var(--text-dim)}
   .kja-body{font-size:16.5px}
   .kja-cta{flex-wrap:wrap;gap:12px}
 }
@@ -715,16 +879,43 @@ img{display:block;max-width:100%}
 }
 @media (max-width:760px){
   .card-cover{height:auto;aspect-ratio:16/9}
-  .card-blurb{display:none}
+  /* .card-blurb{display:none} was here. It dropped the description from every
+     card below 760px, back when the body was the cramped four-line one and had
+     no room for it. The body is .cp-body from 1024px down now, and the
+     description IS its reference line — the last thing in the panel. Hiding it
+     left a card that stopped dead after the meta row. */
   .hero{padding:22px 20px 46px}   /* height is viewport-derived; see .hero */
   .hero-title{font-size:26px}
   /* A phone is too narrow for one-line type: clipped to the width of a phone a
      title is two words and a description is three. Wrap instead. */
   .hero-title,.hero-title button,.hero-blurb{white-space:normal;overflow:visible;text-overflow:clip}
-  .hero-blurb{font-size:15px}
-  .hero-shot .ident-freq{right:20px;top:18px}
+  /* Only the inset changes here; the bottom offset and the dissolve above
+     still apply. */
+  .hero-freq-layer{right:4px}
   .hero-by-focus{display:none}
   .hero-arrow{display:none}
+
+  /* THE SLIDE IS THE POINT ON A PHONE, SO THE WORDS GIVE IT THE ROOM BACK.
+     Five things were stacked over the picture — the eyebrow row, the title, a
+     sentence of description, and a transport row carrying the listener count
+     and the reach figure with it. On a 390px screen that is most of the
+     photograph covered by type, and the type it is covered by is mostly
+     supporting detail: the format and the frequency print again on the card
+     shelves below, and the description belongs to the station page.
+
+     What is left is the two things a slide has to say — WHICH station, and the
+     way to hear it: the title, the Listen now button, and whose station it is.
+     Nothing is removed from the markup; a wider screen still prints all of it. */
+  .hero-blurb{display:none}
+
+  /* AND THE SCRIM COMES UP, because it no longer has as much to protect.
+     It was transparent to 20% then 85% black from 58% down, which is a dark
+     band across most of the frame — sized for the four rows that used to sit
+     in it. Two rows need far less: the fade starts halfway down instead of a
+     fifth, and the darkest the picture ever gets is 82% at the very bottom
+     edge, under the button. The face and the light in these renders live in
+     the upper two thirds, and that is now left alone. */
+  .hero-scrim{background:linear-gradient(180deg,transparent 50%,rgba(0,0,0,.4) 72%,rgba(0,0,0,.82))}
   .section-intro h1{font-size:23px}
 }
 /* THE COLUMN LADDER — inspiremanna.com's .row, step for step.
@@ -760,10 +951,10 @@ img{display:block;max-width:100%}
      two columns it spans both and has the row to itself. */
   .card-cover{height:auto;aspect-ratio:16/9}
 }
-/* Under 450px two columns is a 200px card beside a 200px card with the title
+/* Under 480px two columns is a ~220px card beside a ~220px card with the title
    clamped mid-word. One per row instead: the picture is legible and the title
    has the whole line. */
-@media (max-width:449px){
+@media (max-width:479px){
   .row{grid-template-columns:minmax(0,1fr)}
   .card.wide{grid-column:auto}
   .card-blurb{display:block}
@@ -797,8 +988,8 @@ img{display:block;max-width:100%}
   /* .cp-ref: the description stops being muted supporting copy and becomes the
      panel's reference line. margin-top:auto is gone from .card-meta above, so
      this is what sits last. */
-  .card-blurb{order:3;margin:0;font-size:12px;line-height:1.45;color:hsla(0,0%,100%,.72);
-    -webkit-line-clamp:3}
+  .card-blurb{display:-webkit-box;order:3;margin:0;font-size:12px;line-height:1.45;
+    color:hsla(0,0%,100%,.72);-webkit-line-clamp:3}
   /* The format already prints as a pill in the meta row, the way the panel does
      it, so the line above the title would say it twice. */
   .card-category{display:none}
@@ -831,3 +1022,135 @@ img{display:block;max-width:100%}
 }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
+
+/* THE ARTICLE COLUMN WHILE ITS PROSE IS IN FLIGHT.
+   Bodies are fetched per article rather than shipped in the catalogue (see
+   hmFetchBody in pages/home.js), so there is a moment between the hero being
+   up and the paragraphs arriving. Bars rather than a spinner: they hold the
+   column at roughly the width the text will take, so nothing below them moves
+   when the real paragraphs replace them. */
+.kja-body-loading { margin-top: 18px; }
+.kja-body-loading span {
+    display: block;
+    height: 13px;
+    margin: 0 0 11px;
+    border-radius: 3px;
+    background: linear-gradient(90deg,
+        rgba(255,255,255,.05) 0%,
+        rgba(255,255,255,.10) 50%,
+        rgba(255,255,255,.05) 100%);
+    background-size: 200% 100%;
+    animation: kja-body-shimmer 1.4s ease-in-out infinite;
+}
+.kja-body-loading span:nth-child(2) { width: 96%; animation-delay: .10s; }
+.kja-body-loading span:nth-child(3) { width: 99%; animation-delay: .20s; }
+.kja-body-loading span:nth-child(4) { width: 92%; animation-delay: .30s; }
+.kja-body-loading span:nth-child(5) { width: 61%; animation-delay: .40s; }
+.kja-body-loading-note {
+    margin: 16px 0 0;
+    font-size: 12px;
+    letter-spacing: .04em;
+    color: var(--muted, #8b93a7);
+}
+@keyframes kja-body-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+/* Anyone who has asked not to be shown movement gets the bars without it. */
+@media (prefers-reduced-motion: reduce) {
+    .kja-body-loading span { animation: none; }
+}
+
+.kja-body-failed { margin-top: 18px; color: var(--muted, #8b93a7); }
+.kja-body-failed button {
+    margin-left: 8px;
+    padding: 5px 12px;
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 999px;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    cursor: pointer;
+}
+.kja-body-failed button:hover { border-color: rgba(255,255,255,.45); color: #fff; }
+
+/* ---------- the HM prefix, and where a station broadcasts from -----------
+
+   THE PREFIX AT HALF THE SIZE OF ITS DIGITS.
+
+   "HM 308.70" was set in one size throughout, so the two letters carried the
+   same weight as the number they label — and the number is the thing anybody
+   reads. The prefix cannot simply go: without it the digits are a decimal with
+   no band. So it stays and shrinks. `em` rather than a fixed size, once, for
+   every place the frequency is printed: the card cover, the preview cover and
+   the mobile chip all set their own font-size and all inherit the halving. */
+.hm-pre{font-size:.5em;letter-spacing:.12em;opacity:.82}
+
+/* WHERE THE STATION IS BASED, bottom-left of the card.
+
+   This corner used to read "Five-Fold" on fifty-eight of the hundred and
+   seventeen cards. A city and its state is a fact about the station; the band
+   it sits in was already obvious from the shelf the card was on.
+
+   IT IS THE FORMAT'S PILL AGAIN. Accent blue, bold, a one-pixel accent
+   outline and a fully rounded box — the chip the genre wears in the hover
+   panel, worn by the place in the same row. The plain grey line it briefly
+   became disappeared into the host name beside it; the outlined chip is what
+   makes the corner read as a stated fact rather than as trailing text.
+
+   It flexes instead of taking the format chip's fixed 190px cap: "Ho Chi Minh
+   City, Vietnam" is longer than any genre and still has to sit next to a host
+   name, so it shrinks and ellipses inside its border rather than shoving. */
+.card-pill{
+  flex:0 1 auto;min-width:0;padding:2px 8px;border:1px solid var(--accent);
+  border-radius:999px;background:rgba(61,165,255,.14);color:var(--accent);
+  font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+/* The same fact in the hover panel, in the slot the duplicate frequency used
+   to occupy — and now in the same chip as the format two spans to its left,
+   so the panel’s meta row reads as one pair rather than a tag and a caption. */
+.cp-place{
+  flex:0 1 auto;min-width:0;padding:2px 8px;border:1px solid var(--accent);
+  border-radius:999px;background:color-mix(in srgb,var(--accent) 16%,transparent);
+  color:var(--accent);font-size:10px;font-weight:700;letter-spacing:.06em;
+  text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* ---------- regenerate this cover (administrators only) ------------------
+
+   Top-right of the hover panel's cover, opposite nothing — the frequency and
+   the song count sit along the bottom, so this corner was empty.
+
+   RED, AND ONLY RED HERE. Nothing else on a card is this colour, which is the
+   point: it is the one control on the shelf that reaches back into the build
+   pipeline, and it should not be mistakable for play, save or like. It is also
+   only ever in the DOM for an administrator — see the isAdmin note in
+   pages/home.js, and the route that re-checks the claim server-side. */
+.cp-regen{
+  position:absolute;right:10px;top:10px;z-index:4;
+  display:inline-flex;align-items:center;justify-content:center;
+  width:30px;height:30px;padding:0;border-radius:50%;cursor:pointer;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(198,40,40,.92);color:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,.45);
+  transition:background .15s ease,transform .12s ease,opacity .15s ease;
+}
+.cp-regen svg{width:16px;height:16px;display:block}
+.cp-regen:hover{background:#e53935;transform:scale(1.08)}
+.cp-regen:focus-visible{outline:2px solid #fff;outline-offset:2px}
+
+/* Working, queued and failed all have to be visible without a toast: the panel
+   closes when the pointer leaves it, so any message printed elsewhere would be
+   gone before it was read. The button reports on itself. */
+.cp-regen.is-working{opacity:.6;cursor:default}
+.cp-regen.is-queued{
+  background:rgba(46,125,50,.94);border-color:rgba(255,255,255,.45);cursor:default;
+}
+.cp-regen.is-queued:hover{background:rgba(46,125,50,.94);transform:none}
+.cp-regen.is-failed{background:rgba(120,30,30,.95);border-color:#ff8a80}
+
+@media (prefers-reduced-motion: reduce){
+  .cp-regen{transition:none}
+  .cp-regen:hover{transform:none}
+}

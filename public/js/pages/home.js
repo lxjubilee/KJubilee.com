@@ -1,9 +1,72 @@
 (function () {
   'use strict';
 
+  /* ── FIRST VISIT ON A PHONE GOES TO THE DIAL ─────────────────────────────
+     Someone arriving at kjubilee.com on a phone has come to hear a radio
+     station, and the home page is a shelf of them — a page you read before you
+     can listen. So the first arrival is sent to the dial, which is the one
+     screen that makes sound.
+
+     ONCE, AND ONLY ONCE. The flag is set before the redirect, so Home reached
+     from the menu afterwards stays Home. That is the whole reason this is not
+     a server redirect: a rule that fires every time would make the home page
+     unreachable from a phone, and one that fires from the edge would be cached
+     and served to desktop visitors too.
+
+     BY VIEWPORT, NOT BY USER AGENT — the same 620px line the header collapses
+     at, so "phone" means one thing on this site. And explicitly NOT for
+     crawlers: Googlebot renders at a phone viewport, and bouncing it off the
+     home page would hand the index the dial in its place.
+
+     Cookie AND localStorage, for the reason the console's pane widths use
+     both: localStorage throws outright in some hardened and private contexts,
+     and a first visit that cannot be recorded is a redirect that happens on
+     every visit forever. Either store answering is enough to stay put. */
+  (function firstRunToDial() {
+    var DIAL = '/player';
+    var KEY = 'kjubilee.seen';
+
+    /* Only from the home page itself. `/` and `` are the only two spellings of
+       it; anything else is a page somebody asked for by name.
+
+       This was two normalisations that disagreed — the path was folded to `/`
+       and compared against `'/'` folded to `''` — so the guard rejected the
+       home page it exists to detect and the redirect never fired anywhere. It
+       failed silently and looked exactly like a phone-detection problem. */
+    if (!/^\/?$/.test(location.pathname || '/')) return;
+    // A deep link into the home page asked for something specific; honour it.
+    if (location.search || (location.hash && location.hash.length > 1)) return;
+
+    var ua = navigator.userAgent || '';
+    if (/bot|crawler|spider|crawling|preview|facebookexternalhit|slurp|bingpreview|headless/i.test(ua)) return;
+
+    var phone = false;
+    try {
+      phone = window.matchMedia('(max-width: 620px)').matches
+          && (('ontouchstart' in window) || navigator.maxTouchPoints > 0);
+    } catch (e) { return; }
+    if (!phone) return;
+
+    var seen = false;
+    try { seen = localStorage.getItem(KEY) === '1'; } catch (e) { /* blocked */ }
+    if (!seen) seen = /(?:^|;\s*)kjubilee\.seen=1/.test(document.cookie || '');
+    if (seen) return;
+
+    try { localStorage.setItem(KEY, '1'); } catch (e) { /* blocked */ }
+    try { document.cookie = KEY + '=1;path=/;max-age=31536000;samesite=lax'; } catch (e) { /* blocked */ }
+
+    // `replace`, not `assign`: Back from the dial should leave the site the
+    // way the visitor came in, not bounce them through this again.
+    location.replace(DIAL);
+  })();
+
   var STATIONS = window.KJ_STATIONS || [];
   var MEMBERS  = window.KJ_MEMBERS  || [];
   var SECTIONS = window.KJ_SECTIONS || [];
+  /* City -> state or country, for the location on every card. Emitted by
+     build-home-data from public/data/city-places.json, and optional there — an
+     empty table costs the cards their state, never their city. */
+  var CITIES  = window.KJ_CITIES || {};
   var FEATURED = window.KJ_FEATURED || [];
 
   var bySlug   = {};
@@ -63,6 +126,37 @@
   /* -------------------------------------------------------------------- */
   /* Cards                                                                 */
   /* -------------------------------------------------------------------- */
+  /* WHERE THE STATION IS BASED, for the corner of the card.
+   *
+   * This corner used to print st.pill — "Five-Fold" on fifty-eight of the
+   * hundred and seventeen cards, which told a reader nothing they could not
+   * already see from the shelf they were looking at. The anchor city says
+   * something: bases[0] is the city the station belongs to, and KJ_CITIES turns
+   * it into "Sacramento, California" or "Kingston, Jamaica".
+   *
+   * Falls back to the old pill where a station has no bases recorded — eleven
+   * of the international frequencies are in that state. A blank corner on
+   * eleven cards among a hundred would read as a bug; "International" at least
+   * reads as a choice, and the fix is to give those stations bases rather than
+   * to invent a city here. */
+  function placeOf(st) {
+    var b = (st && st.bases && st.bases[0]) || null;
+    if (!b || !b.city) return st && st.pill ? st.pill : '';
+    var region = b.place || (CITIES && CITIES[b.city]) || '';
+    return region ? b.city + ', ' + region : b.city;
+  }
+
+  /* "HM" set half the size of the digits beside it.
+     The prefix has to be there — the number is meaningless without it — but at
+     equal weight it competed with the frequency it was labelling. Splitting it
+     out is what lets CSS shrink the word without touching the digits. */
+  function freqHTML(freq) {
+    var s = String(freq || '');
+    var m = /^\s*HM\s*(.*)$/i.exec(s);
+    if (!m) return esc(s);
+    return '<span class="hm-pre">HM</span>' + esc(m[1] ? ' ' + m[1] : '');
+  }
+
   function cardHTML(st, wide) {
     var host = byMember[st.host];
     return '' +
@@ -85,7 +179,7 @@
               'title="Play ' + esc(st.name) + (st.tracks ? ' — ' + st.tracks + ' songs' : '') + '">' +
               '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5v14l12-7z"></path></svg>On air</span>'
             : '<span class="cover-soon" title="This frequency is assigned; its catalog is still being built">Coming soon</span>') +
-          '<span class="cover-freq">' + esc(st.freq) + '</span>' +
+          '<span class="cover-freq">' + freqHTML(st.freq) + '</span>' +
         '</div>' +
         '<div class="card-body">' +
           '<span class="body-freq" aria-hidden="true">' + esc(st.hm) + '</span>' +
@@ -117,10 +211,10 @@
           '<h3 class="card-title">' + esc(st.name) + '</h3>' +
           '<p class="card-blurb">' + esc(st.description) + '</p>' +
           '<div class="card-meta">' +
-            '<span class="card-pill">' + esc(st.pill) + '</span>' +
+            '<span class="card-pill">' + esc(placeOf(st)) + '</span>' +
             // The frequency chip the preview prints. Hidden with the actions on
             // a desktop, where the cover already carries it.
-            '<span class="card-dur">HM ' + esc(st.hm) + '</span>' +
+            '<span class="card-dur">' + freqHTML(st.freq) + '</span>' +
             '<span class="card-member">' + esc(host ? host.short : '') + '</span>' +
           '</div>' +
         '</div>' +
@@ -196,7 +290,10 @@
      screen, and the result is rounded UP - a piece announced as shorter than
      it is reads as a broken promise, one announced as longer never does. */
   function hmMinutes(a) {
-    var words = a.body.join(' ').split(/\s+/).length;
+    /* `words` is counted by build-home-data at build time. The body itself is
+       no longer in the catalogue — see hmFetchBody below — and a card must
+       never wait on a network round trip to print a reading time. */
+    var words = a.words || (a.body ? a.body.join(' ').split(/\s+/).length : 0);
     return Math.max(1, Math.ceil(words / 220));
   }
 
@@ -316,10 +413,10 @@
       // The first slide loads EAGERLY. It is the largest thing above the fold,
       // so lazy-loading it would hand the page its own LCP as a late repaint.
       return '<div class="hero-shot ident' + (i === 0 ? ' is-live' : '') + '" style="' + gradVars(st) + '" aria-hidden="true">' +
-             '<img class="cover-art hero-art" alt="" decoding="async" loading="' + (i === 0 ? 'eager' : 'lazy') + '"' +
+             '<img class="cover-art hero-art" data-off-key="' + esc(st.slug) + '"' + offStyle(st.slug) +
+               ' alt="" decoding="async" loading="' + (i === 0 ? 'eager' : 'lazy') + '"' +
                ' src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">' +
-             '<span class="ident-freq"><span class="ident-freq-hm">HM</span> ' +
-             esc(st.hm) + '</span></div>';
+             '</div>';
     }).join('');
     var dots = picks.map(function (st, i) {
       return '<button class="hero-dot' + (i === 0 ? ' is-live' : '') + '" data-i="' + i + '" aria-label="' + esc(st.name) + '"></button>';
@@ -336,6 +433,20 @@
           '<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="m9 6 6 6-6 6"></path></svg>' +
         '</button>' +
         '<div class="hero-dots">' + dots + '</div>' +
+        /* THE FREQUENCY LIVES HERE NOW, NOT INSIDE THE SLIDES.
+           A number per slide meant the outgoing one faded out with its shot
+           while the incoming one faded in with its own, and in between neither
+           was at full strength — the number blinked out and came back on
+           every turn.
+           Two layers stacked in one spot, alternating: the incoming number is
+           written to whichever is dark, then the two trade opacity. Something
+           is always lit, so what a reader sees is one number dissolving into
+           the next. */
+        '<div class="hero-freq" aria-hidden="true">' +
+          '<span class="hero-freq-layer"></span>' +
+          '<span class="hero-freq-layer"></span>' +
+        '</div>' +
+        nudgeHTML(picks[0].slug) +
       '</section>';
   }
 
@@ -374,21 +485,16 @@
     var box = document.getElementById('hero-content');
     if (!box) return;
 
-    // FOUR ROWS, NOT SIX.
+    // THE NAME, THE DESCRIPTION, AND THE CONTROLS. Nothing else.
     //
-    // This used to stack an eyebrow, the title, the frequency, the host and the
-    // blurb as five separate blocks and then the buttons under them, all inside
-    // a 600px column — a column of small print down one edge of a very wide
-    // picture. The labels (Featured, the format, the frequency) are one row of
-    // chrome; the host belongs with the transport controls it sits beside; and
-    // the description is one line rather than a paragraph. The words the hero
-    // actually leads with — the station's name — are what gets the width.
+    // This began as six stacked blocks, was cut to four, and is now three. The
+    // label row that led it — "Featured", the format, the frequency — was
+    // chrome above the only line anyone reads, and it announced the same three
+    // facts the slide already carries in its picture, its dots and its
+    // transport button. The track count and the reach figure went with it for
+    // the same reason: inventory numbers are not a reason to listen to a
+    // station, and they were the last thing on the busiest row.
     box.innerHTML = '' +
-      '<div class="hero-meta-row">' +
-        '<span class="hero-eyebrow">Featured</span>' +
-        '<span class="hero-format">' + esc(st.format) + '</span>' +
-        '<span class="hero-freq">' + esc(st.freq) + '</span>' +
-      '</div>' +
       '<h2 class="hero-title"><button data-slug="' + st.slug + '" title="' + esc(st.name) + '">' + esc(st.name) + '</button></h2>' +
       '<p class="hero-blurb" title="' + esc(st.description) + '">' + esc(st.description) + '</p>' +
       '<div class="hero-actions">' +
@@ -406,13 +512,20 @@
         (host
           ? '<div class="hero-by">' +
               (host.image ? '<img class="hero-face" src="' + esc(host.image) + '" alt="" width="34" height="34">' : '') +
-              '<span class="hero-by-name">' + esc(host.short) + '</span>' +
+              // host.name, not host.short: "Ymani" is a first name, and the
+              // personas are Ymani Inspire, Jubilee Inspire, Zev Inspire. The
+              // short form belongs on a card meta row where width is scarce;
+              // the hero has the room to say who this actually is.
+              '<span class="hero-by-name">' + esc(host.name) + '</span>' +
               '<span class="hero-by-focus">' + esc(host.focus) + '</span>' +
             '</div>'
           : '') +
-        '<span class="hero-tag">' + esc(st.listeners) + '</span>' +
-        '<span class="hero-meta">Reach ' + esc(st.reach) + '</span>' +
       '</div>';
+
+    // The nudge arrows are OUTSIDE the slides (the shots are aria-hidden), so
+    // they have to be told which station is on screen each time one turns.
+    var nudge = document.querySelector('.hero .img-nudge');
+    if (nudge) nudge.setAttribute('data-nudge', st.slug);
 
     // The transport button is rendered empty above and filled here, so the
     // slide always opens showing the right face — a station already playing
@@ -423,6 +536,32 @@
     var dots  = view.querySelectorAll('.hero-dot');
     for (var k = 0; k < shots.length; k++) shots[k].classList.toggle('is-live', k === i);
     for (var d = 0; d < dots.length; d++) dots[d].classList.toggle('is-live', d === i);
+
+    /* THE NUMBER DISSOLVES; IT NEVER LEAVES.
+       This was a Web Animations fade from 0 to 1 on the live slide's own
+       number, which fixed the pop on arrival and made the turns worse: the
+       incoming number was attenuated twice over, once by its shot fading in
+       and again by this, so it arrived after the outgoing one had already
+       gone. Two layers that trade opacity have no such gap.
+       No reduced-motion guard is needed any more — the transition is CSS, and
+       the blanket `*{transition:none!important}` later in home.css covers it. */
+    var stack = view.querySelector('.hero-freq');
+    if (stack) {
+      var layers = stack.querySelectorAll('.hero-freq-layer');
+      if (layers.length === 2) {
+        var lit = stack.querySelector('.hero-freq-layer.is-on') || layers[0];
+        var dark = (lit === layers[0]) ? layers[1] : layers[0];
+        var markup = '<span class="ident-freq-hm">HM</span> ' + esc(st.hm);
+        /* The guard matters: clicking the dot of the slide already showing
+           would otherwise hand the same number to the other layer and
+           cross-fade it against itself, which reads as a flicker for nothing. */
+        if (lit.innerHTML !== markup) {
+          dark.innerHTML = markup;
+          dark.classList.add('is-on');
+          lit.classList.remove('is-on');
+        }
+      }
+    }
     paintHero.index = i;
   }
 
@@ -435,6 +574,71 @@
     }, 8000);
   }
   function stopHero() { if (heroTimer) { clearInterval(heroTimer); heroTimer = null; } }
+
+  /* One step round the carousel, either way. The arrows and the swipe are the
+     same movement asked for two different ways, and both restart the timer:
+     having just been told which slide to look at, the reader gets the full
+     dwell on it rather than whatever was left of the last one. */
+  function heroStep(delta) {
+    var n = FEATURED.length;
+    if (n < 2) return;
+    stopHero();
+    paintHero((((paintHero.index || 0) + delta) % n + n) % n);
+    startHero();
+  }
+
+  /* ---- swipe ----------------------------------------------------------- */
+  /* THE ONLY WAY THROUGH THE CAROUSEL ON A PHONE. The arrows are display:none
+     below 760px — there is no hover to reveal them and no room beside the words
+     — which left six slides behind a row of 9px dots and an eight-second wait.
+     A swipe is what a picture carousel is expected to answer to.
+
+     Bound unconditionally rather than under a width test: touchstart only fires
+     where there is a touch screen, so the gesture exists exactly where it can be
+     made. A touch laptop at 1400px gets it too, which is right — it has a finger
+     and the dots are just as small there.
+
+     Delegated from `document`, because <main> is rewritten on every navigation
+     and listeners bound to the hero element would go with it.
+
+     PASSIVE, and nothing is preventDefault()ed. The page scrolls vertically
+     through this element, and taking the gesture away from the browser to
+     drag-follow the image would fight that scroll on every diagonal swipe. So
+     the browser keeps the vertical axis, the delta is read on release, and the
+     slide commits then — which also suits a carousel that cross-fades rather
+     than slides: there is no horizontal movement to follow a finger with. */
+  var SWIPE_MIN_PX = 40;    // shorter than this is a tap, or a hesitation
+  var SWIPE_RATIO  = 1.2;   // and it has to be this much more across than down
+  var swipeX = 0, swipeY = 0, swiping = false;
+
+  document.addEventListener('touchstart', function (e) {
+    // Two fingers is a pinch-zoom, not a swipe.
+    if (!e.touches || e.touches.length !== 1 ||
+        !e.target.closest || !e.target.closest('.hero')) { swiping = false; return; }
+    swipeX = e.touches[0].clientX;
+    swipeY = e.touches[0].clientY;
+    swiping = true;
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    if (!swiping) return;
+    swiping = false;
+    var t = e.changedTouches && e.changedTouches[0];
+    if (!t) return;
+    var dx = t.clientX - swipeX;
+    var dy = t.clientY - swipeY;
+    // A gesture that travelled further down the page than across it was a
+    // scroll that happened to start on the hero.
+    if (Math.abs(dx) < SWIPE_MIN_PX || Math.abs(dx) < Math.abs(dy) * SWIPE_RATIO) return;
+    // Swiping left pulls the next slide in from the right, the way a stack of
+    // photographs moves under a thumb.
+    heroStep(dx < 0 ? 1 : -1);
+  }, { passive: true });
+
+  // A gesture the system takes over — an edge swipe, a call arriving — is not
+  // a swipe that was finished, and must not move the carousel when the finger
+  // lands again.
+  document.addEventListener('touchcancel', function () { swiping = false; }, { passive: true });
 
   /* -------------------------------------------------------------------- */
   /* Member strip (Inspire Family)                                         */
@@ -633,11 +837,16 @@
       '<article class="kja">' +
         '<section class="kja-hero">' +
           '<div class="kja-hero-art ident" style="' + gradVars(st) + '" aria-hidden="true">' +
-            '<img class="cover-art kja-hero-photo" alt="" decoding="async"' +
+            '<img class="cover-art kja-hero-photo" data-off-key="' + esc(st.slug) + '"' + offStyle(st.slug) +
+              ' alt="" decoding="async"' +
               ' src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">' +
             '<span class="kja-hero-sheen"></span>' +
             '<span class="ident-freq"><span class="ident-freq-hm">HM</span> ' + esc(st.hm) + '</span>' +
           '</div>' +
+          // Same key as the home hero: it is the same picture in near enough
+          // the same crop, so one setting fixes both rather than two settings
+          // needing to be kept in step.
+          nudgeHTML(st.slug) +
           '<button class="kja-back" type="button" data-article-back>' +
             '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"></path></svg>' +
             'All stations' +
@@ -724,7 +933,7 @@
               '<span class="kja-cta-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>' +
               // The three lines need a box of their own to stack in. Unclassed,
               // they were three inline spans in an inline wrapper and ran
-              // together as one line: "HEAR WHAT THIS IS ABOUTkJubilee RadioHM
+              // together as one line: "HEAR WHAT THIS IS ABOUTYear of JubileeHM
               // 308.70".
               '<span class="kja-cta-text">' +
                 '<span class="kja-cta-label">Listen now</span>' +
@@ -787,6 +996,50 @@
     ];
   }
 
+  /* THE BODY IS FETCHED, NOT SHIPPED.
+     One hundred and thirteen essays is about 950 KB of prose. It used to sit in
+     stations-data.js, which every page loads and which is served no-store — so
+     a visitor who opened the dial and pressed play paid for all of it and read
+     none of it. build-home-data now writes one file per slug into
+     public/data/hm-articles and leaves the grid its metadata.
+
+     Cached per slug for the life of the page: the reader who goes back to the
+     shelf and returns to the same piece should not fetch it twice. */
+  var hmBodies = {};
+  var hmWanted = null;
+
+  function hmFetchBody(slug) {
+    if (hmBodies[slug]) return Promise.resolve(hmBodies[slug]);
+    return fetch('/data/hm-articles/' + encodeURIComponent(slug) + '.json?v=' + COVER_V)
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (doc) {
+        hmBodies[slug] = (doc && doc.body) || [];
+        return hmBodies[slug];
+      });
+  }
+
+  /* The prose column, for whichever of the three states we are in. The dek is
+     the lead in all of them, so the reader always has the piece's own first
+     line to hold while the rest arrives. */
+  function hmBodyHTML(a, paras) {
+    var lead = '<p class="kja-lead">' + esc(a.dek) + '</p>';
+    if (paras === null) {
+      // In flight. Bars rather than a spinner: the column keeps its width and
+      // the page does not jump when the real paragraphs land in its place.
+      return lead + '<div class="kja-body-loading" aria-live="polite" aria-busy="true">' +
+        '<span></span><span></span><span></span><span></span><span></span>' +
+        '<p class="kja-body-loading-note">Fetching the article…</p></div>';
+    }
+    if (!paras.length) {
+      return lead + '<p class="kja-body-failed">This article could not be loaded. ' +
+        '<button type="button" data-hm-retry="' + esc(a.slug) + '">Try again</button></p>';
+    }
+    return lead + paras.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+  }
+
   function renderHmArticle(slug) {
     var a = hmBySlug[slug];
     if (!a) { go('hm'); return; }
@@ -796,8 +1049,27 @@
       ? a.img + '?v=' + COVER_V
       : (st ? '/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V : '');
 
-    var body = '<p class="kja-lead">' + esc(a.dek) + '</p>' +
-      a.body.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+    /* Paint immediately with whatever we have — cached prose, or the loading
+       column — so the hero, the title and the reading time are up at once, and
+       only the paragraphs arrive late. Re-rendering the whole article when the
+       fetch returns would throw away the reader's scroll position. */
+    hmWanted = slug;
+    var haveBody = hmBodies[slug] || null;
+    var body = hmBodyHTML(a, haveBody);
+
+    if (!haveBody) {
+      hmFetchBody(slug).then(function (paras) {
+        // The reader may have moved on while this was in flight; a late arrival
+        // must not overwrite whatever they are looking at now.
+        if (hmWanted !== slug) return;
+        var col = view.querySelector('.kja-body');
+        if (col) col.innerHTML = hmBodyHTML(a, paras);
+      }).catch(function () {
+        if (hmWanted !== slug) return;
+        var col = view.querySelector('.kja-body');
+        if (col) col.innerHTML = hmBodyHTML(a, []);
+      });
+    }
 
     var facts = hmBandFacts().map(function (f) {
       return '<dt>' + esc(f[0]) + '</dt><dd>' + esc(f[1]) + '</dd>';
@@ -819,11 +1091,15 @@
           // use — its image where it has one, the station cover behind it if not.
           '<div class="kja-hero-art ident"' + (st ? ' style="' + gradVars(st) + '"' : '') + ' aria-hidden="true">' +
             (heroSrc
-              ? '<img class="cover-art kja-hero-photo" alt="" decoding="async" src="' + heroSrc + '">'
+              ? '<img class="cover-art kja-hero-photo" data-off-key="' + esc(a.slug) + '"' + offStyle(a.slug) +
+                ' alt="" decoding="async" src="' + heroSrc + '">'
               : '') +
             '<span class="kja-hero-sheen"></span>' +
             '<span class="ident-freq"><span class="ident-freq-hm">HM</span></span>' +
           '</div>' +
+          // Keyed by the ARTICLE's slug, not a station's: a Heavenly Band piece
+          // carries its own picture. Only rendered where there is one to move.
+          (heroSrc ? nudgeHTML(a.slug) : '') +
           '<button class="kja-back" type="button" data-hm-back>' +
             '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 18l-6-6 6-6"></path></svg>' +
             'The Heavenly Band' +
@@ -889,7 +1165,7 @@
               '<span class="kja-cta-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"></path></svg></span>' +
               // The three lines need a box of their own to stack in. Unclassed,
               // they were three inline spans in an inline wrapper and ran
-              // together as one line: "HEAR WHAT THIS IS ABOUTkJubilee RadioHM
+              // together as one line: "HEAR WHAT THIS IS ABOUTYear of JubileeHM
               // 308.70".
               '<span class="kja-cta-text">' +
                 '<span class="kja-cta-label">Hear what this is about</span>' +
@@ -1051,6 +1327,197 @@
     try { return (JSON.parse(localStorage.getItem('jv_auth') || '{}') || {}).token || null; }
     catch (e) { return null; }
   }
+
+  /* MAY THIS BROWSER SEE THE REGENERATE BUTTON?
+   *
+   * The same question app/_use-is-admin.js asks, asked again here because this
+   * file is a plain script and that one is a React hook — there is no way to
+   * call it from inside the shelf renderer.
+   *
+   * AND THE SAME CAVEAT APPLIES, which is the part worth keeping: this decides
+   * whether a button is PAINTED, never what may be done. /api/admin/station-
+   * images calls requireSection against the database on every request, so a
+   * browser that sets this flag by hand in the console gains an icon and a 403.
+   *
+   * Asked once per page load, and never for a signed-out visitor — no token,
+   * no request. A preview opened before the answer arrives simply has no
+   * button; the next hover has one. That is a better trade than blocking the
+   * panel on a round trip nobody else needs. */
+  var isAdmin = false;
+  (function askAdmin() {
+    var token = authToken();
+    if (!token) return;
+    fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token }, cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (body) {
+        var role = String((body && body.user && body.user.role) || '').toLowerCase();
+        isAdmin = role === 'admin' || role === 'executive';
+        /* A class rather than a re-render: the nudge arrows are already in the
+           markup, hidden, and this is what uncovers them. Survives every later
+           view rewrite, because it is on <body> and not inside <main>. */
+        if (isAdmin) {
+          document.body.classList.add('kj-admin');
+          /* The wrappers are already on the page and empty — fill them now
+             rather than re-rendering anything. See nudgeHTML. */
+          fillNudges();
+        }
+      })
+      .catch(function () { /* offline or expired: no button is the safe answer */ });
+  })();
+
+  /* ---- where each picture sits in its frame --------------------------- *
+   *
+   * Every large rendering of a station's artwork crops a 16:9 source into a
+   * much wider, much shorter box with object-fit:cover anchored to the top.
+   * That is right for most of the dial and wrong for some of it, and the only
+   * previous fix was to re-render the artwork. An operator can now nudge the
+   * crop instead, five pixels at a time, and the nudge is stored server-side
+   * so it is what EVERY visitor sees — see migrations/007-image-offsets.sql.
+   *
+   * The map is keyed by whatever the picture is identified by: a station slug
+   * on the hero and the station article, an article slug on a Heavenly Band
+   * piece. One namespace, because one table.
+   *
+   * Fetched unconditionally, by everyone. Applying the offset is the whole
+   * point; only CHANGING it is an admin question. */
+  var OFFSETS = {};
+  var OFFSET_STEP = 5;
+  var OFFSET_LIMIT = 400;   /* matches the clamp in the API */
+
+  /* 0 is exactly the `center top` the stylesheets already set, so a station
+     with no row renders precisely as it did before this existed. */
+  function applyOffsetTo(img) {
+    var key = img.getAttribute('data-off-key');
+    if (!key) return;
+    img.style.objectPosition = 'center ' + (OFFSETS[key] || 0) + 'px';
+  }
+  function applyAllOffsets() {
+    var list = document.querySelectorAll('img[data-off-key]');
+    for (var i = 0; i < list.length; i++) applyOffsetTo(list[i]);
+  }
+
+  /* THE OFFSETS WERE SAVING AND NOT COMING BACK, and this is why.
+     applyAllOffsets ran exactly once, when the fetch resolved. Every later
+     render — changing category, opening a station, coming back to the shelf —
+     replaces view.innerHTML with brand new <img> elements that nothing ever
+     re-positions, so an adjustment survived until the reader touched the page
+     and then vanished.
+     route() has half a dozen exits and renderSection/renderArticle/
+     renderHmArticle all write the same container, so chasing every render site
+     would be a list to keep in step. Watching the container is one rule that
+     cannot be forgotten. Batched into a frame because replacing innerHTML
+     emits a burst of records and there is no sense running the query per node. */
+  (function watchRenders() {
+    if (!view || !window.MutationObserver) return;
+    var queued = false;
+    new MutationObserver(function () {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(function () { queued = false; applyAllOffsets(); });
+    }).observe(view, { childList: true, subtree: true });
+  })();
+
+  /* Written straight into the markup as well, so a picture rendered AFTER the
+     offsets are known is never painted at the wrong crop and corrected a frame
+     later. The observer above is what covers the opposite order. */
+  function offStyle(key) {
+    var y = OFFSETS[key] || 0;
+    return y ? ' style="object-position:center ' + y + 'px"' : '';
+  }
+
+  (function loadOffsets() {
+    fetch('/api/station-offsets', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (b) {
+        if (!b || !b.offsets) return;
+        OFFSETS = b.offsets;
+        /* The view may already have rendered — this resolves after first
+           paint on purpose, so nothing waits on it. */
+        applyAllOffsets();
+      })
+      .catch(function () { /* default crop is a fine answer */ });
+  })();
+
+  var NUDGE_UP   = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"></path></svg>';
+  var NUDGE_DOWN = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"></path></svg>';
+
+  /* The two arrows, top-right of whatever picture they belong to. Rendered for
+     EVERYONE and revealed by body.kj-admin in CSS: the admin answer arrives
+     from /api/auth/me after first paint, and re-rendering a hero to add two
+     buttons when it lands would restart the carousel animation. A visitor who
+     is not an admin has two hidden buttons in their DOM and a 403 waiting if
+     they find them. */
+  function nudgeButtonsHTML() {
+    return '<button type="button" class="img-nudge-btn" data-dir="-1"' +
+             ' title="Move this picture up 5px" aria-label="Move this picture up">' + NUDGE_UP + '</button>' +
+           '<button type="button" class="img-nudge-btn" data-dir="1"' +
+             ' title="Move this picture down 5px" aria-label="Move this picture down">' + NUDGE_DOWN + '</button>';
+  }
+
+  /* THE CONTAINER SHIPS EMPTY; THE BUTTONS DO NOT SHIP AT ALL.
+     This used to emit both buttons for every visitor and rely on
+     body.kj-admin in CSS to keep them off the screen. That gate works — a
+     signed-out browser cannot see them and /api/admin/station-offsets answers
+     403 to anyone without the role — but "hidden by a stylesheet" is a thin
+     place to keep an operator control, and it puts two labelled admin buttons
+     in the markup of every anonymous page view.
+
+     So only the positioned wrapper is rendered for everyone. It is empty, has
+     no buttons, no titles and no icons, and stays display:none. When the admin
+     answer arrives, fillNudges() puts the buttons into the wrappers already on
+     the page — which is what the original design was protecting: adding them
+     must not re-render the hero, because that restarts the carousel. The click
+     handler is delegated from `document`, so injected buttons need no binding.
+
+     This is defence in depth, not the lock. The lock is the route. */
+  function nudgeHTML(key) {
+    return '<div class="img-nudge" data-nudge="' + esc(key) + '">' +
+             (isAdmin ? nudgeButtonsHTML() : '') +
+           '</div>';
+  }
+
+  function fillNudges() {
+    var boxes = document.querySelectorAll('.img-nudge');
+    for (var i = 0; i < boxes.length; i++) {
+      if (!boxes[i].firstElementChild) boxes[i].innerHTML = nudgeButtonsHTML();
+    }
+  }
+
+  /* Optimistic: the crop moves on the press and the request follows. A failed
+     save leaves this browser showing a position nobody else has, which the
+     next reload corrects — better than a picture that lags every click. */
+  function saveOffset(key, y) {
+    var token = authToken();
+    if (!token) return;
+    fetch('/api/admin/station-offsets', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ slug: key, offsetY: y })
+    }).catch(function () {});
+  }
+
+  /* Delegated from `document`, like every other handler here: <main> is
+     rewritten on navigation and a listener bound to a hero would go with it. */
+  document.addEventListener('click', function (e) {
+    var btn = e.target.closest && e.target.closest('.img-nudge-btn');
+    if (!btn) return;
+    /* The hero and the article hero both sit inside larger click targets. */
+    e.preventDefault();
+    e.stopPropagation();
+    var box = btn.closest('.img-nudge');
+    var key = box && box.getAttribute('data-nudge');
+    if (!key) return;
+    var step = Number(btn.getAttribute('data-dir')) * OFFSET_STEP;
+    var next = Math.max(-OFFSET_LIMIT, Math.min(OFFSET_LIMIT, (OFFSETS[key] || 0) + step));
+    if (next === (OFFSETS[key] || 0)) return;   /* already at the stop */
+    OFFSETS[key] = next;
+    applyAllOffsets();
+    saveOffset(key, next);
+  });
+
+  /* Stations this browser has already asked to have re-rendered, so the button
+     stays marked after the POST without re-reading the queue on every hover. */
+  var regenAsked = {};
 
   // Thumbs go to /api/radio/feedback, which is an append-only JSONL log with
   // nothing to read back. What this browser has already thumbed is therefore
@@ -1247,8 +1714,23 @@
       '<div class="cp-cover" role="button" tabindex="0" aria-label="' + esc(st.name) + '">' +
         '<div class="ident" style="' + gradVars(st) + '"></div>' +
         '<img class="cover-art" alt="" src="/cdn/stations/' + encodeURIComponent(st.slug) + '.webp?v=' + COVER_V + '">' +
+        // ADMINS ONLY, AND ONLY AS PAINT. The route behind it re-checks against
+        // the database; this is the difference between showing the control and
+        // granting it. A signed-out or ordinary visitor never gets the markup
+        // at all, so there is nothing to find in the DOM either.
+        (isAdmin
+          ? '<button type="button" class="cp-regen' + (regenAsked[st.slug] ? ' is-queued' : '') + '"' +
+            ' data-regen="' + esc(st.slug) + '"' +
+            ' title="' + (regenAsked[st.slug] ? 'Queued for a new cover' : 'Queue this cover to be generated again') + '"' +
+            ' aria-label="Queue this cover to be generated again">' +
+            '<svg viewBox="0 0 24 24" aria-hidden="true">' +
+              '<path d="M20 11A8 8 0 1 0 18 16.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>' +
+              '<path d="M20 5v6h-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>' +
+            '</svg>' +
+          '</button>'
+          : '') +
         '<div class="cp-ident">' +
-          '<span class="cp-freq">' + esc(st.freq) + '</span>' +
+          '<span class="cp-freq">' + freqHTML(st.freq) + '</span>' +
           (st.tracks
             ? '<span class="cp-songs">' + esc(commas(st.tracks)) + ' Song' + (st.tracks === 1 ? '' : 's') + '</span>'
             : '') +
@@ -1263,8 +1745,18 @@
         '</div>' +
         '<div class="cp-title">' + esc(st.name) + '</div>' +
         '<div class="cp-meta">' +
+          // PLACE FIRST, THEN FORMAT. Where a station broadcasts from is the
+          // fact a reader is orienting by on this shelf — the format is the
+          // shelf they are already standing on. The row reads outside-in:
+          // where it is, what it plays, who hosts it.
+          //
+          // This slot WAS A SECOND COPY OF THE FREQUENCY, which .cp-freq
+          // already prints over the cover four lines up — the same number
+          // twice in one small panel. The panel had no room to say where the
+          // station broadcasts from and every room to stop repeating itself,
+          // so the slot carries the location instead.
+          '<span class="cp-place">' + esc(placeOf(st)) + '</span>' +
           '<span class="cp-pill">' + esc(st.format) + '</span>' +
-          '<span class="cp-dur">HM ' + esc(st.hm) + '</span>' +
           '<span class="cp-member">' + esc(host ? host.short : '') + '</span>' +
         '</div>' +
         '<div class="cp-ref">' + esc(st.description) + '</div>' +
@@ -1334,6 +1826,52 @@
     cover.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); details(e); }
     });
+
+    /* QUEUE THIS COVER TO BE MADE AGAIN.
+     *
+     * Sits inside .cp-cover, which is itself a click target that opens the
+     * station page — so the first thing this does is stop the event. Without
+     * that, asking for a new cover would also navigate away from the panel that
+     * was asking, and the request would look like it had failed.
+     *
+     * It does NOT delete the image. The Station Image Studio treats a missing
+     * file as "not done yet", so deleting would be the quick way to requeue and
+     * would blank the card on a live site until somebody happened to run the
+     * Studio. The row in kj_station_image_queue says "redo this" while the
+     * existing cover stays up. */
+    var regenBtn = el.querySelector('.cp-regen');
+    if (regenBtn) {
+      regenBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        if (regenBtn.disabled) return;
+        regenBtn.disabled = true;
+        regenBtn.classList.add('is-working');
+        fetch('/api/admin/station-images', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + authToken(),
+          },
+          body: JSON.stringify({ slug: st.slug }),
+        }).then(function (r) {
+          regenBtn.classList.remove('is-working');
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          regenAsked[st.slug] = true;
+          regenBtn.classList.add('is-queued');
+          regenBtn.title = 'Queued for a new cover';
+          regenBtn.setAttribute('aria-label', regenBtn.title);
+        }).catch(function () {
+          // Re-enable rather than swallow it: a failed request that leaves the
+          // button looking pressed is the one outcome that loses the work.
+          regenBtn.classList.remove('is-working');
+          regenBtn.classList.add('is-failed');
+          regenBtn.disabled = false;
+          regenBtn.title = 'Could not queue this cover — try again';
+          regenBtn.setAttribute('aria-label', regenBtn.title);
+        });
+      });
+    }
 
     el.addEventListener('mouseenter', cancelClose);
     el.addEventListener('mouseleave', scheduleClose);
@@ -1432,13 +1970,7 @@
     if (dot) { stopHero(); paintHero(Number(dot.dataset.i)); startHero(); return; }
 
     var arrow = e.target.closest('.hero-arrow');
-    if (arrow) {
-      stopHero();
-      var n = FEATURED.length, cur = paintHero.index || 0;
-      paintHero(arrow.classList.contains('next') ? (cur + 1) % n : (cur - 1 + n) % n);
-      startHero();
-      return;
-    }
+    if (arrow) { heroStep(arrow.classList.contains('next') ? 1 : -1); return; }
 
     // Listen now inside the dialog: the footer player's own delegated listener
     // starts the audio, this only gets the dialog out of the way so the player
@@ -1452,6 +1984,17 @@
     // it can be arrived at from a pasted link, in which case there is no
     // section behind it and currentSection is still whatever loaded first.
     if (e.target.closest('[data-hm-back]')) { go('hm'); return; }
+
+    /* A body fetch that failed leaves the column with a retry rather than a
+       dead page. Clearing the cached empty is what makes the second attempt a
+       real one — hmFetchBody short-circuits on anything already stored. */
+    var hmRetry = e.target.closest('[data-hm-retry]');
+    if (hmRetry) {
+      var retrySlug = hmRetry.getAttribute('data-hm-retry');
+      delete hmBodies[retrySlug];
+      renderHmArticle(retrySlug);
+      return;
+    }
 
     // A card on the band explainer opens its article.
     var hmCard = e.target.closest('.hm-card[data-hm]');
@@ -1552,17 +2095,11 @@
   });
 
   var typing = null;
-  input.addEventListener('input', function () {
-    clearTimeout(typing);
-    var v = input.value;
-    typing = setTimeout(function () {
-      if (v.trim()) renderSearch(v);
-      else route();
-    }, 200);
-  });
-  document.getElementById('qbtn').addEventListener('click', function () {
-    if (input.value.trim()) renderSearch(input.value);
-  });
+  /* THE HEADER BOX LEAVES THE SITE NOW — see app/_site-header.js. It used to
+     filter the station index here as you typed; searching is JubileeSearch's
+     job, and one box that means one thing everywhere beats a box that means
+     something different on each page. renderSearch() is still reachable
+     through ?q= below, so a link into the index by query keeps working. */
 
   window.addEventListener('hashchange', route);
 
@@ -1641,11 +2178,10 @@
   window.addEventListener('resize', sizeHero);
   window.addEventListener('orientationchange', sizeHero);
 
-  document.getElementById('year').textContent = new Date().getFullYear();
-  document.getElementById('stat').textContent =
-    STATIONS.length + ' stations · ' + MEMBERS.length + ' Inspire Family hosts · ' +
-    STATIONS.filter(function (s) { return s.region !== 'domestic'; }).length + ' international frequencies';
-
+  /* The copyright year is rendered by <Year /> (app/_year.js) now, from the
+     viewer's own clock. This line filled a `<span id="year">` that no longer
+     exists, and left as-is it would throw on a null element and take the rest
+     of this bootstrap — including route() below — down with it. */
   if (!fromQuery()) route();
 
   // After the first render, so there are cards to paint.

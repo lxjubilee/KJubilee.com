@@ -89,7 +89,7 @@
   // the split rather than becoming arbitrary.
   Object.keys(bucket).forEach(function (id) {
     bucket[id].sort(function (a, b) {
-      /* The flagship leads whichever section it falls in. kJubilee Radio is
+      /* The flagship leads whichever section it falls in. Year of Jubilee is
          HM 308.70 and both rules below would otherwise bury it partway down
          Christian Music, beneath stations it is the flagship of. Which
          station that is comes from window.KJ_DEFAULT — the same value the
@@ -391,15 +391,10 @@
     }, { passive: true });
   }
 
-  document.getElementById('qbtn').addEventListener('click', function () {
-    query = document.getElementById('q').value;
-    render();
-  });
-
-  document.getElementById('q').addEventListener('input', function () {
-    query = this.value;
-    render();
-  });
+  /* THE HEADER BOX NO LONGER FILTERS THIS PAGE. It searches JubileeSearch
+     from every page on the site (app/_site-header.js), so binding it here as
+     well would filter a list the browser is in the middle of leaving. `query`
+     stays because the section rendering still reads it; nothing sets it now. */
 
   // Delegated from the container, because the sections are re-rendered on
   // every keystroke.
@@ -432,10 +427,8 @@
     open(tr.getAttribute('data-slug'));
   });
 
-  document.getElementById('year').textContent = new Date().getFullYear();
-  document.getElementById('stat').textContent =
-    STATIONS.length + ' stations · HM ' + STATIONS[0].hm + ' – HM ' + STATIONS[STATIONS.length - 1].hm;
-
+  /* Year now comes from <Year /> (app/_year.js); the #year span is gone and
+     reading it would throw before render(). */
   render();
 
   /* Arriving on /stations#kids should open on Family Friendly. 'auto', not

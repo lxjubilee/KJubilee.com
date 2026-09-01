@@ -1,0 +1,463 @@
+/* ---------------------------------------------------------------------------
+   THE JUBILEEINSPIRE RAIL, ON KJUBILEE.
+
+   A port of JubileeInspire.com's left sidebar — the public (signed-out)
+   variant, src/components/layout/PublicSidebar.tsx over Sidebar.module.css.
+   Same 52px collapsed rail, same expand-to-280px drawer, same gold accent,
+   same vertical wordmark and ringed avatar pinned to the bottom corner.
+
+   TWO THINGS ARE DELIBERATELY NOT PORTED.
+
+   1. THE CSS VARIABLES. The original reads --background/--surface/--border
+      off the JubileeInspire theme. kJubilee publishes its own :root in EVERY
+      page stylesheet and the values differ (--surface is #14151d here, #2f2f2f
+      there), so inheriting would repaint the rail a different shade on every
+      page and leave it undefined on pages that declare no palette at all.
+      The rail therefore carries its own scoped --jir-* set below and reads
+      nothing from the host page. It looks the same on /player as on /admin.
+
+   2. THE FLEX SLOT. On JubileeInspire the rail is an in-flow sticky column
+      inside a flex row that the app layout owns. kJubilee's pages are not
+      built next to a rail — they are full-width documents with a sticky
+      topbar and a fixed footer player — so the rail is fixed to the viewport
+      and the page is moved out from under it with a padding-left on <body>.
+      Fixed chrome does not see that padding, so the two pieces that span the
+      full width get an explicit offset at the foot of this file.
+
+   Class names are prefixed `jir-` (JubileeInspire Rail) because these styles
+   are global here, not a CSS module, and names like .brand or .label would
+   collide with half the site.
+   --------------------------------------------------------------------------- */
+
+/* THESE THREE LIVE ON :root, NOT ON .jir, because <body> needs them and body
+   is not inside the rail. Safe to put here despite note 1: no page stylesheet
+   on this site defines a --jir-* name, so nothing can collide with them. */
+:root {
+  --jir-w: 52px;              /* the collapsed rail */
+  /* Deferred to the PAGE's own --accent, not a copy of its value. Every page
+     stylesheet on this site sets --accent:#3DA5FF, so this resolves to the
+     same azure the wordmark and the footer player use — but it now tracks the
+     page instead of restating it, so the line cannot drift out of step. The
+     literal is only the floor for a page that declares no accent at all. */
+  --jir-azure: var(--accent, #3DA5FF);
+}
+
+.jir {
+  /* The original's palette, hard-coded rather than inherited — see note 1. */
+  /* THE CATEGORY BAR'S COLOUR. --hdr-row2-bg in site-header.css is #1b1b1b,
+     and the rail now matches it exactly so the two pieces of chrome read as
+     one surface meeting at the corner. Restated rather than referenced:
+     --hdr-row2-bg is declared on .topbar, not on :root, so nothing outside
+     the header can inherit it. If the category bar is ever recoloured, this
+     has to move with it. */
+  --jir-bg: #1b1b1b;
+  --jir-surface-hover: #3f3f3f;
+  --jir-border: #3f3f3f;
+  --jir-text: #ececec;
+  --jir-text-secondary: #8e8e8e;
+  /* --jir-gold is GONE. #ffbd59 is JubileeInspire's accent and it came over
+     with the port to colour hovers, the focus ring and the current row. All
+     three now take kJubilee's azure, matching how inspiremanna.com draws the
+     same component in its own accent, so the token had no remaining reader and
+     a live token nobody uses is an invitation to reintroduce the clash. */
+  /* The wordmark's middle word takes kJubilee's azure (--jir-azure, :root
+     above), NOT the gold it wears on jubileeinspire.com: the rail is a guest
+     here and the one word carrying a brand should read in this site's colour. */
+  --jir-head: #6f6f6f;        /* the NAVIGATION hamburger — darker grey */
+  /* --jir-ring is GONE with the ring it named. It existed for the 2px circle
+     around the bottom-corner avatar, which has been removed — the mark is
+     already a circle and did not need a second one drawn around it. (It was
+     #3aa0ff, JubileeInspire's own ring blue, retuned to kJubilee's azure
+     because two blues a few pixels apart on the same edge showed.) */
+  --jir-w-open: 280px;
+}
+
+/* ---------- the rail itself --------------------------------------------- */
+
+.jir-rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--jir-w);
+  /* FLAT, NOT THE ORIGINAL'S TWO-TONE GRADIENT. JubileeInspire splits the rail
+     at 52px — black icon column, grey text column — but that split only makes
+     sense beside a page painted in those same greys. Here it read as two
+     different bars stuck together next to a header that is one colour. One
+     surface, matching the category bar above it. */
+  background: var(--jir-bg);
+  display: flex;
+  flex-direction: column;
+  padding: 4px 0;
+  /* NO border and no edge of any kind. There was an azure line down this side,
+     drawn by the page rather than by the rail; it has been removed outright.
+     The rail is separated from the page by its own #1b1b1b against whatever
+     the page paints, and by nothing else. */
+  /* Under the footer player (z-index 90000) and under any modal, over the
+     ordinary page. The player is offset at the foot of this file instead of
+     being covered. */
+  z-index: 200;
+  transition: width 0.3s ease;
+  overflow: visible;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.jir-rail.is-open { width: var(--jir-w-open); }
+
+/* Some page stylesheets set `* { box-sizing: border-box }` and some do not
+   (home.css does, stations.css does not), so a bordered box in here measured
+   36px on one page and 40px on another — which is exactly how the avatar came
+   to sit off-centre on some pages and not others. The rail states its own box
+   model for the same reason it states its own palette. */
+.jir-rail, .jir-rail *, .jir-burger { box-sizing: border-box; }
+
+/* ---------- menu items --------------------------------------------------- */
+
+.jir-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 10px;
+  margin: 1px 8px;
+  min-height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  position: relative;
+  text-decoration: none;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font: inherit;
+  justify-content: flex-start;
+  transition: background-color 0.15s ease;
+}
+
+/* Collapsed: the row is inset from the rail's edges so its hover highlight is a
+   box around the icon rather than a band spanning the full 52px.
+   THE ICON DOES NOT MOVE. margin + padding still sum to the 15px that centred
+   it before (3 + 12), so only the painted box shrinks — 52px to 46px, a little
+   over a tenth narrower. Change one of the two numbers and the icon slides;
+   change both and it does not. */
+.jir-rail:not(.is-open) .jir-item {
+  margin-left: 3px;
+  margin-right: 3px;
+  padding-left: 12px;
+  padding-right: 12px;
+  gap: 0;
+}
+
+/* ONE ACCENT FOR HOVER, FOCUS AND THE CURRENT ROW, AND IT IS THE AZURE.
+   inspiremanna.com draws all three from a single `--accent` — hover at 10%,
+   the selected row at 14%, the focus ring solid — and its accent is that site's
+   green. This rail is the same component with kJubilee's accent instead, which
+   is the rule the file already set for itself two tokens up when it took the
+   ring off JubileeInspire's blue: "One blue here."
+
+   Hover was gold while the selected row is azure, and hovering the current row
+   would have flashed the row you are on to a different brand's colour.
+
+   rgba first, color-mix second: color-mix wants Chrome 111 / Safari 16.2 /
+   Firefox 113, and an older browser drops the second declaration and keeps a
+   tint that is identical to three decimal places. Same two-declaration habit as
+   100vh then 100dvh elsewhere in this codebase. */
+.jir-item:hover { background-color: rgba(61, 165, 255, .10); }
+.jir-item:hover { background-color: color-mix(in srgb, var(--jir-azure) 10%, transparent); }
+.jir-item:focus-visible { outline: 2px solid var(--jir-azure); outline-offset: -2px; }
+
+.jir-item svg {
+  width: 22px;
+  height: 22px;
+  fill: var(--jir-text-secondary);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+/* THE ROW YOU ARE ALREADY ON — Jubilee Radio, because this site is it.
+   Exactly the treatment inspiremanna.com gives Daily Bread, only in azure:
+   the icon takes the accent solid, and the row sits on the accent at 14%.
+
+   The LABEL IS DELIBERATELY NOT RECOLOURED. Manna leaves it at the normal text
+   colour and it is right — the filled icon plus the wash already say "here",
+   and tinting the words as well made the row look like a different KIND of
+   entry rather than the same entry, selected.
+
+   The NAVIGATION hamburger still does not take any of this: it is a control,
+   not a destination, and painting it like a chosen row said the rail was
+   always on the page you were looking at. */
+.jir-item.is-active svg { fill: var(--jir-azure); }
+.jir-item.is-active { background-color: rgba(61, 165, 255, .14); }
+.jir-item.is-active { background-color: color-mix(in srgb, var(--jir-azure) 14%, transparent); }
+
+.jir-label {
+  font-size: 14px;
+  /* 14 x 1.2 = 16.8px keeps the row icon-driven rather than label-driven, so
+     the icon stays on the row's vertical centre and the collapsed tooltip,
+     anchored at top:50%, lines up with it. The original's note. */
+  line-height: 1.2;
+  color: var(--jir-text);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  pointer-events: none;
+  margin-left: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.jir-rail.is-open .jir-label { opacity: 1; visibility: visible; }
+.jir-item.is-head .jir-label { color: var(--jir-head); letter-spacing: 1px; font-size: 12px; }
+
+/* ---------- collapsed tooltips ------------------------------------------- */
+
+/* Only while collapsed: expanded, the label itself says it. */
+.jir-rail:not(.is-open) .jir-item[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 9px;
+  border-radius: 6px;
+  background: #1b1b1b;
+  border: 1px solid var(--jir-border);
+  color: var(--jir-text);
+  font-size: 12px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- collapse arrow ----------------------------------------------- */
+
+/* AZURE, AND NO BOX. It was a grey chevron in an outlined square that turned
+   gold on hover — a bordered control competing with the nav rows beside it for
+   something that only ever does one small thing. The border is gone and the
+   arrow takes the site's azure, so it reads as an affordance rather than as a
+   button someone forgot to style. */
+.jir-collapse {
+  display: none;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--jir-azure);
+  cursor: pointer;
+  z-index: 2;
+}
+.jir-rail.is-open .jir-collapse { display: flex; }
+.jir-collapse:hover { color: var(--jir-azure); filter: brightness(1.25); }
+.jir-collapse svg { width: 16px; height: 16px; }
+
+/* ---------- the spacer that pins the brand to the floor ------------------ */
+
+.jir-spacer { flex: 1; }
+
+/* ---------- branding, bottom corner -------------------------------------- */
+
+/* VERTICAL, AND VERTICAL IN BOTH STATES. The original never swaps to a
+   horizontal wordmark when the rail opens — it stays rotated at bottom:55px,
+   directly above the avatar at bottom:10px. Reproduced exactly, including the
+   Agency FB stack (a Windows face; the serif fallbacks are the original's). */
+/* CENTRED ON THE 52px ICON COLUMN — NOT ON THE RAIL.
+   This was left:50%, which is half of whatever the rail currently measures:
+   26px closed and 140px open. Opening the rail therefore slid the wordmark and
+   the avatar bodily to the right, which is not what centring them was for.
+   calc(var(--jir-w) / 2) is 26px in both states, so the pair sits over the icon
+   column and stays put while the text column grows out beside it.
+   translateX(-50%) still measures the element rather than assuming its width —
+   Agency FB is a Windows face and most visitors see the serif fallback at a
+   different width. The rotate stays in the same transform, after the translate. */
+/* LIFTED VERBATIM FROM THE ORIGINAL — src/components/layout/Sidebar.module.css
+   on JubileeInspire.com, the `.brand` rule. bottom:55px and left:10px are its
+   numbers, not an approximation of them.
+
+   This had been re-centred on the icon column with
+   `left: calc(var(--jir-w)/2)` + `translateX(-50%)`, which put it at roughly
+   13px and moved with the font: translateX is a share of the ELEMENT's width,
+   and the width of vertical text depends on whether Agency FB is installed or
+   the serif fallback is standing in. A literal 10px is where the original puts
+   it, and it is 10px on every machine. */
+.jir-brand {
+  position: absolute;
+  bottom: 55px;
+  left: 10px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  text-decoration: none;
+}
+.jir-brand-text {
+  font-family: "Agency FB", Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--jir-text);
+  letter-spacing: 0.5px;
+}
+/* AZURE, AND THIS IS THE ONE PLACE THE RAIL DOES NOT COPY THE ORIGINAL.
+   `.inspire` on JubileeInspire.com is `var(--site-accent, #ffbd59)`, and on
+   JubileeInspire.com itself nothing sets --site-accent, so the middle word is
+   gold there. Everything else in this corner — the 22px Agency FB, the 0.5px
+   tracking, 10px from the left and 55px from the bottom, the 36px mark in its
+   2px #3aa0ff ring — is that stylesheet's own value.
+
+   The colour is deliberately not. `--site-accent` is the per-site hook the
+   original leaves open precisely so the wordmark takes the colour of the
+   property it is standing on, and on kJubilee that is azure. Gold was tried
+   here and put back: it was the only gold on the rail and read as another
+   site's brand pinned to this one. Following the variable IS following the
+   original; copying its fallback would not be. */
+.jir-brand-accent { color: var(--jir-azure); }
+.jir-brand-tld { color: var(--jir-text); font-weight: normal; }
+/* .jir-brand-sub is GONE. It carried "JUBILEEINSPIRE AI BIBLE PROJECT · FREE
+   PLAN" — a plan and a strapline for a product that is not what this site
+   sells, set at 8px down the side of a radio station. The wordmark alone says
+   what the rail is for. Its rule is removed rather than display:none'd so the
+   markup and the stylesheet agree that there is nothing there. */
+
+/* The original's `.avatar`, to its own numbers: bottom:10px, left:8px, 36px
+   square, and the 2px #3aa0ff ring it draws around the mark. The artwork is the
+   same file — jubilee-profile.png here is byte-identical to the original's, so
+   only the frame around it had drifted.
+
+   left:8px replaces `calc(var(--jir-w)/2)` + translateX(-50%). That computed to
+   8px too — 26 minus half of 36 — so nothing moves; it is the literal now
+   because the original states it as one, and because a centring expression that
+   happens to agree is a coincidence waiting for --jir-w to change. */
+.jir-avatar {
+  position: absolute;
+  bottom: 10px;
+  left: 8px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid #3aa0ff;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.jir-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+/* ---------- the mobile hamburger + backdrop ------------------------------ */
+
+/* Hidden on desktop, where the in-rail NAVIGATION button is the toggle. Below
+   1024px the rail is off-canvas and this fixed button is the only way to open
+   it. Neutral surface box with grey lines that turn gold — the original is
+   explicit that this is NOT a gold-lined icon. */
+.jir-burger {
+  display: none;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  background: var(--jir-bg);
+  border: 1px solid #3f3f3f;
+  border-radius: 6px;
+  color: #8e8e8e;
+  cursor: pointer;
+  padding: 0;
+  z-index: 320;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+/* Azure on hover, for the same reason every other accented thing in this rail
+   is azure. This was #ffbd59 twice as a literal, which is how it survived the
+   token being retired — the mobile hamburger would have been the last gold
+   left on the rail, lighting up in another site's colour on phones only. */
+.jir-burger:hover { background: #3f3f3f; border-color: var(--jir-azure); color: var(--jir-azure); }
+.jir-burger svg { width: 22px; height: 22px; fill: currentColor; pointer-events: none; }
+.jir-burger.is-hidden { display: none !important; }
+
+.jir-backdrop {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 290;
+}
+
+/* ---------- moving the page out from under the rail ---------------------- */
+
+/* Normal flow: one padding on <body> and every page is clear of the rail
+   without any page's own stylesheet knowing the rail exists. */
+body.jir-on { padding-left: var(--jir-w); }
+
+/* Fixed chrome does NOT see that padding — it is positioned against the
+   viewport — so the two bars that span the full width are offset by hand.
+   These are the only two: everything else fixed on this site is either a
+   modal (inset:0, and correctly covers the rail) or JS-positioned.
+     #kjPlayer         — the footer player, public/js/kj-footer-player.js
+     .nav-menu(-overlay) — the topbar's collapsed-category panel
+   The player's own rule is injected from JS at z-index 90000; this file is
+   loaded with a precedence that lands after it, and the selectors match on
+   specificity, so `left` here wins on document order. */
+body.jir-on #kjPlayer,
+body.jir-on .nav-menu,
+body.jir-on .nav-menu-overlay { left: var(--jir-w); }
+
+/* ---------- 1024px and down: the rail becomes a drawer -------------------- */
+
+@media (max-width: 1024px) {
+  .jir-rail {
+    transform: translateX(-100%);
+    transition: transform 0.3s ease, width 0.3s ease;
+    width: 260px;
+    max-width: 80vw;
+    background: var(--jir-bg);
+    z-index: 1000;
+  }
+  .jir-rail.is-open { transform: translateX(0); width: 260px; }
+  /* Inside a drawer the collapsed icon-only state is meaningless — every row
+     shows its label, and the desktop collapse arrow gives way to the backdrop
+     and a second tap on the hamburger. */
+  .jir-rail .jir-label { opacity: 1; visibility: visible; }
+  .jir-collapse { display: none !important; }
+  .jir-burger { display: flex; }
+  .jir-backdrop { display: block; }
+
+  /* The page comes back to the edge: the drawer is an overlay, not a column,
+     so there is no rail beside the page and nothing for the line to edge. */
+  body.jir-on { padding-left: 0; }
+  body.jir-on #kjPlayer,
+  body.jir-on .nav-menu,
+  body.jir-on .nav-menu-overlay { left: 0; }
+
+  /* KEEPING THE TWO HAMBURGERS APART. kJubilee's own topbar carries a burger
+     for its section categories, and its wordmark sits at the far left of row 1
+     — exactly where this rail's fixed button lands. Pad row 1 clear of it so
+     the two controls read as two controls rather than one stack.
+
+     QUALIFIED WITH body.jir-on, AND THAT IS THE WHOLE FIX. This rule was a bare
+     `.topbar-row1 { padding-left: 44px }` and it never once applied: this file
+     loads BEFORE site-header.css, whose `.topbar-row1,.topbar-row2` rule sets
+     the `padding` SHORTHAND at the same specificity — so the shorthand landed
+     later and reset all four sides, left included. The rail's button has been
+     sitting on top of the wordmark ever since, and widening that shorthand's
+     gutter to 20px only moved the wordmark further under it.
+
+     body.jir-on takes the selector to two classes, which beats the one-class
+     rule in the other file whichever order they load in. The class is the
+     rail's own — set only while the rail is mounted — so a page without the
+     rail keeps the plain 20px gutter and gains no dead space. */
+  body.jir-on .topbar-row1 { padding-left: 50px; }
+}
+
+@media (max-width: 768px) {
+  .jir-burger { top: 10px; left: 10px; width: 32px; height: 32px; }
+  .jir-burger svg { width: 19px; height: 19px; }
+  body.jir-on .topbar-row1 { padding-left: 50px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jir-rail { transition: none; }
+  .jir-label { transition: none; }
+}

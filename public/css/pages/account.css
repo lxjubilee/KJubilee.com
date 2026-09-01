@@ -49,11 +49,33 @@ html,body{margin:0;padding:0}
    `html,body{height:100%}` produces the same symptom by a different route.
 
    A page in a shared document cannot assume a clean body. It has to say what
-   it needs, which is the plainest possible one. */
-html{height:auto}
+   it needs.
+
+   ── Why these carry !important, which nothing else in this file does ──
+   Saying it was not enough. Every rule in the fight is a bare `body` or
+   `html,body` selector, so all three files have identical specificity and the
+   winner is decided by nothing but which <link> React hoisted LAST. React
+   appends a sheet the first time it sees it and never moves or removes it
+   again, so that order is the order the pages were first VISITED — which means
+   whether this page scrolls depended on where the person had been earlier in
+   the session. Reach /account first and /map second and the reset silently
+   loses; reload and it wins, because a fresh document has only this file in it.
+   That is exactly the "scrolls only after a reload" report.
+
+   Specificity is the thing under this file's control, so it is the thing used.
+   An !important author declaration also outranks an inline style, which closes
+   the second door: radio.js and music.js set body.style.overflow = 'hidden'
+   when their mobile sidebar opens, and nothing puts it back when the router
+   leaves for another page.
+
+   The deeper fix is for jubilee-id.css and map.css to stop styling `body` for
+   layout that belongs to their own containers. Until they do, this page has to
+   defend itself, and this is the only weapon that works from here. */
+html{height:auto!important;overflow:visible!important}
 body{
-  display:block;
-  height:auto;
+  display:block!important;
+  height:auto!important;
+  overflow:visible!important;
   min-height:100dvh;
   background:var(--bg);color:var(--text);
   font-family:var(--font-sans);font-size:15px;line-height:1.55;

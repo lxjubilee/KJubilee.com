@@ -1,7 +1,7 @@
 'use client';
 
 import { usePageScripts } from '@/lib/use-page-script';
-import AccountButton from '../_account-button';
+import SiteHeader from '../_site-header';
 
 /*
  * Ported from public/map.
@@ -18,36 +18,9 @@ export default function MapPage() {
 
     return (
         <>
+            <link rel="stylesheet" href="/css/site-header.css" precedence="kj-header" />
             <link rel="stylesheet" href="/css/pages/map.css" precedence="kj-page" />
-            <header className="topbar">
-              <div className="topbar-row1">
-                <a className="logo" href="/" aria-label="kJubilee.com home">
-                  <img className="logo-img" src="/images/members/JubileeInspire-Circle-200.png" alt="" width="32" height="32" />
-                  <span className="logo-name"><span className="logo-k">k</span><span className="logo-accent">Jubilee</span>.com</span>
-                </a>
-                <div className="spacer"></div>
-                <a className="nav-textlink" href="https://www.jubileeinspire.com" rel="noopener">Jubilee AI Bible Chat</a>
-                <a className="nav-textlink" href="/player">The Dial</a>
-                <a className="nav-textlink" href="/stations">HM Radio Stations</a>
-                <a className="nav-textlink" href="/map">AI Towers Map</a>
-                <div className="searchbar">
-                  <svg className="search-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.2-3.2"></path></svg>
-                  <input id="q" type="search" placeholder="Search stations..." aria-label="Search stations" autoComplete="off" />
-                  <button className="search-btn" id="qbtn">SEARCH</button>
-                </div>
-                <AccountButton />
-              </div>
-              <div className="topbar-row2">
-                <nav className="primary-nav" id="nav" aria-label="Station categories"></nav>
-                <div className="spacer"></div>
-                {/* Right-hand side of the category bar: the HM band explainer, kept apart
-                     from the station categories because it is editorial, not a shelf. */}
-                <nav className="primary-nav nav-right" id="nav-right" aria-label="About the band"></nav>
-                <button className="lang-flag" title="English — more languages on the international shelf" aria-label="Language">
-                  <img src="https://flagcdn.com/w80/us.png" alt="English" />
-                </button>
-              </div>
-            </header>
+            <SiteHeader current="map" />
 
             <main>
               <div className="map-wrap">
@@ -75,6 +48,10 @@ export default function MapPage() {
               <aside className="map-side">
                 <div className="side-head">
                   <h2>Broadcast locations</h2>
+                  {/* The Jubilee Praise button moved to the site header, where it
+                      sits before the search box in the top-right corner of EVERY
+                      page — including this one. Keeping a second copy here would
+                      have put two of the same button on the map screen. */}
                   <input className="side-search" id="find" type="search" placeholder="Find a city or country code…" autoComplete="off" aria-label="Find a broadcast location" />
                 </div>
                 <div className="map-list" id="list"></div>

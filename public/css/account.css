@@ -10,7 +10,13 @@
    furniture does not move.
    ───────────────────────────────────────────────────────────────────────── */
 
-.kj-account { position: relative; flex: 0 0 auto; }
+/* LINED UP WITH THE LANGUAGE FLAG IN THE ROW BELOW.
+   The flag sits inside .lang-flag, which carries padding:4px 4px 4px 10px, so
+   the 26px disc of the flag ends 4px short of the row's right edge. Row 1 and
+   row 2 share the same horizontal padding, so matching that 4px here puts the
+   two circles in the same column: both now occupy [right-30px, right-4px].
+   If .lang-flag's right padding ever changes, this has to change with it. */
+.kj-account { position: relative; flex: 0 0 auto; margin-right: 4px; }
 
 .kj-account-trigger {
   display: inline-flex;
@@ -36,13 +42,19 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  /* 26px, to the pixel, because that is .lang-flag img's diameter — the two
+     read as one column of circles down the right-hand end of the bar. */
+  width: 26px;
+  height: 26px;
   flex: none;
   border-radius: 50%;
   background: var(--accent, #3DA5FF);
   color: #06182b;
-  font-size: 13px;
+  /* Two letters in a 4px-smaller circle: 13px no longer fits, and a disc whose
+     initials touch its edge looks broken rather than full. 10px with the
+     tracking pulled in slightly sits them centred with air on both sides. */
+  font-size: 10px;
+  letter-spacing: -0.02em;
   font-weight: 700;
   line-height: 1;
 }

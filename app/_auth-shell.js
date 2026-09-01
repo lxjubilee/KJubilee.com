@@ -14,6 +14,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 import { useState, useEffect } from 'react';
+import Year from './_year';
 
 const BACKDROPS = [
     'https://images.unsplash.com/photo-1507692049790-de58290a4334?w=1200&q=80',
@@ -95,9 +96,12 @@ export default function AuthShell({ children }) {
 
                     <div className="auth-footer">
                         <p className="copyright">
-                            &copy; {new Date().getFullYear()} kJubilee.com |{' '}
-                            <a href="https://www.jubileeinspire.com/help/terms" target="_blank" rel="noopener">Terms of Use</a> |{' '}
-                            <a href="https://www.jubileeinspire.com/help/privacy" target="_blank" rel="noopener">Privacy Policy</a>
+                            {/* The same single line the rest of the site carries.
+                                One legal footer, worded once. */}
+                            Copyright &copy; <Year /> Jubilee Software, Inc. All rights reserved.{' '}
+                            <a href="/sitemap">Sitemap</a> ·{' '}
+                            <a href="/terms">Terms of Use</a> ·{' '}
+                            <a href="/privacy">Privacy Policy</a>
                         </p>
                     </div>
                 </div>

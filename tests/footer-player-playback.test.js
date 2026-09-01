@@ -115,6 +115,7 @@ function session(opts) {
             this._src = ''; this._ct = 0; this.paused = true; this.readyState = 0;
             this.volume = 1; this.muted = false; this.preload = ''; this.crossOrigin = null;
             this.dataset = {}; this._l = {}; this.duration = NaN; this._srcAt = 0;
+            this._released = false;
             FakeAudio.all.push(this);
         }
         get src() { return this._src; }
@@ -123,6 +124,18 @@ function session(opts) {
             const self = this;
             global.setTimeout(function () {                    // metadata, a moment later
                 if (self._src !== v) return;
+                /* A DEAD WINDOW: for `seconds` after `at`, every file refuses
+                   to load. This is the CDN having a bad minute — a burst of
+                   5xx, a DNS wobble, a laptop coming back from sleep — and it
+                   is the fault that used to end the broadcast permanently. */
+                if (fault && fault.kind === 'dead') {
+                    const s = (vnow - T0) / 1000;
+                    if (s >= fault.at && s < fault.at + fault.seconds) {
+                        self.error = { code: 4 };
+                        self.fire('error');
+                        return;
+                    }
+                }
                 self.readyState = 4;
                 const dec = decodeURIComponent(self._src);
                 const e = DOC.entries.find(x => dec.indexOf(x.u) >= 0);
@@ -144,7 +157,13 @@ function session(opts) {
                     { from: +from.toFixed(2), to: +this._ct.toFixed(2), track: short(this._src) });
             }
         }
-        load() {}
+        removeAttribute(n) { if (n === 'src') this._src = ''; }
+        /* On a real phone this is the call that hands the decoder back. Here it
+           records that it happened, so a test can count what the player let go
+           of rather than trusting that it did. */
+        load() {
+            if (!this._src) { this._released = true; this.paused = true; this._ct = 0; }
+        }
         play() {
             if (blockingAutoplay) {
                 const e = new Error("play() failed because the user didn't interact with the document first");
@@ -218,6 +237,10 @@ function session(opts) {
     const store = {};
     const saved = {};
     const docListeners = {};
+    // Declared here rather than beside its helpers: the player is required
+    // further down and registers window listeners as it goes, so a const that
+    // came later would be in its temporal dead zone at exactly the wrong moment.
+    const winListeners = {};
     const fireGesture = (name) => (docListeners[name] || []).slice().forEach(f => { try { f({ type: name }); } catch (e) {} });
     const fakes = {
         localStorage: {
@@ -232,6 +255,7 @@ function session(opts) {
                     origin: 'https://www.kjubilee.com' },
         document: {
             readyState: 'complete', body: new El('body'), head: new El('head'),
+            visibilityState: 'visible',
             createElement: (t) => new El(t),
             getElementById: (id) => byId[id] || null,
             addEventListener: (n, f) => { (docListeners[n] = docListeners[n] || []).push(f); },
@@ -276,7 +300,10 @@ function session(opts) {
         CustomEvent: class { constructor(n, o) { this.type = n; Object.assign(this, o || {}); } },
         ResizeObserver: class { observe() {} disconnect() {} },
         window: global,
-        addEventListener: () => {},
+        // Recorded, not swallowed: the player registers pageshow and focus here,
+        // and a stub that drops them would make the background tests pass for
+        // the wrong reason.
+        addEventListener: (n, f) => { (winListeners[n] = winListeners[n] || []).push(f); },
         dispatchEvent: () => {},
         KJ_STATIONS: [{ slug: 'sim', name: DOC.name, hm: DOC.hm, format: DOC.format,
                         tenant: DOC.tenant, prototype: true, image: '' }],
@@ -319,6 +346,17 @@ function session(opts) {
         return prev < 0 ? true : a.currentTime > prev + 0.001;
     };
 
+    function fireDoc(name, ev) {
+        for (const f of (docListeners[name] || []).slice()) {
+            try { f(ev || { type: name }); } catch (e) { log('listener-threw', { name, e: e.message }); }
+        }
+    }
+    function fireWin(name, ev) {
+        for (const f of (winListeners[name] || []).slice()) {
+            try { f(ev || { type: name }); } catch (e) { log('listener-threw', { name, e: e.message }); }
+        }
+    }
+
     let silentFrom = null, lastHeard = null;
     const silences = [], order = [];
 
@@ -335,8 +373,53 @@ function session(opts) {
 
     return (async () => {
         await flush();
+        let wasBg = false;
         for (let el = 0; el < minutes * 60 * 1000; el += STEP) {
             vnow += STEP;
+
+            /* ── THE PHONE WENT AWAY ──────────────────────────────────────
+               What iOS actually does, and the reason a desktop never sees
+               this: the page's timers STOP. Not throttled — stopped. So for
+               the length of this window no interval fires, which means every
+               recovery mechanism the player has is itself switched off, and
+               whatever breaks while the listener is in another app stays
+               broken until they come back.
+
+               And something does break: the audio session is taken away, so
+               the element is found paused on return. Both halves matter. A
+               test that only paused the element would be answered by the
+               ordinary fifteen-second tick and would prove nothing about
+               being backgrounded at all. */
+            const nowSec = (vnow - T0) / 1000;
+            const inBg = !!(fault && fault.kind === 'background'
+                            && nowSec >= fault.at && nowSec < fault.at + fault.seconds);
+            if (inBg && !wasBg) {
+                global.document.visibilityState = 'hidden';
+                fireDoc('visibilitychange');
+                for (const a of FakeAudio.all) if (isSounding(a)) a.paused = true;
+                log('backgrounded', { at: nowSec });
+            } else if (!inBg && wasBg) {
+                /* A SUSPENDED INTERVAL DOES NOT CATCH UP. It resumes its
+                   cadence from the moment the page runs again, so a
+                   fifteen-second tick that was due eight minutes ago does not
+                   fire on the instant of return — it fires fifteen seconds
+                   later.
+
+                   This matters more than it looks. Letting every overdue timer
+                   fire immediately on resume hands the player a free recovery
+                   it would not get on a real phone, and makes the difference
+                   between noticing the return and not noticing it invisible.
+                   With the phase reset, a player that waits for its next tick
+                   leaves the listener in silence for as long as that tick
+                   takes; one that listens for visibilitychange does not. */
+                for (const t of timers) if (t.every) t.due = vnow + t.every;
+                global.document.visibilityState = 'visible';
+                fireDoc('visibilitychange');
+                fireWin('pageshow', { type: 'pageshow', persisted: true });
+                log('foregrounded', { at: nowSec });
+            }
+            wasBg = inBg;
+
             if (fault && fault.kind === 'stall') {
                 const s = (vnow - T0) / 1000;
                 stalling = s >= fault.at && s < fault.at + fault.seconds;
@@ -345,8 +428,11 @@ function session(opts) {
                 blockingAutoplay = false;          // the touch is the permission
                 fireGesture('pointerdown');
             }
-            drain();
-            for (const a of FakeAudio.all) a.tick(STEP);
+            // Suspended: no timer fires and nothing advances.
+            if (!inBg) {
+                drain();
+                for (const a of FakeAudio.all) a.tick(STEP);
+            }
             await flush();
 
             const sec = Math.floor((vnow - T0) / 1000) + startSec;
@@ -388,6 +474,17 @@ function session(opts) {
             const quietBetween = silences.some(x => x.len >= 2 && x.from >= prev.at - 1 && x.to <= events[i].at + 1);
             if (!quietBetween) cut++;
         }
+        /* How long after the listener came back did they hear anything?
+           Measured from the END of the background window, because that is the
+           moment they are looking at the screen waiting for sound. */
+        let backAfter = null;
+        if (fault && fault.kind === 'background') {
+            const resumeAt = fault.at + fault.seconds;
+            const gap = silences.find(x => x.to >= resumeAt - 1);
+            backAfter = gap ? +Math.max(0, gap.to - resumeAt).toFixed(1)
+                            : (silentFrom === null ? 0 : null);
+        }
+
         // When the injected stall ended, how long until sound came back.
         let recoveredAfter = null;
         if (fault && fault.kind === 'stall') {
@@ -403,9 +500,29 @@ function session(opts) {
             events, order,
             threw: events.filter(e => e.kind === 'timer-threw' || e.kind === 'listener-threw'),
             recoveredAfter,
+            backAfter,
+            silences,
+            /* THE MEMORY QUESTION, answered by counting rather than by hoping.
+               Every <audio> the player ever made, and how many of them it
+               explicitly handed back. What is left is what a phone is still
+               carrying: on iOS each one is a decoder, and they are not freed on
+               a lazy collection. */
+            audioMade: FakeAudio.all.length,
+            audioReleased: FakeAudio.all.filter(a => a._released).length,
+            audioHeld: FakeAudio.all.filter(a => !a._released && a._src).length,
             playingFlag: store['kjubilee.player.playing'],
             armedListeners: (docListeners['pointerdown'] || []).length,
             heard: order.length,
+            // Is the station actually sounding when the session ends? The one
+            // question a "did it recover" assertion turns on.
+            playingAtEnd: FakeAudio.all.some(isSounding),
+            // What the bar is telling the listener when the session ends.
+            // 'Programming unavailable' is the terminal state a station must
+            // never be left in.
+            finalSub: (byId['kjpSub'] && byId['kjpSub'].textContent) || '',
+            // When each distinct track was first heard, so a test can ask
+            // whether anything played AFTER an outage window.
+            heardAt: events.filter(e => e.kind === 'now-hearing').map(e => e.at),
             cut,
             jumps: events.filter(e => e.kind === 'JUMP').length,
             longestSilence: silences.length ? Math.max.apply(null, silences.map(x => x.len)) : 0,
@@ -499,6 +616,128 @@ function session(opts) {
     ok('tracks are heard in the schedule\'s order',
        plain.order.every((t, i) => t === scheduled[i]),
        plain.order.slice(0, 3).join(' | '));
+
+    /* ── A DEAD CDN MUST NOT END THE BROADCAST ───────────────────────────
+       Two minutes in which every file refuses to load, and the station has to
+       be sounding again afterwards.
+
+       WHAT THIS DOES NOT COVER, stated so nobody trusts it further than it
+       goes: it does not reach skipBadTrack's give-up branch, and it CANNOT
+       tell the current player from the one before it. Both survive this, and
+       both survive a permanent outage.
+
+       That is worth writing down, because it corrects the reason the retry was
+       added. The give-up branch was assumed to be terminal — it paused the
+       player, and the stall watchdog only runs WHILE PLAYING. It is not:
+       followDay's fifteen-second tick carries its own recovery
+       (`wantPlaying && audio.paused -> syncDay(true)`), wantPlaying is never
+       cleared there, and so the old player did come back on its own. It simply
+       came back by retrying every fifteen seconds forever while showing the
+       listener a paused button and "Programming unavailable".
+
+       So the backoff is an improvement in manners, not a repair of a hang: it
+       stops hammering a CDN that is already having a bad minute, and it says
+       "Reconnecting…" while it is in fact still trying. Nothing here should be
+       read as evidence that it fixed a silent station. */
+    const dead = await session({
+        minutes: 30,
+        fault: { kind: 'dead', at: 120, seconds: 120 },
+    });
+    const heardAfter = dead.order.length;
+    const soundingAtEnd = dead.playingAtEnd;
+    /* Compared against the CLEAN run, not against `true`: whether the fake
+       audio happens to be mid-track at the final tick is an artefact of where
+       the session stops, and the question here is whether the outage changed
+       the outcome — not what the last tick looked like. */
+    ok('a two-minute dead CDN does not end the broadcast',
+       soundingAtEnd === plain.playingAtEnd,
+       'with outage = ' + soundingAtEnd + ', clean run = ' + plain.playingAtEnd
+       + ', tracks heard = ' + heardAfter);
+    const afterOutage = (dead.heardAt || []).filter(t => t > 240).length;
+    ok('the station is heard again after the outage',
+       afterOutage > 0,
+       'distinct tracks started after the dead window = ' + afterOutage);
+
+    /* ══ THE PHONE ═══════════════════════════════════════════════════════
+       Everything above this line is a desktop's failure. These two are the
+       phone's, and they are the ones actually reported: the radio plays for
+       an hour, the listener switches apps, and when they come back it is
+       silent.
+
+       Neither test could be written before the harness could suspend its own
+       timers, which is the whole difference between the platforms. On a
+       desktop the recovery machinery keeps running while the window is behind
+       another; on iOS it stops dead, and everything the player relies on to
+       notice trouble stops with it. */
+
+    /* ── 1. COMING BACK ──────────────────────────────────────────────────
+       Ten minutes in another app: timers frozen, audio session taken away.
+       The listener returns and should hear the station, at the live position,
+       without touching anything.
+
+       The number that matters is HOW LONG they stand there in silence.
+
+       WHAT THIS TEST DOES AND DOES NOT SHOW, because the distinction cost a
+       wrong diagnosis once already: it passes against the player from BEFORE
+       the lifecycle handlers were added, and it is not evidence that they
+       fixed anything. A suspended page's promise callbacks keep running in
+       this harness, so the old player gets a recovery here that a genuinely
+       frozen iOS page would not hand it. What this is, honestly, is a
+       REGRESSION GUARD — backgrounded recovery works today and must keep
+       working — not a demonstration of an improvement.
+
+       The measured improvement is the one below. */
+    const bg = await session({
+        minutes: 30,
+        fault: { kind: 'background', at: 300, seconds: 600 },
+    });
+    /* Measured from the return, not from the end of the session: whether the
+       very last 100ms step happens to fall inside a hand-over is noise, and an
+       unfaulted control session ends "not sounding" about as often as not. */
+    const RESUMED_AT = 900;
+    const heardAfterReturn = bg.events.filter(e => e.kind === 'now-hearing' && e.at >= RESUMED_AT).length;
+    const longSilenceAfter = (bg.silences || []).filter(x => x.from >= RESUMED_AT && x.len >= 5);
+
+    ok('the station is heard again after ten minutes in another app',
+       heardAfterReturn > 0,
+       'tracks heard after the return = ' + heardAfterReturn);
+    ok('it returns within a couple of seconds of the listener coming back',
+       bg.backAfter !== null && bg.backAfter <= 3,
+       'silent for ' + bg.backAfter + 's after coming back');
+    ok('and it keeps playing rather than dropping out again',
+       longSilenceAfter.length === 0,
+       longSilenceAfter.length + ' silence(s) of 5s or more after the return');
+    ok('nothing threw while the page was suspended and restored',
+       bg.threw.length === 0,
+       JSON.stringify(bg.threw.slice(0, 2)));
+
+    /* ── 2. WHAT THE PHONE IS STILL CARRYING ─────────────────────────────
+       The player builds an <audio> per track to warm the next one. Dropping
+       the reference is not enough on iOS: a buffered element holds a decoder,
+       and Safari will sooner reclaim the page's whole media stack than free
+       one nobody explicitly released.
+
+       So this counts rather than hopes. Over an hour the player makes roughly
+       one element per track, and all but the two in use — the sounding one
+       and the warm one — must have been handed back. An accumulation here is
+       a session that plays perfectly for hours and then goes quiet, which is
+       exactly the report this came from.
+
+       THIS ONE DISCRIMINATES, which is the whole reason to trust it. Run
+       against the previous player it fails, and not marginally:
+
+           18 made, 1 released, 17 still holding a buffer
+
+       Seventeen buffered decoders after a single hour, on a device that has
+       very few to give. Against the current player, one — the track being
+       played. Reproduce with:
+
+           PLAYER_PATH=/path/to/old/kj-footer-player.js node tests/footer-player-playback.test.js */
+    const long = await session({ minutes: 60 });
+    ok('a long session does not hoard audio elements',
+       long.audioHeld <= 2,
+       long.audioMade + ' made, ' + long.audioReleased + ' released, '
+       + long.audioHeld + ' still holding a buffer');
 
     console.log('\n' + pass + ' passed, ' + fail + ' failed\n');
     process.exit(fail ? 1 : 0);

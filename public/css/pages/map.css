@@ -47,70 +47,17 @@ a{color:inherit;text-decoration:none}
    header subtree resolves them the way index.html does while the map keeps its
    own palette untouched. Copy any change here from index.html rather than
    inventing one, or the two headers drift. */
-.topbar{
-  --accent:#3DA5FF;
-  --border-strong:hsla(0,0%,100%,.1);
-  --site-max:1548px;
-  --topbar-row1-h:48px;
-  --topbar-row2-h:50px;
-  --font-logo:"Orbitron","Segoe UI",sans-serif;
-  flex:none;background:#1b1b1b;border-bottom:1px solid var(--border-strong);z-index:30;
-}
-.topbar-row1,.topbar-row2{
-  display:flex;align-items:center;flex-wrap:nowrap;gap:12px;
-  padding:0 max(10px,calc((100% - var(--site-max)) / 2 + 10px));
-}
-.topbar-row1{height:var(--topbar-row1-h);background:#242424}
-.topbar-row2{height:var(--topbar-row2-h);background:#1b1b1b;border-top:1px solid var(--border-strong)}
-.logo{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
-.logo-img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
-.logo-name{font-family:var(--font-logo);font-weight:600;font-size:24px;line-height:1;letter-spacing:.01em;white-space:nowrap}
-.logo-accent{color:var(--accent)}
 /* The leading "k" sits 2pt below the rest of the wordmark. calc with an
    absolute pt, not an em ratio, so the reduction stays exactly 2pt at the
    24px desktop size and the 17px narrow-screen size alike. */
-.logo-k{font-size:calc(1em - 2pt)}
-.spacer{flex:1 1 auto;min-width:0}
-.nav-textlink{
-  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
-  font-size:12px;font-weight:500;color:#c4c4c4;white-space:nowrap;transition:color .2s ease;
-}
-.nav-textlink:hover{color:#fff}
-.searchbar{
-  display:flex;align-items:center;gap:8px;flex:0 50 auto;min-width:0;
-  padding:5px 12px;background:hsla(0,0%,100%,.06);
-  border:1px solid hsla(0,0%,100%,.12);border-radius:4px;transition:border-color .15s ease;
-}
-.searchbar:focus-within{border-color:hsla(0,0%,100%,.2)}
-.search-icon{color:#8a8a8a;flex:none}
-.searchbar input{flex:1 1;min-width:0;width:130px;background:none;border:0;color:#fff;font-size:12px;outline:none}
-.searchbar input::placeholder{color:#8a8a8a}
-.search-btn{flex:none;padding:3px 10px;border-radius:3px;background:var(--accent);color:#0A1B2B;font-size:11px;font-weight:700;transition:filter .15s ease}
-.search-btn:hover{filter:brightness(1.06)}
 .btn-outline{
   padding:8px 12px;border-radius:4px;border:1px solid var(--border-strong);
   color:#c4c4c4;font-size:12px;font-weight:500;white-space:nowrap;
   transition:border-color .2s ease,color .2s ease,background .2s ease;
 }
 .btn-outline:hover{color:#fff;background:#2d2d2d}
-.primary-nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
-.primary-nav::-webkit-scrollbar{display:none}
-.nav-link{
-  display:inline-flex;align-items:center;padding:8px 12px;border:1px solid transparent;border-radius:4px;
-  font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.02em;color:#fff;white-space:nowrap;
-  transition:color .2s ease,border-color .2s ease,background .2s ease;
-}
-.nav-link:hover{background:#2d2d2d}
-.nav-link.is-active{color:var(--accent);border-color:var(--accent);background:transparent}
-.nav-right{flex:0 0 auto;overflow:visible}
-.nav-short{display:none}
 @media (max-width:900px){
-  .nav-long{display:none}
-  .nav-short{display:inline}
 }
-.lang-flag{flex:0 0 auto;padding:4px 4px 4px 10px;background:#1b1b1b;display:inline-flex;transition:box-shadow .2s ease,transform .2s ease}
-.lang-flag:hover{transform:scale(1.1);box-shadow:0 0 0 2px var(--accent)}
-.lang-flag img{width:26px;height:26px;border-radius:50%;object-fit:cover}
 
 /* ---------- layout -------------------------------------------------------- */
 main{flex:1 1;min-height:0;display:flex;overflow:hidden}
@@ -206,6 +153,27 @@ main{flex:1 1;min-height:0;display:flex;overflow:hidden}
 .map-side{flex:0 0 300px;min-height:0;border-left:1px solid var(--border-strong);background:var(--panel);display:flex;flex-direction:column}
 .side-head{flex:none;padding:14px 16px 10px;border-bottom:1px solid var(--border)}
 .side-head h2{font-size:11.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--text-muted)}
+/* THE JUBILEE PRAISE BUTTON — between the map and the search field.
+   Solid --accent, the same #3DA5FF the rest of the site uses for its blue, so
+   it reads as this network's colour rather than a one-off.
+
+   DARK INK ON IT, NOT WHITE, and that is a contrast decision rather than a
+   taste one: #3DA5FF is a light blue, and white text on it lands around 2.6:1,
+   which fails AA for any size. The near-black below is about 7.2:1 and passes
+   comfortably. The panel's own --border-strong ring keeps its edge legible if
+   the fill is ever lightened. */
+.side-cta{
+  display:block;margin-top:10px;width:100%;
+  padding:9px 12px;border-radius:7px;box-sizing:border-box;
+  background:var(--accent);border:1px solid var(--accent);
+  color:#04121f;
+  font-size:13px;font-weight:700;letter-spacing:.03em;
+  text-align:center;text-decoration:none;
+  transition:background .15s ease,border-color .15s ease;
+}
+.side-cta:hover{background:#5cb6ff;border-color:#5cb6ff}
+.side-cta:focus-visible{outline:2px solid var(--text);outline-offset:2px}
+
 .side-search{
   margin-top:9px;width:100%;background:#091220;border:1px solid var(--border-strong);border-radius:7px;
   padding:7px 10px;font-size:13px;color:var(--text);

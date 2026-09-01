@@ -58,6 +58,59 @@ function mainComponentBody(src) {
 }
 
 /**
+ * The source with comments and string literals blanked out.
+ *
+ * WITHOUT THIS THE TEST CRIES WOLF. The usage probe below is a regex for a bare
+ * identifier, and prose is full of them: `_site-header.js` failed because a
+ * comment describing the bar mentions "the four cross-site links, so" — and
+ * `links,` matches. Three more components failed the same way. A suite with
+ * four standing false failures gets ignored, which is worse than not having it.
+ *
+ * Blanked rather than deleted: every character is replaced by a space and every
+ * newline kept, so offsets and line numbers still line up with the real source
+ * and the brace counting elsewhere is unaffected.
+ *
+ * Regex literals are not tracked — telling `/` division from `/` regex needs a
+ * parser. The consequence is a regex body staying visible to the probe, which
+ * can only ever produce the false positive this already tolerated, never hide a
+ * real one.
+ */
+function stripNoise(src) {
+    let out = '';
+    let i = 0;
+    const N = src.length;
+    while (i < N) {
+        const c = src[i], d = src[i + 1];
+        // block comment
+        if (c === '/' && d === '*') {
+            const end = src.indexOf('*/', i + 2);
+            const stop = end < 0 ? N : end + 2;
+            for (let k = i; k < stop; k++) out += src[k] === '\n' ? '\n' : ' ';
+            i = stop; continue;
+        }
+        // line comment
+        if (c === '/' && d === '/') {
+            while (i < N && src[i] !== '\n') { out += ' '; i++; }
+            continue;
+        }
+        // string or template literal
+        if (c === '"' || c === "'" || c === '`') {
+            const quote = c;
+            out += ' '; i++;
+            while (i < N) {
+                if (src[i] === '\\') { out += '  '; i += 2; continue; }
+                if (src[i] === quote) { out += ' '; i++; break; }
+                out += src[i] === '\n' ? '\n' : ' ';
+                i++;
+            }
+            continue;
+        }
+        out += c; i++;
+    }
+    return out;
+}
+
+/**
  * Names declared at the TOP level of a body — not inside a nested function.
  *
  * Depth matters. `const r = await postJson(…)` inside a submit handler is a
@@ -75,6 +128,35 @@ function declaredNames(body, topLevelOnly) {
                 let m;
                 while ((m = re.exec(line))) names.add(m[1]);
             }
+            /* DESTRUCTURING DECLARES NAMES TOO, and missing that produced the
+               test's longest-standing false failure: `_dashboard.js` was
+               reported as leaking `total` because Dashboard has `const total =`
+               and a SIBLING component takes it as a prop —
+               `function Bar({ label, value, total, meta })`. Bar declares its
+               own `total` and shadows nothing; the checker simply could not see
+               a binding that was not preceded by const, let or var.
+
+               ONE DIRECTION ONLY — this runs for the outside scan, never for
+               the component's own. The two sides are not symmetrical: a name
+               wrongly believed to be declared outside merely suppresses a
+               warning, while a name wrongly believed to be declared inside
+               invents one. Applying it to both put `l` from `(l) => …` into the
+               candidate set and failed two more components on the spot. Regex
+               is a guess about JavaScript, so it is pointed the way that a bad
+               guess costs coverage rather than credibility. */
+            for (const re of topLevelOnly ? [] : [/\b(?:const|let|var)\s*\{([^}]*)\}\s*=/g,
+                              /\bfunction\s+\w+\s*\(([^)]*)\)/g,
+                              /\(([^)]*)\)\s*=>/g]) {
+                let m;
+                while ((m = re.exec(line))) {
+                    for (const part of m[1].split(',')) {
+                        // `a`, `a: b` (b is the binding), `a = 1`, `...rest`
+                        const bind = part.includes(':') ? part.split(':')[1] : part;
+                        const id = (bind.replace(/[{}.]/g, '').split('=')[0] || '').trim();
+                        if (/^[A-Za-z_$][\w$]*$/.test(id)) names.add(id);
+                    }
+                }
+            }
         }
         for (const c of line) { if (c === '{') depth++; else if (c === '}') depth--; }
     }
@@ -89,8 +171,12 @@ for (const file of walk(APP)) {
     if (!main) continue;
 
     const rel = path.relative(path.join(__dirname, '..'), file).replace(/\\/g, '/');
-    const outside = src.slice(0, main.from) + src.slice(main.to);
-    const inner = declaredNames(main.body, true);
+    /* Comments and strings blanked before anything looks for an identifier —
+       in BOTH directions. A comment that happens to read `const foo =` would
+       otherwise register as a module-level declaration and quietly suppress a
+       real leak, which is the more dangerous half of the same mistake. */
+    const outside = stripNoise(src.slice(0, main.from) + src.slice(main.to));
+    const inner = declaredNames(stripNoise(main.body), true);
     const moduleLevel = declaredNames(outside, false);
 
     const leaks = [];
