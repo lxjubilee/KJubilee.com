@@ -64,7 +64,20 @@ body:has(.auth-row){font-family:'Open Sans',system-ui,sans-serif;background:#1a1
 /* height, not min-height: the column has to be exactly the viewport for its own
    overflow-y to produce a scrollbar. With min-height it grows to fit its content
    instead and never scrolls, so anything past the fold is simply unreachable. */
-.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem 2rem;position:relative;z-index:2;overflow-y:auto;height:calc(100dvh - var(--kj-player-h,0px))}
+/* scrollbar-gutter, and this is the whole reason it is here.
+
+   The column is EXACTLY the viewport tall and its content lands within a pixel
+   or two of that, so overflow-y:auto was flipping between "needs a bar" and
+   "does not" — and each flip changes the column's inner width, which reflows
+   the content, which changes its height again. The Turnstile widget is what
+   pushes it over the line: it arrives after first paint and refreshes its token
+   on a timer, so the flip repeats rather than settling. Zooming only helped
+   because it moved where the rounding landed.
+
+   `stable` reserves the channel whether or not there is anything to scroll, so
+   the width never changes and there is nothing to oscillate. Browsers without
+   it fall back to exactly the behaviour above, which is no worse than today. */
+.auth-form-panel{width:33%;min-width:380px;max-width:520px;background:#2b2b2b;display:flex;flex-direction:column;padding:30px 2.5rem 2rem;position:relative;z-index:2;overflow-y:auto;scrollbar-gutter:stable;height:calc(100dvh - var(--kj-player-h,0px))}
 /* The form is vertically centred, so the short email screen and the tall
    Jubilee ID screen both sit comfortably without the logo jumping.
    `safe center` rather than plain `center`: when the content is TALLER than

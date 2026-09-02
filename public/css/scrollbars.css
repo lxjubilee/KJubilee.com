@@ -25,7 +25,11 @@
    ========================================================================== */
 
 :root {
-  --sb-accent: var(--accent, var(--accent-gold, #E6AC00));
+  /* --kj-accent is in this chain because the auth pages (jubilee-id.css) name
+     their blue that way and nothing else. Without it the chain fell all the way
+     through to the gold default, and /signin and /signup were drawing a gold
+     scrollbar down the middle of a blue page. */
+  --sb-accent: var(--accent, var(--kj-accent, var(--accent-gold, #E6AC00)));
   --sb-size: 12px;
   --sb-pad: 3px;
   --sb-track: rgba(255, 255, 255, .035);
