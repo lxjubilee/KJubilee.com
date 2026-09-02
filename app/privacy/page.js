@@ -48,7 +48,7 @@ export default function Page() {
             <p>
                 kJubilee.com is operated by <strong>Jubilee Software, Inc.</strong>, which is the controller
                 of the personal data described here. You can reach us at{' '}
-                <a href="mailto:ops@kjubilee.com">ops@kjubilee.com</a>.
+                <a href="mailto:support@kjubilee.com">support@kjubilee.com</a>.
             </p>
 
             <h2>2. What we collect, and why</h2>
@@ -200,7 +200,7 @@ export default function Page() {
                 Comments and voice messages you sent are stored separately from your account, as dated
                 records of what a listener said at the time. Deleting your account does not automatically
                 remove them. If you want those removed as well, email{' '}
-                <a href="mailto:ops@kjubilee.com">ops@kjubilee.com</a> and we will find and delete them.
+                <a href="mailto:support@kjubilee.com">support@kjubilee.com</a> and we will find and delete them.
             </div>
 
             <h2>8. Children</h2>
@@ -221,7 +221,7 @@ export default function Page() {
             <h2>10. Contact</h2>
             <p>
                 For anything in this policy, including a request to see or delete your data, write to{' '}
-                <a href="mailto:ops@kjubilee.com">ops@kjubilee.com</a>.
+                <a href="mailto:support@kjubilee.com">support@kjubilee.com</a>.
             </p>
             <p>Jubilee Software, Inc. — kJubilee.com</p>
         </LegalPage>

@@ -219,7 +219,7 @@ export default function Page() {
             <h2>12. Contact</h2>
             <p>
                 Questions about these terms, or about anything on kJubilee, can be sent to{' '}
-                <a href="mailto:ops@kjubilee.com">ops@kjubilee.com</a>.
+                <a href="mailto:support@kjubilee.com">support@kjubilee.com</a>.
             </p>
             <p>Jubilee Software, Inc. — kJubilee.com</p>
         </LegalPage>
