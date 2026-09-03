@@ -42,61 +42,15 @@
   --stop:#E8896F;
   --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
   --font-mono:ui-monospace,"Cascadia Mono","Consolas","SF Mono",Menlo,monospace;
+  /* STATED, NOT LEFT TO THE BROWSER TO GUESS. These pages now take the native
+     scrollbar, and a browser decides whether to paint it dark from the page's
+     declared colour scheme — Firefox will infer it from the background, Chrome
+     will not always. Without this a dark console can be handed a bright white
+     scrollbar down its edge. */
+  color-scheme: dark;
   --panel-w:346px;
   --albums-w:474px;
 }
-/* ── Scrollbars ─────────────────────────────────────────────────────────
-   A dark channel and a grey capsule. That is the treatment every serious
-   dark-theme console uses — VS Code, Outlook, the Windows Terminal — and it is
-   the right one here for the reason all of them landed on it: a scrollbar is
-   the one control on the page that must be findable without being looked at,
-   and it earns exactly none of the eye's attention beyond that.
-
-   scrollbars.css gives the site a 12px bar with a pale recessed channel tinted
-   with the page accent. That is right for a reading page and wrong for a
-   console with three scroll containers on screen at once, where three lit
-   channels are the loudest thing in the room before a word is read.
-
-   THE CHANNEL IS DARKER THAN THE PANES IT SITS IN — the surfaces here run
-   #14151d to #16171f, so a near-black gutter reads as recessed rather than as
-   a stripe painted on top of them. The 6px thumb inside a 10px bar is the
-   2px inset either side that makes it a capsule floating in a channel rather
-   than a block filling one.
-
-   Overriding the shared variables rather than the pseudo-elements keeps Firefox
-   in step: the standard-property branch of scrollbars.css reads the same three
-   tokens. These come after scrollbars.css in the document, which is the whole
-   reason equal-specificity :root rules land — do not reorder the <link> tags. */
-:root{
-  --sb-size:10px;
-  --sb-pad:2px;            /* 10 − 2×2 = a 6px capsule in a 10px channel */
-  --sb-track:#0a0b10;
-  --sb-thumb:hsla(0,0%,100%,.20);
-  --sb-thumb-hover:hsla(0,0%,100%,.36);
-}
-::-webkit-scrollbar-track{background:var(--sb-track);border-radius:0}
-/* Fully rounded caps, stated rather than inherited: the radius is what makes
-   this a capsule instead of a bar, and it is not something to leave depending
-   on another file. `min-height` keeps a long list's thumb from collapsing into
-   a dot with no ends to round. */
-::-webkit-scrollbar-thumb{
-  border-radius:999px;
-  min-height:38px;
-  transition:background-color .12s ease;
-}
-/* The thumb belongs to the pane under the pointer, not to whichever thumb the
-   pointer happens to be exactly on top of — a 6px target is not where anyone
-   aims first, and a bar that only lifts once you have already hit it is a bar
-   you cannot find. */
-.td-panel-scroll:hover::-webkit-scrollbar-thumb,
-.td-albums-scroll:hover::-webkit-scrollbar-thumb,
-.td-scroll:hover::-webkit-scrollbar-thumb{
-  background-color:hsla(0,0%,100%,.30);
-}
-.td-panel-scroll::-webkit-scrollbar-thumb:hover,
-.td-albums-scroll::-webkit-scrollbar-thumb:hover,
-.td-scroll::-webkit-scrollbar-thumb:hover{background-color:var(--sb-thumb-hover)}
-::-webkit-scrollbar-thumb:active{background-color:hsla(0,0%,100%,.48)}
 
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;height:100%}
@@ -631,4 +585,176 @@ pre{
   }
   .td-rail-sep{width:1px;height:24px;margin:0 2px}
   .td-dot.is-all{margin-bottom:0}
+}
+
+/* ══ /todo/ — THE CARD INDEX ═══════════════════════════════════════════════
+   The way in to every queue. Cards rather than a list because the projects
+   are not a ranking: they are twelve personas and half a dozen properties,
+   and a reader is looking for a NAME. Same tokens, same scrollbars and the
+   same header as the consoles they lead to, so arriving on one is continuous
+   with the page it came from. */
+.tx-body{overflow:auto;background:var(--bg)}
+.tx-main{max-width:1180px;margin:0 auto;padding:26px 22px 60px}
+.tx-group{margin:0 0 30px}
+.tx-group-h{
+  margin:0 0 12px;font-size:11px;font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--text-muted);
+}
+/* auto-fill, not auto-fit: with one card in a row auto-fit would stretch it
+   the full width of the page and make a single project look like a banner. */
+.tx-cards{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(248px,1fr))}
+.tx-card{
+  display:flex;flex-direction:column;gap:5px;min-height:104px;
+  padding:13px 15px;border-radius:11px;text-decoration:none;
+  background:var(--surface);border:1px solid var(--border);
+  transition:border-color .18s ease,background .18s ease,transform .18s ease;
+}
+.tx-card:hover{border-color:var(--accent);background:var(--surface-2);transform:translateY(-1px)}
+.tx-card-t{font-size:14.5px;font-weight:700;color:var(--text);letter-spacing:-.01em}
+.tx-card-b{font-size:12px;color:var(--text-muted);line-height:1.45;flex:1 1 auto}
+.tx-card-n{font-size:12.5px;color:var(--warn);display:flex;flex-direction:column;gap:2px}
+.tx-card-n b{font-weight:700}
+.tx-card-sub{font-size:11px;color:var(--text-muted)}
+/* Nothing left to record reads in the done colour rather than the warning one. */
+.tx-card.is-done .tx-card-n{color:var(--ok)}
+/* A card whose queue file did not load says so instead of showing a zero,
+   which would be indistinguishable from a finished project. */
+.tx-card.is-missing{opacity:.55;border-style:dashed}
+.tx-card.is-missing .tx-card-n{color:var(--stop)}
+
+/* The refresh control, shared by the index and every console page. */
+.td-refresh{
+  flex:0 0 auto;margin-left:10px;font-size:11.5px;font-weight:600;
+  color:var(--text-dim);background:transparent;cursor:pointer;
+  border:1px solid var(--border-strong);border-radius:999px;padding:4px 12px;
+  transition:color .18s ease,border-color .18s ease;
+}
+.td-refresh:hover:not(:disabled){color:var(--accent);border-color:var(--accent)}
+.td-refresh:disabled{opacity:.6;cursor:default}
+
+/* ══ THE SITE BAR, ON A CONSOLE PAGE ═══════════════════════════════════════
+   /todo/<project>.html carries the site header above its own .td-top strip —
+   the same two-row bar every other page has, lifted out of the prerendered home
+   page by tools/build-todo-pages.js and finished in the browser by
+   /js/kj-static-header.js. It is here so the console can say who is signed in
+   and paint the Admin pill, which is the whole reason it was added.
+
+   ALMOST NOTHING IS NEEDED FOR IT TO WORK. site-header.css is self-contained
+   and `body` is already a flex column with `overflow:hidden`, so the bar takes
+   its own height as a `flex:none` item and .td-split keeps the rest. These are
+   the two places the console's own base rules would otherwise reach into it. */
+
+/* `a:hover{text-decoration:underline}` above is written for lyric-pane links
+   and would underline the wordmark, the category buttons and every link in the
+   bar. The header states its own hover treatment — a colour change — and that
+   is the one it should get. */
+.topbar a:hover{text-decoration:none}
+/* The bar's own rule underneath it already resolves to --border-strong: it is
+   declared as `var(--border-strong, #2a2a2a)` and this file declares that
+   token, so the header themes with the console without being told to. */
+
+/* ══ CORRECTING THE WORDS ══════════════════════════════════════════════════
+   An administrator gets an Edit button on every track, a plain textarea in
+   place of the rendered lyric, and Save. Nothing else on the block is editable
+   — not the title, not the Styles prompt — for the reasons set out at the top
+   of app/api/todo/lyrics/route.js.
+
+   DELIBERATELY A BARE TEXTAREA. The words are stored as plain text in the sheet
+   on the J: share, and every piece of formatting a rich editor would add is a
+   character that has to be stripped back out before the file is written. The
+   only thing it is asked to do is be big enough to work in and use the same
+   monospace-adjacent measure the rendered lyric does, so a line that looked
+   right before an edit looks right after it. */
+.td-edit{
+  flex:0 0 auto;font-size:10.5px;font-weight:600;color:var(--text-muted);
+  border:1px solid var(--border-strong);border-radius:7px;padding:2px 9px;
+}
+.td-edit:hover{color:var(--warn);border-color:var(--warn)}
+/* AMBER WHILE OPEN, because an open editor is an unfinished job and should be
+   findable in a column of thirteen tracks without scrolling each one. */
+.td-edit.is-on{color:var(--warn);border-color:var(--warn)}
+
+.td-editor{margin:0 0 11px}
+.td-editor-area{
+  display:block;width:100%;min-height:260px;resize:vertical;
+  padding:11px 13px;border-radius:8px 8px 0 0;
+  background:#0c0d13;border:1px solid var(--warn);border-bottom:0;
+  color:var(--text);font-family:var(--font-sans);font-size:12.5px;line-height:1.5;
+  white-space:pre-wrap;
+}
+.td-editor-area:focus{outline:none;border-color:var(--warn)}
+/* Attached to the box rather than floating under it: the two are one control,
+   and a gap between them invites the eye to read Save as belonging to whatever
+   comes next down the page. */
+.td-editor-bar{
+  display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  padding:8px 11px;border-radius:0 0 8px 8px;
+  background:var(--surface-2);border:1px solid var(--warn);border-top:0;
+}
+.td-editor-msg{
+  flex:1 1 auto;min-width:0;font-size:11.5px;color:var(--text-muted);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.td-editor-msg.is-bad{color:var(--stop)}
+.td-editor-msg.is-good{color:var(--ok)}
+.td-btn{
+  flex:0 0 auto;font-size:11.5px;font-weight:600;color:var(--text-dim);
+  border:1px solid var(--border-strong);border-radius:999px;padding:4px 13px;
+  transition:color .18s ease,border-color .18s ease;
+}
+.td-btn:hover:not(:disabled){color:var(--accent);border-color:var(--accent)}
+.td-btn:disabled{opacity:.5;cursor:default}
+.td-btn.is-primary{color:var(--warn);border-color:var(--warn)}
+.td-btn.is-primary:hover:not(:disabled){color:#000;background:var(--warn);border-color:var(--warn)}
+
+/* ── "These are not the words in the sheet" ─────────────────────────────
+   A corrected track has to say so wherever it is read, or the next person to
+   open the J: file will find it disagrees with the page and have no way to know
+   which is the newer. Blue rather than amber: this is a fact about the track,
+   not a job outstanding on it. */
+.td-pill.is-edited{color:var(--accent)}
+.td-lyric.is-edited{border-color:color-mix(in srgb,var(--accent) 40%,var(--border))}
+.td-edited-note{
+  margin:6px 0 0;padding-left:var(--lyric-inset);
+  font-size:11px;color:var(--text-muted);
+}
+.td-edited-note b{color:var(--text-dim);font-weight:600}
+.td-edited-note .td-hist-open{
+  margin-left:8px;font-size:11px;color:var(--accent);text-decoration:underline;
+}
+
+/* ── The history ────────────────────────────────────────────────────────
+   Every save, newest first, with what the words were before it. Folded away by
+   default: it is the answer to "who changed this and when", which is a question
+   asked rarely and never while reading the song. */
+.td-hist{
+  margin:8px 0 0;border:1px solid var(--border);border-radius:8px;
+  background:var(--surface-2);overflow:hidden;
+}
+.td-hist-h{
+  padding:7px 11px;font-size:10px;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--text-muted);
+  border-bottom:1px solid var(--border);
+}
+.td-hist-r{padding:9px 11px;border-bottom:1px solid var(--border)}
+.td-hist-r:last-child{border-bottom:0}
+.td-hist-w{
+  display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;
+  font-size:11.5px;color:var(--text-dim);
+}
+.td-hist-rev{
+  font-family:var(--font-mono);font-size:10.5px;font-weight:700;color:var(--accent);
+}
+.td-hist-when{color:var(--text-muted);font-size:11px}
+.td-hist-applied{color:var(--ok);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase}
+.td-hist-pending{color:var(--warn);font-size:10px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase}
+/* The words as they stood before this save. Capped and scrollable rather than
+   printed in full: a history of six revisions of a four-minute song is longer
+   than the song, and it is a reference, not a reading. */
+.td-hist-was{
+  margin:6px 0 0;padding:8px 10px;max-height:170px;overflow:auto;
+  border-radius:6px;background:#0c0d13;border:1px solid var(--border);
+  color:var(--text-muted);font-size:11.5px;white-space:pre-wrap;
 }

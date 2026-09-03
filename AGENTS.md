@@ -25,6 +25,7 @@ of them, it answers it; code comments and this file do not override them.
 | Whether every station is actually playable right now | `tools/check-station-health.js` (drilled by `tools/drill-station-health.js`) |
 | Whether the dial can still be spun (mouse and touch) | `tools/drill-dial-spin.js` — needs the page served somewhere |
 | Which written songs still need an `.mp3`, per station | `/analytics/todo.html` — the recording queue |
+| Correcting a lyric after it is written | `/todo/<project>.html`, Edit — admins only; `tools/apply-lyric-edits.js` carries it back to J: |
 | Where a station broadcasts from (anchor + relays) | [`data/broadcast-bases.json`](data/broadcast-bases.json) — `tools/build-broadcast-bases.js` seeds any station that lacks one |
 
 ## "import refresh"
@@ -114,6 +115,33 @@ stations each new song reached. A run with no grid is not finished.
   link to `/prayers/upper-room.html` was added there unasked. Other pages may
   link wherever they like; this block is closed. If something genuinely has to
   reach the dial, ask first — do not add it and see.
+- **A CORRECTED LYRIC IS NOT IN THE SHEET UNTIL A TOOL PUTS IT THERE.** An
+  admin editing a lyric on `/todo` writes a row in `kj_lyric_edits`, and
+  `public/js/pages/todo.js` lays it over the album bundle as it renders — so
+  the console is right immediately and the sheet on the J: share still says
+  what it always said. That split is deliberate: the bundles under
+  `<CDN_LOCAL_ROOT>/lyrics/` are DERIVED, rewritten by `build-todo-index.js`
+  from the authoring trees, so an edit written into one would vanish at the
+  next index build with nothing reporting it. `node tools/apply-lyric-edits.js`
+  is the other half — run it where J: is visible, then rebuild the index and
+  deploy the lyrics tree. Until it runs, a render made from the sheet is made
+  from the uncorrected words. The console says which revisions are still
+  waiting; `--apply` writes, and it refuses any block the sheet has changed
+  underneath rather than overwriting somebody's work.
+- **A static page under `public/` gets the site's header, not the site's
+  behaviour.** `tools/build-todo-pages.js` lifts the bar's markup out of the
+  prerendered home page, which is what React emits on the SERVER — where
+  localStorage does not exist and nobody is ever signed in. So it ships a
+  hardcoded "Sign In" and no Admin pill however signed-in the reader is.
+  `/js/kj-static-header.js` is the runtime half: it reads the same session in
+  the same two keys, swaps in the account control, asks `/api/auth/me` for the
+  role and paints the pill. Any static page carrying `.topbar` must load it
+  along with `site-header.css` and `account.css`, or it lies about who is
+  there. Drilled by `tools/drill-todo-console.js`.
 - **Node tests do not cover the browser.** CORS and autoplay are enforced only in a
-  real browser; press play before calling audio work done.
+  real browser; press play before calling audio work done. `/todo`'s sign-in,
+  Admin pill and lyric editor are all runtime-only for the same reason —
+  `node tools/drill-todo-console.js https://kjubilee.com` drives them in a real
+  Chrome, and its own first version passed locally and failed over the network
+  because it waited on a control the un-hydrated page already had.
 

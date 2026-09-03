@@ -43,7 +43,20 @@ const LEGACY_HTML_ROUTES = {
     '/signup.html': '/signup',
     '/forgot-password.html': '/forgot-password',
     '/reset-password.html': '/reset-password',
-    '/radio.html': '/radio',
+    /* /radio WAS THE OLD FULL-PAGE PLAYER, AND IT IS GONE (2026-09-03).
+       It had drifted into a dead end: JubileeVerse branding on a kJubilee
+       route, an empty station list, and "Select a station" over a list that
+       never arrived - and ?station=<slug>, which every link into it carried,
+       did nothing at all. /player is the dial that works.
+
+       Both entries redirect rather than 404 because the address is in the
+       search index, in bookmarks and on printed material. Next carries the
+       query string across on its own, so ?station=<slug> survives the hop and
+       public/js/pages/player.js resolves it to a frequency at the far end -
+       an old deep link lands tuned, not merely somewhere. */
+    '/radio.html': '/player',
+    '/radio': '/player',
+    '/radio/': '/player',
     '/music.html': '/music',
     '/player.html': '/player',
     '/dial.html': '/dial',
@@ -99,6 +112,10 @@ const NO_CACHE_SOURCES = [
     // whole value is that its numbers are current. A cached copy of it reports
     // yesterday's dial with today's confidence.
     '/analytics/(.*)',
+    // /todo/* — the recording queues, and consoles for the same reason: they
+    // report a backlog that changes as work is done, and they now carry a bar
+    // that says who is signed in. A cached copy of one greets the wrong person.
+    '/todo/(.*)',
     '/js/(.*)',
     '/css/(.*)',
     '/data/(.*)',
