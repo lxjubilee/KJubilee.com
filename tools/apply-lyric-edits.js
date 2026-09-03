@@ -21,6 +21,20 @@
  * server can do this — it has to be run where J: is visible, against the
  * production database. Which is why it is a tool and not a route.
  *
+ * ── REACHING THE DATABASE FROM THE WORKSTATION ──────────────────────────────
+ *
+ * There is no local kjubilee database. `.env` here names localhost:5433, which
+ * is the inspirecortex Docker container and holds no such database — the rows
+ * are only ever on the VPS, and Postgres there listens on localhost. So this
+ * runs over a tunnel:
+ *
+ *   ssh -N -L 15432:localhost:5432 root@94.72.120.231 &
+ *   DB_HOST=127.0.0.1 DB_PORT=15432 DB_NAME=kjubilee DB_USER=kjubilee \
+ *   DB_PASSWORD=<from the VPS .env> node tools/apply-lyric-edits.js
+ *
+ * Run it without --apply first. That reads the sheets and decides, and writes
+ * nothing — which is also how you find a conflict before it is urgent.
+ *
  * ── IT REFUSES RATHER THAN GUESSES ──────────────────────────────────────────
  *
  * Between a correction being saved and this being run, the sheet may have been
