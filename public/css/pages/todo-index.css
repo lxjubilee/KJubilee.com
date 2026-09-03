@@ -1,0 +1,175 @@
+/*
+ * /todo/index.html — the page shell only.
+ *
+ * Everything visible here belongs to something else on purpose:
+ *   · the HEADER and the RAIL are the site's own, lifted from the prerendered
+ *     home page by tools/build-todo-pages.js, with /css/site-header.css and
+ *     /css/inspire-rail.css doing the work;
+ *   · the CARDS are the home page's, from /css/pages/home.css — same .shelf /
+ *     .row / .card, so a project tile is the same object a station tile is.
+ *
+ * What is left for this file is the strip that titles the page, the count on
+ * each card, and a body that SCROLLS. The console pages set
+ * `body{display:flex;overflow:hidden;height:100%}` for their three-pane layout,
+ * which is exactly wrong for a page you read down — that rule is why the first
+ * cut rendered one card per row in a narrow column.
+ */
+
+html, body { margin: 0; padding: 0; }
+/* The scrollbar down the right of this page is the browser's own — nothing
+   here styles one — and this is what tells the browser to paint it dark.
+   The /todo/ console pages declare the same thing for the same reason, so the
+   two render the identical bar rather than each depending on a guess. */
+:root { color-scheme: dark; }
+body {
+  background: var(--bg);
+  color: var(--text, #f3f2ee);
+  font-family: var(--font-sans, "Segoe UI", Tahoma, sans-serif);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* .stage already reserves the rail's width on every other page; this only adds
+   the reading measure and the room under the sticky header. */
+/* 70px of bottom padding was reserved here for the fixed footer player. This
+   page does not load it, so all 70px were dead space under the last line —
+   and once the totals moved down from the top, that line IS the last line and
+   the gap sat in plain view. 20px is the breathing room the rule needs, and
+   nothing more. */
+.tx-stage { max-width: 1500px; margin: 0 auto; padding: 18px 22px 20px; }
+
+/* ── the title strip, UNDER the shelves ──────────────────────────────────────────────────── */
+/* It used to run across the top, and nothing in it was needed to read the
+   page: the shelves name themselves and every card carries its own count, so
+   a title, a network-wide total and two controls were three lines of chrome
+   standing in front of the only thing anyone comes here for. As a footing it
+   is read after the cards instead of before them, which is the order it
+   actually matters in, and Refresh stays one click from wherever you stop.
+   Rules are shared with the old class name so nothing is orphaned if a page
+   still emits .tx-bar. */
+.tx-bar, .tx-foot {
+  display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap;
+}
+.tx-foot {
+  margin: 38px 0 0; padding-top: 15px;
+  border-top: 1px solid hsla(0, 0%, 100%, .08);
+}
+.tx-bar { margin: 0 0 22px; padding-bottom: 12px; border-bottom: 1px solid hsla(0, 0%, 100%, .08); }
+.tx-h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -.01em; color: #fff; flex: none; }
+/* Smaller down here: at the foot it labels the total beside it rather than
+   titling the page, and 22px would make the last thing on the page the
+   loudest. */
+.tx-foot .tx-h1 { font-size: 16px; color: var(--text-dim, #c9cad4); }
+.tx-meta {
+  flex: 1 1 auto; min-width: 0; font-size: 12px; color: var(--text-muted, #8c8d9c);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.tx-meta .is-warn { color: #E6AC00; font-weight: 700; }
+.tx-top-link { flex: none; font-size: 12px; color: var(--text-muted, #8c8d9c); text-decoration: none; }
+.tx-top-link:hover { color: #fff; }
+
+.tx-refresh {
+  flex: none; font-size: 11.5px; font-weight: 600; color: #c9cad4;
+  background: transparent; cursor: pointer;
+  border: 1px solid hsla(0, 0%, 100%, .16); border-radius: 999px; padding: 4px 13px;
+  transition: color .18s ease, border-color .18s ease;
+}
+.tx-refresh:hover:not(:disabled) { color: #fff; border-color: #fff; }
+.tx-refresh:disabled { opacity: .6; cursor: default; }
+
+/* ── the count on each card ───────────────────────────────────────────── */
+/* THE NUMBER IS THE POINT OF THE CARD, so it is set larger than the blurb
+   above it rather than smaller — 16px against the body's 12.5px. It was 12px
+   and read as a footnote to the description, when it is the one thing somebody
+   scanning this page is actually looking for. */
+.tx-count {
+  margin-top: auto;
+  font-size: 16px; line-height: 1.25;
+  color: #E6AC00; font-weight: 700;
+}
+.tx-count b { font-weight: 700; }
+/* The album line stays quiet underneath: it is context for the number, not a
+   second number competing with it. */
+.tx-count .tx-sub {
+  display: block; margin-top: 3px;
+  font-size: 11.5px; font-weight: 400; color: var(--text-muted, #8c8d9c);
+}
+/* Nothing left to record reads in the done colour rather than the warning one. */
+.card.is-done .tx-count { color: #4ade80; }
+/* A queue whose file did not load says so instead of showing a zero, which
+   would be indistinguishable from a finished project. */
+.card.is-missing { opacity: .6; }
+.card.is-missing .tx-count { color: #E8896F; font-size: 13px; }
+
+@media (max-width: 620px) {
+  .tx-stage { padding: 14px 14px 18px; }
+  .tx-bar, .tx-foot { gap: 8px; }
+  .tx-meta { flex-basis: 100%; order: 3; white-space: normal; }
+  .tx-count { font-size: 15px; }
+}
+
+/* ══ THE FIVE FAMILY COLOURS ═══════════════════════════════════════════════
+   Five houses, twelve people: the card carries the FAMILY colour, not the
+   persona identity hue the roster keeps. Nova is violet on the dial and green
+   here, and both are right about different things.
+
+     blue    Jubilee · Melody · Amir
+     yellow  Zariah · Zev
+     purple  Elias · Eliana
+     green   Caleb · Nova
+     red     Imani · Santiago · Tahoma
+
+   THE COLOUR THAT READS IS THE BAND ACROSS THE TOP, painted by FAMILY_HUE in
+   tools/build-todo-pages.js and delivered as --g1/--g2 on the .ident. These
+   rules are the quieter half: a deep, low-chroma body under the text and a
+   hairline border, so the card is one object in one colour from the gradient
+   down rather than a coloured lid on a grey box. On their own they were not
+   enough to be seen — against 210px of saturated gradient, a dark wash behind
+   twelve words does not register, which is why the band above had to take the
+   family hue too. The hover state lifts the same hue rather than switching to
+   the generic grey, or a card would lose its family the moment you pointed
+   at it. */
+.tx-stage .card.tone-blue   { background:#161d33; border:1px solid #3a4a86 }
+.tx-stage .card.tone-yellow { background:#241f11; border:1px solid #8a6a1f }
+.tx-stage .card.tone-purple { background:#211630; border:1px solid #6a4a90 }
+.tx-stage .card.tone-green  { background:#12241d; border:1px solid #2f7a5f }
+.tx-stage .card.tone-red    { background:#2a1518; border:1px solid #8c3a45 }
+
+.tx-stage .card.tone-blue:hover   { background:#1d2645 }
+.tx-stage .card.tone-yellow:hover { background:#302a17 }
+.tx-stage .card.tone-purple:hover { background:#2c1e40 }
+.tx-stage .card.tone-green:hover  { background:#193227 }
+.tx-stage .card.tone-red:hover    { background:#3a1d21 }
+
+/* ══ HOW MANY ARE DONE ═════════════════════════════════════════════════════
+   Bottom-right of the cover, opposite the frequency bottom-left, sharing its
+   baseline — so the pair reads as one line: what this project IS on the left,
+   how much of it EXISTS on the right. The card already answers "how much is
+   left" in amber below; this is the other half of that question, and having to
+   open a project to learn how much of it was already recorded was the gap.
+
+   WHITE AND NOT BOLD. The amber count below is the working number — the thing
+   a producer is deciding from — and it is set bold for that reason. This one
+   is a fact about the project rather than a call to act on it, so it takes
+   plain white at normal weight: legible over any of the twelve gradients,
+   without competing with the number it sits above. The word "done" beside it
+   is a label and is dimmer again; the figure is what is being read.
+
+   The shadow is the same one .cover-freq carries. These sit directly on the
+   ident gradient, whose light end runs to 50% lightness, and white text on
+   that needs a shadow to hold its edges. */
+.cover-done {
+  position: absolute; right: 12px; bottom: 10px;
+  font-size: 11px; font-weight: 400; letter-spacing: .02em;
+  color: hsla(0, 0%, 100%, .62);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, .6);
+  pointer-events: none;
+}
+.cover-done .cd-n { color: #fff; font-weight: 400; }
+/* A wide card has room for both; the narrowest column does not, and a
+   frequency that wraps is worse than a figure that waits for a bigger
+   window. */
+@media (max-width: 620px) {
+  .cover-done { font-size: 10.5px; right: 10px; }
+}

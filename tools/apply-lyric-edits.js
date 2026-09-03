@@ -114,7 +114,23 @@ function findBlock(lines, n) {
         if (cut === bodyStart) cut = bodyEnd;
     }
 
-    return { start, end, bodyStart, lyricEnd: cut };
+    /* ── THE BLANK LINES AROUND THE WORDS ARE THE FILE'S, NOT THE LYRIC'S ──
+       parseSheet trims what it returns, so the text the console shows — and
+       therefore the text that comes back from an edit — has no blank line after
+       `LYRICS:` and none before `Styles:`. Splicing that over the full span
+       would take those two lines out of the file on every correction: a real
+       diff, in a hand-authored document, that nobody asked for. Measured on
+       AMIM1001EN, where it was the whole of the collateral change.
+
+       So the span narrows to the words themselves. What is written back is
+       still exactly what was saved; the frame around it is left alone. */
+    let from = bodyStart;
+    while (from < cut && !lines[from].trim()) from++;
+    let to = cut;
+    while (to > from && !lines[to - 1].trim()) to--;
+    if (from === to) { from = bodyStart; to = cut; }   // a block with no words yet
+
+    return { start, end, bodyStart: from, lyricEnd: to };
 }
 
 /* What build-todo-index.js would have produced for this block, so the text in
@@ -132,9 +148,10 @@ function norm(text) {
         .replace(/\r\n?/g, '\n').replace(/[ \t]+$/gm, '').replace(/\s+$/, '');
 }
 
-/* Written back in whatever ending the file already had. These sheets are
-   authored on Windows and are mostly CRLF; rewriting one as LF would show up as
-   every line changed in whatever the operator diffs it with. */
+/* Written back in whatever ending the file already had. DO NOT ASSUME EITHER
+   WAY — the trees hold both, and AMIM1001EN's sheet is LF on a Windows share.
+   Rewriting one in the other ending shows up as every line changed in whatever
+   the operator diffs it with, which buries the one line that did. */
 function eolOf(text) {
     const crlf = (text.match(/\r\n/g) || []).length;
     const lf = (text.match(/\n/g) || []).length - crlf;
@@ -275,8 +292,10 @@ async function main() {
                 + 'since this correction was made and says something neither the '
                 + 'correction nor its history knows.');
             console.log('      sheet: ' + path.relative(CDN_ROOT, where.file));
-            console.log('      the sheet begins:  ' + firstLine(current));
-            console.log('      the console has:   ' + firstLine(wanted));
+            const d = firstDifference(current, wanted);
+            console.log('      first differ at line ' + d.line + ' of the lyric:');
+            console.log('        sheet:   ' + d.a);
+            console.log('        console: ' + d.b);
             console.log('      Nothing was written. Decide by hand, then re-run.');
             conflicts++;
             continue;
@@ -321,9 +340,25 @@ async function main() {
     return conflicts || missing ? 1 : 0;
 }
 
-function firstLine(text) {
-    const l = String(text || '').split('\n')[0] || '';
-    return l.length > 70 ? l.slice(0, 70) + '…' : l;
+/* WHERE THEY PART, not where they start. A conflict on a lyric whose first
+   line is unchanged — which is most of them — printed "[Intro]" against
+   "[Intro]" and told the operator nothing about what they had to decide. */
+function firstDifference(a, b) {
+    const la = String(a || '').split('\n');
+    const lb = String(b || '').split('\n');
+    const n = Math.max(la.length, lb.length);
+    for (let i = 0; i < n; i++) {
+        if (la[i] !== lb[i]) {
+            return { line: i + 1, a: show(la[i]), b: show(lb[i]) };
+        }
+    }
+    return { line: 0, a: show(la[0]), b: show(lb[0]) };
+}
+
+function show(line) {
+    if (line === undefined) return '(the lyric ends here)';
+    const l = String(line);
+    return l.length > 78 ? l.slice(0, 78) + '…' : (l || '(a blank line)');
 }
 
 /* The revision applied AND everything under it: those revisions are in the
