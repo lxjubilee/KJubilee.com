@@ -378,14 +378,14 @@
        from HM 321.90-BR — both Portuguese, different stations. */
     if (langEl) langEl.textContent = s.langCode || '';
     stationEl.textContent = s.name;
-    var circ = circulationOf(s.slug);
-    subEl.innerHTML = esc(s.format) + (host ? '  ·  ' + esc(host.name) : '') +
-      (circ !== null
-        // `(343,200,000 c.)` rather than `(Circulation: 343,200,000)`. The
-        // number is the content and the word was two thirds of the width of
-        // the line saying so; `c.` keeps the unit without spending the room.
-        ? ' <span class="circ">(' + commas(circ) + ' c.)</span>'
-        : '');
+    /* NO CIRCULATION FIGURE ON THIS LINE.
+       It used to close with `(343,200,000 c.)` in gold. Removed at the owner's
+       request (2026-09-01): the line names WHAT THIS STATION IS — its format and
+       who presents it — and a reach estimate is a different kind of fact, one
+       that belongs on the analytics pages rather than beside the presenter's
+       name. circulationOf() is left in place; the band totals in the corner
+       still use it. */
+    subEl.innerHTML = esc(s.format) + (host ? '  ·  ' + esc(host.name) : '');
     if (originEl) originEl.innerHTML = originHTML(s);
     /* Counted from the station's own catalogue figure, which
        build-home-data.js writes from the built manifest — the same
@@ -660,12 +660,55 @@
      placeholder in the markup. */
   function paintListeners(p) {
     if (!liveEl || !p) return;
-    liveEl.innerHTML = '<span class="n">' + p.here + '</span>'
-                     + '<span class="sep">/</span>'
-                     + '<span class="n">' + p.total + '</span>'
-                     + '<span class="lbl">LISTENING</span>';
-    liveEl.setAttribute('aria-label',
-      p.here + ' listening to this station, ' + p.total + ' across the dial');
+    /* A LINK, to the roll of who is actually on the dial. The count answers
+       "how many"; /listeners answers "who, and from where", and the number is
+       the natural place to ask from.
+       It is a link for everyone, and the page itself turns away anyone who is
+       not station staff — the same shape /studio/download.html uses. A link
+       that is only drawn for admins would mean asking the server who this
+       visitor is on every load of the player, which is a request the dial does
+       not otherwise need. */
+    /* ── X / Y / Z ────────────────────────────────────────────────────────
+       Everybody on the dial, then the ones with an account, then the ones
+       without. The three always add up — X = Y + Z — which is what makes the
+       readout worth three numbers instead of one: the middle figure counts
+       REAL signed-in people and nothing else, so it holds still even while a
+       stress drill is padding the outer two.
+
+       `here` — how many are on this frequency — used to be the first number.
+       It moved to the tooltip rather than being dropped: it is still the most
+       locally interesting figure, but four numbers in a dial corner is a
+       licence plate, not a readout.
+
+       THE OLD TWO-NUMBER FORM IS STILL REACHABLE, and deliberately. During a
+       deploy the browser gets this script before the API restarts, so for a
+       minute or so `accounts` arrives as null — and printing "17 / 0 / 17"
+       then would be a lie about the audience rather than a gap in the
+       rollout. */
+    var split = typeof p.accounts === 'number' && typeof p.anon === 'number';
+
+    liveEl.innerHTML =
+      '<a class="dial-listeners-link" href="/listeners" '
+    + 'title="' + (split
+        ? p.total + ' listening now — ' + p.accounts + ' signed in, ' + p.anon
+          + ' not. ' + p.here + ' on this frequency.'
+        : 'Who is listening right now, and from where') + '">'
+    +   (split
+        ? '<span class="n">' + p.total + '</span>'
+          + '<span class="sep">/</span>'
+          + '<span class="n">' + p.accounts + '</span>'
+          + '<span class="sep">/</span>'
+          + '<span class="n">' + p.anon + '</span>'
+        : '<span class="n">' + p.here + '</span>'
+          + '<span class="sep">/</span>'
+          + '<span class="n">' + p.total + '</span>')
+    +   '<span class="lbl">LISTENING</span>'
+    + '</a>';
+
+    liveEl.setAttribute('aria-label', split
+      ? p.total + ' listening across the dial: ' + p.accounts + ' signed in, '
+        + p.anon + ' not signed in. ' + p.here + ' on this station.'
+      : p.here + ' listening to this station, ' + p.total + ' across the dial');
   }
   window.addEventListener('kj-presence', function (e) { paintListeners(e.detail); });
   // The event may already have fired before this page's script ran.
@@ -690,10 +733,30 @@
      actually play, which leaves next and prev meaningful from there.       */
   function requestedHm() {
     try {
-      var q = new URLSearchParams(location.search).get('hm');
-      if (!q) return null;
-      var n = parseFloat(q);
-      return isNaN(n) ? null : n;
+      var p = new URLSearchParams(location.search);
+      var q = p.get('hm');
+      if (q) {
+        var n = parseFloat(q);
+        return isNaN(n) ? null : n;
+      }
+      /* ?station=<slug> IS THE OLD PAGE'S ADDRESS, and it still arrives here:
+         /radio was retired on 2026-09-03 and redirects to this page, query and
+         all. Every link the site itself writes now carries ?hm=, but bookmarks,
+         the search index and anything printed before today carry the slug, and
+         a reader following one of those should land on the station they asked
+         for rather than on whatever the dial opens with. Resolved against the
+         whole catalogue, not just LIVE: a station that is not on air yet gets
+         the same named "not on air" note as an ?hm= request for one does. */
+      var slug = p.get('station');
+      if (slug) {
+        for (var i = 0; i < ALL.length; i++) {
+          if (ALL[i].slug === slug) {
+            var m = parseFloat(ALL[i].hm);
+            return isNaN(m) ? null : m;
+          }
+        }
+      }
+      return null;
     } catch (e) { return null; }
   }
 

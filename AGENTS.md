@@ -27,6 +27,7 @@ of them, it answers it; code comments and this file do not override them.
 | Which written songs still need an `.mp3`, per station | `/analytics/todo.html` — the recording queue |
 | Correcting a lyric after it is written | `/todo/<project>.html`, Edit — admins only; `tools/apply-lyric-edits.js` carries it back to J: |
 | Where a station broadcasts from (anchor + relays) | [`data/broadcast-bases.json`](data/broadcast-bases.json) — `tools/build-broadcast-bases.js` seeds any station that lacks one |
+| Filling `/listeners` with a fictional audience for a drill | [`setup/radio-stress-testing.md`](setup/radio-stress-testing.md) |
 
 ## "import refresh"
 
@@ -138,6 +139,25 @@ stations each new song reached. A run with no grid is not finished.
   role and paints the pill. Any static page carrying `.topbar` must load it
   along with `site-header.css` and `account.css`, or it lies about who is
   there. Drilled by `tools/drill-todo-console.js`.
+- **A FULL LISTENERS GRID MAY NOT BE A REAL ONE.** With
+  `STRESS_TEST_LISTENERS=true`, `/listeners` appends ~95–145 fabricated rows
+  from `data/stress-listeners` so operators can drill against a busy page
+  (`setup/radio-stress-testing.md`). Every one of those addresses is inside
+  RFC 6598 or RFC 3849 space and belongs to nobody, and the page always
+  declares itself: a banner, a `simulated` tally beside the real one, and a
+  `sim` tag on each fabricated row. **Do not remove those markers.** The drill
+  works because the grid is full, not because the page is lying — a screenshot
+  of `/listeners` can end up in a report. `lib/presence.js` is never touched,
+  so the switch is a clean on and a clean off.
+- **THE DIAL READS `X / Y / Z LISTENING`, and the middle number is the honest
+  one.** X is everybody on the dial, Y is how many of them signed in, Z is how
+  many did not; `X = Y + Z` always. A stress drill moves X and Z and **cannot**
+  move Y, because every fixture listener is anonymous by construction and
+  `stressTally()` has no `accounts` to return. That is structural, not a
+  promise: real listeners are counted in `lib/presence.js` (`breakdown()`) and
+  the fixture is only ever *added* at the route. Keep it that way — a synthetic
+  listener gets its own store, never a flag in that Map. `here` (this frequency)
+  is still returned and lives in the readout's tooltip.
 - **Node tests do not cover the browser.** CORS and autoplay are enforced only in a
   real browser; press play before calling audio work done. `/todo`'s sign-in,
   Admin pill and lyric editor are all runtime-only for the same reason —

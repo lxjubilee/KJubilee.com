@@ -427,10 +427,39 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   font-variant-numeric:tabular-nums;
   color:#8a8a8a;
 }
-/* The slash is punctuation between two numbers, so it sits below them; the
-   label is a caption and sits lower still. The digits are the content. */
+/* The slashes are punctuation between the numbers, so they sit below them; the
+   label is a caption and sits lower still. The digits are the content.
+
+   THREE NUMBERS NOW, not two — everybody / signed in / not (see paintListeners
+   in public/js/pages/player.js). The block is `position:fixed` with no width of
+   its own, so the extra pair of digits simply takes the room it needs; nothing
+   here had to change for it. Worth knowing before anyone gives this a width. */
 .dial-listeners .sep{color:#5a5a5a;margin:0 .18em}
 .dial-listeners .lbl{color:#5a5a5a;margin-left:.5em;letter-spacing:.08em;font-size:8.5pt}
+
+/* THE COUNT IS A LINK, so the pointer has to come back on. The block above
+   sets pointer-events:none deliberately — it is a fixed overlay across the
+   bottom-left of the dial and must not eat drags meant for the scale — so the
+   anchor re-enables it for itself alone, which is exactly the area that should
+   be clickable and no more. */
+.dial-listeners-link{
+  pointer-events:auto;
+  display:inline-block;
+  color:inherit;text-decoration:none;
+  padding:3px 5px;margin:-3px -5px;   /* a real target without moving the text */
+  border-radius:4px;
+  transition:color .12s ease,background .12s ease;
+}
+.dial-listeners-link:hover,
+.dial-listeners-link:focus-visible{
+  color:var(--live,#46D07A);
+  background:rgba(70,208,122,.08);
+  outline:none;
+}
+.dial-listeners-link:hover .sep,
+.dial-listeners-link:hover .lbl,
+.dial-listeners-link:focus-visible .sep,
+.dial-listeners-link:focus-visible .lbl{color:var(--live,#46D07A);opacity:.8}
 
 @media (max-width:700px){
   /* The corner is busy on a phone and this is an operator's figure, not a
@@ -515,3 +544,42 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .dial-note strong{color:#e6ac00;font-weight:700}
 .dial-note a{color:var(--ink);text-decoration:underline;text-underline-offset:2px}
 .dial-note a:hover{color:#e6ac00}
+
+/* ---------- the footer bar, on the page that IS a transport --------------
+   THE DIAL ALREADY HAS BACK, PLAY AND NEXT — three 60px controls in the middle
+   of the instrument, which is the whole point of this page. The footer bar
+   carries its own copy of the same three, so on this page and no other the
+   visitor is offered two sets of the same buttons, one above the other, with
+   the smaller pair the less useful of the two.
+
+   The bar itself stays: it is what is actually making sound, and it carries the
+   station, the artwork, the streaming lamp and the volume that the dial does
+   not. Only its transport stands down.
+
+   `body ` IS LOAD-ORDER INSURANCE, NOT DECORATION. kj-footer-player.js builds
+   its stylesheet at runtime and does document.head.appendChild, so that sheet
+   lands AFTER this file's <link> and wins every tie. `#kjPlayer .ctrls` there
+   is (1,0,1) and `#kjPlayer` is (1,0,0); prefixing with `body` takes these to
+   (1,0,2) and (1,0,1), which win whatever order the two arrive in.
+
+   The column count has to change with it. The bar is `1fr auto 1fr` with the
+   transport in the middle — hide that middle child and .right slides into the
+   auto column and stops being right-aligned. `1fr auto` is the two-column form
+   the bar already uses below 860px, for the same reason.
+   THE CLASS IS NOT DECORATION EITHER, AND THIS IS THE BUG THAT WAS HERE:
+   these rules used to be `body #kjPlayer ...`, unconditional, on the theory
+   that a page stylesheet only applies to its own page. It does not. This file
+   is linked with React's `precedence`, which HOISTS it into <head> and LEAVES
+   IT THERE across client navigations - the site is a single-page app and the
+   sheet is cached for the session, not unmounted with the route. So the moment
+   a visitor opened the dial, the footer transport was hidden on every page they
+   visited afterwards: no play, no pause, no way to stop what was playing until
+   a full reload. Verified in a real browser on 2026-09-02 - after navigating
+   away, `player.css` is still in document.styleSheets and .ctrls still computed
+   to display:none while <body> no longer carried the class.
+
+   Scoping to .kj-own-transport fixes it at the only point that actually tracks
+   "am I on the dial": app/player/client.js adds the class on mount and removes
+   it on unmount. Sheet stays, rules stop matching. */
+body.kj-own-transport #kjPlayer{grid-template-columns:1fr auto}
+body.kj-own-transport #kjPlayer .ctrls{display:none}

@@ -1,0 +1,214 @@
+/* ==========================================================================
+   /listeners — who is on the dial right now.
+
+   THE ROWS ARE THIN ON PURPOSE. This is a monitoring grid: its job is to let
+   an operator take in twenty listeners at a glance, and a comfortable 44px row
+   fits eight on a laptop. 26px, tabular numerals, and one hairline between
+   rows — the density of a mixing desk's meter bridge rather than a settings
+   page.
+
+   The palette is the dial's own (public/css/pages/player.css), so this reads
+   as the same station rather than an admin tool that happens to share a
+   domain. --live is the green ON AIR uses and nothing else here is green.
+   ========================================================================== */
+
+.lsn{
+  --bg:#0b0b0c;
+  --panel:#131315;
+  --line:#232326;
+  --line-soft:#1a1a1d;
+  --ink:#e8e8ea;
+  --dim:#8a8a8a;
+  --dimmer:#5a5a5a;
+  --live:#46D07A;
+  --font-sans:"Segoe UI",Tahoma,Geneva,Verdana,-apple-system,BlinkMacSystemFont,sans-serif;
+  --font-dial:"Orbitron","Segoe UI",sans-serif;
+
+  max-width:1180px;
+  margin:0 auto;
+  padding:26px 18px 90px;
+  font-family:var(--font-sans);
+  color:var(--ink);
+}
+
+/* The page paints its own ground: this route is dark whatever the shell does,
+   and a white flash before the grid arrives is the one thing an operator
+   staring at a dial at night will notice. */
+body:has(.lsn){background:#0b0b0c}
+
+/* ── The head ──────────────────────────────────────────────────────────── */
+.lsn-head{
+  display:flex;flex-wrap:wrap;gap:18px;
+  align-items:flex-end;justify-content:space-between;
+  padding-bottom:14px;margin-bottom:16px;
+  border-bottom:1px solid var(--line);
+}
+.lsn h1{
+  font-family:var(--font-dial);
+  font-size:21px;font-weight:700;letter-spacing:.04em;
+  margin:0 0 5px;color:var(--ink);
+}
+.lsn-sub{margin:0;font-size:12.5px;color:var(--dim);max-width:52ch;line-height:1.5}
+
+.lsn-tallies{display:flex;gap:8px;flex-wrap:wrap}
+.lsn-tallies .t{
+  min-width:74px;padding:7px 11px;
+  background:var(--panel);border:1px solid var(--line);border-radius:6px;
+  text-align:center;
+}
+.lsn-tallies b{
+  display:block;font-family:var(--font-dial);
+  font-size:17px;line-height:1.1;font-variant-numeric:tabular-nums;
+}
+.lsn-tallies span{
+  display:block;margin-top:2px;
+  font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dimmer);
+}
+
+/* The simulated tally sits in the same row as the real ones and must not be
+   mistaken for one of them, so it takes the drill's violet rather than the
+   dial's green or the error red — this is neither good news nor a fault. */
+.lsn-tallies .t.sim{border-color:#3a3550;background:#17151f}
+.lsn-tallies .t.sim b{color:#a99ee0}
+
+/* ── The drill banner ──────────────────────────────────────────────────── */
+/* ALWAYS SHOWN WHEN THE FIXTURE IS ON. A page that quietly fabricates an
+   audience is one screenshot away from becoming a number somebody reports
+   upward, so this is not styled as a dismissible notice and has no close
+   button. Violet, not red: nothing is broken. */
+.lsn-drill{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;
+  margin:0 0 14px;padding:10px 13px;
+  border:1px solid #3a3550;border-left:3px solid #7d63d8;border-radius:6px;
+  background:linear-gradient(90deg,#191527,#131315 60%);
+  font-size:12px;line-height:1.55;
+}
+.lsn-drill b{
+  font-family:var(--font-dial);font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:#b9aef0;white-space:nowrap;
+}
+.lsn-drill span{color:var(--dim);flex:1 1 340px}
+.lsn-drill code{
+  font-family:ui-monospace,Consolas,monospace;font-size:10.5px;
+  padding:2px 6px;border-radius:4px;
+  background:#0e0d14;border:1px solid #2b2740;color:#8a82b8;white-space:nowrap;
+}
+
+/* ── The stations strip ────────────────────────────────────────────────── */
+.lsn-strip{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.lsn-strip .chip{
+  display:inline-flex;align-items:baseline;gap:6px;
+  padding:4px 9px;border-radius:999px;
+  background:var(--panel);border:1px solid var(--line);
+  font-size:11.5px;color:var(--dim);
+}
+.lsn-strip .chip b{color:var(--live);font-variant-numeric:tabular-nums}
+.lsn-strip .chip i{font-style:normal;color:var(--dimmer);font-size:10px}
+
+/* ── The grid ──────────────────────────────────────────────────────────── */
+/* Its own scroller, so a long address or a long station name never makes the
+   PAGE scroll sideways. */
+.lsn-gridwrap{
+  border:1px solid var(--line);border-radius:8px;
+  background:var(--panel);overflow-x:auto;
+}
+.lsn-grid{width:100%;border-collapse:collapse;font-size:12.5px}
+
+.lsn-grid thead th{
+  position:sticky;top:0;z-index:1;
+  background:#17171a;
+  padding:7px 10px;text-align:left;
+  font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dimmer);font-weight:600;
+  border-bottom:1px solid var(--line);
+  white-space:nowrap;
+}
+
+/* THE THIN ROW. 26px total: 5px of padding either side of a 16px line box.
+   line-height is set explicitly because the default would put the row back to
+   34px on its own. */
+.lsn-grid tbody td{
+  padding:5px 10px;
+  line-height:16px;
+  border-bottom:1px solid var(--line-soft);
+  white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+}
+.lsn-grid tbody tr:last-child td{border-bottom:0}
+.lsn-grid tbody tr:hover td{background:#1a1a1e}
+
+/* ── The columns ───────────────────────────────────────────────────────── */
+.lsn-grid .c-live{width:22px;padding-left:12px;padding-right:0}
+.lsn-grid .c-who{width:30%;max-width:0}      /* max-width:0 makes the ellipsis work in a table */
+.lsn-grid .c-stn{width:24%;max-width:0}
+.lsn-grid .c-hm {width:74px;text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+.lsn-grid .c-loc{width:20%;max-width:0}
+.lsn-grid .c-ip {width:172px;color:var(--dim);font-family:ui-monospace,Consolas,monospace;font-size:11.5px}
+/* Four values ever — iPhone, Android, Windows, Mac — so it is sized to the
+   longest of them and never negotiates for space with the station name. */
+.lsn-grid .c-dev{width:76px;color:var(--dim)}
+.lsn-grid .c-dev.dim{color:#3f3f44}
+.lsn-grid .c-for{width:70px;text-align:right;font-variant-numeric:tabular-nums;color:var(--dim)}
+
+/* The stress-fixture tag. Deliberately quiet — it must not turn a grid of a
+   hundred simulated rows into a grid of a hundred warnings — but it is on
+   every fabricated row, without exception and without a switch. */
+.lsn-grid .sim{
+  display:inline-block;margin-left:6px;padding:0 4px;
+  border:1px solid #3a3550;border-radius:3px;
+  font-style:normal;font-family:var(--font-sans);
+  font-size:8.5px;line-height:13px;letter-spacing:.08em;text-transform:uppercase;
+  color:#7d76a8;vertical-align:1px;
+}
+
+.lsn-grid .dot{
+  display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:#3a3a3e;vertical-align:middle;
+}
+.lsn-grid .dot.on{background:var(--live);box-shadow:0 0 0 2px rgba(70,208,122,.16)}
+
+.lsn-grid .who.named{color:var(--ink)}
+/* Not an error and not a warning — most of the audience is not signed in, and
+   styling the normal case as a problem would make the grid read as broken. */
+.lsn-grid .who.anon{color:var(--dimmer);font-style:italic}
+.lsn-grid .c-loc.dim{color:var(--dimmer)}
+
+/* ── Panels and notes ──────────────────────────────────────────────────── */
+.lsn-panel{
+  background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:26px;max-width:560px;
+}
+.lsn-panel h2{font-family:var(--font-dial);font-size:15px;margin:0 0 8px;letter-spacing:.03em}
+.lsn-panel p{margin:0 0 14px;font-size:13px;color:var(--dim);line-height:1.6}
+.lsn-panel p:last-child{margin-bottom:0}
+.lsn-err{color:#e0674f;font-family:ui-monospace,Consolas,monospace;font-size:12px}
+
+.lsn-btn{
+  display:inline-block;padding:8px 16px;border-radius:6px;
+  background:#1f1f23;border:1px solid var(--line);
+  color:var(--ink);text-decoration:none;font-size:12.5px;
+}
+.lsn-btn:hover{background:#26262b;border-color:#33333a}
+
+.lsn-note{color:var(--dim);font-size:13px}
+.lsn-foot{
+  margin:12px 2px 0;font-size:11px;line-height:1.65;color:var(--dimmer);max-width:78ch;
+}
+
+/* ── Narrow ────────────────────────────────────────────────────────────── */
+@media (max-width:820px){
+  /* The address is the widest column and the least useful on a phone; the
+     location it resolves to is the point. */
+  .lsn-grid .c-ip{display:none}
+  .lsn-grid thead th.c-ip{display:none}
+}
+@media (max-width:600px){
+  .lsn{padding:18px 12px 80px}
+  .lsn-grid .c-hm{display:none}
+  .lsn-grid thead th.c-hm{display:none}
+  /* The device is a nice-to-have next to knowing WHO and WHERE. It is the
+     second thing to go, after the address it sits beside. */
+  .lsn-grid .c-dev{display:none}
+  .lsn-grid thead th.c-dev{display:none}
+  .lsn-tallies .t{min-width:64px;padding:6px 9px}
+}

@@ -13,16 +13,33 @@
    stutter. It reads the player's public state and its state event, both of
    which already exist, and touches nothing else.
 
-   WHAT IT SENDS: a random id minted here, and a station slug. No account, no
-   IP, nothing that identifies a person. The id lives in localStorage so two
-   tabs are one listener, with a cookie mirror for the profiles where
-   localStorage throws — the same belt-and-braces the console's pane widths
-   use, and for the same reason: a store that silently fails would make every
-   tab a separate listener and inflate the number it exists to report.
+   WHAT IT SENDS: a random id minted here, a station slug, and — when somebody
+   is signed in — the access token they are already sending to every other API
+   on this site. The id lives in localStorage so two tabs are one listener, with
+   a cookie mirror for the profiles where localStorage throws — the same
+   belt-and-braces the console's pane widths use, and for the same reason: a
+   store that silently fails would make every tab a separate listener and
+   inflate the number it exists to report.
 
-   Publishes `window.KJ_PRESENCE = {here,total,station}` and fires
+   THE TOKEN IS FOR ATTRIBUTION, NOT ACCESS. The endpoint answers the same
+   integers with or without it; what it changes is which side of the dial's
+   split this browser lands on, and whether the station operator's view at
+   /listeners can put a name against a row instead of an IP. Sending it is not
+   a new disclosure — it is the same header the header bar, the console and the
+   studio already send, to the same origin.
+
+   THE IP IS NOT SENT AND COULD NOT USEFULLY BE. The server reads the
+   connecting address off the request, which is the only version of it worth
+   having: a browser that could state its own address could state any.
+
+   Publishes `window.KJ_PRESENCE = {here,total,accounts,anon,station}` and fires
    `kj-presence` on window. The dial page renders it; nothing else has to know
    this file exists.
+
+   `accounts` and `anon` are the two halves of `total` — how many of the people
+   listening are signed in, and how many are not. `accounts` counts real people
+   only and cannot be moved by the stress fixture; see lib/presence.js. Both are
+   `null`, not zero, when the server did not send them.
    ========================================================================== */
 (function () {
     'use strict';
@@ -60,6 +77,25 @@
     var timer = null;
     var lastStation = null;
 
+    /* THE SAME TWO KEYS EVERY OTHER READER USES. `jubileeVerseAuth` is what
+       radio and music write, `jv_auth` is what the home page writes, and every
+       writer writes both — app/_session-store.js is the authority on the pair.
+       Read afresh on each beat rather than once at load: a listener who signs
+       in mid-song should become a named row on the next heartbeat, not on
+       their next page load. */
+    function authToken() {
+        var keys = ['jv_auth', 'jubileeVerseAuth'];
+        for (var i = 0; i < keys.length; i++) {
+            try {
+                var raw = localStorage.getItem(keys[i]);
+                if (!raw) continue;
+                var parsed = JSON.parse(raw);
+                if (parsed && parsed.token) return parsed.token;
+            } catch (e) { /* unreadable — try the other key */ }
+        }
+        return null;
+    }
+
     function current() {
         try {
             var st = window.kjPlayer && window.kjPlayer.state ? window.kjPlayer.state() : null;
@@ -68,9 +104,18 @@
     }
 
     function publish(data, station) {
+        var num = function (v) { return typeof v === 'number' ? v : null; };
         window.KJ_PRESENCE = {
             here: data && typeof data.here === 'number' ? data.here : 0,
             total: data && typeof data.total === 'number' ? data.total : 0,
+            /* THE SPLIT, AND IT IS ALLOWED TO BE ABSENT. Null rather than zero
+               when the server did not send it, so the dial can tell "nobody is
+               signed in" from "this server predates the three-number readout"
+               and fall back to the old two-number one instead of printing a
+               confident and wrong zero. That gap is real for the length of a
+               deploy: the browser gets the new script before the API restarts. */
+            accounts: data ? num(data.accounts) : null,
+            anon: data ? num(data.anon) : null,
             station: station || null,
         };
         try {
@@ -83,9 +128,13 @@
         var station = st ? st.slug : '';
         lastStation = station || null;
         if (typeof fetch !== 'function') return;
+        var headers = { 'Content-Type': 'application/json' };
+        var token = authToken();
+        if (token) headers.Authorization = 'Bearer ' + token;
+
         fetch(ENDPOINT, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: headers,
             body: JSON.stringify({ session: ID, station: station, playing: st ? st.playing : false }),
             cache: 'no-store',
             keepalive: true,
