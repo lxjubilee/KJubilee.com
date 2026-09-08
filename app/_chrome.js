@@ -14,11 +14,20 @@ import SessionKeeper from './_session-keeper';
  * does not do.
  */
 
+/*
+ * THE ROUTE IS RETIRED (2026-09-03) AND THIS GUARD STAYS ON PURPOSE.
+ * /radio no longer exists as a page; next.config.js redirects it, and its
+ * query string, to /player. The guard is still worth having because a /radio
+ * link can still be CLICKED — old content, a bookmark bar, a printed card —
+ * and the link router below must let that leave as a document load so the
+ * server-side redirect actually fires. Routed client-side it would ask the app
+ * for a page that is not there.
+ *
+ * An exact match is all that is needed, and a substring test would also claim
+ * any future path that merely contains the word.
+ */
 function isRadio(pathname) {
     const p = (pathname || '').toLowerCase();
-    // /radio.html is redirected to /radio by next.config.js before anything
-    // here sees it, so an exact match is all that is needed — and a substring
-    // test would also claim any future path that merely contains the word.
     return p === '/radio' || p === '/radio/';
 }
 
@@ -76,6 +85,14 @@ function useInternalLinkRouting() {
             let url;
             try { url = new URL(a.getAttribute('href'), location.href); } catch { return; }
             if (url.origin !== location.origin) return;
+
+            // A ROUTE HANDLER IS NOT A PAGE. /api/* answers with a redirect or
+            // a raw document, and the router has nothing to render for it —
+            // pushed instead of navigated, the click would go nowhere. The
+            // rail's "Bible Talks" row is one of these: it mints a one-time
+            // Jubilee ID ticket and redirects to another origin, which is a
+            // navigation by definition, so it must leave the document.
+            if (url.pathname.startsWith('/api/')) return;
 
             // /radio runs its own full player and would fight the footer bar,
             // so a document load there is correct — kj-nav.js left these alone

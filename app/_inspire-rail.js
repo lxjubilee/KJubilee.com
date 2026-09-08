@@ -55,8 +55,15 @@ const NAV_ITEMS = [
     },
     {
         key: 'jsv',
-        label: 'Jubilee Bible Talks',
-        href: 'https://jubileebibletalks.com',
+        label: 'Bible Talks',
+        // THE ONE ROW THAT IS NOT A BARE CROSS-DOMAIN LINK. It goes through
+        // kJubilee's own route first (app/api/go/bible-talks/route.js), which
+        // mints a one-time Jubilee ID ticket from this reader's sealed family
+        // session and redirects on with it — so a member arrives at Bible Talks
+        // already signed in rather than facing a login form for an account the
+        // family already has. Signed out, it redirects to the same plain
+        // https://jubileebibletalks.com this used to be.
+        href: '/api/go/bible-talks',
         // Supplied artwork, Material Symbols 960 grid: an OPEN bible, pages
         // spread. It replaced a hand-built closed book with a cross knocked
         // out of the cover, which was the only icon needing an even-odd
@@ -88,7 +95,7 @@ const NAV_ITEMS = [
     },
     {
         key: 'inspiremanna',
-        label: 'Daily Bread',
+        label: 'Daily Manna',
         href: 'https://inspiremanna.com',
         // Supplied artwork, Material Symbols 960 grid: a communion wafer
         // cross. Two hand-drawn loaves failed here before it — bread is a
@@ -282,8 +289,20 @@ export default function InspireRail() {
                         className={'jir-item' + (isCurrentProperty(item) ? ' is-active' : '')}
                         aria-current={isCurrentProperty(item) ? 'page' : undefined}
                         href={item.href}
+                        /* ONE TOOLTIP, AND IT IS THE STYLED ONE. Both were
+                           being rendered: `data-tip` draws the rail's own
+                           white-boxed label, and `title` made the browser
+                           volunteer its native one on top of it a moment later
+                           - two labels for one row, saying the same thing in
+                           two designs.
+
+                           `aria-label` replaces `title` rather than nothing
+                           taking its place: collapsed, .jir-label is
+                           visibility:hidden, which takes it out of the
+                           accessibility tree too, and a link whose only name
+                           was the title would have been left unnamed. */
                         data-tip={item.label}
-                        title={item.label}
+                        aria-label={item.label}
                         rel="noopener"
                         onClick={() => setOpen(false)}
                     >
