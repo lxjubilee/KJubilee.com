@@ -62,14 +62,16 @@ a{color:inherit;text-decoration:none}
 }
 .topbar-row1{height:var(--topbar-row1-h);background:#242424}
 .topbar-row2{height:var(--topbar-row2-h);background:#1b1b1b;border-top:1px solid var(--border-strong)}
-.logo{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
-.logo-img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
+.logo{display:inline-flex;align-items:center;gap:10px;flex:0 0 auto}
+.logo-img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none}
 .logo-name{font-family:var(--font-logo);font-weight:600;font-size:24px;line-height:1;letter-spacing:.01em;white-space:nowrap}
 .logo-accent{color:var(--accent)}
-/* The leading "k" sits 2pt below the rest of the wordmark. calc with an
-   absolute pt, not an em ratio, so the reduction stays exactly 2pt at the
-   24px desktop size and the 17px narrow-screen size alike. */
-.logo-k{font-size:calc(1em - 2pt)}
+/* The leading "k" used to sit 2pt below the rest of the wordmark. At 24px that
+   is an 11% drop, and against a 40px mark it read as a typo rather than a
+   treatment — so it now matches "Jubilee". Kept as a rule rather than deleted:
+   the markup still carries the hook, and player.css never had the reduction, so
+   the header is finally the same on every page. */
+.logo-k{font-size:1em}
 .spacer{flex:1 1 auto;min-width:0}
 .nav-textlink{
   display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;

@@ -22,7 +22,7 @@ export default function HomePage() {
             <header className="topbar">
               <div className="topbar-row1">
                 <a className="logo" href="/" aria-label="kJubilee.com home">
-                  <img className="logo-img" src="/images/members/JubileeInspire-Circle-200.png" alt="" width="32" height="32" />
+                  <img className="logo-img" src="/images/members/JubileeInspire-Circle-200.png" alt="" width="40" height="40" />
                   <span className="logo-name"><span className="logo-k">k</span><span className="logo-accent">Jubilee</span>.com</span>
                 </a>
                 <div className="spacer"></div>

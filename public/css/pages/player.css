@@ -73,8 +73,8 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   padding:0 max(10px,calc((100% - var(--site-max)) / 2 + 10px));}
 .topbar-row1{height:var(--topbar-row1-h);background:#242424}
 .topbar-row2{height:var(--topbar-row2-h);background:#1b1b1b;border-top:1px solid var(--border-strong)}
-.logo{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto}
-.logo-img{width:32px;height:32px;border-radius:50%;object-fit:cover;flex:none}
+.logo{display:inline-flex;align-items:center;gap:10px;flex:0 0 auto}
+.logo-img{width:40px;height:40px;border-radius:50%;object-fit:cover;flex:none}
 .logo-name{font-family:var(--font-logo);font-weight:600;font-size:24px;line-height:1;letter-spacing:.01em;white-space:nowrap}
 .logo-accent{color:var(--accent)}
 .spacer{flex:1 1 auto;min-width:0}
